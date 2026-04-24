@@ -3,21 +3,49 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, FileText } from 'lucide-react';
+import { Search, FileText, ChevronDown, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { WikiPage } from '@/schemas/wiki';
 
-// TODO(refactor-C): wiki has no `parentId` anymore — for now we group by first
-// Category. Design a proper tree or category-grouped navigation in Refactor C.
+const CATEGORY_ORDER = [
+  'Documentation',
+  'Strategy doc',
+  'Planning',
+  'Customer research',
+  'Proposal',
+] as const;
+
+const UNCATEGORIZED = 'Sin categoría';
+
 function groupByCategory(pages: WikiPage[]): Array<{ category: string; pages: WikiPage[] }> {
   const map = new Map<string, WikiPage[]>();
   for (const p of pages) {
-    const key = p.categories[0] ?? 'Sin categoría';
+    const key = p.categories[0] ?? UNCATEGORIZED;
     const arr = map.get(key) ?? [];
     arr.push(p);
     map.set(key, arr);
   }
-  return Array.from(map.entries()).map(([category, pages]) => ({ category, pages }));
+
+  // Alphabetize within each group.
+  for (const arr of map.values()) {
+    arr.sort((a, b) => a.title.localeCompare(b.title, 'es'));
+  }
+
+  // Emit groups in fixed order, then any remaining (unknown categories),
+  // then the uncategorized bucket last.
+  const ordered: Array<{ category: string; pages: WikiPage[] }> = [];
+  for (const cat of CATEGORY_ORDER) {
+    const arr = map.get(cat);
+    if (arr && arr.length) ordered.push({ category: cat, pages: arr });
+    map.delete(cat);
+  }
+  for (const [cat, arr] of map.entries()) {
+    if (cat === UNCATEGORIZED) continue;
+    if (arr.length) ordered.push({ category: cat, pages: arr });
+  }
+  const rest = map.get(UNCATEGORIZED);
+  if (rest && rest.length) ordered.push({ category: UNCATEGORIZED, pages: rest });
+  return ordered;
 }
 
 function PageRow({ page }: { page: WikiPage }) {
@@ -37,6 +65,37 @@ function PageRow({ page }: { page: WikiPage }) {
       </span>
       <span className="truncate">{page.title}</span>
     </Link>
+  );
+}
+
+function CategoryGroup({
+  category,
+  pages,
+  defaultOpen = true,
+}: {
+  category: string;
+  pages: WikiPage[];
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="mb-2">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center gap-1 px-2 py-1 text-[10px] uppercase font-semibold tracking-[0.04em] text-muted-foreground hover:text-foreground transition-colors"
+      >
+        {open ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+        <span className="flex-1 text-left">{category}</span>
+        <span className="text-[10px] font-medium text-muted-foreground">{pages.length}</span>
+      </button>
+      {open && (
+        <div className="pl-1">
+          {pages.map((p) => (
+            <PageRow key={p.id} page={p} />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -66,14 +125,7 @@ export function WikiTree({ pages }: { pages: WikiPage[] }) {
         </kbd>
       </div>
       {groups.map(({ category, pages }) => (
-        <div key={category} className="mb-3">
-          <div className="text-[10px] uppercase font-semibold tracking-[0.04em] text-muted-foreground p-2">
-            {category}
-          </div>
-          {pages.map((p) => (
-            <PageRow key={p.id} page={p} />
-          ))}
-        </div>
+        <CategoryGroup key={category} category={category} pages={pages} />
       ))}
       {groups.length === 0 && (
         <div className="text-[12px] text-muted-foreground text-center p-4">

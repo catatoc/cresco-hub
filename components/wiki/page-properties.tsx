@@ -1,6 +1,15 @@
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { cn } from '@/lib/utils';
 import type { WikiPage } from '@/schemas/wiki';
+
+const CATEGORY_COLOR: Record<string, string> = {
+  Proposal: 'bg-[#faf0db] text-[#c78a2c]',
+  'Customer research': 'bg-[#eff6ff] text-[#3a5fcc]',
+  'Strategy doc': 'bg-[#f4ecf8] text-[#7f3aa7]',
+  Planning: 'bg-[#fceaea] text-[#d24949]',
+  Documentation: 'bg-[#e8f5ec] text-[#3f9f5c]',
+};
 
 type Props = { page: WikiPage };
 
@@ -18,7 +27,10 @@ export function PageProperties({ page }: Props) {
             {page.categories.map((c: string) => (
               <span
                 key={c}
-                className="inline-flex px-2 py-[1px] rounded text-[11px] font-medium bg-[#eeeffc] text-[#5e6ad2]"
+                className={cn(
+                  'inline-flex px-2 py-[1px] rounded text-[11px] font-medium',
+                  CATEGORY_COLOR[c] ?? 'bg-[#eeeffc] text-[#5e6ad2]',
+                )}
               >
                 {c}
               </span>
