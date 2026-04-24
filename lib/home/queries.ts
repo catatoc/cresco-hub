@@ -9,11 +9,15 @@ export async function getHomeData(customerId: string, sprintId: string | null) {
     queryWikiByCustomer(customerId),
   ]);
 
+  // Spanish labels for UI, mapped from real Notion statuses:
+  //   "En progreso"  = In Progress
+  //   "Por hacer"    = Refining + Not Started (anything pending)
+  //   "Completadas"  = Done   (Archived excluded from throughput)
   const stats = {
     inProgress: tasks.filter((t) => t.status === 'In Progress').length,
-    todo: tasks.filter((t) => t.status === 'Not Started').length,
+    todo: tasks.filter((t) => t.status === 'Not Started' || t.status === 'Refining').length,
     done: tasks.filter((t) => t.status === 'Done').length,
-    total: tasks.length,
+    total: tasks.filter((t) => t.status !== 'Archived').length,
   };
 
   const now = Date.now();
