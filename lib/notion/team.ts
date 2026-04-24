@@ -11,15 +11,15 @@ export async function findMemberByEmail(email: string): Promise<TeamMember | nul
 
   const row = res.results[0];
   if (!row || !('properties' in row)) return null;
-
-  const props = row.properties as Record<string, any>;
+  const p = row.properties as Record<string, any>;
 
   return teamMemberSchema.parse({
     id: row.id,
-    name: props.Name?.title?.[0]?.plain_text ?? '',
-    email: props.Email?.email ?? email,
-    clientId: props.Client?.relation?.[0]?.id ?? null,
-    projectIds: (props.Project?.relation ?? []).map((r: { id: string }) => r.id),
-    role: props.Role?.select?.name ?? null,
+    name: p.Name?.title?.[0]?.plain_text ?? '',
+    email: p.Email?.email ?? email,
+    role: typeof p.Role?.rich_text?.[0]?.plain_text === 'string' ? p.Role.rich_text[0].plain_text : null,
+    area: p.Area?.select?.name ?? null,
+    customerIds: (p.Customers?.relation ?? []).map((r: { id: string }) => r.id),
+    projectIds: (p.Projects?.relation ?? []).map((r: { id: string }) => r.id),
   });
 }
