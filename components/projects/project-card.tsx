@@ -2,14 +2,14 @@ import type { Project } from '@/schemas/project';
 import { cn } from '@/lib/utils';
 import { Calendar, Users, FolderKanban } from 'lucide-react';
 
-// TODO(refactor-C): redesign status pills for full Notion Project status set.
+// Full 6-status map aligned with Notion Project Status enum.
 const STATUS: Record<string, { bg: string; text: string; dot: string; progress: string }> = {
-  'In Progress': { bg: 'bg-[#e8f5ec]', text: 'text-[#3f9f5c]',        dot: 'bg-[#3f9f5c]', progress: 'bg-[#3f9f5c]' },
-  Paused:        { bg: 'bg-[#faf0db]', text: 'text-[#c78a2c]',        dot: 'bg-[#c78a2c]', progress: 'bg-[#c78a2c]' },
-  Canceled:      { bg: 'bg-[#fceaea]', text: 'text-[#d24949]',        dot: 'bg-[#d24949]', progress: 'bg-[#d24949]' },
-  Done:          { bg: 'bg-[#f7f7f8]', text: 'text-muted-foreground', dot: 'bg-[#8a8a91]', progress: 'bg-[#8a8a91]' },
-  Planning:      { bg: 'bg-[#eeeffc]', text: 'text-[#5e6ad2]',        dot: 'bg-[#5e6ad2]', progress: 'bg-[#5e6ad2]' },
-  Backlog:       { bg: 'bg-[#f7f7f8]', text: 'text-muted-foreground', dot: 'bg-[#8a8a91]', progress: 'bg-[#8a8a91]' },
+  Backlog:       { bg: 'bg-white border border-border', text: 'text-muted-foreground', dot: 'bg-[#a0a0a8]', progress: 'bg-[#a0a0a8]' },
+  Planning:      { bg: 'bg-[#eeeffc]', text: 'text-[#5e6ad2]',                          dot: 'bg-[#5e6ad2]', progress: 'bg-[#5e6ad2]' },
+  'In Progress': { bg: 'bg-[#eff6ff]', text: 'text-[#3a5fcc]',                          dot: 'bg-[#3a5fcc]', progress: 'bg-[#3a5fcc]' },
+  Paused:        { bg: 'bg-[#faf0db]', text: 'text-[#c78a2c]',                          dot: 'bg-[#c78a2c]', progress: 'bg-[#c78a2c]' },
+  Done:          { bg: 'bg-[#e8f5ec]', text: 'text-[#3f9f5c]',                          dot: 'bg-[#3f9f5c]', progress: 'bg-[#3f9f5c]' },
+  Canceled:      { bg: 'bg-[#fceaea]', text: 'text-[#d24949]',                          dot: 'bg-[#d24949]', progress: 'bg-[#d24949]' },
 };
 
 const ACCENTS = [

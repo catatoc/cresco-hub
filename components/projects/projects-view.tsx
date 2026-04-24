@@ -7,7 +7,10 @@ import { ProjectCard } from './project-card';
 
 type Tab = 'active' | 'planning' | 'completed' | 'all';
 
-// TODO(refactor-C): align tab taxonomy with real Notion Project statuses.
+// Tab taxonomy mapped onto the 6 real Notion Project statuses:
+//   active    = In Progress + Paused
+//   planning  = Planning + Backlog
+//   completed = Done + Canceled
 function isActive(p: Project) {
   return p.status === 'In Progress' || p.status === 'Paused';
 }
