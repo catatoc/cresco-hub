@@ -47,7 +47,6 @@ export function NextMeeting({ meeting }: { meeting: Meeting | null }) {
           </div>
         )}
         <div className="mt-3.5 pt-3 border-t border-dashed border-border flex gap-2">
-          {/* TODO(refactor-C): restore Unirse button once Meet URL field is added to Notion schema */}
           <a href={meeting.url} target="_blank" rel="noreferrer" className="px-2.5 py-1 rounded-md text-[12px] font-medium border border-border bg-white hover:bg-[#f7f7f8]">
             Ver agenda
           </a>

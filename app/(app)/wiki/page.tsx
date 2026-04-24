@@ -21,7 +21,7 @@ export default async function WikiIndexPage() {
     );
   }
 
-  // TODO(refactor-C): pick a smarter landing page (pinned, most recent, etc).
+  // Land on the most recently edited page (the wiki query sorts by last_edited_time desc).
   const first: WikiPage = pages[0]!;
   redirect(`/wiki/${first.id}`);
 }
