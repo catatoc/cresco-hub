@@ -22,9 +22,10 @@ describe('findMemberByEmail', () => {
           properties: {
             Name: { title: [{ plain_text: 'Daniela' }] },
             Email: { email: 'dani@focuskids.co' },
-            Client: { relation: [{ id: 'client-123' }] },
-            Project: { relation: [{ id: 'proj-A' }, { id: 'proj-B' }] },
-            Role: { select: { name: 'Designer' } },
+            Role: { rich_text: [{ plain_text: 'Designer' }] },
+            Area: { select: { name: 'Design' } },
+            Customers: { relation: [{ id: 'customer-123' }, { id: 'customer-456' }] },
+            Projects: { relation: [{ id: 'proj-A' }, { id: 'proj-B' }] },
           },
         },
       ],
@@ -36,9 +37,10 @@ describe('findMemberByEmail', () => {
       id: 'member-1',
       name: 'Daniela',
       email: 'dani@focuskids.co',
-      clientId: 'client-123',
-      projectIds: ['proj-A', 'proj-B'],
       role: 'Designer',
+      area: 'Design',
+      customerIds: ['customer-123', 'customer-456'],
+      projectIds: ['proj-A', 'proj-B'],
     });
     expect(mockNotion.dataSources.query).toHaveBeenCalledWith({
       data_source_id: 'team-db-id',
