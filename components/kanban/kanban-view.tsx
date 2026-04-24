@@ -1,18 +1,33 @@
 'use client';
 
 import { useState } from 'react';
+import { Clock } from 'lucide-react';
+import type { NotionUser } from '@/schemas/notion-user';
 import type { Task } from '@/schemas/task';
 import { BoardClassic } from './board-classic';
 import { BoardWeek } from './board-week';
 import { ViewToggle } from './view-toggle';
-import { CycleNav } from './cycle-nav';
-import { Clock } from 'lucide-react';
+import { SprintNav } from './sprint-nav';
 
-type Props = { initialTasks: Task[]; sprintLabel: string };
+type Props = {
+  initialTasks: Task[];
+  sprintLabel: string;
+  currentSprintId: string | null;
+  allSprintIds: string[];
+  users: NotionUser[];
+};
 
-export function KanbanView({ initialTasks, sprintLabel }: Props) {
+export function KanbanView({
+  initialTasks,
+  sprintLabel,
+  currentSprintId,
+  allSprintIds,
+  users,
+}: Props) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [view, setView] = useState<'classic' | 'week'>('classic');
+
+  const usersById = new Map(users.map((u) => [u.id, u]));
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden px-5 pt-5">
@@ -22,16 +37,16 @@ export function KanbanView({ initialTasks, sprintLabel }: Props) {
           <Clock className="w-[11px] h-[11px]" />
           {sprintLabel}
         </span>
-        <CycleNav />
+        <SprintNav currentSprintId={currentSprintId} allSprintIds={allSprintIds} />
         <div className="ml-3">
           <ViewToggle view={view} onChange={setView} />
         </div>
       </div>
 
       {view === 'classic' ? (
-        <BoardClassic tasks={tasks} setTasks={setTasks} />
+        <BoardClassic tasks={tasks} setTasks={setTasks} usersById={usersById} />
       ) : (
-        <BoardWeek tasks={tasks} setTasks={setTasks} />
+        <BoardWeek tasks={tasks} setTasks={setTasks} usersById={usersById} />
       )}
     </div>
   );

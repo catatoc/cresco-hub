@@ -13,27 +13,76 @@ import {
   type DragEndEvent,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import type { NotionUser } from '@/schemas/notion-user';
 import type { Task, TaskStatus } from '@/schemas/task';
 import { Column } from './column';
 import { TaskCard } from './card';
 import { useMoveTask } from '@/hooks/use-move-task';
 
-// TODO(refactor-C): redesign kanban columns. For now we map the 6 real statuses
-// onto 4 display columns using the old visual vocabulary.
-const COLUMNS: Array<{ title: string; status: TaskStatus; dotClass: string; dotFilled?: boolean }> = [
-  { title: 'Refining',    status: 'Refining',    dotClass: 'border-[#a0a0a8] text-[#a0a0a8]' },
-  { title: 'Not Started', status: 'Not Started', dotClass: 'border-[#57575c] text-[#57575c]' },
-  { title: 'In Progress', status: 'In Progress', dotClass: 'border-[#5e6ad2] text-[#5e6ad2]', dotFilled: true },
-  { title: 'Done',        status: 'Done',        dotClass: 'border-[#3f9f5c] text-[#3f9f5c]', dotFilled: true },
+/**
+ * Column = display bucket. Each column groups one or more Notion status values.
+ * `dropStatus` is the status a card gets when dropped into the column.
+ */
+type BoardColumn = {
+  id: string;
+  title: string;
+  statuses: TaskStatus[];
+  dropStatus: TaskStatus;
+  dotClass: string;
+  dotFilled?: boolean;
+};
+
+const COLUMNS: BoardColumn[] = [
+  {
+    id: 'todo',
+    title: 'Por hacer',
+    statuses: ['Refining', 'Not Started'],
+    dropStatus: 'Not Started',
+    dotClass: 'border-[#57575c] text-[#57575c]',
+  },
+  {
+    id: 'in-progress',
+    title: 'En progreso',
+    statuses: ['In Progress'],
+    dropStatus: 'In Progress',
+    dotClass: 'border-[#5e6ad2] text-[#5e6ad2]',
+    dotFilled: true,
+  },
+  {
+    id: 'in-review',
+    title: 'En revisión',
+    statuses: ['In Review'],
+    dropStatus: 'In Review',
+    dotClass: 'border-[#c78a2c] text-[#c78a2c]',
+    dotFilled: true,
+  },
+  {
+    id: 'done',
+    title: 'Hecho',
+    statuses: ['Done'],
+    dropStatus: 'Done',
+    dotClass: 'border-[#3f9f5c] text-[#3f9f5c]',
+    dotFilled: true,
+  },
+  {
+    id: 'archived',
+    title: 'Archivado',
+    statuses: ['Archived'],
+    dropStatus: 'Archived',
+    dotClass: 'border-[#8a8a91] text-[#8a8a91]',
+    dotFilled: true,
+  },
 ];
 
 type Props = {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  usersById: Map<string, NotionUser>;
 };
 
-export function BoardClassic({ tasks, setTasks }: Props) {
+export function BoardClassic({ tasks, setTasks, usersById }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [archivedOpen, setArchivedOpen] = useState(false);
   const { move } = useMoveTask(setTasks);
 
   const sensors = useSensors(
@@ -53,13 +102,17 @@ export function BoardClassic({ tasks, setTasks }: Props) {
     const task = tasks.find((t) => t.id === e.active.id);
     if (!task) return;
 
-    const newStatus = COLUMNS.find((c) => c.status === overId)?.status;
-    if (!newStatus || newStatus === task.status) return;
+    const targetColumn = COLUMNS.find((c) => c.id === overId);
+    if (!targetColumn) return;
+    if (targetColumn.statuses.includes(task.status)) return;
 
-    void move(task.id, newStatus);
+    void move(task.id, targetColumn.dropStatus);
   }
 
   const active = tasks.find((t) => t.id === activeId) ?? null;
+  const visibleColumns = COLUMNS.filter((c) => c.id !== 'archived');
+  const archivedColumn = COLUMNS.find((c) => c.id === 'archived')!;
+  const archivedTasks = tasks.filter((t) => archivedColumn.statuses.includes(t.status));
 
   return (
     <DndContext
@@ -69,19 +122,65 @@ export function BoardClassic({ tasks, setTasks }: Props) {
       onDragEnd={onDragEnd}
       onDragCancel={() => setActiveId(null)}
     >
-      <div className="flex-1 grid grid-cols-4 gap-2.5 pb-5 overflow-auto">
-        {COLUMNS.map((col) => (
-          <Column
-            key={col.status}
-            id={col.status}
-            title={col.title}
-            tasks={tasks.filter((t) => t.status === col.status)}
-            dotClass={col.dotClass}
-            dotFilled={col.dotFilled}
-          />
-        ))}
+      <div className="flex-1 flex flex-col gap-3 pb-5 overflow-auto">
+        <div className="grid grid-cols-4 gap-2.5">
+          {visibleColumns.map((col) => (
+            <Column
+              key={col.id}
+              id={col.id}
+              title={col.title}
+              tasks={tasks.filter((t) => col.statuses.includes(t.status))}
+              dotClass={col.dotClass}
+              dotFilled={col.dotFilled}
+              usersById={usersById}
+            />
+          ))}
+        </div>
+
+        {archivedTasks.length > 0 && (
+          <div className="border border-border rounded-lg bg-[#fafafa]">
+            <button
+              onClick={() => setArchivedOpen((v) => !v)}
+              className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-black/[0.02] transition-colors"
+            >
+              <span
+                className={`w-2.5 h-2.5 rounded-full border-[1.5px] ${archivedColumn.dotClass} bg-current`}
+              />
+              <span className="text-[12px] font-semibold">{archivedColumn.title}</span>
+              <span className="text-[12px] text-muted-foreground font-medium">
+                {archivedTasks.length}
+              </span>
+              <span className="ml-auto text-[11px] text-muted-foreground">
+                {archivedOpen ? 'Ocultar' : 'Mostrar'}
+              </span>
+            </button>
+            {archivedOpen && (
+              <div className="p-2 grid grid-cols-4 gap-2 border-t border-border">
+                {archivedTasks.map((t) => (
+                  <TaskCard
+                    key={t.id}
+                    task={t}
+                    assignees={t.assigneeIds
+                      .map((id) => usersById.get(id))
+                      .filter((u): u is NotionUser => !!u)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
-      <DragOverlay>{active && <TaskCard task={active} isOverlay />}</DragOverlay>
+      <DragOverlay>
+        {active && (
+          <TaskCard
+            task={active}
+            isOverlay
+            assignees={active.assigneeIds
+              .map((id) => usersById.get(id))
+              .filter((u): u is NotionUser => !!u)}
+          />
+        )}
+      </DragOverlay>
     </DndContext>
   );
 }

@@ -3,7 +3,10 @@ import { addDays, format, isSameDay, startOfWeek } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
-// TODO(refactor-C): anchor this stripe to Sprint start/end instead of current week.
+/**
+ * Week stripe for the Kanban "Week" view. Always shows the current ISO week;
+ * sprint anchoring is handled at the page level via the sprint selector.
+ */
 export function WeekStripe({ tasks }: { tasks: Task[] }) {
   const today = new Date();
   const start = startOfWeek(today, { weekStartsOn: 1 });

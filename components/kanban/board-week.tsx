@@ -13,28 +13,61 @@ import {
   type DragEndEvent,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import type { NotionUser } from '@/schemas/notion-user';
 import type { Task, TaskStatus } from '@/schemas/task';
 import { Column } from './column';
 import { TaskCard } from './card';
 import { WeekStripe } from './week-stripe';
 import { useMoveTask } from '@/hooks/use-move-task';
 
-// TODO(refactor-C): rebuild week view on top of Sprint start/end dates.
-const COLUMNS: Array<{ title: string; status: TaskStatus; dotClass: string; dotFilled?: boolean }> = [
-  { title: 'Not Started',       status: 'Not Started', dotClass: 'border-[#57575c] text-[#57575c]' },
-  { title: 'In Progress',       status: 'In Progress', dotClass: 'border-[#5e6ad2] text-[#5e6ad2]', dotFilled: true },
-  { title: 'Done esta semana',  status: 'Done',        dotClass: 'border-[#3f9f5c] text-[#3f9f5c]', dotFilled: true },
+type WeekColumn = {
+  id: string;
+  title: string;
+  statuses: TaskStatus[];
+  dropStatus: TaskStatus;
+  dotClass: string;
+  dotFilled?: boolean;
+};
+
+const COLUMNS: WeekColumn[] = [
+  {
+    id: 'todo',
+    title: 'Por hacer',
+    statuses: ['Refining', 'Not Started'],
+    dropStatus: 'Not Started',
+    dotClass: 'border-[#57575c] text-[#57575c]',
+  },
+  {
+    id: 'in-progress',
+    title: 'En progreso',
+    statuses: ['In Progress'],
+    dropStatus: 'In Progress',
+    dotClass: 'border-[#5e6ad2] text-[#5e6ad2]',
+    dotFilled: true,
+  },
+  {
+    id: 'done',
+    title: 'Hecho esta semana',
+    statuses: ['Done'],
+    dropStatus: 'Done',
+    dotClass: 'border-[#3f9f5c] text-[#3f9f5c]',
+    dotFilled: true,
+  },
 ];
 
 type Props = {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  usersById: Map<string, NotionUser>;
 };
 
-export function BoardWeek({ tasks, setTasks }: Props) {
+export function BoardWeek({ tasks, setTasks, usersById }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const { move } = useMoveTask(setTasks);
-  const active = tasks.filter((t) => t.status !== 'Refining' && t.status !== 'Archived');
+  // Week view: ignore Refining-only (triage), In Review, and Archived.
+  const weekTasks = tasks.filter(
+    (t) => t.status !== 'In Review' && t.status !== 'Archived',
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -47,9 +80,10 @@ export function BoardWeek({ tasks, setTasks }: Props) {
     if (!overId) return;
     const task = tasks.find((t) => t.id === e.active.id);
     if (!task) return;
-    const newStatus = COLUMNS.find((c) => c.status === overId)?.status;
-    if (!newStatus || newStatus === task.status) return;
-    void move(task.id, newStatus);
+    const targetColumn = COLUMNS.find((c) => c.id === overId);
+    if (!targetColumn) return;
+    if (targetColumn.statuses.includes(task.status)) return;
+    void move(task.id, targetColumn.dropStatus);
   }
 
   const dragged = tasks.find((t) => t.id === activeId) ?? null;
@@ -63,22 +97,33 @@ export function BoardWeek({ tasks, setTasks }: Props) {
       onDragCancel={() => setActiveId(null)}
     >
       <div className="flex-1 flex flex-col overflow-hidden">
-        <WeekStripe tasks={active} />
+        <WeekStripe tasks={weekTasks} />
         <div className="flex-1 grid grid-cols-3 gap-2.5 pb-5 overflow-auto">
           {COLUMNS.map((col) => (
             <Column
-              key={col.status}
-              id={col.status}
+              key={col.id}
+              id={col.id}
               title={col.title}
-              tasks={active.filter((t) => t.status === col.status)}
+              tasks={weekTasks.filter((t) => col.statuses.includes(t.status))}
               dotClass={col.dotClass}
               dotFilled={col.dotFilled}
               showDayChip
+              usersById={usersById}
             />
           ))}
         </div>
       </div>
-      <DragOverlay>{dragged && <TaskCard task={dragged} isOverlay />}</DragOverlay>
+      <DragOverlay>
+        {dragged && (
+          <TaskCard
+            task={dragged}
+            isOverlay
+            assignees={dragged.assigneeIds
+              .map((id) => usersById.get(id))
+              .filter((u): u is NotionUser => !!u)}
+          />
+        )}
+      </DragOverlay>
     </DndContext>
   );
 }

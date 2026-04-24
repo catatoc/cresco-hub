@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import type { NotionUser } from '@/schemas/notion-user';
 import type { Task } from '@/schemas/task';
 import { cn } from '@/lib/utils';
 import { useSortable } from '@dnd-kit/sortable';
@@ -49,9 +50,78 @@ const TAG_MAP: Record<string, string> = {
   'Video production': 'bg-[#f4ecf8] text-[#7f3aa7]',
 };
 
-type Props = { task: Task; showDayChip?: boolean; isOverlay?: boolean };
+/**
+ * Take up to two letters from a name for avatar fallback.
+ * "Carlos Carrasquero" → "CC"; "Carlos" → "CA"; "?" → "?"
+ */
+export function initials(name: string | null | undefined): string {
+  if (!name) return '?';
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  const first = parts[0]!;
+  if (parts.length === 1) return first.slice(0, 2).toUpperCase() || '?';
+  const last = parts[parts.length - 1]!;
+  return ((first[0] ?? '') + (last[0] ?? '')).toUpperCase() || '?';
+}
 
-export function TaskCard({ task, showDayChip, isOverlay }: Props) {
+type AvatarProps = {
+  user: NotionUser;
+  size?: number;
+};
+
+export function AssigneeAvatar({ user, size = 18 }: AvatarProps) {
+  const s = `${size}px`;
+  if (user.avatarUrl) {
+    return (
+      <img
+        src={user.avatarUrl}
+        alt={user.name ?? 'User'}
+        style={{ width: s, height: s }}
+        className="rounded-full object-cover"
+      />
+    );
+  }
+  return (
+    <div
+      style={{ width: s, height: s, fontSize: Math.max(9, Math.floor(size * 0.5)) }}
+      className="rounded-full bg-[#6da88e] text-white font-semibold grid place-items-center"
+      title={user.name ?? undefined}
+    >
+      {initials(user.name)}
+    </div>
+  );
+}
+
+export function AssigneeStack({
+  assignees,
+  size = 18,
+}: {
+  assignees: NotionUser[];
+  size?: number;
+}) {
+  if (assignees.length === 0) return null;
+  const first = assignees[0]!;
+  const rest = assignees.slice(1);
+  return (
+    <div className="flex items-center gap-1">
+      <AssigneeAvatar user={first} size={size} />
+      {rest.length > 0 && (
+        <span className="text-[10px] text-muted-foreground font-medium">
+          +{rest.length}
+        </span>
+      )}
+    </div>
+  );
+}
+
+type Props = {
+  task: Task;
+  assignees?: NotionUser[];
+  showDayChip?: boolean;
+  isOverlay?: boolean;
+};
+
+export function TaskCard({ task, assignees = [], showDayChip, isOverlay }: Props) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: task.id, disabled: isOverlay });
 
@@ -130,8 +200,8 @@ export function TaskCard({ task, showDayChip, isOverlay }: Props) {
             {new Date(task.dueDate).toLocaleDateString('es', { day: '2-digit', month: 'short' })}
           </span>
         ) : null}
-        <div className="w-[18px] h-[18px] rounded-full bg-[#6da88e] text-white text-[9px] font-semibold grid place-items-center ml-auto">
-          DL
+        <div className="ml-auto">
+          <AssigneeStack assignees={assignees} />
         </div>
       </div>
     </div>

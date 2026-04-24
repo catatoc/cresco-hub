@@ -1,5 +1,6 @@
 'use client';
 
+import type { NotionUser } from '@/schemas/notion-user';
 import type { Task } from '@/schemas/task';
 import { TaskCard } from './card';
 import { cn } from '@/lib/utils';
@@ -13,9 +14,10 @@ type Props = {
   dotClass: string;
   dotFilled?: boolean;
   showDayChip?: boolean;
+  usersById: Map<string, NotionUser>;
 };
 
-export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip }: Props) {
+export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, usersById }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id });
 
   return (
@@ -34,7 +36,14 @@ export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip }: P
       <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
         <div className="flex-1 p-2 flex flex-col gap-1.5 overflow-auto min-h-[80px]">
           {tasks.map((t) => (
-            <TaskCard key={t.id} task={t} showDayChip={showDayChip} />
+            <TaskCard
+              key={t.id}
+              task={t}
+              showDayChip={showDayChip}
+              assignees={t.assigneeIds
+                .map((id) => usersById.get(id))
+                .filter((u): u is NotionUser => !!u)}
+            />
           ))}
         </div>
       </SortableContext>
