@@ -4,9 +4,10 @@ export const teamMemberSchema = z.object({
   id: z.string(),
   name: z.string(),
   email: z.string().email(),
-  clientId: z.string().nullable(),
-  projectIds: z.array(z.string()),
   role: z.string().nullable(),
+  area: z.string().nullable(),
+  customerIds: z.array(z.string()), // from "Customers" relation (plural)
+  projectIds: z.array(z.string()),  // from "Projects" relation
 });
 
 export type TeamMember = z.infer<typeof teamMemberSchema>;
