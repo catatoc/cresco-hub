@@ -30,3 +30,21 @@ export async function queryProjectsByCustomer(customerId: string): Promise<Proje
   });
   return res.results.filter((r): r is any => 'properties' in r).map(parseProject);
 }
+
+export async function queryProjectsByCustomerAndTitle(
+  customerId: string,
+  term: string,
+): Promise<Project[]> {
+  const notion = getNotion();
+  const res = await notion.dataSources.query({
+    data_source_id: serverEnv.NOTION_DB_PROJECTS,
+    page_size: 8,
+    filter: {
+      and: [
+        { property: 'Customer', relation: { contains: customerId } },
+        { property: 'Project name', title: { contains: term } },
+      ],
+    },
+  });
+  return res.results.filter((r): r is any => 'properties' in r).map(parseProject);
+}

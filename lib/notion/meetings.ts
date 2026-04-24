@@ -40,3 +40,21 @@ export async function getMeeting(meetingId: string): Promise<Meeting | null> {
     return null;
   }
 }
+
+export async function queryMeetingsByCustomerAndTitle(
+  customerId: string,
+  term: string,
+): Promise<Meeting[]> {
+  const notion = getNotion();
+  const res = await notion.dataSources.query({
+    data_source_id: serverEnv.NOTION_DB_MEETINGS,
+    page_size: 8,
+    filter: {
+      and: [
+        { property: 'Customer', relation: { contains: customerId } },
+        { property: 'Name', title: { contains: term } },
+      ],
+    },
+  });
+  return res.results.filter((r): r is any => 'properties' in r).map(parseMeeting);
+}

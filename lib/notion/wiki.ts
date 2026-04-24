@@ -39,3 +39,21 @@ export async function getWikiPageBlocks(pageId: string) {
   const res = await notion.blocks.children.list({ block_id: pageId, page_size: 100 });
   return res.results;
 }
+
+export async function queryWikiByCustomerAndTitle(
+  customerId: string,
+  term: string,
+): Promise<WikiPage[]> {
+  const notion = getNotion();
+  const res = await notion.dataSources.query({
+    data_source_id: serverEnv.NOTION_DB_WIKI,
+    page_size: 8,
+    filter: {
+      and: [
+        { property: 'Customer', relation: { contains: customerId } },
+        { property: 'Doc name', title: { contains: term } },
+      ],
+    },
+  });
+  return res.results.filter((r): r is any => 'properties' in r).map(parseWiki);
+}

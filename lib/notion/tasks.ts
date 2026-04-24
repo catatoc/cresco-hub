@@ -60,3 +60,21 @@ export async function getTask(taskId: string): Promise<Task | null> {
     return null;
   }
 }
+
+export async function queryTasksByCustomerAndTitle(
+  customerId: string,
+  term: string,
+): Promise<Task[]> {
+  const notion = getNotion();
+  const res = await notion.dataSources.query({
+    data_source_id: serverEnv.NOTION_DB_TASKS,
+    page_size: 8,
+    filter: {
+      and: [
+        { property: 'Customer', relation: { contains: customerId } },
+        { property: 'Task name', title: { contains: term } },
+      ],
+    },
+  });
+  return res.results.filter((r): r is any => 'properties' in r).map(parseTask);
+}

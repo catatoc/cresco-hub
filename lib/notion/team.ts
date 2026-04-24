@@ -46,3 +46,37 @@ export async function getTeamMembers(ids: string[]): Promise<TeamMember[]> {
   const members = await Promise.all(unique.map(getTeamMember));
   return members.filter((m): m is TeamMember => m !== null);
 }
+
+export async function queryMembersByCustomerAndName(
+  customerId: string,
+  term: string,
+): Promise<TeamMember[]> {
+  const notion = getNotion();
+  const res = await notion.dataSources.query({
+    data_source_id: serverEnv.NOTION_DB_TEAM,
+    page_size: 8,
+    filter: {
+      and: [
+        { property: 'Customers', relation: { contains: customerId } },
+        { property: 'Name', title: { contains: term } },
+      ],
+    },
+  });
+  return res.results
+    .filter((r): r is any => 'properties' in r)
+    .map((row): TeamMember => {
+      const p = row.properties as Record<string, any>;
+      return teamMemberSchema.parse({
+        id: row.id,
+        name: p.Name?.title?.[0]?.plain_text ?? '',
+        email: p.Email?.email ?? '',
+        role:
+          typeof p.Role?.rich_text?.[0]?.plain_text === 'string'
+            ? p.Role.rich_text[0].plain_text
+            : null,
+        area: p.Area?.select?.name ?? null,
+        customerIds: (p.Customers?.relation ?? []).map((r: { id: string }) => r.id),
+        projectIds: (p.Projects?.relation ?? []).map((r: { id: string }) => r.id),
+      });
+    });
+}
