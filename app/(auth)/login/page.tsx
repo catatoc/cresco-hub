@@ -18,7 +18,7 @@ export default function LoginPage() {
           <p className="text-xs uppercase tracking-wider text-white/50 font-medium mb-3">
             Notion Hub
           </p>
-          <h1 className="text-5xl font-semibold leading-[1.1] tracking-tight mb-4">
+          <h1 className="text-[42px] font-semibold leading-[1.1] tracking-[-0.02em] mb-4">
             Tu proyecto.
             <br />
             <span className="text-[#b4bcf0]">Sin abrir Notion.</span>
