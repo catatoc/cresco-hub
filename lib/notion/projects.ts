@@ -48,3 +48,14 @@ export async function queryProjectsByCustomerAndTitle(
   });
   return res.results.filter((r): r is any => 'properties' in r).map(parseProject);
 }
+
+export async function getProject(id: string): Promise<Project | null> {
+  const notion = getNotion();
+  try {
+    const page = await notion.pages.retrieve({ page_id: id });
+    if (!('properties' in page)) return null;
+    return parseProject(page);
+  } catch {
+    return null;
+  }
+}
