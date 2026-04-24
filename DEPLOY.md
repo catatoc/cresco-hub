@@ -2,6 +2,18 @@
 
 Todo lo que necesitas para pasar del repo al hub en producción.
 
+## ✨ Quick verification after setup
+
+```bash
+npm run smoke
+```
+
+Hits your real Notion with 8 checks (team lookup, customer, current sprint,
+tasks, meetings, projects, wiki, user resolution). Any ❌ tells you exactly
+which service or property name is broken.
+
+Override the default email with `SMOKE_TEST_EMAIL=you@example.com npm run smoke`.
+
 ## 1. Obtener IDs de Notion (data sources, no databases)
 
 El SDK v5 requiere **data source IDs**, no database IDs clásicos.
