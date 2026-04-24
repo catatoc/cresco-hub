@@ -2,12 +2,14 @@ import type { Project } from '@/schemas/project';
 import { cn } from '@/lib/utils';
 import { Calendar, Users, FolderKanban } from 'lucide-react';
 
+// TODO(refactor-C): redesign status pills for full Notion Project status set.
 const STATUS: Record<string, { bg: string; text: string; dot: string; progress: string }> = {
-  'On track':   { bg: 'bg-[#e8f5ec]', text: 'text-[#3f9f5c]',          dot: 'bg-[#3f9f5c]', progress: 'bg-[#3f9f5c]' },
-  'At risk':    { bg: 'bg-[#faf0db]', text: 'text-[#c78a2c]',          dot: 'bg-[#c78a2c]', progress: 'bg-[#c78a2c]' },
-  Blocked:      { bg: 'bg-[#fceaea]', text: 'text-[#d24949]',          dot: 'bg-[#d24949]', progress: 'bg-[#d24949]' },
-  Done:         { bg: 'bg-[#f7f7f8]', text: 'text-muted-foreground',   dot: 'bg-[#8a8a91]', progress: 'bg-[#8a8a91]' },
-  Planning:     { bg: 'bg-[#eeeffc]', text: 'text-[#5e6ad2]',          dot: 'bg-[#5e6ad2]', progress: 'bg-[#5e6ad2]' },
+  'In Progress': { bg: 'bg-[#e8f5ec]', text: 'text-[#3f9f5c]',        dot: 'bg-[#3f9f5c]', progress: 'bg-[#3f9f5c]' },
+  Paused:        { bg: 'bg-[#faf0db]', text: 'text-[#c78a2c]',        dot: 'bg-[#c78a2c]', progress: 'bg-[#c78a2c]' },
+  Canceled:      { bg: 'bg-[#fceaea]', text: 'text-[#d24949]',        dot: 'bg-[#d24949]', progress: 'bg-[#d24949]' },
+  Done:          { bg: 'bg-[#f7f7f8]', text: 'text-muted-foreground', dot: 'bg-[#8a8a91]', progress: 'bg-[#8a8a91]' },
+  Planning:      { bg: 'bg-[#eeeffc]', text: 'text-[#5e6ad2]',        dot: 'bg-[#5e6ad2]', progress: 'bg-[#5e6ad2]' },
+  Backlog:       { bg: 'bg-[#f7f7f8]', text: 'text-muted-foreground', dot: 'bg-[#8a8a91]', progress: 'bg-[#8a8a91]' },
 };
 
 const ACCENTS = [
@@ -30,6 +32,9 @@ export function ProjectCard({ project, accentIndex }: Props) {
   const s = project.status ? STATUS[project.status] : null;
   const accent = ACCENTS[accentIndex % ACCENTS.length];
   const iconBg = ICON_BG[accentIndex % ICON_BG.length];
+
+  const completionPct =
+    typeof project.completion === 'number' ? Math.round(project.completion * 100) : null;
 
   return (
     <a
@@ -55,22 +60,22 @@ export function ProjectCard({ project, accentIndex }: Props) {
         )}
       </div>
 
-      {project.description && (
+      {project.summary && (
         <p className="text-[12px] text-muted-foreground leading-relaxed mb-3 line-clamp-2 min-h-[36px]">
-          {project.description}
+          {project.summary}
         </p>
       )}
 
-      {typeof project.progress === 'number' && (
+      {completionPct !== null && (
         <div className="flex items-center gap-2.5 mb-3">
           <span className="text-[11px] text-muted-foreground whitespace-nowrap">Avance</span>
           <div className="flex-1 h-1 bg-[#f7f7f8] rounded overflow-hidden">
             <div
               className={cn('h-full rounded', s?.progress ?? 'bg-[#5e6ad2]')}
-              style={{ width: `${project.progress}%` }}
+              style={{ width: `${completionPct}%` }}
             />
           </div>
-          <span className="text-[12px] font-semibold min-w-[32px] text-right">{project.progress}%</span>
+          <span className="text-[12px] font-semibold min-w-[32px] text-right">{completionPct}%</span>
         </div>
       )}
 
@@ -79,10 +84,10 @@ export function ProjectCard({ project, accentIndex }: Props) {
           <Users className="w-3 h-3" />
           {project.teamIds.length} en equipo
         </span>
-        {project.deadline && (
+        {project.endDate && (
           <span className="inline-flex items-center gap-1.5">
             <Calendar className="w-3 h-3" />
-            {new Date(project.deadline).toLocaleDateString('es', { month: 'short', year: '2-digit' })}
+            {new Date(project.endDate).toLocaleDateString('es', { month: 'short', year: '2-digit' })}
           </span>
         )}
       </div>

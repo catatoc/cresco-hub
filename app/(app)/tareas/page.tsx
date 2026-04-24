@@ -1,25 +1,23 @@
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
-import { queryTasksByClientAndCycle } from '@/lib/notion/tasks';
-import { currentCycle } from '@/lib/cycles';
+import { queryTasksByCustomerAndSprint } from '@/lib/notion/tasks';
+import { getCurrentSprint } from '@/lib/notion/sprints';
 import { KanbanView } from '@/components/kanban/kanban-view';
 
 export const dynamic = 'force-dynamic';
 
-export default async function TareasPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ cycle?: string }>;
-}) {
+export default async function TareasPage() {
   const ctx = await requireContext();
-  const sp = await searchParams;
-  const cycle = sp.cycle ?? currentCycle();
-  const tasks = await queryTasksByClientAndCycle(ctx.customerId, cycle);
+  // TODO(refactor-C): wire Sprint selector via searchParams; for now use current sprint.
+  const sprint = await getCurrentSprint();
+  const tasks = await queryTasksByCustomerAndSprint(ctx.customerId, sprint?.id ?? null);
+
+  const sprintLabel = sprint?.name ?? 'Sin sprint activo';
 
   return (
     <>
-      <Topbar crumbs={[{ label: 'Tareas' }, { label: 'Sprint activo', muted: true }]} />
-      <KanbanView initialTasks={tasks} cycle={cycle} />
+      <Topbar crumbs={[{ label: 'Tareas' }, { label: sprintLabel, muted: true }]} />
+      <KanbanView initialTasks={tasks} sprintLabel={sprintLabel} />
     </>
   );
 }

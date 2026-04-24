@@ -1,6 +1,6 @@
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Play, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import type { Meeting } from '@/schemas/meeting';
 import type { Task } from '@/schemas/task';
 import { BlocksRenderer } from '@/components/wiki/blocks-renderer';
@@ -42,22 +42,11 @@ export function HeroMeeting({ meeting, blocks, actionItems }: Props) {
                 value={`${fmtTime(start)}${end ? ` → ${fmtTime(end)}` : ''}`}
               />
             )}
-            {meeting.meetUrl && <MetaItem label="Dónde" value="🎥 Google Meet" />}
-            {meeting.recurrence && <MetaItem label="Recurrencia" value={meeting.recurrence} />}
+            {meeting.meetingType && <MetaItem label="Tipo" value={meeting.meetingType} />}
           </div>
 
           <div className="flex gap-2">
-            {meeting.meetUrl && (
-              <a
-                href={meeting.meetUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-[13px] font-medium bg-[#5e6ad2] text-white hover:bg-[#525db9]"
-              >
-                <Play className="w-3.5 h-3.5" />
-                Unirse al Meet
-              </a>
-            )}
+            {/* TODO(refactor-C): restore join button when Meet URL field is added to Notion schema */}
             <a
               href={meeting.url}
               target="_blank"

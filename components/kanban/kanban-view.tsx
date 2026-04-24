@@ -6,12 +6,11 @@ import { BoardClassic } from './board-classic';
 import { BoardWeek } from './board-week';
 import { ViewToggle } from './view-toggle';
 import { CycleNav } from './cycle-nav';
-import { formatCycleLabel } from '@/lib/cycles';
 import { Clock } from 'lucide-react';
 
-type Props = { initialTasks: Task[]; cycle: string };
+type Props = { initialTasks: Task[]; sprintLabel: string };
 
-export function KanbanView({ initialTasks, cycle }: Props) {
+export function KanbanView({ initialTasks, sprintLabel }: Props) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [view, setView] = useState<'classic' | 'week'>('classic');
 
@@ -21,10 +20,9 @@ export function KanbanView({ initialTasks, cycle }: Props) {
         <h1 className="text-[15px] font-semibold">Sprint activo</h1>
         <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[12px] font-medium bg-[#eeeffc] text-[#5e6ad2]">
           <Clock className="w-[11px] h-[11px]" />
-          Semana {cycle.split('-W')[1]}
+          {sprintLabel}
         </span>
-        <span className="text-muted-foreground text-[12px]">{formatCycleLabel(cycle)}</span>
-        <CycleNav cycle={cycle} />
+        <CycleNav />
         <div className="ml-3">
           <ViewToggle view={view} onChange={setView} />
         </div>
@@ -33,7 +31,7 @@ export function KanbanView({ initialTasks, cycle }: Props) {
       {view === 'classic' ? (
         <BoardClassic tasks={tasks} setTasks={setTasks} />
       ) : (
-        <BoardWeek tasks={tasks} cycle={cycle} setTasks={setTasks} />
+        <BoardWeek tasks={tasks} setTasks={setTasks} />
       )}
     </div>
   );

@@ -18,11 +18,13 @@ import { Column } from './column';
 import { TaskCard } from './card';
 import { useMoveTask } from '@/hooks/use-move-task';
 
+// TODO(refactor-C): redesign kanban columns. For now we map the 6 real statuses
+// onto 4 display columns using the old visual vocabulary.
 const COLUMNS: Array<{ title: string; status: TaskStatus; dotClass: string; dotFilled?: boolean }> = [
-  { title: 'Backlog',     status: 'Backlog',     dotClass: 'border-[#a0a0a8] text-[#a0a0a8]' },
-  { title: 'Por hacer',   status: 'Por hacer',   dotClass: 'border-[#57575c] text-[#57575c]' },
-  { title: 'En progreso', status: 'En progreso', dotClass: 'border-[#5e6ad2] text-[#5e6ad2]', dotFilled: true },
-  { title: 'Hecho',       status: 'Hecho',       dotClass: 'border-[#3f9f5c] text-[#3f9f5c]', dotFilled: true },
+  { title: 'Refining',    status: 'Refining',    dotClass: 'border-[#a0a0a8] text-[#a0a0a8]' },
+  { title: 'Not Started', status: 'Not Started', dotClass: 'border-[#57575c] text-[#57575c]' },
+  { title: 'In Progress', status: 'In Progress', dotClass: 'border-[#5e6ad2] text-[#5e6ad2]', dotFilled: true },
+  { title: 'Done',        status: 'Done',        dotClass: 'border-[#3f9f5c] text-[#3f9f5c]', dotFilled: true },
 ];
 
 type Props = {

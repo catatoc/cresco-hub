@@ -36,7 +36,7 @@ export function ActionItems({ tasks }: { tasks: Task[] }) {
   return (
     <div className="border border-border rounded-lg bg-white overflow-hidden">
       {tasks.map((t, i) => {
-        const done = t.status === 'Hecho';
+        const done = t.status === 'Done';
         return (
           <Link
             href={`/tareas/${t.id}`}
@@ -66,9 +66,9 @@ export function ActionItems({ tasks }: { tasks: Task[] }) {
             >
               {t.title}
             </span>
-            {t.number && (
+            {t.type && (
               <span className="px-1.5 rounded text-[11px] font-medium bg-[#eeeffc] text-[#5e6ad2]">
-                {t.number}
+                {t.type}
               </span>
             )}
             <div className="w-[18px] h-[18px] rounded-full bg-[#6da88e] text-white text-[9px] font-semibold grid place-items-center">

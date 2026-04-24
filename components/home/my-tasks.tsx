@@ -4,10 +4,9 @@ import type { Task } from '@/schemas/task';
 import { cn } from '@/lib/utils';
 
 const PRIORITY_FILL: Record<string, string> = {
-  Urgente: '#d24949',
-  Alta: '#c78a2c',
-  Media: '#8a8a91',
-  Baja: '#8a8a91',
+  High: '#c78a2c',
+  Medium: '#8a8a91',
+  Low: '#8a8a91',
 };
 
 function PriorityIcon({ priority }: { priority: Task['priority'] }) {
@@ -16,8 +15,8 @@ function PriorityIcon({ priority }: { priority: Task['priority'] }) {
   return (
     <svg viewBox="0 0 24 24" className="w-2.5 h-2.5" fill={color}>
       <rect x="2" y="10" width="4" height="12" />
-      <rect x="10" y="6" width="4" height="16" opacity={priority === 'Baja' ? 0.3 : 1} />
-      <rect x="18" y="2" width="4" height="20" opacity={priority === 'Urgente' ? 1 : 0.3} />
+      <rect x="10" y="6" width="4" height="16" opacity={priority === 'Low' ? 0.3 : 1} />
+      <rect x="18" y="2" width="4" height="20" opacity={priority === 'High' ? 1 : 0.3} />
     </svg>
   );
 }
@@ -30,15 +29,16 @@ function DueCell({ dueDate }: { dueDate: string | null }) {
   return <span className="text-[11px] text-muted-foreground">{format(d, 'MMM d')}</span>;
 }
 
-function LabelChip({ label }: { label: string }) {
+function TagChip({ tag }: { tag: string }) {
   const map: Record<string, string> = {
-    Frontend: 'bg-[#eef4ff] text-[#3a5fcc]',
-    Backend: 'bg-[#f0f4e6] text-[#556c1d]',
-    Design: 'bg-[#f4ecf8] text-[#7f3aa7]',
-    Docs: 'bg-[#f4ecf8] text-[#7f3aa7]',
-    Review: 'bg-[#fceaea] text-[#a92f2f]',
+    Mobile: 'bg-[#eef4ff] text-[#3a5fcc]',
+    Website: 'bg-[#f0f4e6] text-[#556c1d]',
+    Improvement: 'bg-[#f4ecf8] text-[#7f3aa7]',
+    Marketing: 'bg-[#fceaea] text-[#a92f2f]',
+    Research: 'bg-[#eeeffc] text-[#5e6ad2]',
+    Branding: 'bg-[#faf0db] text-[#c78a2c]',
   };
-  return <span className={cn('px-1.5 rounded text-[11px] font-medium', map[label] ?? 'bg-[#f7f7f8] text-[#57575c]')}>{label}</span>;
+  return <span className={cn('px-1.5 rounded text-[11px] font-medium', map[tag] ?? 'bg-[#f7f7f8] text-[#57575c]')}>{tag}</span>;
 }
 
 export function MyTasks({ tasks }: { tasks: Task[] }) {
@@ -80,20 +80,19 @@ export function MyTasks({ tasks }: { tasks: Task[] }) {
             <span
               className={cn(
                 'w-3.5 h-3.5 rounded-full border-[1.5px] shrink-0',
-                t.status === 'Hecho' && 'bg-[#3f9f5c] border-[#3f9f5c]',
-                t.status === 'En progreso' && 'border-[#5e6ad2]',
-                (t.status === 'Por hacer' || t.status === 'Backlog') && 'border-muted-foreground',
+                t.status === 'Done' && 'bg-[#3f9f5c] border-[#3f9f5c]',
+                t.status === 'In Progress' && 'border-[#5e6ad2]',
+                (t.status === 'Not Started' || t.status === 'Refining') && 'border-muted-foreground',
               )}
               style={
-                t.status === 'En progreso'
+                t.status === 'In Progress'
                   ? { background: 'conic-gradient(#5e6ad2 0 60%, transparent 60% 100%)' }
                   : undefined
               }
             />
             <PriorityIcon priority={t.priority} />
-            {t.number && <span className="text-[11px] text-muted-foreground font-medium w-11 shrink-0">{t.number}</span>}
             <span className="text-[13px] flex-1 truncate">{t.title}</span>
-            {t.labels[0] && <LabelChip label={t.labels[0]} />}
+            {t.tags[0] && <TagChip tag={t.tags[0]} />}
             <DueCell dueDate={t.dueDate} />
             <div className="w-5 h-5 rounded-full bg-[#6da88e] text-white text-[9px] font-semibold grid place-items-center shrink-0">DL</div>
           </Link>

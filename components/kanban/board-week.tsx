@@ -19,22 +19,22 @@ import { TaskCard } from './card';
 import { WeekStripe } from './week-stripe';
 import { useMoveTask } from '@/hooks/use-move-task';
 
+// TODO(refactor-C): rebuild week view on top of Sprint start/end dates.
 const COLUMNS: Array<{ title: string; status: TaskStatus; dotClass: string; dotFilled?: boolean }> = [
-  { title: 'Por hacer',          status: 'Por hacer',   dotClass: 'border-[#57575c] text-[#57575c]' },
-  { title: 'En progreso',        status: 'En progreso', dotClass: 'border-[#5e6ad2] text-[#5e6ad2]', dotFilled: true },
-  { title: 'Hecho esta semana',  status: 'Hecho',       dotClass: 'border-[#3f9f5c] text-[#3f9f5c]', dotFilled: true },
+  { title: 'Not Started',       status: 'Not Started', dotClass: 'border-[#57575c] text-[#57575c]' },
+  { title: 'In Progress',       status: 'In Progress', dotClass: 'border-[#5e6ad2] text-[#5e6ad2]', dotFilled: true },
+  { title: 'Done esta semana',  status: 'Done',        dotClass: 'border-[#3f9f5c] text-[#3f9f5c]', dotFilled: true },
 ];
 
 type Props = {
   tasks: Task[];
-  cycle: string;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 };
 
-export function BoardWeek({ tasks, cycle, setTasks }: Props) {
+export function BoardWeek({ tasks, setTasks }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const { move } = useMoveTask(setTasks);
-  const active = tasks.filter((t) => t.status !== 'Backlog');
+  const active = tasks.filter((t) => t.status !== 'Refining' && t.status !== 'Archived');
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -63,7 +63,7 @@ export function BoardWeek({ tasks, cycle, setTasks }: Props) {
       onDragCancel={() => setActiveId(null)}
     >
       <div className="flex-1 flex flex-col overflow-hidden">
-        <WeekStripe tasks={active} cycle={cycle} />
+        <WeekStripe tasks={active} />
         <div className="flex-1 grid grid-cols-3 gap-2.5 pb-5 overflow-auto">
           {COLUMNS.map((col) => (
             <Column

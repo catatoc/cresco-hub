@@ -1,8 +1,9 @@
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
-import { queryMeetingsByClient, getMeeting } from '@/lib/notion/meetings';
+import { queryMeetingsByCustomer, getMeeting } from '@/lib/notion/meetings';
 import { getBlocks } from '@/lib/notion/blocks';
 import { getTask } from '@/lib/notion/tasks';
+import type { Task } from '@/schemas/task';
 import { notFound } from 'next/navigation';
 import { HeroMeeting } from '@/components/meetings/hero-meeting';
 import { HistoryPanel } from '@/components/meetings/history-panel';
@@ -18,12 +19,14 @@ export default async function MeetingDetailPage({
   const { meetingId } = await params;
 
   const meeting = await getMeeting(meetingId);
-  if (!meeting || meeting.clientId !== ctx.customerId) notFound();
+  if (!meeting || meeting.customerId !== ctx.customerId) notFound();
 
   const [meetings, blocks, actionItems] = await Promise.all([
-    queryMeetingsByClient(ctx.customerId),
+    queryMeetingsByCustomer(ctx.customerId),
     getBlocks(meetingId),
-    Promise.all(meeting.actionItemIds.map(getTask)).then((ts) => ts.filter((t): t is NonNullable<typeof t> => t !== null)),
+    Promise.all(meeting.taskIds.map(getTask)).then((ts) =>
+      ts.filter((t: Task | null): t is Task => t !== null),
+    ),
   ]);
 
   return (

@@ -1,6 +1,7 @@
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
-import { queryWikiByClient, getWikiPageBlocks } from '@/lib/notion/wiki';
+import { queryWikiByCustomer, getWikiPageBlocks } from '@/lib/notion/wiki';
+import type { WikiPage } from '@/schemas/wiki';
 import { WikiTree } from '@/components/wiki/tree';
 import { BlocksRenderer } from '@/components/wiki/blocks-renderer';
 import { PageProperties } from '@/components/wiki/page-properties';
@@ -18,21 +19,21 @@ export default async function WikiPageView({
   const { pageId } = await params;
 
   const [pages, blocks] = await Promise.all([
-    queryWikiByClient(ctx.customerId),
+    queryWikiByCustomer(ctx.customerId),
     getWikiPageBlocks(pageId),
   ]);
 
-  const page = pages.find((p) => p.id === pageId);
+  const page = pages.find((p: WikiPage) => p.id === pageId);
   if (!page) notFound();
 
-  const parent = page.parentId ? pages.find((p) => p.id === page.parentId) : null;
+  const category = page.categories[0] ?? null;
 
   return (
     <>
       <Topbar
         crumbs={[
           { label: 'Wiki' },
-          ...(parent ? [{ label: parent.title, muted: true }] : []),
+          ...(category ? [{ label: category, muted: true }] : []),
           { label: page.title },
         ]}
       >

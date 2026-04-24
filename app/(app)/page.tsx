@@ -1,32 +1,39 @@
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
 import { getHomeData } from '@/lib/home/queries';
-import { currentCycle, formatCycleLabel } from '@/lib/cycles';
+import { getCurrentSprint } from '@/lib/notion/sprints';
 import { Greeting } from '@/components/home/greeting';
 import { StatsStrip } from '@/components/home/stats-strip';
 import { MyTasks } from '@/components/home/my-tasks';
 import { NextMeeting } from '@/components/home/next-meeting';
 import { WikiRecents } from '@/components/home/wiki-recents';
+import type { Task } from '@/schemas/task';
 import { Clock } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const ctx = await requireContext();
-  const cycle = currentCycle();
-  const data = await getHomeData(ctx.customerId, cycle);
+  const sprint = await getCurrentSprint();
+  const data = await getHomeData(ctx.customerId, sprint?.id ?? null);
 
   const overdue = data.tasks.filter(
-    (t) => t.status !== 'Hecho' && t.dueDate && new Date(t.dueDate).getTime() < Date.now() &&
-           new Date(t.dueDate).toDateString() !== new Date().toDateString()
+    (t: Task) =>
+      t.status !== 'Done' &&
+      t.status !== 'Archived' &&
+      t.dueDate &&
+      new Date(t.dueDate).getTime() < Date.now() &&
+      new Date(t.dueDate).toDateString() !== new Date().toDateString(),
   ).length;
+
+  const sprintLabel = sprint?.name ?? 'Sin sprint activo';
 
   return (
     <>
       <Topbar crumbs={[{ label: 'Home' }]}>
         <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[12px] text-muted-foreground border border-border bg-white">
           <Clock className="w-3 h-3" />
-          {cycle.replace('-W', ' · W')} · {formatCycleLabel(cycle)}
+          {sprintLabel}
         </span>
       </Topbar>
 

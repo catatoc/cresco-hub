@@ -10,10 +10,12 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 const STATUS_STYLE: Record<string, string> = {
-  Backlog: 'bg-[#f7f7f8] text-muted-foreground',
-  'Por hacer': 'bg-[#f7f7f8] text-[#57575c]',
-  'En progreso': 'bg-[#eeeffc] text-[#5e6ad2]',
-  Hecho: 'bg-[#e8f5ec] text-[#3f9f5c]',
+  Refining: 'bg-[#f7f7f8] text-muted-foreground',
+  'Not Started': 'bg-[#f7f7f8] text-[#57575c]',
+  'In Progress': 'bg-[#eeeffc] text-[#5e6ad2]',
+  'In Review': 'bg-[#faf0db] text-[#c78a2c]',
+  Done: 'bg-[#e8f5ec] text-[#3f9f5c]',
+  Archived: 'bg-[#f7f7f8] text-muted-foreground',
 };
 
 type Props = { task: Task; blocks: any[] };
@@ -31,7 +33,7 @@ export function TaskDrawer({ task, blocks }: Props) {
       <SheetContent className="w-full sm:max-w-[520px] overflow-y-auto p-6">
         <div className="mb-4">
           <div className="flex items-center gap-2 text-[12px] text-muted-foreground mb-2">
-            {task.number && <span className="font-medium">{task.number}</span>}
+            {task.type && <span className="font-medium">{task.type}</span>}
             <span
               className={`px-2 py-0.5 rounded text-[11px] font-medium ${
                 STATUS_STYLE[task.status] ?? ''
@@ -54,10 +56,14 @@ export function TaskDrawer({ task, blocks }: Props) {
               ? format(new Date(task.dueDate), "d 'de' MMMM", { locale: es })
               : '—'}
           </span>
-          <span className="text-muted-foreground">Ciclo</span>
-          <span>{task.cycle ?? '—'}</span>
-          <span className="text-muted-foreground">Etiquetas</span>
-          <span>{task.labels.join(', ') || '—'}</span>
+          <span className="text-muted-foreground">Planned</span>
+          <span>
+            {task.plannedDate
+              ? format(new Date(task.plannedDate), "d 'de' MMMM", { locale: es })
+              : '—'}
+          </span>
+          <span className="text-muted-foreground">Tags</span>
+          <span>{task.tags.join(', ') || '—'}</span>
         </div>
 
         {blocks.length > 0 ? (

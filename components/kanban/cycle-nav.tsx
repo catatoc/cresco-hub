@@ -1,30 +1,22 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { shiftCycle } from '@/lib/cycles';
 
-export function CycleNav({ cycle }: { cycle: string }) {
-  const router = useRouter();
-  const sp = useSearchParams();
-
-  const go = (delta: number) => {
-    const params = new URLSearchParams(sp);
-    params.set('cycle', shiftCycle(cycle, delta));
-    router.push(`?${params.toString()}`);
-  };
-
+// TODO(refactor-C): wire Sprint navigation (prev/next via Sprint ID).
+export function CycleNav() {
   return (
     <div className="flex gap-1 ml-auto">
       <button
-        onClick={() => go(-1)}
-        className="w-6 h-6 border border-border rounded-[5px] bg-white hover:bg-[#f7f7f8] grid place-items-center text-muted-foreground hover:text-foreground"
+        disabled
+        aria-label="Sprint anterior"
+        className="w-6 h-6 border border-border rounded-[5px] bg-white grid place-items-center text-muted-foreground opacity-50 cursor-not-allowed"
       >
         <ChevronLeft className="w-3 h-3" />
       </button>
       <button
-        onClick={() => go(1)}
-        className="w-6 h-6 border border-border rounded-[5px] bg-white hover:bg-[#f7f7f8] grid place-items-center text-muted-foreground hover:text-foreground"
+        disabled
+        aria-label="Sprint siguiente"
+        className="w-6 h-6 border border-border rounded-[5px] bg-white grid place-items-center text-muted-foreground opacity-50 cursor-not-allowed"
       >
         <ChevronRight className="w-3 h-3" />
       </button>

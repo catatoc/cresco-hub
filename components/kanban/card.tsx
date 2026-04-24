@@ -7,10 +7,9 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 const PRIORITY_COLOR: Record<string, string> = {
-  Urgente: '#d24949',
-  Alta: '#c78a2c',
-  Media: '#8a8a91',
-  Baja: '#8a8a91',
+  High: '#c78a2c',
+  Medium: '#8a8a91',
+  Low: '#8a8a91',
 };
 
 function PriorityBars({ priority }: { priority: Task['priority'] }) {
@@ -21,28 +20,33 @@ function PriorityBars({ priority }: { priority: Task['priority'] }) {
       <rect x="2" y="10" width="4" height="12" />
       <rect
         x="10"
-        y={priority === 'Baja' ? 10 : 6}
+        y={priority === 'Low' ? 10 : 6}
         width="4"
-        height={priority === 'Baja' ? 12 : 16}
-        opacity={priority === 'Baja' ? 0.3 : 1}
+        height={priority === 'Low' ? 12 : 16}
+        opacity={priority === 'Low' ? 0.3 : 1}
       />
       <rect
         x="18"
-        y={priority === 'Urgente' ? 6 : 2}
+        y={priority === 'High' ? 6 : 2}
         width="4"
-        height={priority === 'Urgente' ? 16 : 20}
-        opacity={priority === 'Urgente' ? 1 : 0.3}
+        height={priority === 'High' ? 16 : 20}
+        opacity={priority === 'High' ? 1 : 0.3}
       />
     </svg>
   );
 }
 
-const LABEL_MAP: Record<string, string> = {
-  Frontend: 'bg-[#eef4ff] text-[#3a5fcc]',
-  Backend: 'bg-[#f0f4e6] text-[#556c1d]',
-  Design: 'bg-[#f4ecf8] text-[#7f3aa7]',
-  Docs: 'bg-[#f4ecf8] text-[#7f3aa7]',
-  Review: 'bg-[#fceaea] text-[#a92f2f]',
+const TAG_MAP: Record<string, string> = {
+  Mobile: 'bg-[#eef4ff] text-[#3a5fcc]',
+  Website: 'bg-[#f0f4e6] text-[#556c1d]',
+  Improvement: 'bg-[#f4ecf8] text-[#7f3aa7]',
+  Marketing: 'bg-[#fceaea] text-[#a92f2f]',
+  Research: 'bg-[#eeeffc] text-[#5e6ad2]',
+  Branding: 'bg-[#faf0db] text-[#c78a2c]',
+  Metrics: 'bg-[#e8f5ec] text-[#3f9f5c]',
+  Meeting: 'bg-[#f7f7f8] text-[#57575c]',
+  Email: 'bg-[#f7f7f8] text-[#57575c]',
+  'Video production': 'bg-[#f4ecf8] text-[#7f3aa7]',
 };
 
 type Props = { task: Task; showDayChip?: boolean; isOverlay?: boolean };
@@ -51,8 +55,8 @@ export function TaskCard({ task, showDayChip, isOverlay }: Props) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: task.id, disabled: isOverlay });
 
-  const isDone = task.status === 'Hecho';
-  const isProgress = task.status === 'En progreso';
+  const isDone = task.status === 'Done';
+  const isProgress = task.status === 'In Progress';
 
   const dayChip = (() => {
     if (!task.dueDate) return null;
@@ -85,7 +89,7 @@ export function TaskCard({ task, showDayChip, isOverlay }: Props) {
     >
       <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground mb-1">
         <PriorityBars priority={task.priority} />
-        {task.number && <span className="font-medium">{task.number}</span>}
+        {task.type && <span className="font-medium">{task.type}</span>}
       </div>
 
       <Link
@@ -100,14 +104,14 @@ export function TaskCard({ task, showDayChip, isOverlay }: Props) {
       </Link>
 
       <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-        {task.labels[0] && (
+        {task.tags[0] && (
           <span
             className={cn(
               'px-1.5 rounded text-[11px] font-medium',
-              LABEL_MAP[task.labels[0]] ?? 'bg-[#f7f7f8] text-[#57575c]',
+              TAG_MAP[task.tags[0]] ?? 'bg-[#f7f7f8] text-[#57575c]',
             )}
           >
-            {task.labels[0]}
+            {task.tags[0]}
           </span>
         )}
         {showDayChip && dayChip ? (

@@ -1,18 +1,18 @@
-import { queryTasksByClientAndCycle } from '@/lib/notion/tasks';
-import { queryMeetingsByClient } from '@/lib/notion/meetings';
-import { queryWikiByClient } from '@/lib/notion/wiki';
+import { queryTasksByCustomerAndSprint } from '@/lib/notion/tasks';
+import { queryMeetingsByCustomer } from '@/lib/notion/meetings';
+import { queryWikiByCustomer } from '@/lib/notion/wiki';
 
-export async function getHomeData(clientId: string, cycle: string) {
+export async function getHomeData(customerId: string, sprintId: string | null) {
   const [tasks, meetings, wiki] = await Promise.all([
-    queryTasksByClientAndCycle(clientId, cycle),
-    queryMeetingsByClient(clientId),
-    queryWikiByClient(clientId),
+    queryTasksByCustomerAndSprint(customerId, sprintId),
+    queryMeetingsByCustomer(customerId),
+    queryWikiByCustomer(customerId),
   ]);
 
   const stats = {
-    inProgress: tasks.filter((t) => t.status === 'En progreso').length,
-    todo: tasks.filter((t) => t.status === 'Por hacer').length,
-    done: tasks.filter((t) => t.status === 'Hecho').length,
+    inProgress: tasks.filter((t) => t.status === 'In Progress').length,
+    todo: tasks.filter((t) => t.status === 'Not Started').length,
+    done: tasks.filter((t) => t.status === 'Done').length,
     total: tasks.length,
   };
 
@@ -29,7 +29,7 @@ export async function getHomeData(clientId: string, cycle: string) {
   const todayStr = new Date().toDateString();
   const myTasksToday = tasks
     .filter((t) => {
-      if (t.status === 'Hecho') return false;
+      if (t.status === 'Done' || t.status === 'Archived') return false;
       if (!t.dueDate) return true;
       const d = new Date(t.dueDate);
       return d.toDateString() === todayStr || d.getTime() < Date.now();

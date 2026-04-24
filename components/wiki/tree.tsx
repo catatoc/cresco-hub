@@ -3,73 +3,40 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronRight, Search, FileText } from 'lucide-react';
+import { Search, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { WikiPage } from '@/schemas/wiki';
 
-type Node = WikiPage & { children: Node[] };
-
-function buildTree(pages: WikiPage[]): Node[] {
-  const byId = new Map<string, Node>();
-  pages.forEach((p) => byId.set(p.id, { ...p, children: [] }));
-
-  const roots: Node[] = [];
-  pages.forEach((p) => {
-    const n = byId.get(p.id)!;
-    if (p.parentId && byId.has(p.parentId)) byId.get(p.parentId)!.children.push(n);
-    else roots.push(n);
-  });
-  return roots;
+// TODO(refactor-C): wiki has no `parentId` anymore — for now we group by first
+// Category. Design a proper tree or category-grouped navigation in Refactor C.
+function groupByCategory(pages: WikiPage[]): Array<{ category: string; pages: WikiPage[] }> {
+  const map = new Map<string, WikiPage[]>();
+  for (const p of pages) {
+    const key = p.categories[0] ?? 'Sin categoría';
+    const arr = map.get(key) ?? [];
+    arr.push(p);
+    map.set(key, arr);
+  }
+  return Array.from(map.entries()).map(([category, pages]) => ({ category, pages }));
 }
 
-function TreeNode({ node, level = 0 }: { node: Node; level?: number }) {
-  const [open, setOpen] = useState(true);
+function PageRow({ page }: { page: WikiPage }) {
   const pathname = usePathname();
-  const active = pathname === `/wiki/${node.id}`;
-  const hasChildren = node.children.length > 0;
+  const active = pathname === `/wiki/${page.id}`;
 
   return (
-    <div>
-      <div
-        className={cn(
-          'flex items-center gap-1 px-1.5 py-1 rounded-md text-[13px] text-muted-foreground hover:bg-black/[0.04] hover:text-foreground',
-          active && 'bg-white text-foreground font-medium border border-border shadow-sm',
-        )}
-      >
-        {hasChildren ? (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setOpen((o) => !o);
-            }}
-            className="w-3.5 h-3.5 text-muted-foreground shrink-0 grid place-items-center hover:bg-black/[0.06] rounded"
-            aria-label={open ? 'Colapsar' : 'Expandir'}
-          >
-            <ChevronRight
-              className={cn('w-2.5 h-2.5 transition-transform', open && 'rotate-90')}
-            />
-          </button>
-        ) : (
-          <span className="w-3.5 h-3.5 shrink-0" />
-        )}
-        <Link
-          href={`/wiki/${node.id}`}
-          className="flex-1 flex items-center gap-2 min-w-0 py-0"
-        >
-          <span className="text-[13px] w-4 shrink-0 grid place-items-center">
-            {node.icon ?? <FileText className="w-3 h-3" />}
-          </span>
-          <span className="truncate">{node.title}</span>
-        </Link>
-      </div>
-      {hasChildren && open && (
-        <div className="ml-[18px]">
-          {node.children.map((c) => (
-            <TreeNode key={c.id} node={c} level={level + 1} />
-          ))}
-        </div>
+    <Link
+      href={`/wiki/${page.id}`}
+      className={cn(
+        'flex items-center gap-2 px-1.5 py-1 rounded-md text-[13px] text-muted-foreground hover:bg-black/[0.04] hover:text-foreground',
+        active && 'bg-white text-foreground font-medium border border-border shadow-sm',
       )}
-    </div>
+    >
+      <span className="text-[13px] w-4 shrink-0 grid place-items-center">
+        {page.icon ?? <FileText className="w-3 h-3" />}
+      </span>
+      <span className="truncate">{page.title}</span>
+    </Link>
   );
 }
 
@@ -82,7 +49,7 @@ export function WikiTree({ pages }: { pages: WikiPage[] }) {
         : pages,
     [pages, q],
   );
-  const tree = useMemo(() => buildTree(filtered), [filtered]);
+  const groups = useMemo(() => groupByCategory(filtered), [filtered]);
 
   return (
     <aside className="border-r border-border bg-[#f7f7f8] overflow-auto p-2">
@@ -98,13 +65,17 @@ export function WikiTree({ pages }: { pages: WikiPage[] }) {
           ⌘K
         </kbd>
       </div>
-      <div className="text-[10px] uppercase font-semibold tracking-[0.04em] text-muted-foreground p-2">
-        Wiki
-      </div>
-      {tree.map((n) => (
-        <TreeNode key={n.id} node={n} />
+      {groups.map(({ category, pages }) => (
+        <div key={category} className="mb-3">
+          <div className="text-[10px] uppercase font-semibold tracking-[0.04em] text-muted-foreground p-2">
+            {category}
+          </div>
+          {pages.map((p) => (
+            <PageRow key={p.id} page={p} />
+          ))}
+        </div>
       ))}
-      {tree.length === 0 && (
+      {groups.length === 0 && (
         <div className="text-[12px] text-muted-foreground text-center p-4">
           Sin resultados.
         </div>

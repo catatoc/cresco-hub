@@ -1,6 +1,5 @@
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Video } from 'lucide-react';
 import type { Meeting } from '@/schemas/meeting';
 import Link from 'next/link';
 
@@ -42,22 +41,13 @@ export function NextMeeting({ meeting }: { meeting: Meeting | null }) {
           </div>
         )}
         <div className="text-[15px] font-medium mb-1.5">{meeting.title}</div>
-        <div className="text-[12px] text-muted-foreground flex items-center gap-2">
-          {meeting.meetUrl && (
-            <>
-              <Video className="w-3.5 h-3.5" />
-              <span>Google Meet</span>
-            </>
-          )}
-          {meeting.meetUrl && meeting.recurrence && <span>·</span>}
-          {meeting.recurrence && <span>{meeting.recurrence}</span>}
-        </div>
+        {meeting.meetingType && (
+          <div className="text-[12px] text-muted-foreground flex items-center gap-2">
+            <span>{meeting.meetingType}</span>
+          </div>
+        )}
         <div className="mt-3.5 pt-3 border-t border-dashed border-border flex gap-2">
-          {meeting.meetUrl && (
-            <a href={meeting.meetUrl} target="_blank" rel="noreferrer" className="px-2.5 py-1 rounded-md text-[12px] font-medium bg-[#5e6ad2] text-white hover:bg-[#525db9]">
-              Unirse
-            </a>
-          )}
+          {/* TODO(refactor-C): restore Unirse button once Meet URL field is added to Notion schema */}
           <a href={meeting.url} target="_blank" rel="noreferrer" className="px-2.5 py-1 rounded-md text-[12px] font-medium border border-border bg-white hover:bg-[#f7f7f8]">
             Ver agenda
           </a>

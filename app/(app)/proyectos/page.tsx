@@ -1,13 +1,13 @@
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
-import { queryProjectsByClient } from '@/lib/notion/projects';
+import { queryProjectsByCustomer } from '@/lib/notion/projects';
 import { ProjectsView } from '@/components/projects/projects-view';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ProyectosPage() {
   const ctx = await requireContext();
-  const projects = await queryProjectsByClient(ctx.customerId);
+  const projects = await queryProjectsByCustomer(ctx.customerId);
 
   return (
     <>

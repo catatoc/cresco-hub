@@ -1,8 +1,10 @@
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
-import { queryMeetingsByClient } from '@/lib/notion/meetings';
+import { queryMeetingsByCustomer } from '@/lib/notion/meetings';
 import { getBlocks } from '@/lib/notion/blocks';
 import { getTask } from '@/lib/notion/tasks';
+import type { Meeting } from '@/schemas/meeting';
+import type { Task } from '@/schemas/task';
 import { HeroMeeting } from '@/components/meetings/hero-meeting';
 import { HistoryPanel } from '@/components/meetings/history-panel';
 
@@ -10,13 +12,13 @@ export const dynamic = 'force-dynamic';
 
 export default async function ReunionesPage() {
   const ctx = await requireContext();
-  const meetings = await queryMeetingsByClient(ctx.customerId);
+  const meetings = await queryMeetingsByCustomer(ctx.customerId);
 
   const now = Date.now();
   const currentOrNext =
     meetings
-      .filter((m) => m.date)
-      .sort((a, b) => {
+      .filter((m: Meeting) => m.date)
+      .sort((a: Meeting, b: Meeting) => {
         const ta = new Date(a.date!).getTime();
         const tb = new Date(b.date!).getTime();
         const futureA = ta >= now - 86400_000;
@@ -29,7 +31,9 @@ export default async function ReunionesPage() {
   const [blocks, actionItems] = currentOrNext
     ? await Promise.all([
         getBlocks(currentOrNext.id),
-        Promise.all(currentOrNext.actionItemIds.map(getTask)).then((ts) => ts.filter((t): t is NonNullable<typeof t> => t !== null)),
+        Promise.all(currentOrNext.taskIds.map(getTask)).then((ts) =>
+          ts.filter((t: Task | null): t is Task => t !== null),
+        ),
       ])
     : [[], []];
 
