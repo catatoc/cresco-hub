@@ -1,6 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import type { Task } from '@/schemas/task';
 import { cn } from '@/lib/utils';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const PRIORITY_COLOR: Record<string, string> = {
   Urgente: '#d24949',
@@ -41,9 +45,12 @@ const LABEL_MAP: Record<string, string> = {
   Review: 'bg-[#fceaea] text-[#a92f2f]',
 };
 
-type Props = { task: Task; showDayChip?: boolean };
+type Props = { task: Task; showDayChip?: boolean; isOverlay?: boolean };
 
-export function TaskCard({ task, showDayChip }: Props) {
+export function TaskCard({ task, showDayChip, isOverlay }: Props) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: task.id, disabled: isOverlay });
+
   const isDone = task.status === 'Hecho';
   const isProgress = task.status === 'En progreso';
 
@@ -58,13 +65,22 @@ export function TaskCard({ task, showDayChip }: Props) {
     return { label, today: isToday };
   })();
 
+  const style = isOverlay
+    ? undefined
+    : { transform: CSS.Transform.toString(transform), transition };
+
   return (
-    <Link
-      href={`/tareas/${task.id}`}
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...(!isOverlay ? attributes : {})}
+      {...(!isOverlay ? listeners : {})}
       className={cn(
-        'bg-white border border-border rounded-md p-2.5 cursor-grab hover:shadow-sm transition-all block',
+        'bg-white border border-border rounded-md p-2.5 cursor-grab active:cursor-grabbing hover:shadow-sm transition-shadow',
         isDone && 'opacity-75',
         isProgress && 'border-[#c9cbe8] shadow-[0_0_0_1px_rgba(94,106,210,.12)]',
+        isDragging && !isOverlay && 'opacity-40',
+        isOverlay && 'shadow-lg rotate-2 cursor-grabbing',
       )}
     >
       <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground mb-1">
@@ -72,18 +88,25 @@ export function TaskCard({ task, showDayChip }: Props) {
         {task.number && <span className="font-medium">{task.number}</span>}
       </div>
 
-      <div
+      <Link
+        href={`/tareas/${task.id}`}
+        onPointerDown={(e) => e.stopPropagation()}
         className={cn(
-          'text-[13px] leading-tight mb-2',
+          'block text-[13px] leading-tight mb-2 hover:underline',
           isDone && 'line-through text-muted-foreground',
         )}
       >
         {task.title}
-      </div>
+      </Link>
 
       <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
         {task.labels[0] && (
-          <span className={cn('px-1.5 rounded text-[11px] font-medium', LABEL_MAP[task.labels[0]] ?? 'bg-[#f7f7f8] text-[#57575c]')}>
+          <span
+            className={cn(
+              'px-1.5 rounded text-[11px] font-medium',
+              LABEL_MAP[task.labels[0]] ?? 'bg-[#f7f7f8] text-[#57575c]',
+            )}
+          >
             {task.labels[0]}
           </span>
         )}
@@ -107,6 +130,6 @@ export function TaskCard({ task, showDayChip }: Props) {
           DL
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

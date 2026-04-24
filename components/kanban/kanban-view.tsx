@@ -12,7 +12,7 @@ import { Clock } from 'lucide-react';
 type Props = { initialTasks: Task[]; cycle: string };
 
 export function KanbanView({ initialTasks, cycle }: Props) {
-  const [tasks] = useState<Task[]>(initialTasks);
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [view, setView] = useState<'classic' | 'week'>('classic');
 
   return (
@@ -31,9 +31,9 @@ export function KanbanView({ initialTasks, cycle }: Props) {
       </div>
 
       {view === 'classic' ? (
-        <BoardClassic tasks={tasks} />
+        <BoardClassic tasks={tasks} setTasks={setTasks} />
       ) : (
-        <BoardWeek tasks={tasks} cycle={cycle} />
+        <BoardWeek tasks={tasks} cycle={cycle} setTasks={setTasks} />
       )}
     </div>
   );
