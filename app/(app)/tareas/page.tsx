@@ -4,7 +4,7 @@ import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
 import { queryTasksByCustomerAndSprint } from '@/lib/notion/tasks';
 import { getCurrentSprint, getSprint, listSprints } from '@/lib/notion/sprints';
-import { getUsers } from '@/lib/notion/users';
+import { getTeamMembers } from '@/lib/notion/team';
 import { KanbanView } from '@/components/kanban/kanban-view';
 
 export const dynamic = 'force-dynamic';
@@ -33,8 +33,8 @@ export default async function TareasPage({
 
   const tasks = await queryTasksByCustomerAndSprint(ctx.customerId, sprint?.id ?? null);
 
-  const userIds = Array.from(new Set(tasks.flatMap((t) => t.assigneeIds)));
-  const users = await getUsers(userIds);
+  const memberIds = Array.from(new Set(tasks.flatMap((t) => t.assigneeIds)));
+  const members = await getTeamMembers(memberIds);
 
   const sprintLabel = sprint?.name ?? 'Sin sprint activo';
   const sprintDates = sprint ? formatSprintDates(sprint.startDate, sprint.endDate) : null;
@@ -48,7 +48,7 @@ export default async function TareasPage({
         sprintLabel={sprintLabel}
         currentSprintId={sprint?.id ?? null}
         allSprintIds={sprints.map((s) => s.id)}
-        users={users}
+        members={members}
       />
     </>
   );

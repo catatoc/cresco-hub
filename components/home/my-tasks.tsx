@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { format, isToday, isPast } from 'date-fns';
-import type { NotionUser } from '@/schemas/notion-user';
+import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
 import { cn } from '@/lib/utils';
 import { AssigneeStack } from '@/components/kanban/card';
@@ -45,10 +45,10 @@ function TagChip({ tag }: { tag: string }) {
 
 type Props = {
   tasks: Task[];
-  usersById: Map<string, NotionUser>;
+  membersById: Map<string, TeamMember>;
 };
 
-export function MyTasks({ tasks, usersById }: Props) {
+export function MyTasks({ tasks, membersById }: Props) {
   if (tasks.length === 0) {
     return (
       <div className="mb-8">
@@ -77,8 +77,8 @@ export function MyTasks({ tasks, usersById }: Props) {
       <div className="border border-border rounded-lg bg-white overflow-hidden">
         {tasks.map((t, i) => {
           const assignees = t.assigneeIds
-            .map((id) => usersById.get(id))
-            .filter((u): u is NotionUser => !!u);
+            .map((id) => membersById.get(id))
+            .filter((m): m is TeamMember => !!m);
           return (
             <Link
               href={`/tareas/${t.id}`}

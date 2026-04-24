@@ -13,7 +13,7 @@ import {
   type DragEndEvent,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import type { NotionUser } from '@/schemas/notion-user';
+import type { TeamMember } from '@/schemas/team-member';
 import type { Task, TaskStatus } from '@/schemas/task';
 import { Column } from './column';
 import { TaskCard } from './card';
@@ -58,10 +58,10 @@ const COLUMNS: WeekColumn[] = [
 type Props = {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
-  usersById: Map<string, NotionUser>;
+  membersById: Map<string, TeamMember>;
 };
 
-export function BoardWeek({ tasks, setTasks, usersById }: Props) {
+export function BoardWeek({ tasks, setTasks, membersById }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const { move } = useMoveTask(setTasks);
   // Week view: ignore Refining-only (triage), In Review, and Archived.
@@ -108,7 +108,7 @@ export function BoardWeek({ tasks, setTasks, usersById }: Props) {
               dotClass={col.dotClass}
               dotFilled={col.dotFilled}
               showDayChip
-              usersById={usersById}
+              membersById={membersById}
             />
           ))}
         </div>
@@ -119,8 +119,8 @@ export function BoardWeek({ tasks, setTasks, usersById }: Props) {
             task={dragged}
             isOverlay
             assignees={dragged.assigneeIds
-              .map((id) => usersById.get(id))
-              .filter((u): u is NotionUser => !!u)}
+              .map((id) => membersById.get(id))
+              .filter((m): m is TeamMember => !!m)}
           />
         )}
       </DragOverlay>

@@ -3,9 +3,7 @@ import { requireContext } from '@/lib/auth/require-context';
 import { queryMeetingsByCustomer, getMeeting } from '@/lib/notion/meetings';
 import { getBlocks } from '@/lib/notion/blocks';
 import { getTask } from '@/lib/notion/tasks';
-import { getUsers } from '@/lib/notion/users';
 import { getTeamMembers } from '@/lib/notion/team';
-import type { NotionUser } from '@/schemas/notion-user';
 import type { Task } from '@/schemas/task';
 import { notFound } from 'next/navigation';
 import { HeroMeeting } from '@/components/meetings/hero-meeting';
@@ -24,26 +22,22 @@ export default async function MeetingDetailPage({
   const meeting = await getMeeting(meetingId);
   if (!meeting || meeting.customerId !== ctx.customerId) notFound();
 
-  const [meetings, blocks, actionItems, attendees, teamMembers] = await Promise.all([
+  const [meetings, blocks, actionItems] = await Promise.all([
     queryMeetingsByCustomer(ctx.customerId),
     getBlocks(meetingId),
     Promise.all(meeting.taskIds.map(getTask)).then((ts) =>
       ts.filter((t: Task | null): t is Task => t !== null),
     ),
-    getUsers(meeting.attendeeIds),
-    getTeamMembers(meeting.teamIds),
   ]);
 
-  // Build a resolver that includes action-item assignees too.
-  const actionItemUserIds = Array.from(
-    new Set(actionItems.flatMap((t) => t.assigneeIds)),
+  const memberIds = Array.from(
+    new Set([
+      ...meeting.teamIds,
+      ...actionItems.flatMap((t) => t.assigneeIds),
+    ]),
   );
-  const extraUsers = await getUsers(
-    actionItemUserIds.filter((id) => !attendees.some((a) => a.id === id)),
-  );
-  const usersById = new Map<string, NotionUser>(
-    [...attendees, ...extraUsers].map((u) => [u.id, u]),
-  );
+  const members = await getTeamMembers(memberIds);
+  const membersById = new Map(members.map((m) => [m.id, m]));
 
   return (
     <>
@@ -59,9 +53,7 @@ export default async function MeetingDetailPage({
             meeting={meeting}
             blocks={blocks}
             actionItems={actionItems}
-            attendees={attendees}
-            teamMembers={teamMembers}
-            usersById={usersById}
+            membersById={membersById}
           />
         </div>
         <HistoryPanel meetings={meetings} currentId={meeting.id} />

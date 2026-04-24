@@ -18,9 +18,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={inter.variable}>
+    <html lang="es" className={`${inter.variable} h-full`}>
       <body
-        className="antialiased"
+        className="antialiased h-full"
         style={{ fontFeatureSettings: "'cv11', 'ss01', 'ss03'" }}
       >
         {children}

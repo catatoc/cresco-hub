@@ -13,7 +13,7 @@ import {
   type DragEndEvent,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import type { NotionUser } from '@/schemas/notion-user';
+import type { TeamMember } from '@/schemas/team-member';
 import type { Task, TaskStatus } from '@/schemas/task';
 import { Column } from './column';
 import { TaskCard } from './card';
@@ -77,10 +77,10 @@ const COLUMNS: BoardColumn[] = [
 type Props = {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
-  usersById: Map<string, NotionUser>;
+  membersById: Map<string, TeamMember>;
 };
 
-export function BoardClassic({ tasks, setTasks, usersById }: Props) {
+export function BoardClassic({ tasks, setTasks, membersById }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [archivedOpen, setArchivedOpen] = useState(false);
   const { move } = useMoveTask(setTasks);
@@ -132,7 +132,7 @@ export function BoardClassic({ tasks, setTasks, usersById }: Props) {
               tasks={tasks.filter((t) => col.statuses.includes(t.status))}
               dotClass={col.dotClass}
               dotFilled={col.dotFilled}
-              usersById={usersById}
+              membersById={membersById}
             />
           ))}
         </div>
@@ -161,8 +161,8 @@ export function BoardClassic({ tasks, setTasks, usersById }: Props) {
                     key={t.id}
                     task={t}
                     assignees={t.assigneeIds
-                      .map((id) => usersById.get(id))
-                      .filter((u): u is NotionUser => !!u)}
+                      .map((id) => membersById.get(id))
+                      .filter((m): m is TeamMember => !!m)}
                   />
                 ))}
               </div>
@@ -176,8 +176,8 @@ export function BoardClassic({ tasks, setTasks, usersById }: Props) {
             task={active}
             isOverlay
             assignees={active.assigneeIds
-              .map((id) => usersById.get(id))
-              .filter((u): u is NotionUser => !!u)}
+              .map((id) => membersById.get(id))
+              .filter((m): m is TeamMember => !!m)}
           />
         )}
       </DragOverlay>

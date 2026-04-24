@@ -3,10 +3,8 @@ import { requireContext } from '@/lib/auth/require-context';
 import { queryMeetingsByCustomer } from '@/lib/notion/meetings';
 import { getBlocks } from '@/lib/notion/blocks';
 import { getTask } from '@/lib/notion/tasks';
-import { getUsers } from '@/lib/notion/users';
 import { getTeamMembers } from '@/lib/notion/team';
 import type { Meeting } from '@/schemas/meeting';
-import type { NotionUser } from '@/schemas/notion-user';
 import type { Task } from '@/schemas/task';
 import type { TeamMember } from '@/schemas/team-member';
 import { HeroMeeting } from '@/components/meetings/hero-meeting';
@@ -34,29 +32,25 @@ export default async function ReunionesPage() {
 
   let blocks: any[] = [];
   let actionItems: Task[] = [];
-  let attendees: NotionUser[] = [];
-  let teamMembers: TeamMember[] = [];
-  let usersById = new Map<string, NotionUser>();
+  let membersById = new Map<string, TeamMember>();
 
   if (currentOrNext) {
-    [blocks, actionItems, attendees, teamMembers] = await Promise.all([
+    [blocks, actionItems] = await Promise.all([
       getBlocks(currentOrNext.id),
       Promise.all(currentOrNext.taskIds.map(getTask)).then((ts) =>
         ts.filter((t: Task | null): t is Task => t !== null),
       ),
-      getUsers(currentOrNext.attendeeIds),
-      getTeamMembers(currentOrNext.teamIds),
     ]);
 
-    const actionItemUserIds = Array.from(
-      new Set(actionItems.flatMap((t) => t.assigneeIds)),
+    // Team members needed: meeting.teamIds (attendees) + every assignee on every action item.
+    const memberIds = Array.from(
+      new Set([
+        ...currentOrNext.teamIds,
+        ...actionItems.flatMap((t) => t.assigneeIds),
+      ]),
     );
-    const extraUsers = await getUsers(
-      actionItemUserIds.filter((id) => !attendees.some((a) => a.id === id)),
-    );
-    usersById = new Map<string, NotionUser>(
-      [...attendees, ...extraUsers].map((u) => [u.id, u]),
-    );
+    const members = await getTeamMembers(memberIds);
+    membersById = new Map(members.map((m) => [m.id, m]));
   }
 
   return (
@@ -74,9 +68,7 @@ export default async function ReunionesPage() {
               meeting={currentOrNext}
               blocks={blocks}
               actionItems={actionItems}
-              attendees={attendees}
-              teamMembers={teamMembers}
-              usersById={usersById}
+              membersById={membersById}
             />
           ) : (
             <p className="text-muted-foreground">Este cliente no tiene reuniones registradas todavía.</p>

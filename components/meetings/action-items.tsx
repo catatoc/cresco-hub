@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import type { NotionUser } from '@/schemas/notion-user';
+import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
 import { cn } from '@/lib/utils';
 import { format, parseISO, isSameDay, subDays } from 'date-fns';
@@ -36,17 +36,17 @@ function DueCell({ dueDate }: { dueDate: string | null }) {
 
 type Props = {
   tasks: Task[];
-  usersById: Map<string, NotionUser>;
+  membersById: Map<string, TeamMember>;
 };
 
-export function ActionItems({ tasks, usersById }: Props) {
+export function ActionItems({ tasks, membersById }: Props) {
   return (
     <div className="border border-border rounded-lg bg-white overflow-hidden">
       {tasks.map((t, i) => {
         const done = t.status === 'Done';
         const assignees = t.assigneeIds
-          .map((id) => usersById.get(id))
-          .filter((u): u is NotionUser => !!u);
+          .map((id) => membersById.get(id))
+          .filter((m): m is TeamMember => !!m);
         return (
           <Link
             href={`/tareas/${t.id}`}

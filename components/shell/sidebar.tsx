@@ -7,7 +7,10 @@ import { Search, Home, CheckSquare, Calendar, BookOpen, FolderKanban } from 'luc
 export function Sidebar({ context }: { context: AppContext }) {
   return (
     <aside className="bg-[#f7f7f8] border-r border-border flex flex-col p-2">
-      <WorkspaceHeader name={context.customerName} icon={context.customerIcon} />
+      <WorkspaceHeader
+        current={{ id: context.customerId, name: context.customerName, icon: context.customerIcon }}
+        customers={context.customers}
+      />
 
       <div className="pb-3">
         <NavItem href="#" icon={<Search className="w-3.5 h-3.5" />} kbd="⌘K">

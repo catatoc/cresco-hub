@@ -1,5 +1,14 @@
+import { cookies } from 'next/headers';
 import { findMemberByEmail } from '@/lib/notion/team';
-import { getCustomer } from '@/lib/notion/customers';
+import { getCustomers } from '@/lib/notion/customers';
+
+export const SELECTED_CUSTOMER_COOKIE = 'selected-customer-id';
+
+export type CustomerSummary = {
+  id: string;
+  name: string;
+  icon: string | null;
+};
 
 export type AppContext = {
   email: string;
@@ -8,6 +17,7 @@ export type AppContext = {
   customerId: string;
   customerName: string;
   customerIcon: string | null;
+  customers: CustomerSummary[];
   projectIds: string[];
   isAdmin: boolean;
 };
@@ -18,11 +28,15 @@ export async function resolveContext(email: string | null): Promise<AppContext |
   const member = await findMemberByEmail(email);
   if (!member) return null;
 
-  const firstCustomerId = member.customerIds[0];
-  if (!firstCustomerId) return null;
+  if (member.customerIds.length === 0) return null;
 
-  const customer = await getCustomer(firstCustomerId);
-  if (!customer) return null;
+  const customers = await getCustomers(member.customerIds);
+  if (customers.length === 0) return null;
+
+  const cookieStore = await cookies();
+  const selectedId = cookieStore.get(SELECTED_CUSTOMER_COOKIE)?.value;
+  const active =
+    (selectedId ? customers.find((c) => c.id === selectedId) : undefined) ?? customers[0]!;
 
   // TODO(v1.5): check app_admins table in Supabase
   const isAdmin = false;
@@ -31,9 +45,10 @@ export async function resolveContext(email: string | null): Promise<AppContext |
     email,
     memberId: member.id,
     memberName: member.name,
-    customerId: customer.id,
-    customerName: customer.name,
-    customerIcon: customer.icon,
+    customerId: active.id,
+    customerName: active.name,
+    customerIcon: active.icon,
+    customers: customers.map((c) => ({ id: c.id, name: c.name, icon: c.icon })),
     projectIds: member.projectIds,
     isAdmin,
   };

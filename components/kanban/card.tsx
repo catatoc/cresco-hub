@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { NotionUser } from '@/schemas/notion-user';
+import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
 import { cn } from '@/lib/utils';
 import { useSortable } from '@dnd-kit/sortable';
@@ -64,30 +64,37 @@ export function initials(name: string | null | undefined): string {
   return ((first[0] ?? '') + (last[0] ?? '')).toUpperCase() || '?';
 }
 
+/**
+ * Deterministic avatar color per person id so the UI stays consistent.
+ */
+const AVATAR_PALETTE = [
+  '#6da88e', '#8ba1d9', '#a07ac9', '#c78a2c', '#d24949', '#3f9f5c', '#7f3aa7', '#3a5fcc',
+];
+function avatarBg(id: string): string {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) | 0;
+  return AVATAR_PALETTE[Math.abs(hash) % AVATAR_PALETTE.length]!;
+}
+
 type AvatarProps = {
-  user: NotionUser;
+  member: TeamMember;
   size?: number;
 };
 
-export function AssigneeAvatar({ user, size = 18 }: AvatarProps) {
+export function AssigneeAvatar({ member, size = 18 }: AvatarProps) {
   const s = `${size}px`;
-  if (user.avatarUrl) {
-    return (
-      <img
-        src={user.avatarUrl}
-        alt={user.name ?? 'User'}
-        style={{ width: s, height: s }}
-        className="rounded-full object-cover"
-      />
-    );
-  }
   return (
     <div
-      style={{ width: s, height: s, fontSize: Math.max(9, Math.floor(size * 0.5)) }}
-      className="rounded-full bg-[#6da88e] text-white font-semibold grid place-items-center"
-      title={user.name ?? undefined}
+      style={{
+        width: s,
+        height: s,
+        fontSize: Math.max(9, Math.floor(size * 0.5)),
+        background: avatarBg(member.id),
+      }}
+      className="rounded-full text-white font-semibold grid place-items-center shrink-0"
+      title={member.name}
     >
-      {initials(user.name)}
+      {initials(member.name)}
     </div>
   );
 }
@@ -96,7 +103,7 @@ export function AssigneeStack({
   assignees,
   size = 18,
 }: {
-  assignees: NotionUser[];
+  assignees: TeamMember[];
   size?: number;
 }) {
   if (assignees.length === 0) return null;
@@ -104,7 +111,7 @@ export function AssigneeStack({
   const rest = assignees.slice(1);
   return (
     <div className="flex items-center gap-1">
-      <AssigneeAvatar user={first} size={size} />
+      <AssigneeAvatar member={first} size={size} />
       {rest.length > 0 && (
         <span className="text-[10px] text-muted-foreground font-medium">
           +{rest.length}
@@ -116,7 +123,7 @@ export function AssigneeStack({
 
 type Props = {
   task: Task;
-  assignees?: NotionUser[];
+  assignees?: TeamMember[];
   showDayChip?: boolean;
   isOverlay?: boolean;
 };

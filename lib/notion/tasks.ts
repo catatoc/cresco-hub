@@ -10,7 +10,9 @@ function parseTask(row: any): Task {
     status: p.Status?.status?.name ?? 'Not Started',
     priority: p.Priority?.select?.name ?? null,
     type: p.Type?.select?.name ?? null,
-    assigneeIds: (p.Assignee?.people ?? []).map((u: { id: string }) => u.id),
+    // Assignees come from the Team relation (canonical directory),
+    // not the Notion person `Assignee` property.
+    assigneeIds: (p.Team?.relation ?? []).map((r: { id: string }) => r.id),
     projectId: p.Project?.relation?.[0]?.id ?? null,
     customerId: p.Customer?.relation?.[0]?.id ?? null,
     sprintId: p.Sprint?.relation?.[0]?.id ?? null,

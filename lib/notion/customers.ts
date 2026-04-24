@@ -20,3 +20,8 @@ export async function getCustomer(id: string): Promise<Customer | null> {
     return null;
   }
 }
+
+export async function getCustomers(ids: string[]): Promise<Customer[]> {
+  const results = await Promise.all(ids.map((id) => getCustomer(id)));
+  return results.filter((c): c is Customer => c !== null);
+}

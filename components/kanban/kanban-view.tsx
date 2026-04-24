@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Clock } from 'lucide-react';
-import type { NotionUser } from '@/schemas/notion-user';
+import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
 import { BoardClassic } from './board-classic';
 import { BoardWeek } from './board-week';
@@ -14,7 +14,7 @@ type Props = {
   sprintLabel: string;
   currentSprintId: string | null;
   allSprintIds: string[];
-  users: NotionUser[];
+  members: TeamMember[];
 };
 
 export function KanbanView({
@@ -22,12 +22,12 @@ export function KanbanView({
   sprintLabel,
   currentSprintId,
   allSprintIds,
-  users,
+  members,
 }: Props) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [view, setView] = useState<'classic' | 'week'>('classic');
 
-  const usersById = new Map(users.map((u) => [u.id, u]));
+  const membersById = new Map(members.map((m) => [m.id, m]));
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden px-5 pt-5">
@@ -44,9 +44,9 @@ export function KanbanView({
       </div>
 
       {view === 'classic' ? (
-        <BoardClassic tasks={tasks} setTasks={setTasks} usersById={usersById} />
+        <BoardClassic tasks={tasks} setTasks={setTasks} membersById={membersById} />
       ) : (
-        <BoardWeek tasks={tasks} setTasks={setTasks} usersById={usersById} />
+        <BoardWeek tasks={tasks} setTasks={setTasks} membersById={membersById} />
       )}
     </div>
   );

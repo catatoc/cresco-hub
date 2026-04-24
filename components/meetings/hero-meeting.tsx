@@ -1,8 +1,7 @@
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { ExternalLink, Users } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import type { Meeting } from '@/schemas/meeting';
-import type { NotionUser } from '@/schemas/notion-user';
 import type { Task } from '@/schemas/task';
 import type { TeamMember } from '@/schemas/team-member';
 import { BlocksRenderer } from '@/components/wiki/blocks-renderer';
@@ -14,24 +13,19 @@ type Props = {
   meeting: Meeting;
   blocks: any[];
   actionItems: Task[];
-  attendees: NotionUser[];
-  teamMembers: TeamMember[];
-  usersById: Map<string, NotionUser>;
+  membersById: Map<string, TeamMember>;
 };
 
-export function HeroMeeting({
-  meeting,
-  blocks,
-  actionItems,
-  attendees,
-  teamMembers,
-  usersById,
-}: Props) {
+export function HeroMeeting({ meeting, blocks, actionItems, membersById }: Props) {
   const now = new Date();
   const start = meeting.date ? parseISO(meeting.date) : null;
   const end = meeting.endDate ? parseISO(meeting.endDate) : null;
   const live = isLive({ now, start, end });
   const fmtTime = (d: Date) => format(d, 'h:mmaaa').replace(/\s/g, '');
+
+  const attendees = meeting.teamIds
+    .map((id) => membersById.get(id))
+    .filter((m): m is TeamMember => !!m);
 
   return (
     <>
@@ -67,13 +61,13 @@ export function HeroMeeting({
                   Asistentes
                 </span>
                 <div className="flex -space-x-1.5">
-                  {attendees.slice(0, 6).map((u) => (
+                  {attendees.slice(0, 6).map((m) => (
                     <div
-                      key={u.id}
+                      key={m.id}
                       className="ring-2 ring-white rounded-full"
-                      title={u.name ?? undefined}
+                      title={`${m.name}${m.email ? ` · ${m.email}` : ''}`}
                     >
-                      <AssigneeAvatar user={u} size={22} />
+                      <AssigneeAvatar member={m} size={22} />
                     </div>
                   ))}
                   {attendees.length > 6 && (
@@ -81,26 +75,6 @@ export function HeroMeeting({
                       +{attendees.length - 6}
                     </span>
                   )}
-                </div>
-              </div>
-            )}
-
-            {teamMembers.length > 0 && (
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="inline-flex items-center gap-1 text-[11px] uppercase tracking-[0.03em] font-medium text-muted-foreground">
-                  <Users className="w-3 h-3" />
-                  Equipo
-                </span>
-                <div className="flex flex-wrap gap-1">
-                  {teamMembers.map((m) => (
-                    <span
-                      key={m.id}
-                      className="inline-flex items-center gap-1 px-2 py-[1px] rounded text-[11px] font-medium bg-[#f7f7f8] text-[#57575c] border border-border"
-                      title={m.email}
-                    >
-                      {m.name}
-                    </span>
-                  ))}
                 </div>
               </div>
             )}
@@ -132,7 +106,7 @@ export function HeroMeeting({
       {actionItems.length > 0 && (
         <section className="mb-7">
           <SectionHead title="Tareas de esta reunión" count={`${actionItems.length} vinculadas`} />
-          <ActionItems tasks={actionItems} usersById={usersById} />
+          <ActionItems tasks={actionItems} membersById={membersById} />
         </section>
       )}
     </>

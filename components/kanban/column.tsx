@@ -1,6 +1,6 @@
 'use client';
 
-import type { NotionUser } from '@/schemas/notion-user';
+import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
 import { TaskCard } from './card';
 import { cn } from '@/lib/utils';
@@ -14,10 +14,10 @@ type Props = {
   dotClass: string;
   dotFilled?: boolean;
   showDayChip?: boolean;
-  usersById: Map<string, NotionUser>;
+  membersById: Map<string, TeamMember>;
 };
 
-export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, usersById }: Props) {
+export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, membersById }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id });
 
   return (
@@ -41,8 +41,8 @@ export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, use
               task={t}
               showDayChip={showDayChip}
               assignees={t.assigneeIds
-                .map((id) => usersById.get(id))
-                .filter((u): u is NotionUser => !!u)}
+                .map((id) => membersById.get(id))
+                .filter((m): m is TeamMember => !!m)}
             />
           ))}
         </div>
