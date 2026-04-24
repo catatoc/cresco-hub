@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { format, isToday, isPast } from 'date-fns';
+import type { NotionUser } from '@/schemas/notion-user';
 import type { Task } from '@/schemas/task';
 import { cn } from '@/lib/utils';
+import { AssigneeStack } from '@/components/kanban/card';
 
 const PRIORITY_FILL: Record<string, string> = {
   High: '#c78a2c',
@@ -41,7 +43,12 @@ function TagChip({ tag }: { tag: string }) {
   return <span className={cn('px-1.5 rounded text-[11px] font-medium', map[tag] ?? 'bg-[#f7f7f8] text-[#57575c]')}>{tag}</span>;
 }
 
-export function MyTasks({ tasks }: { tasks: Task[] }) {
+type Props = {
+  tasks: Task[];
+  usersById: Map<string, NotionUser>;
+};
+
+export function MyTasks({ tasks, usersById }: Props) {
   if (tasks.length === 0) {
     return (
       <div className="mb-8">
@@ -68,35 +75,42 @@ export function MyTasks({ tasks }: { tasks: Task[] }) {
         </Link>
       </div>
       <div className="border border-border rounded-lg bg-white overflow-hidden">
-        {tasks.map((t, i) => (
-          <Link
-            href={`/tareas/${t.id}`}
-            key={t.id}
-            className={cn(
-              'flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-[#f7f7f8]',
-              i < tasks.length - 1 && 'border-b border-border',
-            )}
-          >
-            <span
+        {tasks.map((t, i) => {
+          const assignees = t.assigneeIds
+            .map((id) => usersById.get(id))
+            .filter((u): u is NotionUser => !!u);
+          return (
+            <Link
+              href={`/tareas/${t.id}`}
+              key={t.id}
               className={cn(
-                'w-3.5 h-3.5 rounded-full border-[1.5px] shrink-0',
-                t.status === 'Done' && 'bg-[#3f9f5c] border-[#3f9f5c]',
-                t.status === 'In Progress' && 'border-[#5e6ad2]',
-                (t.status === 'Not Started' || t.status === 'Refining') && 'border-muted-foreground',
+                'flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-[#f7f7f8]',
+                i < tasks.length - 1 && 'border-b border-border',
               )}
-              style={
-                t.status === 'In Progress'
-                  ? { background: 'conic-gradient(#5e6ad2 0 60%, transparent 60% 100%)' }
-                  : undefined
-              }
-            />
-            <PriorityIcon priority={t.priority} />
-            <span className="text-[13px] flex-1 truncate">{t.title}</span>
-            {t.tags[0] && <TagChip tag={t.tags[0]} />}
-            <DueCell dueDate={t.dueDate} />
-            <div className="w-5 h-5 rounded-full bg-[#6da88e] text-white text-[9px] font-semibold grid place-items-center shrink-0">DL</div>
-          </Link>
-        ))}
+            >
+              <span
+                className={cn(
+                  'w-3.5 h-3.5 rounded-full border-[1.5px] shrink-0',
+                  t.status === 'Done' && 'bg-[#3f9f5c] border-[#3f9f5c]',
+                  t.status === 'In Progress' && 'border-[#5e6ad2]',
+                  (t.status === 'Not Started' || t.status === 'Refining') && 'border-muted-foreground',
+                )}
+                style={
+                  t.status === 'In Progress'
+                    ? { background: 'conic-gradient(#5e6ad2 0 60%, transparent 60% 100%)' }
+                    : undefined
+                }
+              />
+              <PriorityIcon priority={t.priority} />
+              <span className="text-[13px] flex-1 truncate">{t.title}</span>
+              {t.tags[0] && <TagChip tag={t.tags[0]} />}
+              <DueCell dueDate={t.dueDate} />
+              <div className="shrink-0">
+                <AssigneeStack assignees={assignees} size={20} />
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

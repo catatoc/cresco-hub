@@ -1,8 +1,10 @@
 import Link from 'next/link';
+import type { NotionUser } from '@/schemas/notion-user';
 import type { Task } from '@/schemas/task';
 import { cn } from '@/lib/utils';
 import { format, parseISO, isSameDay, subDays } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { AssigneeStack } from '@/components/kanban/card';
 
 function DueCell({ dueDate }: { dueDate: string | null }) {
   if (!dueDate) return <span className="text-[11px] text-muted-foreground">—</span>;
@@ -32,11 +34,19 @@ function DueCell({ dueDate }: { dueDate: string | null }) {
   );
 }
 
-export function ActionItems({ tasks }: { tasks: Task[] }) {
+type Props = {
+  tasks: Task[];
+  usersById: Map<string, NotionUser>;
+};
+
+export function ActionItems({ tasks, usersById }: Props) {
   return (
     <div className="border border-border rounded-lg bg-white overflow-hidden">
       {tasks.map((t, i) => {
         const done = t.status === 'Done';
+        const assignees = t.assigneeIds
+          .map((id) => usersById.get(id))
+          .filter((u): u is NotionUser => !!u);
         return (
           <Link
             href={`/tareas/${t.id}`}
@@ -71,8 +81,8 @@ export function ActionItems({ tasks }: { tasks: Task[] }) {
                 {t.type}
               </span>
             )}
-            <div className="w-[18px] h-[18px] rounded-full bg-[#6da88e] text-white text-[9px] font-semibold grid place-items-center">
-              DL
+            <div className="shrink-0">
+              <AssigneeStack assignees={assignees} />
             </div>
             <DueCell dueDate={t.dueDate} />
           </Link>

@@ -2,11 +2,13 @@ import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
 import { getHomeData } from '@/lib/home/queries';
 import { getCurrentSprint } from '@/lib/notion/sprints';
+import { getUsers } from '@/lib/notion/users';
 import { Greeting } from '@/components/home/greeting';
 import { StatsStrip } from '@/components/home/stats-strip';
 import { MyTasks } from '@/components/home/my-tasks';
 import { NextMeeting } from '@/components/home/next-meeting';
 import { WikiRecents } from '@/components/home/wiki-recents';
+import type { NotionUser } from '@/schemas/notion-user';
 import type { Task } from '@/schemas/task';
 import { Clock } from 'lucide-react';
 
@@ -16,6 +18,12 @@ export default async function HomePage() {
   const ctx = await requireContext();
   const sprint = await getCurrentSprint();
   const data = await getHomeData(ctx.customerId, sprint?.id ?? null);
+
+  const myTasksUserIds = Array.from(
+    new Set(data.myTasksToday.flatMap((t: Task) => t.assigneeIds)),
+  );
+  const users = await getUsers(myTasksUserIds);
+  const usersById = new Map(users.map((u: NotionUser) => [u.id, u]));
 
   const overdue = data.tasks.filter(
     (t: Task) =>
@@ -40,7 +48,7 @@ export default async function HomePage() {
       <div className="flex-1 overflow-auto px-10 py-10 max-w-[980px] mx-auto w-full">
         <Greeting name={ctx.memberName} stats={data.stats} upcomingMeeting={data.upcomingMeeting} />
         <StatsStrip stats={data.stats} upcomingMeeting={data.upcomingMeeting} overdueCount={overdue} />
-        <MyTasks tasks={data.myTasksToday} />
+        <MyTasks tasks={data.myTasksToday} usersById={usersById} />
         <div className="grid grid-cols-2 gap-5">
           <NextMeeting meeting={data.upcomingMeeting} />
           <WikiRecents pages={data.recentWiki} />
