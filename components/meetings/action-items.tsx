@@ -1,15 +1,23 @@
 import Link from 'next/link';
 import type { Task } from '@/schemas/task';
 import { cn } from '@/lib/utils';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, isSameDay, subDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 function DueCell({ dueDate }: { dueDate: string | null }) {
   if (!dueDate) return <span className="text-[11px] text-muted-foreground">—</span>;
   const d = parseISO(dueDate);
   const today = new Date();
-  const isToday = d.toDateString() === today.toDateString();
+  const isToday = isSameDay(d, today);
+  const isYesterday = isSameDay(d, subDays(today, 1));
   const isPast = d.getTime() < today.getTime() && !isToday;
+
+  const label = isToday
+    ? 'Hoy'
+    : isYesterday
+      ? 'Ayer'
+      : format(d, 'MMM d', { locale: es });
+
   return (
     <span
       className={cn(
@@ -19,7 +27,7 @@ function DueCell({ dueDate }: { dueDate: string | null }) {
         !isToday && !isPast && 'text-muted-foreground',
       )}
     >
-      {isToday ? 'Hoy' : isPast ? 'Ayer' : format(d, 'MMM d', { locale: es })}
+      {label}
     </span>
   );
 }
