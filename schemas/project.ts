@@ -1,19 +1,31 @@
 import { z } from 'zod';
 
-export const projectStatusSchema = z.enum(['Planning', 'On track', 'At risk', 'Blocked', 'Done']);
+export const projectStatusSchema = z.enum([
+  'Backlog',
+  'Planning',
+  'In Progress',
+  'Paused',
+  'Done',
+  'Canceled',
+]);
 export type ProjectStatus = z.infer<typeof projectStatusSchema>;
+
+export const projectPrioritySchema = z.enum(['Low', 'Medium', 'High']);
+export type ProjectPriority = z.infer<typeof projectPrioritySchema>;
 
 export const projectSchema = z.object({
   id: z.string(),
   name: z.string(),
   icon: z.string().nullable(),
-  description: z.string().nullable(),
+  summary: z.string().nullable(),
   status: projectStatusSchema.nullable(),
-  progress: z.number().min(0).max(100).nullable(),
-  clientId: z.string().nullable(),
+  priority: projectPrioritySchema.nullable(),
+  completion: z.number().nullable(), // 0..1 rollup
+  ownerIds: z.array(z.string()),     // Notion user IDs
+  customerId: z.string().nullable(),
   teamIds: z.array(z.string()),
-  deadline: z.string().nullable(),
+  startDate: z.string().nullable(),
+  endDate: z.string().nullable(),
   url: z.string().url(),
 });
-
 export type Project = z.infer<typeof projectSchema>;

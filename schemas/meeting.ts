@@ -5,13 +5,13 @@ export const meetingSchema = z.object({
   title: z.string(),
   date: z.string().nullable(),
   endDate: z.string().nullable(),
-  meetUrl: z.string().nullable(),
-  recurrence: z.string().nullable(),
-  facilitatorId: z.string().nullable(),
-  attendeeIds: z.array(z.string()),
-  clientId: z.string().nullable(),
-  actionItemIds: z.array(z.string()),
+  meetingType: z.string().nullable(),
+  attendeeIds: z.array(z.string()),       // Notion user IDs (not Team IDs)
+  customerId: z.string().nullable(),
+  projectIds: z.array(z.string()),
+  teamIds: z.array(z.string()),
+  taskIds: z.array(z.string()),           // the action items
+  wikiIds: z.array(z.string()),
   url: z.string().url(),
 });
-
 export type Meeting = z.infer<typeof meetingSchema>;
