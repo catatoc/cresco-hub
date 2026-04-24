@@ -15,13 +15,16 @@ type Props = {
 
 export function NavItem({ href, icon, kbd, count, children, exact }: Props) {
   const pathname = usePathname();
-  const active = exact || href === '/' ? pathname === href : pathname.startsWith(href);
+  const active =
+    exact || href === '/' || href === '#'
+      ? pathname === href
+      : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <Link
       href={href}
       className={cn(
-        'flex items-center gap-2 px-2 py-1.5 rounded-md text-[13px] font-normal text-muted-foreground hover:bg-black/[0.04] hover:text-foreground transition-colors',
+        'flex items-center gap-2 px-2 py-1.5 rounded-[5px] text-[13px] font-normal text-muted-foreground hover:bg-black/[0.04] hover:text-foreground transition-colors',
         active && 'bg-white text-foreground font-medium shadow-sm border border-border',
       )}
     >
