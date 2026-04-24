@@ -6,11 +6,12 @@ const serverEnvSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20),
   NOTION_API_KEY: z.string().startsWith('ntn_'),
   NOTION_DB_TEAM: z.string().min(10),
-  NOTION_DB_CLIENTS: z.string().min(10),
+  NOTION_DB_CUSTOMERS: z.string().min(10),
   NOTION_DB_PROJECTS: z.string().min(10),
   NOTION_DB_TASKS: z.string().min(10),
   NOTION_DB_MEETINGS: z.string().min(10),
   NOTION_DB_WIKI: z.string().min(10),
+  NOTION_DB_SPRINTS: z.string().min(10),
   NEXT_PUBLIC_APP_URL: z.string().url(),
 });
 
