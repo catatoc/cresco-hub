@@ -1,0 +1,43 @@
+import type { AppContext } from '@/lib/auth/context';
+import { WorkspaceHeader } from './workspace-header';
+import { UserCard } from './user-card';
+import { NavItem } from './nav-item';
+import { Search, Home, CheckSquare, Calendar, BookOpen, FolderKanban } from 'lucide-react';
+
+export function Sidebar({ context }: { context: AppContext }) {
+  return (
+    <aside className="bg-[#f7f7f8] border-r border-border flex flex-col p-2">
+      <WorkspaceHeader name={context.clientName} icon={context.clientIcon} />
+
+      <div className="pb-3">
+        <NavItem href="#" icon={<Search className="w-3.5 h-3.5" />} kbd="⌘K">
+          Buscar
+        </NavItem>
+        <NavItem href="/" icon={<Home className="w-3.5 h-3.5" />} exact>
+          Home
+        </NavItem>
+      </div>
+
+      <div className="pb-3">
+        <div className="text-[11px] uppercase text-muted-foreground font-medium tracking-[0.03em] px-2 pt-1.5 pb-1">
+          Workspace
+        </div>
+        <NavItem href="/tareas" icon={<CheckSquare className="w-3.5 h-3.5" />}>
+          Tareas
+        </NavItem>
+        <NavItem href="/reuniones" icon={<Calendar className="w-3.5 h-3.5" />}>
+          Reuniones
+        </NavItem>
+        <NavItem href="/wiki" icon={<BookOpen className="w-3.5 h-3.5" />}>
+          Wiki
+        </NavItem>
+        <NavItem href="/proyectos" icon={<FolderKanban className="w-3.5 h-3.5" />}>
+          Proyectos
+        </NavItem>
+      </div>
+
+      <div className="flex-1" />
+      <UserCard name={context.memberName} role={`Miembro · ${context.clientName}`} />
+    </aside>
+  );
+}
