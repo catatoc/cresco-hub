@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ReunionesPage() {
   const ctx = await requireContext();
-  const meetings = await queryMeetingsByClient(ctx.clientId);
+  const meetings = await queryMeetingsByClient(ctx.customerId);
 
   const now = Date.now();
   const currentOrNext =

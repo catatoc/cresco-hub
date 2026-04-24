@@ -24,7 +24,7 @@ export async function PATCH(
 
   const task = await getTask(id);
   if (!task) return NextResponse.json({ error: 'not-found' }, { status: 404 });
-  if (task.clientId !== ctx.clientId)
+  if (task.clientId !== ctx.customerId)
     return NextResponse.json({ error: 'forbidden' }, { status: 403 });
 
   const parsed = bodySchema.safeParse(await req.json());

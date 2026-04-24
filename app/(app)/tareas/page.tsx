@@ -14,7 +14,7 @@ export default async function TareasPage({
   const ctx = await requireContext();
   const sp = await searchParams;
   const cycle = sp.cycle ?? currentCycle();
-  const tasks = await queryTasksByClientAndCycle(ctx.clientId, cycle);
+  const tasks = await queryTasksByClientAndCycle(ctx.customerId, cycle);
 
   return (
     <>

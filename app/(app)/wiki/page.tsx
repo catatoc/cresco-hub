@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function WikiIndexPage() {
   const ctx = await requireContext();
-  const pages = await queryWikiByClient(ctx.clientId);
+  const pages = await queryWikiByClient(ctx.customerId);
 
   if (pages.length === 0) {
     return (

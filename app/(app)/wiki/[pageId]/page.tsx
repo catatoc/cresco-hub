@@ -18,7 +18,7 @@ export default async function WikiPageView({
   const { pageId } = await params;
 
   const [pages, blocks] = await Promise.all([
-    queryWikiByClient(ctx.clientId),
+    queryWikiByClient(ctx.customerId),
     getWikiPageBlocks(pageId),
   ]);
 

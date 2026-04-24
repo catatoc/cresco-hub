@@ -7,7 +7,7 @@ import { Search, Home, CheckSquare, Calendar, BookOpen, FolderKanban } from 'luc
 export function Sidebar({ context }: { context: AppContext }) {
   return (
     <aside className="bg-[#f7f7f8] border-r border-border flex flex-col p-2">
-      <WorkspaceHeader name={context.clientName} icon={context.clientIcon} />
+      <WorkspaceHeader name={context.customerName} icon={context.customerIcon} />
 
       <div className="pb-3">
         <NavItem href="#" icon={<Search className="w-3.5 h-3.5" />} kbd="⌘K">
@@ -37,7 +37,7 @@ export function Sidebar({ context }: { context: AppContext }) {
       </div>
 
       <div className="flex-1" />
-      <UserCard name={context.memberName} role={`Miembro · ${context.clientName}`} />
+      <UserCard name={context.memberName} role={`Miembro · ${context.customerName}`} />
     </aside>
   );
 }

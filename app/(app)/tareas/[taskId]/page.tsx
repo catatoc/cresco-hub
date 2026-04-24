@@ -15,7 +15,7 @@ export default async function TaskPage({
   const { taskId } = await params;
 
   const task = await getTask(taskId);
-  if (!task || task.clientId !== ctx.clientId) notFound();
+  if (!task || task.clientId !== ctx.customerId) notFound();
 
   const blocks = await getBlocks(taskId);
 

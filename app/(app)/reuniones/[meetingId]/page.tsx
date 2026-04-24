@@ -18,10 +18,10 @@ export default async function MeetingDetailPage({
   const { meetingId } = await params;
 
   const meeting = await getMeeting(meetingId);
-  if (!meeting || meeting.clientId !== ctx.clientId) notFound();
+  if (!meeting || meeting.clientId !== ctx.customerId) notFound();
 
   const [meetings, blocks, actionItems] = await Promise.all([
-    queryMeetingsByClient(ctx.clientId),
+    queryMeetingsByClient(ctx.customerId),
     getBlocks(meetingId),
     Promise.all(meeting.actionItemIds.map(getTask)).then((ts) => ts.filter((t): t is NonNullable<typeof t> => t !== null)),
   ]);

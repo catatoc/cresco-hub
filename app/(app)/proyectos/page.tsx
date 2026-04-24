@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ProyectosPage() {
   const ctx = await requireContext();
-  const projects = await queryProjectsByClient(ctx.clientId);
+  const projects = await queryProjectsByClient(ctx.customerId);
 
   return (
     <>

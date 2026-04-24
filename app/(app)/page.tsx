@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 export default async function HomePage() {
   const ctx = await requireContext();
   const cycle = currentCycle();
-  const data = await getHomeData(ctx.clientId, cycle);
+  const data = await getHomeData(ctx.customerId, cycle);
 
   const overdue = data.tasks.filter(
     (t) => t.status !== 'Hecho' && t.dueDate && new Date(t.dueDate).getTime() < Date.now() &&
