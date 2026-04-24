@@ -20,10 +20,25 @@ function Stat({ label, value, unit, sub, subClass }: { label: string; value: Rea
   );
 }
 
+function formatAmPm(d: Date): string {
+  return format(d, 'h:mmaaa').replace(/\s/g, '');
+}
+
 export function StatsStrip({ stats, upcomingMeeting, overdueCount = 0 }: Props) {
-  const meetingLabel = upcomingMeeting?.date
-    ? format(new Date(upcomingMeeting.date), "'Hoy' HH:mm")
-    : 'Sin próximas';
+  const meetingLabel = (() => {
+    if (!upcomingMeeting?.date) return 'Sin próximas';
+    const d = new Date(upcomingMeeting.date);
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const sameDay = d.toDateString() === today.toDateString();
+    const isTomorrow = d.toDateString() === tomorrow.toDateString();
+
+    if (sameDay) return `Hoy ${formatAmPm(d)}`;
+    if (isTomorrow) return `Mañana ${formatAmPm(d)}`;
+    return format(d, 'd MMM');
+  })();
 
   return (
     <div className="grid grid-cols-4 gap-2 mb-8">

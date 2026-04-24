@@ -18,6 +18,7 @@ export function NextMeeting({ meeting }: { meeting: Meeting | null }) {
 
   const d = meeting.date ? parseISO(meeting.date) : null;
   const endD = meeting.endDate ? parseISO(meeting.endDate) : null;
+  const fmtTime = (x: Date) => format(x, 'h:mmaaa').replace(/\s/g, '');
 
   return (
     <div>
@@ -36,13 +37,19 @@ export function NextMeeting({ meeting }: { meeting: Meeting | null }) {
             </div>
             <div className="ml-auto text-[12px] text-[#57575c] flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 bg-[#3f9f5c] rounded-full shadow-[0_0_0_3px_#e8f5ec]" />
-              {format(d, 'HH:mm')}{endD ? ` — ${format(endD, 'HH:mm')}` : ''}
+              {fmtTime(d)}{endD ? ` — ${fmtTime(endD)}` : ''}
             </div>
           </div>
         )}
         <div className="text-[15px] font-medium mb-1.5">{meeting.title}</div>
         <div className="text-[12px] text-muted-foreground flex items-center gap-2">
-          {meeting.meetUrl && (<><Video className="w-3.5 h-3.5" /> Google Meet<span>·</span></>)}
+          {meeting.meetUrl && (
+            <>
+              <Video className="w-3.5 h-3.5" />
+              <span>Google Meet</span>
+            </>
+          )}
+          {meeting.meetUrl && meeting.recurrence && <span>·</span>}
           {meeting.recurrence && <span>{meeting.recurrence}</span>}
         </div>
         <div className="mt-3.5 pt-3 border-t border-dashed border-border flex gap-2">
