@@ -78,3 +78,24 @@ export async function queryTasksByCustomerAndTitle(
   });
   return res.results.filter((r): r is any => 'properties' in r).map(parseTask);
 }
+
+export async function createTask(args: {
+  customerId: string;
+  title: string;
+  sprintId?: string | null;
+}): Promise<{ id: string; url: string }> {
+  const notion = getNotion();
+  const properties: Record<string, any> = {
+    'Task name': { title: [{ text: { content: args.title } }] },
+    Status: { status: { name: 'Not Started' } },
+    Customer: { relation: [{ id: args.customerId }] },
+  };
+  if (args.sprintId) {
+    properties.Sprint = { relation: [{ id: args.sprintId }] };
+  }
+  const res = await notion.pages.create({
+    parent: { database_id: serverEnv.NOTION_DB_TASKS },
+    properties,
+  });
+  return { id: (res as any).id, url: (res as any).url };
+}
