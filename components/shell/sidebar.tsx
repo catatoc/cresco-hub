@@ -2,7 +2,8 @@ import type { AppContext } from '@/lib/auth/context';
 import { WorkspaceHeader } from './workspace-header';
 import { UserCard } from './user-card';
 import { NavItem } from './nav-item';
-import { Search, Home, CheckSquare, Calendar, BookOpen, FolderKanban } from 'lucide-react';
+import { SearchTrigger } from '@/components/search/search-trigger';
+import { Home, CheckSquare, Calendar, BookOpen, FolderKanban } from 'lucide-react';
 
 export function Sidebar({ context }: { context: AppContext }) {
   return (
@@ -13,9 +14,7 @@ export function Sidebar({ context }: { context: AppContext }) {
       />
 
       <div className="pb-3">
-        <NavItem href="#" icon={<Search className="w-3.5 h-3.5" />} kbd="⌘K">
-          Buscar
-        </NavItem>
+        <SearchTrigger />
         <NavItem href="/" icon={<Home className="w-3.5 h-3.5" />} exact>
           Home
         </NavItem>
