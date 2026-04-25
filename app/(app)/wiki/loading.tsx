@@ -15,10 +15,10 @@ export default function Loading() {
           ))}
         </aside>
         <div className="overflow-auto">
-          <div className="h-[180px] bg-gradient-to-br from-[#5e6ad2]/70 to-[#7c5fd0]/70 animate-pulse" />
+          <div className="h-[180px] bg-[#f0f0f2] animate-pulse" />
           <article className="px-16 pt-0 pb-20 max-w-[800px] mx-auto">
-            <div className="text-[60px] mt-[-48px] relative leading-none mb-[18px]">📄</div>
-            <div className="h-10 w-96 bg-[#f7f7f8] rounded animate-pulse mb-5" />
+            <div className="w-[60px] h-[60px] mt-[-30px] relative rounded-md bg-[#e8e8ec] animate-pulse mb-[18px]" />
+            <div className="h-10 w-96 bg-[#f0f0f2] rounded animate-pulse mb-5" />
             <div className="h-20 bg-[#f7f7f8] rounded-lg animate-pulse mb-9" />
             <div className="space-y-3">
               {[0, 1, 2, 3, 4].map((i) => (
