@@ -1,6 +1,8 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
+const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 days
+
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -14,7 +16,7 @@ export async function updateSession(request: NextRequest) {
           items.forEach(({ name, value }) => request.cookies.set(name, value));
           response = NextResponse.next({ request });
           items.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options),
+            response.cookies.set(name, value, { ...options, maxAge: SESSION_MAX_AGE_SECONDS }),
           );
         },
       },
