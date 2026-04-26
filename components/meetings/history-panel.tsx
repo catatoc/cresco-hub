@@ -80,7 +80,7 @@ export function HistoryPanel({ meetings, currentId }: Props) {
         </section>
       ))}
 
-      {meetings.length === 0 && (
+      {groups.length === 0 && (
         <div className="text-[12px] text-muted-foreground text-center p-4">Sin reuniones aún.</div>
       )}
     </aside>

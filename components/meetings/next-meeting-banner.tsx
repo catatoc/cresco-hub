@@ -3,10 +3,10 @@ import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { Meeting } from '@/schemas/meeting';
 
-type Props = { nextMeeting: Meeting };
+type Props = { nextMeeting: Meeting | null };
 
 export function NextMeetingBanner({ nextMeeting }: Props) {
-  if (!nextMeeting.date) return null;
+  if (!nextMeeting || !nextMeeting.date) return null;
   const d = parseISO(nextMeeting.date);
   const time = format(d, 'h:mmaaa', { locale: es }).replace(/\s/g, '');
   const dayRaw = format(d, "EEEE d 'de' MMMM", { locale: es });
