@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { m } from '@/components/motion/m';
 
 type Props = {
   href: string;
@@ -24,10 +25,17 @@ export function NavItem({ href, icon, kbd, count, children, exact }: Props) {
     <Link
       href={href}
       className={cn(
-        'flex items-center gap-2 px-2 py-1.5 rounded-[5px] text-[13px] font-normal text-muted-foreground hover:bg-black/[0.04] hover:text-foreground transition-colors',
+        'relative flex items-center gap-2 px-2 py-1.5 rounded-[5px] text-[13px] font-normal text-muted-foreground transition-[background-color,color] duration-(--duration-fast) ease-(--ease-linear) hover:bg-black/[0.04] hover:text-foreground',
         active && 'bg-white text-foreground font-medium shadow-sm border border-border',
       )}
     >
+      {active && (
+        <m.span
+          layoutId="sidebar-active-indicator"
+          className="absolute -left-px top-1.5 bottom-1.5 w-0.5 rounded-r bg-primary"
+          transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+        />
+      )}
       {icon}
       <span className="flex-1 truncate">{children}</span>
       {kbd && (
