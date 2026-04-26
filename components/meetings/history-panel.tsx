@@ -54,7 +54,7 @@ export function HistoryPanel({ meetings, currentId }: Props) {
               >
                 <div
                   className={cn(
-                    'text-[10px] font-semibold uppercase tracking-[0.04em]',
+                    'text-[9px] font-semibold uppercase tracking-[0.04em]',
                     active ? 'text-[#5e6ad2]' : 'text-muted-foreground',
                   )}
                 >
@@ -68,7 +68,7 @@ export function HistoryPanel({ meetings, currentId }: Props) {
                   <p
                     className={cn(
                       'text-[11px] leading-[1.5] mt-1 line-clamp-3',
-                      active ? 'text-[#555]' : 'text-muted-foreground',
+                      active ? 'text-[#555]' : 'text-[#888]',
                     )}
                   >
                     {m.summary}
