@@ -15,17 +15,19 @@ export default async function AppLayout({
 }) {
   const ctx = await requireContext();
   return (
-    <LazyMotion features={domAnimation} strict>
-      <SearchProvider customerId={ctx.customerId}>
-        <div className="grid grid-cols-[232px_1fr] h-screen overflow-hidden bg-[#fafafa]">
-          <Sidebar context={ctx} />
-          <main className="flex flex-col min-h-0 min-w-0 overflow-hidden bg-white">
-            {children}
-          </main>
-        </div>
-        {modal}
-      </SearchProvider>
+    <>
+      <LazyMotion features={domAnimation} strict>
+        <SearchProvider customerId={ctx.customerId}>
+          <div className="grid grid-cols-[232px_1fr] h-screen overflow-hidden bg-[#fafafa]">
+            <Sidebar context={ctx} />
+            <main className="flex flex-col min-h-0 min-w-0 overflow-hidden bg-white">
+              {children}
+            </main>
+          </div>
+          {modal}
+        </SearchProvider>
+      </LazyMotion>
       <Toaster position="bottom-right" />
-    </LazyMotion>
+    </>
   );
 }
