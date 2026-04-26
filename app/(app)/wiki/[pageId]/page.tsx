@@ -3,6 +3,7 @@ import { queryWikiByCustomer, getWikiPageBlocks } from '@/lib/notion/wiki';
 import type { WikiPage } from '@/schemas/wiki';
 import { BlocksRenderer } from '@/components/wiki/blocks-renderer';
 import { PageProperties } from '@/components/wiki/page-properties';
+import { PageEnter } from '@/components/motion/page-enter';
 import { notFound } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
@@ -24,7 +25,7 @@ export default async function WikiPageView({
   if (!page) notFound();
 
   return (
-    <>
+    <PageEnter className="flex flex-col h-full overflow-hidden">
       {page.cover ? (
         <div
           className="h-[180px] bg-cover bg-center"
@@ -45,6 +46,6 @@ export default async function WikiPageView({
         <PageProperties page={page} />
         <BlocksRenderer blocks={blocks} />
       </article>
-    </>
+    </PageEnter>
   );
 }
