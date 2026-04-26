@@ -79,7 +79,8 @@ describe('WikiForm', () => {
     fireEvent.click(screen.getByRole('button', { name: /Crear y abrir|Creando/ }));
     await waitFor(() => expect(mockToast.success).toHaveBeenCalled());
     expect(mockPush).not.toHaveBeenCalledWith('/wiki/wiki-1');
-    const opts = mockToast.success.mock.calls[0][1];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const opts = mockToast.success.mock.calls[0]![1] as { action: { label: string } };
     expect(opts.action.label).toBe('Abrir');
   });
 });
