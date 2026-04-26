@@ -22,38 +22,47 @@ export async function GET(req: Request) {
   const type = url.searchParams.get('type');
   const q = url.searchParams.get('q') ?? '';
 
-  let options: Option[] = [];
-  if (type === 'sprint') {
-    const sprints = await listSprints();
-    options = sprints.map((s) => ({
-      id: s.id,
-      label: s.name,
-      sublabel: s.status ?? undefined,
-    }));
-  } else if (type === 'project') {
-    const projects = await queryProjectsByCustomer(ctx.customerId);
-    options = projects.map((p) => ({
-      id: p.id,
-      label: p.name,
-      sublabel: p.icon ?? undefined,
-    }));
-  } else if (type === 'team') {
-    const members = await queryMembersByCustomerAndName(ctx.customerId, q);
-    options = members.map((m) => ({
-      id: m.id,
-      label: m.name,
-      sublabel: m.email,
-    }));
-  } else if (type === 'meeting') {
-    const meetings = await queryMeetingsByCustomer(ctx.customerId);
-    options = meetings.map((m) => ({
-      id: m.id,
-      label: m.title,
-      sublabel: m.date ?? undefined,
-    }));
-  } else {
-    return NextResponse.json({ error: 'invalid-type' }, { status: 400 });
-  }
+  try {
+    let options: Option[] = [];
+    if (type === 'sprint') {
+      const sprints = await listSprints();
+      options = sprints
+        .map((s) => ({
+          id: s.id,
+          label: s.name,
+          sublabel: s.status ?? undefined,
+        }))
+        .slice(0, 20);
+    } else if (type === 'project') {
+      const projects = await queryProjectsByCustomer(ctx.customerId);
+      options = projects.map((p) => ({
+        id: p.id,
+        label: p.name,
+        sublabel: p.icon ?? undefined,
+      }));
+    } else if (type === 'team') {
+      const members = await queryMembersByCustomerAndName(ctx.customerId, q);
+      options = members.map((m) => ({
+        id: m.id,
+        label: m.name,
+        sublabel: m.email,
+      }));
+    } else if (type === 'meeting') {
+      const meetings = await queryMeetingsByCustomer(ctx.customerId);
+      options = meetings
+        .map((m) => ({
+          id: m.id,
+          label: m.title,
+          sublabel: m.date ?? undefined,
+        }))
+        .slice(0, 20);
+    } else {
+      return NextResponse.json({ error: 'invalid-type' }, { status: 400 });
+    }
 
-  return NextResponse.json({ options });
+    return NextResponse.json({ options });
+  } catch (e) {
+    console.error('[/api/create/options]', type, e);
+    return NextResponse.json({ error: 'fetch-failed' }, { status: 502 });
+  }
 }

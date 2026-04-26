@@ -76,4 +76,13 @@ describe('GET /api/create/options', () => {
     const res = await GET(req('type=unknown'));
     expect(res.status).toBe(400);
   });
+
+  it('502 when underlying lib throws', async () => {
+    const { listSprints } = await import('@/lib/notion/sprints');
+    (listSprints as any).mockRejectedValueOnce(new Error('Notion down'));
+    const res = await GET(req('type=sprint'));
+    expect(res.status).toBe(502);
+    const body = await res.json();
+    expect(body.error).toBe('fetch-failed');
+  });
 });
