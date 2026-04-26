@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
+type FlashKind = 'success' | 'progress' | 'review' | 'neutral' | null;
+
 type Props = {
   id: string;
   title: string;
@@ -15,16 +17,18 @@ type Props = {
   dotFilled?: boolean;
   showDayChip?: boolean;
   membersById: Map<string, TeamMember>;
+  flash?: FlashKind;
 };
 
-export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, membersById }: Props) {
+export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, membersById, flash }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id });
 
   return (
     <div
       ref={setNodeRef}
+      data-flashed={flash ?? undefined}
       className={cn(
-        'bg-[#fafafa] border border-border rounded-lg flex flex-col min-h-full transition-colors',
+        'bg-[#fafafa] border border-border rounded-lg flex flex-col min-h-full transition-colors duration-(--duration-fast) ease-(--ease-linear)',
         isOver && 'border-[#5e6ad2] bg-[#eeeffc]/40',
       )}
     >
