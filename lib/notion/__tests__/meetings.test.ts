@@ -87,6 +87,32 @@ describe('queryMeetingsByCustomer', () => {
     const meetings = await queryMeetingsByCustomer('cust-focus');
     expect(meetings[0].summary).toBeNull();
   });
+
+  it('returns null summary when Summary rich_text is an empty array', async () => {
+    mockNotion.dataSources.query.mockResolvedValueOnce({
+      results: [
+        {
+          id: 'meeting-3',
+          url: 'https://notion.so/meeting-3',
+          properties: {
+            Name: { title: [{ plain_text: 'Empty summary' }] },
+            Date: { date: { start: '2026-04-01', end: null } },
+            'Meeting type': { select: null },
+            Summary: { rich_text: [] },
+            Attendees: { people: [] },
+            Customer: { relation: [{ id: 'cust-focus' }] },
+            Projects: { relation: [] },
+            Team: { relation: [] },
+            Tasks: { relation: [] },
+            Wiki: { relation: [] },
+          },
+        },
+      ],
+    });
+
+    const meetings = await queryMeetingsByCustomer('cust-focus');
+    expect(meetings[0].summary).toBeNull();
+  });
 });
 
 describe('getMeeting', () => {
