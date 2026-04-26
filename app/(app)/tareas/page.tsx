@@ -10,6 +10,7 @@ import { getCurrentSprint, getSprint, listSprints } from '@/lib/notion/sprints';
 import { getTeamMembers } from '@/lib/notion/team';
 import { KanbanView } from '@/components/kanban/kanban-view';
 import { ScopePill } from '@/components/kanban/scope-pill';
+import { PageEnter } from '@/components/motion/page-enter';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,7 +51,7 @@ export default async function TareasPage({
   const crumbLabel = sprintDates ? `${sprintLabel} · ${sprintDates}` : sprintLabel;
 
   return (
-    <>
+    <PageEnter className="flex flex-col h-full overflow-hidden">
       <Topbar crumbs={[{ label: 'Tareas' }, { label: crumbLabel, muted: true }]}>
         <ScopePill
           scope={scope}
@@ -67,6 +68,6 @@ export default async function TareasPage({
         members={members}
         scope={scope}
       />
-    </>
+    </PageEnter>
   );
 }
