@@ -85,7 +85,7 @@ describe('queryMeetingsByCustomer', () => {
     });
 
     const meetings = await queryMeetingsByCustomer('cust-focus');
-    expect(meetings[0].summary).toBeNull();
+    expect(meetings[0]).toMatchObject({ summary: null });
   });
 
   it('returns null summary when Summary rich_text is an empty array', async () => {
@@ -111,7 +111,7 @@ describe('queryMeetingsByCustomer', () => {
     });
 
     const meetings = await queryMeetingsByCustomer('cust-focus');
-    expect(meetings[0].summary).toBeNull();
+    expect(meetings[0]).toMatchObject({ summary: null });
   });
 });
 

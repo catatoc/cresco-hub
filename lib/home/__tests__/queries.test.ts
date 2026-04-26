@@ -36,6 +36,7 @@ const mkMeeting = (over: Partial<Meeting>): Meeting => ({
   date: null,
   endDate: null,
   meetingType: null,
+  summary: null,
   attendeeIds: [],
   customerId: 'c',
   projectIds: [],
