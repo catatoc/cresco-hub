@@ -1,12 +1,58 @@
 import { queryTasksByCustomerAndSprint } from '@/lib/notion/tasks';
 import { queryMeetingsByCustomer } from '@/lib/notion/meetings';
 import { queryWikiByCustomer } from '@/lib/notion/wiki';
+import { queryProjectsByCustomer } from '@/lib/notion/projects';
+import type { Project, ProjectStatus } from '@/schemas/project';
+import type { Task } from '@/schemas/task';
+
+export type HomeProject = Project & {
+  openTaskCount: number;
+  recentlyActive: boolean;
+};
+
+const ACTIVE_STATUS_ORDER: Partial<Record<ProjectStatus, number>> = {
+  'In Progress': 0,
+  Planning: 1,
+  Paused: 2,
+};
+
+function isActiveStatus(s: ProjectStatus | null): s is ProjectStatus {
+  return s !== null && s in ACTIVE_STATUS_ORDER;
+}
+
+function shapeActiveProjects(projects: Project[], tasks: Task[]): HomeProject[] {
+  const tasksByProject = new Map<string, Task[]>();
+  for (const t of tasks) {
+    if (!t.projectId) continue;
+    const list = tasksByProject.get(t.projectId) ?? [];
+    list.push(t);
+    tasksByProject.set(t.projectId, list);
+  }
+
+  return projects
+    .filter((p) => isActiveStatus(p.status))
+    .map((p): HomeProject => {
+      const projectTasks = tasksByProject.get(p.id) ?? [];
+      const openTaskCount = projectTasks.filter(
+        (t) => t.status !== 'Done' && t.status !== 'Archived',
+      ).length;
+      return { ...p, openTaskCount, recentlyActive: openTaskCount > 0 };
+    })
+    .sort((a, b) => {
+      const sa = ACTIVE_STATUS_ORDER[a.status as ProjectStatus] ?? 99;
+      const sb = ACTIVE_STATUS_ORDER[b.status as ProjectStatus] ?? 99;
+      if (sa !== sb) return sa - sb;
+      return (b.completion ?? 0) - (a.completion ?? 0);
+    })
+    .slice(0, 6);
+}
 
 export async function getHomeData(customerId: string, sprintId: string | null) {
-  const [tasks, meetings, wiki] = await Promise.all([
+  const [tasks, meetings, wiki, projects] = await Promise.all([
     queryTasksByCustomerAndSprint(customerId, sprintId),
     queryMeetingsByCustomer(customerId),
     queryWikiByCustomer(customerId),
+    queryProjectsByCustomer(customerId),
   ]);
 
   // Spanish labels for UI, mapped from real Notion statuses:
@@ -40,5 +86,7 @@ export async function getHomeData(customerId: string, sprintId: string | null) {
     })
     .slice(0, 5);
 
-  return { tasks, stats, upcomingMeeting, recentWiki, myTasksToday };
+  const activeProjects = shapeActiveProjects(projects, tasks);
+
+  return { tasks, stats, upcomingMeeting, recentWiki, myTasksToday, activeProjects };
 }
