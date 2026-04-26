@@ -4,16 +4,13 @@ import { SearchProvider } from '@/components/search/search-provider';
 import { CreateProvider } from '@/components/create/create-provider';
 import { Toaster } from 'sonner';
 import { LazyMotion, domMax, MotionConfig } from '@/components/motion/m';
-import { AnimatedMain } from '@/components/motion/animated-main';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AppLayout({
   children,
-  modal,
 }: {
   children: React.ReactNode;
-  modal: React.ReactNode;
 }) {
   const ctx = await requireContext();
   return (
@@ -24,9 +21,10 @@ export default async function AppLayout({
             <SearchProvider customerId={ctx.customerId}>
               <div className="grid grid-cols-[232px_1fr] h-screen overflow-hidden bg-[#fafafa]">
                 <Sidebar context={ctx} />
-                <AnimatedMain>{children}</AnimatedMain>
+                <main className="flex flex-col min-h-0 min-w-0 overflow-hidden bg-white">
+                  {children}
+                </main>
               </div>
-              {modal}
             </SearchProvider>
           </CreateProvider>
         </MotionConfig>
