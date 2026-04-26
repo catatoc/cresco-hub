@@ -4,6 +4,7 @@ import { UserCard } from './user-card';
 import { NavItem } from './nav-item';
 import { SearchTrigger } from '@/components/search/search-trigger';
 import { Home, CheckSquare, Calendar, BookOpen, FolderKanban } from 'lucide-react';
+import { LayoutGroup } from '@/components/motion/m';
 
 export function Sidebar({ context }: { context: AppContext }) {
   return (
@@ -13,30 +14,32 @@ export function Sidebar({ context }: { context: AppContext }) {
         customers={context.customers}
       />
 
-      <div className="pb-3">
-        <SearchTrigger />
-        <NavItem href="/" icon={<Home className="w-3.5 h-3.5" />} exact>
-          Home
-        </NavItem>
-      </div>
-
-      <div className="pb-3">
-        <div className="text-[11px] uppercase text-muted-foreground font-medium tracking-[0.03em] px-2 pt-1.5 pb-1">
-          Workspace
+      <LayoutGroup id="sidebar-nav">
+        <div className="pb-3">
+          <SearchTrigger />
+          <NavItem href="/" icon={<Home className="w-3.5 h-3.5" />} exact>
+            Home
+          </NavItem>
         </div>
-        <NavItem href="/tareas" icon={<CheckSquare className="w-3.5 h-3.5" />}>
-          Tareas
-        </NavItem>
-        <NavItem href="/reuniones" icon={<Calendar className="w-3.5 h-3.5" />}>
-          Reuniones
-        </NavItem>
-        <NavItem href="/wiki" icon={<BookOpen className="w-3.5 h-3.5" />}>
-          Wiki
-        </NavItem>
-        <NavItem href="/proyectos" icon={<FolderKanban className="w-3.5 h-3.5" />}>
-          Proyectos
-        </NavItem>
-      </div>
+
+        <div className="pb-3">
+          <div className="text-[11px] uppercase text-muted-foreground font-medium tracking-[0.03em] px-2 pt-1.5 pb-1">
+            Workspace
+          </div>
+          <NavItem href="/tareas" icon={<CheckSquare className="w-3.5 h-3.5" />}>
+            Tareas
+          </NavItem>
+          <NavItem href="/reuniones" icon={<Calendar className="w-3.5 h-3.5" />}>
+            Reuniones
+          </NavItem>
+          <NavItem href="/wiki" icon={<BookOpen className="w-3.5 h-3.5" />}>
+            Wiki
+          </NavItem>
+          <NavItem href="/proyectos" icon={<FolderKanban className="w-3.5 h-3.5" />}>
+            Proyectos
+          </NavItem>
+        </div>
+      </LayoutGroup>
 
       <div className="flex-1" />
       <UserCard name={context.memberName} role={`Miembro · ${context.customerName}`} />
