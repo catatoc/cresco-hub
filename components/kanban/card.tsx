@@ -157,7 +157,7 @@ export function TaskCard({ task, assignees = [], showDayChip, isOverlay }: Props
       {...(!isOverlay ? attributes : {})}
       {...(!isOverlay ? listeners : {})}
       className={cn(
-        'bg-white border border-border rounded-md p-2.5 cursor-grab active:cursor-grabbing hover:shadow-sm transition-shadow',
+        'bg-white border border-border rounded-md p-2.5 cursor-grab active:cursor-grabbing transition-[transform,box-shadow,border-color] duration-(--duration-base) ease-(--ease-linear) hover:-translate-y-px hover:shadow-md hover:border-[#c9cbe8]',
         isDone && 'opacity-75',
         isProgress && 'border-[#c9cbe8] shadow-[0_0_0_1px_rgba(94,106,210,.12)]',
         isDragging && !isOverlay && 'opacity-40',
