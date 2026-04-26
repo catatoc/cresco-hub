@@ -8,6 +8,7 @@ import { StatsStrip } from '@/components/home/stats-strip';
 import { MyTasks } from '@/components/home/my-tasks';
 import { NextMeeting } from '@/components/home/next-meeting';
 import { WikiRecents } from '@/components/home/wiki-recents';
+import { ActiveProjects } from '@/components/home/active-projects';
 import type { Task } from '@/schemas/task';
 import { Clock } from 'lucide-react';
 
@@ -19,7 +20,10 @@ export default async function HomePage() {
   const data = await getHomeData(ctx.customerId, sprint?.id ?? null);
 
   const memberIds = Array.from(
-    new Set(data.myTasksToday.flatMap((t: Task) => t.assigneeIds)),
+    new Set([
+      ...data.myTasksToday.flatMap((t: Task) => t.assigneeIds),
+      ...data.activeProjects.flatMap((p) => p.teamIds),
+    ]),
   );
   const members = await getTeamMembers(memberIds);
   const membersById = new Map(members.map((m) => [m.id, m]));
@@ -48,6 +52,7 @@ export default async function HomePage() {
         <Greeting name={ctx.memberName} stats={data.stats} upcomingMeeting={data.upcomingMeeting} />
         <StatsStrip stats={data.stats} upcomingMeeting={data.upcomingMeeting} overdueCount={overdue} />
         <MyTasks tasks={data.myTasksToday} membersById={membersById} />
+        <ActiveProjects projects={data.activeProjects} membersById={membersById} />
         <div className="grid grid-cols-2 gap-5">
           <NextMeeting meeting={data.upcomingMeeting} />
           <WikiRecents pages={data.recentWiki} />
