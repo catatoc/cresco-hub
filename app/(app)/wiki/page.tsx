@@ -3,6 +3,7 @@ import { requireContext } from '@/lib/auth/require-context';
 import { queryWikiByCustomer } from '@/lib/notion/wiki';
 import type { WikiPage } from '@/schemas/wiki';
 import { redirect } from 'next/navigation';
+import { EmptyState } from '@/components/common/empty-state';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,9 +15,7 @@ export default async function WikiIndexPage() {
     return (
       <>
         <Topbar crumbs={[{ label: 'Wiki' }]} />
-        <div className="p-10 text-muted-foreground">
-          Tu proyecto aún no tiene páginas de wiki.
-        </div>
+        <EmptyState icon="📚" title="Wiki vacía" description="Empieza creando tu primera página" />
       </>
     );
   }
