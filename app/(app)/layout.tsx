@@ -2,7 +2,7 @@ import { requireContext } from '@/lib/auth/require-context';
 import { Sidebar } from '@/components/shell/sidebar';
 import { SearchProvider } from '@/components/search/search-provider';
 import { Toaster } from 'sonner';
-import { LazyMotion, domAnimation } from '@/components/motion/m';
+import { LazyMotion, domMax, MotionConfig } from '@/components/motion/m';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +16,8 @@ export default async function AppLayout({
   const ctx = await requireContext();
   return (
     <>
-      <LazyMotion features={domAnimation} strict>
+      <LazyMotion features={domMax} strict>
+        <MotionConfig reducedMotion="user">
         <SearchProvider customerId={ctx.customerId}>
           <div className="grid grid-cols-[232px_1fr] h-screen overflow-hidden bg-[#fafafa]">
             <Sidebar context={ctx} />
@@ -26,6 +27,7 @@ export default async function AppLayout({
           </div>
           {modal}
         </SearchProvider>
+        </MotionConfig>
       </LazyMotion>
       <Toaster position="bottom-right" />
     </>
