@@ -52,7 +52,7 @@ export function SearchFilterPills({
             onClick={() => onChange(p.value)}
             onKeyDown={(e) => onKeyDown(e, idx)}
             className={cn(
-              'text-[11px] px-2.5 py-1 rounded-full border whitespace-nowrap transition-colors',
+              'text-[11px] px-2.5 py-1 rounded-full border whitespace-nowrap cursor-pointer transition-[transform,background-color,border-color,color] duration-(--duration-fast) ease-(--ease-linear) active:scale-[0.97]',
               active
                 ? 'bg-primary/10 text-primary border-primary/20'
                 : 'bg-white text-muted-foreground border-border hover:bg-muted',
