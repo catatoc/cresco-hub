@@ -1,9 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { m } from '@/components/motion/m';
-import { ViewTransitionLink } from '@/components/motion/view-transition-link';
 
 type Props = {
   href: string;
@@ -22,7 +22,7 @@ export function NavItem({ href, icon, kbd, count, children, exact }: Props) {
       : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <ViewTransitionLink
+    <Link
       href={href}
       className={cn(
         'relative flex items-center gap-2 px-2 py-1.5 rounded-[5px] text-[13px] font-normal text-muted-foreground transition-[background-color,color] duration-(--duration-fast) ease-(--ease-linear) hover:bg-black/[0.04] hover:text-foreground',
@@ -48,6 +48,6 @@ export function NavItem({ href, icon, kbd, count, children, exact }: Props) {
           {count}
         </span>
       )}
-    </ViewTransitionLink>
+    </Link>
   );
 }

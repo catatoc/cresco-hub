@@ -201,42 +201,6 @@
   .animate-home-pulse { animation: none; }
 }
 
-::view-transition-old(main-content),
-::view-transition-new(main-content) {
-  animation-duration: var(--duration-base);
-  animation-timing-function: var(--ease-linear);
-}
-
-::view-transition-old(main-content) {
-  animation-name: page-out;
-}
-
-::view-transition-new(main-content) {
-  animation-name: page-in;
-}
-
-@keyframes page-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes page-out {
-  from { opacity: 1; transform: translateY(0); }
-  to   { opacity: 0; transform: translateY(-3px); }
-}
-
-/* Fallback for browsers without view-transitions */
-@supports not (view-transition-name: x) {
-  main { animation: page-in var(--duration-base) var(--ease-linear); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(main-content),
-  ::view-transition-new(main-content) {
-    animation: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   [data-stagger-item] { animation-delay: 0ms !important; }
 }
