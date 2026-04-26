@@ -4,12 +4,11 @@ import { queryMeetingsByCustomer } from '@/lib/notion/meetings';
 import { getBlocks } from '@/lib/notion/blocks';
 import { getTask } from '@/lib/notion/tasks';
 import { getTeamMembers } from '@/lib/notion/team';
-import { pickDefault, pickNextMeeting } from '@/lib/meetings/select';
+import { pickDefault } from '@/lib/meetings/select';
 import type { Task } from '@/schemas/task';
 import type { TeamMember } from '@/schemas/team-member';
 import { HeroMeeting } from '@/components/meetings/hero-meeting';
 import { HistoryPanel } from '@/components/meetings/history-panel';
-import { NextMeetingBanner } from '@/components/meetings/next-meeting-banner';
 import { MeetingsEmpty } from '@/components/meetings/meetings-empty';
 
 export const dynamic = 'force-dynamic';
@@ -18,14 +17,7 @@ export default async function ReunionesPage() {
   const ctx = await requireContext();
   const meetings = await queryMeetingsByCustomer(ctx.customerId);
 
-  const now = Date.now();
-  const current = pickDefault(meetings, now);
-  const nextMeeting = pickNextMeeting(meetings, now);
-  const isPast =
-    current !== null &&
-    current.date !== null &&
-    new Date(current.date).getTime() <= now;
-  const bannerMeeting = isPast ? nextMeeting : null;
+  const current = pickDefault(meetings);
 
   let blocks: any[] = [];
   let actionItems: Task[] = [];
@@ -57,15 +49,12 @@ export default async function ReunionesPage() {
       <div className="flex-1 grid grid-cols-[1fr_280px] overflow-hidden">
         <div className="overflow-auto p-7 pb-12">
           {current ? (
-            <>
-              {bannerMeeting && <NextMeetingBanner nextMeeting={bannerMeeting} />}
-              <HeroMeeting
-                meeting={current}
-                blocks={blocks}
-                actionItems={actionItems}
-                membersById={membersById}
-              />
-            </>
+            <HeroMeeting
+              meeting={current}
+              blocks={blocks}
+              actionItems={actionItems}
+              membersById={membersById}
+            />
           ) : (
             <MeetingsEmpty />
           )}

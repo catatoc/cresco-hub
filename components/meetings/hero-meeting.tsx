@@ -19,6 +19,7 @@ type Props = {
 
 export function HeroMeeting({ meeting, blocks, actionItems, membersById }: Props) {
   const now = new Date();
+  const created = parseISO(meeting.createdTime);
   const start = meeting.date ? parseISO(meeting.date) : null;
   const end = meeting.endDate ? parseISO(meeting.endDate) : null;
   const live = isLive({ now, start, end });
@@ -37,7 +38,7 @@ export function HeroMeeting({ meeting, blocks, actionItems, membersById }: Props
           <div className="flex items-center gap-2 mb-3">
             {live && <LiveBadge />}
             <span className="text-[12px] text-muted-foreground font-medium">
-              {start && format(start, "EEEE · d 'de' MMMM · 'Semana' w", { locale: es })}
+              {format(created, "EEEE · d 'de' MMMM · 'Semana' w", { locale: es })}
             </span>
             {meeting.meetingType && (
               <span className="inline-flex items-center px-1.5 py-[1px] rounded text-[11px] font-medium bg-[#eeeffc] text-[#5e6ad2]">

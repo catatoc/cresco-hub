@@ -7,6 +7,7 @@ function parseMeeting(row: any): Meeting {
   return meetingSchema.parse({
     id: row.id,
     title: p.Name?.title?.[0]?.plain_text ?? '',
+    createdTime: row.created_time,
     date: p.Date?.date?.start ?? null,
     endDate: p.Date?.date?.end ?? null,
     meetingType: p['Meeting type']?.select?.name ?? null,
@@ -30,7 +31,7 @@ export async function queryMeetingsByCustomer(customerId: string): Promise<Meeti
   const res = await notion.dataSources.query({
     data_source_id: serverEnv.NOTION_DB_MEETINGS,
     filter: { property: 'Customer', relation: { contains: customerId } },
-    sorts: [{ property: 'Date', direction: 'descending' }],
+    sorts: [{ timestamp: 'created_time', direction: 'descending' }],
   });
   return res.results.filter((r): r is any => 'properties' in r).map(parseMeeting);
 }

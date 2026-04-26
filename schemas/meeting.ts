@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const meetingSchema = z.object({
   id: z.string(),
   title: z.string(),
+  createdTime: z.string(),
   date: z.string().nullable(),
   endDate: z.string().nullable(),
   meetingType: z.string().nullable(),

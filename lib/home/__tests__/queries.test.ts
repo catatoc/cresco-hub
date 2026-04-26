@@ -36,6 +36,7 @@ const mkTask = (over: Partial<Task>): Task => ({
 const mkMeeting = (over: Partial<Meeting>): Meeting => ({
   id: 'm',
   title: '',
+  createdTime: '2026-01-01T00:00:00.000Z',
   date: null,
   endDate: null,
   meetingType: null,

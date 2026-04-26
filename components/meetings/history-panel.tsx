@@ -11,8 +11,7 @@ type MonthGroup = { key: string; label: string; meetings: Meeting[] };
 function groupByMonth(meetings: Meeting[]): MonthGroup[] {
   const groups = new Map<string, MonthGroup>();
   for (const m of meetings) {
-    if (!m.date) continue;
-    const d = parseISO(m.date);
+    const d = parseISO(m.createdTime);
     const key = format(d, 'yyyy-MM');
     const label = format(d, 'MMMM yyyy', { locale: es }).toUpperCase();
     if (!groups.has(key)) groups.set(key, { key, label, meetings: [] });
@@ -40,8 +39,8 @@ export function HistoryPanel({ meetings, currentId }: Props) {
 
           {g.meetings.map((m) => {
             const active = m.id === currentId;
-            const d = m.date ? parseISO(m.date) : null;
-            const week = d ? getISOWeek(d) : null;
+            const d = parseISO(m.createdTime);
+            const week = getISOWeek(d);
 
             return (
               <Link
@@ -58,8 +57,7 @@ export function HistoryPanel({ meetings, currentId }: Props) {
                     active ? 'text-[#5e6ad2]' : 'text-muted-foreground',
                   )}
                 >
-                  {d && format(d, 'MMM d', { locale: es })}
-                  {week && ` · Sem ${week}`}
+                  {format(d, 'MMM d', { locale: es })} · Sem {week}
                 </div>
                 <div className={cn('text-[12px] leading-snug mt-0.5', active ? 'font-semibold' : 'font-medium')}>
                   {m.title}

@@ -19,6 +19,7 @@ describe('queryMeetingsByCustomer', () => {
         {
           id: 'meeting-1',
           url: 'https://notion.so/meeting-1',
+          created_time: '2026-04-24T09:30:00.000Z',
           properties: {
             Name: { title: [{ plain_text: 'Weekly sync' }] },
             Date: {
@@ -50,6 +51,7 @@ describe('queryMeetingsByCustomer', () => {
     expect(meetings[0]).toMatchObject({
       id: 'meeting-1',
       title: 'Weekly sync',
+      createdTime: '2026-04-24T09:30:00.000Z',
       date: '2026-04-24T10:00:00.000Z',
       endDate: '2026-04-24T11:00:00.000Z',
       meetingType: 'Weekly',
@@ -69,6 +71,7 @@ describe('queryMeetingsByCustomer', () => {
         {
           id: 'meeting-2',
           url: 'https://notion.so/meeting-2',
+          created_time: '2026-04-01T08:00:00.000Z',
           properties: {
             Name: { title: [{ plain_text: 'Sin summary' }] },
             Date: { date: { start: '2026-04-01', end: null } },
@@ -94,6 +97,7 @@ describe('queryMeetingsByCustomer', () => {
         {
           id: 'meeting-3',
           url: 'https://notion.so/meeting-3',
+          created_time: '2026-03-15T07:00:00.000Z',
           properties: {
             Name: { title: [{ plain_text: 'Empty summary' }] },
             Date: { date: { start: '2026-04-01', end: null } },
