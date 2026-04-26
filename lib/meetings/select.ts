@@ -1,7 +1,7 @@
 import type { Meeting } from '@/schemas/meeting';
 
 function withDate(m: Meeting): m is Meeting & { date: string } {
-  return m.date !== null;
+  return !!m.date;
 }
 
 export function pickDefault(meetings: Meeting[], now: number): Meeting | null {
@@ -11,7 +11,7 @@ export function pickDefault(meetings: Meeting[], now: number): Meeting | null {
   const past = dated
     .filter((m) => new Date(m.date).getTime() <= now)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  if (past.length > 0) return past[0];
+  if (past.length > 0) return past[0] ?? null;
 
   const future = dated
     .filter((m) => new Date(m.date).getTime() > now)

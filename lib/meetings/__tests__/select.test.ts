@@ -53,6 +53,11 @@ describe('pickDefault', () => {
     const meetings = [makeMeeting('exact', '2026-04-26T12:00:00Z')];
     expect(pickDefault(meetings, NOW)?.id).toBe('exact');
   });
+
+  it('ignores meetings with empty-string date', () => {
+    const m = makeMeeting('empty', '');
+    expect(pickDefault([m], NOW)).toBeNull();
+  });
 });
 
 describe('pickNextMeeting', () => {
@@ -76,5 +81,9 @@ describe('pickNextMeeting', () => {
       makeMeeting('soon', '2026-04-30T10:00:00Z'),
     ];
     expect(pickNextMeeting(meetings, NOW)?.id).toBe('soon');
+  });
+
+  it('returns null for empty list', () => {
+    expect(pickNextMeeting([], NOW)).toBeNull();
   });
 });
