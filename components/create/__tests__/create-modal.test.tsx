@@ -66,4 +66,16 @@ describe('CreateModal shell', () => {
     expect(screen.getByDisplayValue('Hola')).toBeInTheDocument();
     confirmSpy.mockRestore();
   });
+
+  it('Esc with non-empty title prompts confirm exactly once (no double-fire)', () => {
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+    setup();
+    fireEvent.click(screen.getByText('open'));
+    fireEvent.change(screen.getByPlaceholderText(/Título/i), {
+      target: { value: 'Hola' },
+    });
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(confirmSpy).toHaveBeenCalledTimes(1);
+    confirmSpy.mockRestore();
+  });
 });

@@ -27,22 +27,6 @@ export function CreateModal({ customerId }: { customerId: string }) {
     }
   }, [isOpen]);
 
-  // Esc handler with confirm
-  useEffect(() => {
-    if (!isOpen) return;
-    function onKey(e: KeyboardEvent) {
-      if (e.key !== 'Escape') return;
-      if (title.trim().length === 0) {
-        close();
-      } else {
-        const ok = window.confirm('¿Descartar?');
-        if (ok) close();
-      }
-    }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [isOpen, title, close]);
-
   function handleOpenChange(open: boolean) {
     if (open) return;
     if (title.trim().length === 0) close();
