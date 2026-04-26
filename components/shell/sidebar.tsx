@@ -17,8 +17,6 @@ export function Sidebar({ context }: { context: AppContext }) {
 
       <LayoutGroup id="sidebar-nav">
         <div className="pb-3">
-          <SearchTrigger />
-          <CreateTrigger />
           <NavItem href="/" icon={<Home className="w-3.5 h-3.5" />} exact>
             Home
           </NavItem>
@@ -44,6 +42,10 @@ export function Sidebar({ context }: { context: AppContext }) {
       </LayoutGroup>
 
       <div className="flex-1" />
+      <div className="pb-1 hidden">
+        <SearchTrigger />
+        <CreateTrigger />
+      </div>
       <UserCard name={context.memberName} role={`Miembro · ${context.customerName}`} />
     </aside>
   );

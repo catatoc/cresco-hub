@@ -3,7 +3,7 @@ import { Topbar } from '@/components/shell/topbar';
 export default function Loading() {
   return (
     <>
-      <Topbar crumbs={[{ label: 'Tareas' }, { label: 'Sprint activo', muted: true }]} />
+      <Topbar crumbs={[{ label: 'Tareas' }, { label: 'Semana activa', muted: true }]} />
       <div className="flex-1 flex flex-col overflow-hidden px-5 pt-5">
         <div className="flex items-center gap-2.5 mb-4">
           <div className="h-4 w-28 bg-[#f7f7f8] rounded animate-pulse" />
