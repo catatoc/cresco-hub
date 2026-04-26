@@ -6,6 +6,7 @@ import type { Task } from '@/schemas/task';
 import type { TeamMember } from '@/schemas/team-member';
 import { BlocksRenderer } from '@/components/wiki/blocks-renderer';
 import { AssigneeAvatar } from '@/components/kanban/card';
+import { cn } from '@/lib/utils';
 import { LiveBadge, isLive } from './live-badge';
 import { ActionItems } from './action-items';
 
@@ -46,6 +47,12 @@ export function HeroMeeting({ meeting, blocks, actionItems, membersById }: Props
           </div>
 
           <h1 className="text-[22px] font-semibold tracking-[-0.01em] mb-3.5">{meeting.title}</h1>
+
+          {meeting.summary && (
+            <p className="text-[12.5px] text-muted-foreground leading-[1.55] max-w-[640px] mb-4">
+              {meeting.summary}
+            </p>
+          )}
 
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5 p-3.5 bg-white border border-border rounded-lg mb-4 text-[12px]">
             {start && (
@@ -105,7 +112,18 @@ export function HeroMeeting({ meeting, blocks, actionItems, membersById }: Props
 
       {actionItems.length > 0 && (
         <section className="mb-7">
-          <SectionHead title="Tareas de esta reunión" count={`${actionItems.length} vinculadas`} />
+          {(() => {
+            const open = actionItems.filter((t) => t.status !== 'Done').length;
+            const done = actionItems.length - open;
+            const label = `${open} abierta${open === 1 ? '' : 's'} · ${done} hecha${done === 1 ? '' : 's'}`;
+            return (
+              <SectionHead
+                title="Tareas de esta reunión"
+                count={label}
+                countTone={open > 0 ? 'warn' : 'muted'}
+              />
+            );
+          })()}
           <ActionItems tasks={actionItems} membersById={membersById} />
         </section>
       )}
@@ -122,11 +140,30 @@ function MetaItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-function SectionHead({ title, count }: { title: string; count?: string }) {
+function SectionHead({
+  title,
+  count,
+  countTone = 'muted',
+}: {
+  title: string;
+  count?: string;
+  countTone?: 'muted' | 'warn';
+}) {
   return (
     <div className="flex items-baseline gap-2.5 mb-3">
-      <h2 className="text-[13px] font-semibold uppercase tracking-[0.04em] text-muted-foreground">{title}</h2>
-      {count && <span className="text-[12px] text-muted-foreground">{count}</span>}
+      <h2 className="text-[13px] font-semibold uppercase tracking-[0.04em] text-muted-foreground">
+        {title}
+      </h2>
+      {count && (
+        <span
+          className={cn(
+            'text-[12px] font-medium',
+            countTone === 'warn' ? 'text-[#b8741d]' : 'text-muted-foreground',
+          )}
+        >
+          {count}
+        </span>
+      )}
     </div>
   );
 }
