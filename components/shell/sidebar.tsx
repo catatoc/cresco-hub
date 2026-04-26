@@ -3,6 +3,7 @@ import { WorkspaceHeader } from './workspace-header';
 import { UserCard } from './user-card';
 import { NavItem } from './nav-item';
 import { SearchTrigger } from '@/components/search/search-trigger';
+import { CreateTrigger } from '@/components/create/create-trigger';
 import { Home, CheckSquare, Calendar, BookOpen, FolderKanban } from 'lucide-react';
 import { LayoutGroup } from '@/components/motion/m';
 
@@ -17,6 +18,7 @@ export function Sidebar({ context }: { context: AppContext }) {
       <LayoutGroup id="sidebar-nav">
         <div className="pb-3">
           <SearchTrigger />
+          <CreateTrigger />
           <NavItem href="/" icon={<Home className="w-3.5 h-3.5" />} exact>
             Home
           </NavItem>
