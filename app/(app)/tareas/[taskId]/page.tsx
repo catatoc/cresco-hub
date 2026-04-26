@@ -5,7 +5,7 @@ import { getProject } from '@/lib/notion/projects';
 import { getSprint } from '@/lib/notion/sprints';
 import { getTeamMembers } from '@/lib/notion/team';
 import { notFound } from 'next/navigation';
-import { TaskDrawer } from '@/components/kanban/task-drawer';
+import { TaskDetail } from '@/components/kanban/task-detail';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,13 +28,12 @@ export default async function TaskPage({
   ]);
 
   return (
-    <TaskDrawer
+    <TaskDetail
       task={task}
       blocks={blocks}
       project={project}
       sprint={sprint}
       assignees={assignees}
-      closeMode="push"
     />
   );
 }
