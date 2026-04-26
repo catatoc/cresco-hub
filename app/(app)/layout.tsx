@@ -21,7 +21,7 @@ export default async function AppLayout({
         <SearchProvider customerId={ctx.customerId}>
           <div className="grid grid-cols-[232px_1fr] h-screen overflow-hidden bg-[#fafafa]">
             <Sidebar context={ctx} />
-            <main className="flex flex-col min-h-0 min-w-0 overflow-hidden bg-white">
+            <main className="flex flex-col min-h-0 min-w-0 overflow-hidden bg-white [view-transition-name:main-content]">
               {children}
             </main>
           </div>
