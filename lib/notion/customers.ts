@@ -1,5 +1,19 @@
 import { getNotion } from './client';
-import { customerSchema, type Customer } from '@/schemas/customer';
+import { customerSchema, type Customer, type CustomerIcon } from '@/schemas/customer';
+
+function parseIcon(icon: any): CustomerIcon | null {
+  if (!icon) return null;
+  if (icon.type === 'emoji' && typeof icon.emoji === 'string') {
+    return { type: 'emoji', value: icon.emoji };
+  }
+  if (icon.type === 'external' && typeof icon.external?.url === 'string') {
+    return { type: 'image', value: icon.external.url };
+  }
+  if (icon.type === 'file' && typeof icon.file?.url === 'string') {
+    return { type: 'image', value: icon.file.url };
+  }
+  return null;
+}
 
 export async function getCustomer(id: string): Promise<Customer | null> {
   const notion = getNotion();
@@ -7,12 +21,11 @@ export async function getCustomer(id: string): Promise<Customer | null> {
     const page = await notion.pages.retrieve({ page_id: id });
     if (!('properties' in page)) return null;
     const p = page.properties as Record<string, any>;
-    const icon = (page as any).icon;
 
     return customerSchema.parse({
       id: page.id,
       name: p['Customer name']?.title?.[0]?.plain_text ?? '',
-      icon: icon?.type === 'emoji' ? icon.emoji : null,
+      icon: parseIcon((page as any).icon),
       status: p.Status?.status?.name ?? null,
       type: p.Type?.select?.name ?? null,
     });

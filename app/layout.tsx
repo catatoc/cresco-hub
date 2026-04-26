@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Hub",
+  title: "crescō",
   description: "Tu proyecto. Sin abrir Notion.",
 };
 

@@ -82,7 +82,7 @@ function CategoryGroup({
     <div className="mb-2">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-1 px-2 py-1 text-[10px] uppercase font-semibold tracking-[0.04em] text-muted-foreground hover:text-foreground transition-colors"
+        className="w-full flex items-center gap-1 px-2 py-1 text-[10px] uppercase font-semibold tracking-[0.04em] text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
       >
         {open ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
         <span className="flex-1 text-left">{category}</span>

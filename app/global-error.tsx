@@ -19,7 +19,7 @@ export default function GlobalError({
             )}
             <button
               onClick={reset}
-              className="mt-2 px-3 py-1.5 rounded-md border border-neutral-300 text-sm hover:bg-neutral-50"
+              className="mt-2 px-3 py-1.5 rounded-md border border-neutral-300 text-sm hover:bg-neutral-50 cursor-pointer"
             >
               Recargar
             </button>

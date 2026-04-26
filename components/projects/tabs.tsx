@@ -25,7 +25,7 @@ export function Tabs({ current, counts, onChange }: Props) {
           key={k}
           onClick={() => onChange(k)}
           className={cn(
-            'px-3 py-[5px] text-[12px] rounded-md font-medium flex items-center gap-1.5 text-muted-foreground hover:text-foreground',
+            'px-3 py-[5px] text-[12px] rounded-md font-medium flex items-center gap-1.5 text-muted-foreground hover:text-foreground cursor-pointer',
             current === k && 'bg-white text-foreground shadow-sm',
           )}
         >

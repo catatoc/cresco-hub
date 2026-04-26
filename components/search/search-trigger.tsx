@@ -8,7 +8,7 @@ export function SearchTrigger() {
   return (
     <button
       onClick={open}
-      className="w-full flex items-center gap-2 px-2 py-1.5 rounded-[5px] text-[13px] font-normal text-muted-foreground hover:bg-black/[0.04] hover:text-foreground transition-colors"
+      className="w-full flex items-center gap-2 px-2 py-1.5 rounded-[5px] text-[13px] font-normal text-muted-foreground hover:bg-black/[0.04] hover:text-foreground transition-colors cursor-pointer"
       aria-label="Buscar (⌘K)"
     >
       <Search className="w-3.5 h-3.5" />

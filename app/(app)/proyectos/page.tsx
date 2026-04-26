@@ -12,12 +12,14 @@ export default async function ProyectosPage() {
   return (
     <>
       <Topbar crumbs={[{ label: 'Proyectos' }]} />
-      <div className="flex-1 overflow-auto p-10 max-w-[1100px] mx-auto w-full">
-        <div className="flex items-baseline gap-2.5 mb-5">
-          <h1 className="text-[20px] font-semibold tracking-[-0.01em]">Proyectos</h1>
-          <span className="text-[12px] text-muted-foreground">{projects.length} en total</span>
+      <div className="flex-1 overflow-auto">
+        <div className="p-10 max-w-[1100px] mx-auto w-full">
+          <div className="flex items-baseline gap-2.5 mb-5">
+            <h1 className="text-[20px] font-semibold tracking-[-0.01em]">Proyectos</h1>
+            <span className="text-[12px] text-muted-foreground">{projects.length} en total</span>
+          </div>
+          <ProjectsView projects={projects} />
         </div>
-        <ProjectsView projects={projects} />
       </div>
     </>
   );

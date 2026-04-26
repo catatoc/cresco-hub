@@ -56,7 +56,13 @@ describe('resolveContext', () => {
       customerIds: ['customer-123'], projectIds: ['p-1'],
     });
     vi.mocked(getCustomers).mockResolvedValueOnce([
-      { id: 'customer-123', name: 'Focus Kids', icon: '🎯', status: 'Active', type: 'Customer' },
+      {
+        id: 'customer-123',
+        name: 'Focus Kids',
+        icon: { type: 'emoji', value: '🎯' },
+        status: 'Active',
+        type: 'Customer',
+      },
     ]);
 
     const ctx = await resolveContext('d@x.com');
@@ -64,8 +70,10 @@ describe('resolveContext', () => {
       email: 'd@x.com',
       customerId: 'customer-123',
       customerName: 'Focus Kids',
-      customerIcon: '🎯',
-      customers: [{ id: 'customer-123', name: 'Focus Kids', icon: '🎯' }],
+      customerIcon: { type: 'emoji', value: '🎯' },
+      customers: [
+        { id: 'customer-123', name: 'Focus Kids', icon: { type: 'emoji', value: '🎯' } },
+      ],
       projectIds: ['p-1'],
       memberId: 'm-1',
       memberName: 'Dani',

@@ -1,3 +1,5 @@
+import { Mermaid } from './mermaid';
+
 type RichText = {
   plain_text: string;
   annotations: {
@@ -104,15 +106,20 @@ export function BlocksRenderer({ blocks }: { blocks: any[] }) {
                 <RenderRich rich={b.quote.rich_text} />
               </blockquote>
             );
-          case 'code':
+          case 'code': {
+            const source = b.code.rich_text.map((r: RichText) => r.plain_text).join('');
+            if (b.code.language === 'mermaid') {
+              return <Mermaid key={b.id} chart={source} />;
+            }
             return (
               <pre
                 key={b.id}
                 className="p-3 rounded-md bg-[#f7f7f8] text-[12px] font-mono overflow-auto my-3"
               >
-                <code>{b.code.rich_text.map((r: RichText) => r.plain_text).join('')}</code>
+                <code>{source}</code>
               </pre>
             );
+          }
           default:
             return null;
         }

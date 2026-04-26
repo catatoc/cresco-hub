@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { getNotion } from './client';
 import { serverEnv } from '@/lib/env';
 import { wikiPageSchema, type WikiPage } from '@/schemas/wiki';
@@ -24,15 +25,17 @@ function parseWiki(row: any): WikiPage {
   });
 }
 
-export async function queryWikiByCustomer(customerId: string): Promise<WikiPage[]> {
-  const notion = getNotion();
-  const res = await notion.dataSources.query({
-    data_source_id: serverEnv.NOTION_DB_WIKI,
-    filter: { property: 'Customer', relation: { contains: customerId } },
-    sorts: [{ timestamp: 'last_edited_time', direction: 'descending' }],
-  });
-  return res.results.filter((r): r is any => 'properties' in r).map(parseWiki);
-}
+export const queryWikiByCustomer = cache(
+  async (customerId: string): Promise<WikiPage[]> => {
+    const notion = getNotion();
+    const res = await notion.dataSources.query({
+      data_source_id: serverEnv.NOTION_DB_WIKI,
+      filter: { property: 'Customer', relation: { contains: customerId } },
+      sorts: [{ timestamp: 'last_edited_time', direction: 'descending' }],
+    });
+    return res.results.filter((r): r is any => 'properties' in r).map(parseWiki);
+  },
+);
 
 export async function getWikiPageBlocks(pageId: string) {
   const notion = getNotion();

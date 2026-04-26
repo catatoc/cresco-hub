@@ -4,24 +4,24 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-[1fr_520px]">
       <section className="relative hidden md:flex flex-col p-12 text-white bg-[#0f0f10] overflow-hidden">
-        <div className="absolute -top-40 -left-20 w-[700px] h-[700px] rounded-full bg-[#5e6ad2]/35 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-40 -right-20 w-[500px] h-[500px] rounded-full bg-[#7c5fd0]/20 blur-3xl pointer-events-none" />
+        <div className="absolute -top-40 -left-20 w-[700px] h-[700px] rounded-full bg-[#22c55e]/35 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-40 -right-20 w-[500px] h-[500px] rounded-full bg-[#15803d]/25 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#5e6ad2] to-[#7c5fd0] grid place-items-center font-bold">
-            H
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#22c55e] to-[#15803d] grid place-items-center font-bold">
+            C
           </div>
-          <span className="font-semibold">Hub</span>
+          <span className="font-semibold">crescō</span>
         </div>
 
         <div className="relative z-10 flex-1 flex flex-col justify-center max-w-[440px]">
           <p className="text-xs uppercase tracking-wider text-white/50 font-medium mb-3">
-            Notion Hub
+            crescō
           </p>
           <h1 className="text-[42px] font-semibold leading-[1.1] tracking-[-0.02em] mb-4">
             Tu proyecto.
             <br />
-            <span className="text-[#b4bcf0]">Sin abrir Notion.</span>
+            <span className="text-[#86efac]">Sin abrir Notion.</span>
           </h1>
           <p className="text-white/70 leading-relaxed">
             Un espacio ligero, rápido y claro para ver tus tareas, reuniones y
@@ -30,7 +30,7 @@ export default function LoginPage() {
 
           <ul className="mt-12 space-y-3.5 text-[13px] text-white/80">
             <li className="flex items-center gap-3">
-              <span className="w-6 h-6 rounded-md bg-[#5e6ad2]/15 text-[#b4bcf0] grid place-items-center shrink-0">
+              <span className="w-6 h-6 rounded-md bg-[#22c55e]/15 text-[#86efac] grid place-items-center shrink-0">
                 <svg
                   width="12"
                   height="12"
@@ -46,7 +46,7 @@ export default function LoginPage() {
               Kanban semanal enfocado en lo que importa hoy
             </li>
             <li className="flex items-center gap-3">
-              <span className="w-6 h-6 rounded-md bg-[#5e6ad2]/15 text-[#b4bcf0] grid place-items-center shrink-0">
+              <span className="w-6 h-6 rounded-md bg-[#22c55e]/15 text-[#86efac] grid place-items-center shrink-0">
                 <svg
                   width="12"
                   height="12"
@@ -63,7 +63,7 @@ export default function LoginPage() {
               Reuniones con agenda, decisiones y acciones ligadas
             </li>
             <li className="flex items-center gap-3">
-              <span className="w-6 h-6 rounded-md bg-[#5e6ad2]/15 text-[#b4bcf0] grid place-items-center shrink-0">
+              <span className="w-6 h-6 rounded-md bg-[#22c55e]/15 text-[#86efac] grid place-items-center shrink-0">
                 <svg
                   width="12"
                   height="12"
@@ -81,7 +81,7 @@ export default function LoginPage() {
           </ul>
         </div>
 
-        <p className="relative z-10 text-xs text-white/40">© 2026 Hub</p>
+        <p className="relative z-10 text-xs text-white/40">© 2026 crescō</p>
       </section>
 
       <section className="flex flex-col p-12 md:p-16 bg-white border-l border-neutral-200">
@@ -89,7 +89,7 @@ export default function LoginPage() {
           ¿Primera vez?{' '}
           <a
             href="#"
-            className="ml-1.5 text-foreground font-medium hover:text-[#5e6ad2]"
+            className="ml-1.5 text-foreground font-medium hover:text-[#15803d]"
           >
             Contacta a tu PM →
           </a>

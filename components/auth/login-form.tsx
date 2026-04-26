@@ -41,13 +41,13 @@ export function LoginForm() {
   if (sent) {
     return (
       <div className="space-y-3 text-sm">
-        <div className="p-4 rounded-lg bg-[#eeeffc] border border-[#dfe1f2] text-[#3a3f7a]">
+        <div className="p-4 rounded-lg bg-[#f0fdf4] border border-[#dcfce7] text-[#14532d]">
           <strong>Revisa tu correo.</strong> Te enviamos un link a{' '}
           <code className="font-mono text-xs">{email}</code>.
         </div>
         <button
           onClick={() => setSent(false)}
-          className="text-xs text-muted-foreground hover:text-foreground"
+          className="text-xs text-muted-foreground hover:text-foreground cursor-pointer"
         >
           Usar otro correo
         </button>
@@ -123,8 +123,8 @@ export function LoginForm() {
         Continuar con Google
       </Button>
 
-      <div className="mt-4 p-3 rounded-lg bg-[#eeeffc] border border-[#dfe1f2] text-[12px] leading-relaxed text-[#3a3f7a] flex gap-2">
-        <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#5e6ad2]" />
+      <div className="mt-4 p-3 rounded-lg bg-[#f0fdf4] border border-[#dcfce7] text-[12px] leading-relaxed text-[#14532d] flex gap-2">
+        <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#15803d]" />
         <p>
           <strong>Solo correos autorizados.</strong> Tu PM debe tenerte
           registrado en la base de Equipo de Notion con este email.

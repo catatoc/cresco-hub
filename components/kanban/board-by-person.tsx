@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import type { Task } from '@/schemas/task';
 import type { TeamMember } from '@/schemas/team-member';
 import { groupTasksByPerson } from '@/lib/tareas/group-by-person';
@@ -9,6 +9,7 @@ import { BoardClassic } from './board-classic';
 import { BoardWeek } from './board-week';
 import { AssigneeAvatar } from './card';
 import { cn } from '@/lib/utils';
+import { m, AnimatePresence, EASE_OUT_SOFT } from '@/components/motion/m';
 
 type Props = {
   tasks: Task[];
@@ -29,21 +30,23 @@ export function BoardByPerson({ tasks, setTasks, members, membersById, view }: P
   const groups = groupTasksByPerson(tasks, members);
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col gap-3 pb-5 overflow-auto">
-      {groups.map((g) => (
-        <PersonSection
-          key={g.member?.id ?? '__unassigned__'}
-          group={g}
-          setTasks={setTasks}
-          membersById={membersById}
-          view={view}
-        />
-      ))}
-      {groups.length === 0 && (
-        <div className="border border-dashed border-border rounded-lg p-6 text-center text-sm text-muted-foreground">
-          No hay tareas en este sprint.
-        </div>
-      )}
+    <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pb-5">
+      <div className="flex flex-col gap-3">
+        {groups.map((g) => (
+          <PersonSection
+            key={g.member?.id ?? '__unassigned__'}
+            group={g}
+            setTasks={setTasks}
+            membersById={membersById}
+            view={view}
+          />
+        ))}
+        {groups.length === 0 && (
+          <div className="border border-dashed border-border rounded-lg p-6 text-center text-sm text-muted-foreground">
+            No hay tareas en este sprint.
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -84,55 +87,90 @@ function PersonSection({
     });
   };
 
+  const labelId = `person-${group.member?.id ?? 'unassigned'}-label`;
+  const panelId = `person-${group.member?.id ?? 'unassigned'}-panel`;
+
   return (
-    <section className="border border-border rounded-lg bg-white overflow-hidden">
+    <section className="border border-border rounded-lg bg-white shrink-0">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-3 px-3.5 py-2.5 text-left hover:bg-black/[0.02] cursor-pointer"
+        aria-expanded={open}
+        aria-controls={panelId}
+        id={labelId}
+        className={cn(
+          'w-full flex items-center gap-3 px-3.5 py-2.5 text-left rounded-lg cursor-pointer',
+          'transition-colors duration-(--duration-fast) ease-(--ease-linear)',
+          'hover:bg-black/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5e6ad2]/30',
+          open && 'rounded-b-none',
+        )}
       >
-        {open ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
+        <m.span
+          aria-hidden
+          animate={{ rotate: open ? 90 : 0 }}
+          transition={{ duration: 0.15, ease: EASE_OUT_SOFT }}
+          className="inline-flex"
+        >
+          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+        </m.span>
         {group.member ? (
           <AssigneeAvatar member={group.member} size={28} />
         ) : (
           <span className="w-7 h-7 rounded-full bg-[#ececef] text-[#8a8a91] grid place-items-center text-[10px] font-semibold">?</span>
         )}
-        <span className="flex flex-col leading-tight">
-          <span className="text-[13px] font-semibold">
+        <span className="flex flex-col leading-tight min-w-0">
+          <span className="text-[13px] font-semibold truncate">
             {group.member?.name ?? 'Sin asignar'}
           </span>
           {group.member && (group.member.area || group.member.role) && (
-            <span className="text-[11px] text-muted-foreground">
+            <span className="text-[11px] text-muted-foreground truncate">
               {group.member.area ?? group.member.role}
             </span>
           )}
         </span>
-        <span className="ml-auto flex items-center gap-1.5">
+        <span className="ml-auto flex items-center gap-1.5 shrink-0">
           <CountChip dotClass={STATUS_DOT.todo!} value={counts.todo} />
           <CountChip dotClass={STATUS_DOT.inProgress!} value={counts.inProgress} />
           <CountChip dotClass={STATUS_DOT.inReview!} value={counts.inReview} />
           <CountChip dotClass={STATUS_DOT.done!} value={counts.done} />
         </span>
       </button>
-      {open && (
-        <div className="border-t border-border p-2.5">
-          {view === 'classic' ? (
-            <BoardClassic
-              tasks={group.tasks}
-              setTasks={setSubsetTasks}
-              membersById={membersById}
-              embedded
-            />
-          ) : (
-            <BoardWeek
-              tasks={group.tasks}
-              setTasks={setSubsetTasks}
-              membersById={membersById}
-              embedded
-            />
-          )}
-        </div>
-      )}
+      <AnimatePresence initial={false}>
+        {open && (
+          <m.div
+            key="panel"
+            id={panelId}
+            role="region"
+            aria-labelledby={labelId}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{
+              height: { duration: 0.22, ease: EASE_OUT_SOFT },
+              opacity: { duration: 0.15, ease: EASE_OUT_SOFT },
+            }}
+            className="overflow-hidden"
+          >
+            <div className="border-t border-border p-2.5">
+              {view === 'classic' ? (
+                <BoardClassic
+                  tasks={group.tasks}
+                  setTasks={setSubsetTasks}
+                  membersById={membersById}
+                  embedded
+                />
+              ) : (
+                <BoardWeek
+                  tasks={group.tasks}
+                  setTasks={setSubsetTasks}
+                  membersById={membersById}
+                  embedded
+                />
+              )}
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

@@ -19,8 +19,13 @@ type Props = {
 function CustomerBadge({ customer }: { customer: CustomerSummary }) {
   return (
     <>
-      <div className="w-[22px] h-[22px] rounded-[5px] bg-gradient-to-br from-orange-400 to-pink-500 grid place-items-center text-white text-[11px] font-semibold shrink-0">
-        {customer.icon ?? customer.name[0]?.toUpperCase() ?? '?'}
+      <div className="w-[22px] h-[22px] rounded-[5px] bg-gradient-to-br from-orange-400 to-pink-500 grid place-items-center text-white text-[11px] font-semibold shrink-0 overflow-hidden">
+        {customer.icon?.type === 'image' ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={customer.icon.value} alt="" className="w-full h-full object-cover" />
+        ) : (
+          (customer.icon?.value ?? customer.name[0]?.toUpperCase() ?? '?')
+        )}
       </div>
       <span className="font-semibold text-[13px] flex-1 truncate text-left">{customer.name}</span>
     </>
@@ -72,8 +77,13 @@ export function WorkspaceHeader({ current, customers }: Props) {
               onClick={() => selectCustomer(c.id)}
               className="flex items-center gap-2"
             >
-              <div className="w-5 h-5 rounded-[4px] bg-gradient-to-br from-orange-400 to-pink-500 grid place-items-center text-white text-[10px] font-semibold shrink-0">
-                {c.icon ?? c.name[0]?.toUpperCase() ?? '?'}
+              <div className="w-5 h-5 rounded-[4px] bg-gradient-to-br from-orange-400 to-pink-500 grid place-items-center text-white text-[10px] font-semibold shrink-0 overflow-hidden">
+                {c.icon?.type === 'image' ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={c.icon.value} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  (c.icon?.value ?? c.name[0]?.toUpperCase() ?? '?')
+                )}
               </div>
               <span className="flex-1 truncate text-[13px]">{c.name}</span>
               {c.id === current.id && <Check className="w-3.5 h-3.5 text-muted-foreground" />}

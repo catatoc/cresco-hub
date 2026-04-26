@@ -9,7 +9,7 @@ import { TaskDrawer } from '@/components/kanban/task-drawer';
 
 export const dynamic = 'force-dynamic';
 
-export default async function TaskPage({
+export default async function InterceptedTaskPage({
   params,
 }: {
   params: Promise<{ taskId: string }>;
@@ -34,7 +34,7 @@ export default async function TaskPage({
       project={project}
       sprint={sprint}
       assignees={assignees}
-      closeMode="push"
+      closeMode="back"
     />
   );
 }

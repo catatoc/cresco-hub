@@ -48,14 +48,16 @@ export default async function HomePage() {
         </span>
       </Topbar>
 
-      <div className="flex-1 overflow-auto px-10 py-10 max-w-[980px] mx-auto w-full">
-        <Greeting name={ctx.memberName} stats={data.stats} lastMeeting={data.lastMeeting} />
-        <StatsStrip stats={data.stats} lastMeeting={data.lastMeeting} overdueCount={overdue} />
-        <MyTasks tasks={data.myTasksToday} membersById={membersById} />
-        <ActiveProjects projects={data.activeProjects} membersById={membersById} />
-        <div className="grid grid-cols-2 gap-5">
-          <LastMeeting meeting={data.lastMeeting} />
-          <WikiRecents pages={data.recentWiki} />
+      <div className="flex-1 overflow-auto">
+        <div className="px-10 py-10 max-w-[980px] mx-auto w-full">
+          <Greeting name={ctx.memberName} stats={data.stats} lastMeeting={data.lastMeeting} />
+          <StatsStrip stats={data.stats} lastMeeting={data.lastMeeting} overdueCount={overdue} />
+          <MyTasks tasks={data.myTasksToday} membersById={membersById} />
+          <ActiveProjects projects={data.activeProjects} membersById={membersById} />
+          <div className="grid grid-cols-2 gap-5">
+            <LastMeeting meeting={data.lastMeeting} />
+            <WikiRecents pages={data.recentWiki} />
+          </div>
         </div>
       </div>
     </>
