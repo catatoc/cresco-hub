@@ -31,7 +31,7 @@ export async function POST(req: Request) {
   }
 
   if (parsed.data.customerId !== ctx.customerId) {
-    return NextResponse.json({ error: 'customer-mismatch' }, { status: 401 });
+    return NextResponse.json({ error: 'customer-mismatch' }, { status: 403 });
   }
 
   try {

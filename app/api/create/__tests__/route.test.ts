@@ -49,13 +49,13 @@ describe('POST /api/create', () => {
     expect(res.status).toBe(403);
   });
 
-  it('returns 401 when body customerId differs from ctx customerId', async () => {
+  it('returns 403 when body customerId differs from ctx customerId', async () => {
     mockSupabase.auth.getUser.mockResolvedValueOnce({
       data: { user: { email: 'x@y.com' } },
     });
     (resolveContext as any).mockResolvedValueOnce({ customerId: 'real-cust' });
     const res = await POST(req({ type: 'task', customerId: 'fake', title: 't' }));
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(403);
   });
 
   it('returns 400 with first issue.message on Zod fail', async () => {
