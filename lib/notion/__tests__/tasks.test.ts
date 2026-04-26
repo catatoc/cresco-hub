@@ -5,10 +5,11 @@ vi.mock('@/lib/env', () => ({ serverEnv: { NOTION_DB_TASKS: 'tasks-ds' } }));
 
 const mockNotion = {
   dataSources: { query: vi.fn() },
-  pages: { update: vi.fn(), retrieve: vi.fn() },
+  pages: { update: vi.fn(), retrieve: vi.fn(), create: vi.fn() },
+  blocks: { children: { append: vi.fn() } },
 };
 
-import { queryTasksByCustomerAndSprint, updateTaskStatus } from '../tasks';
+import { queryTasksByCustomerAndSprint, updateTaskStatus, createTask } from '../tasks';
 
 describe('queryTasksByCustomerAndSprint', () => {
   beforeEach(() => mockNotion.dataSources.query.mockReset());
@@ -76,5 +77,75 @@ describe('updateTaskStatus', () => {
       page_id: 'task-1',
       properties: { Status: { status: { name: 'Done' } } },
     });
+  });
+});
+
+describe('createTask (extended)', () => {
+  beforeEach(() => {
+    mockNotion.pages.create.mockReset();
+    mockNotion.blocks.children.append.mockReset();
+  });
+
+  it('maps assigneeIds to Team relation (NOT Assignee people)', async () => {
+    mockNotion.pages.create.mockResolvedValueOnce({
+      id: 'task-x',
+      url: 'https://notion.so/task-x',
+    });
+    await createTask({
+      customerId: 'cust-1',
+      title: 'New task',
+      assigneeIds: ['team-1', 'team-2'],
+    });
+    const call = mockNotion.pages.create.mock.calls[0]![0];
+    expect(call.properties.Team).toEqual({
+      relation: [{ id: 'team-1' }, { id: 'team-2' }],
+    });
+    expect(call.properties.Assignee).toBeUndefined();
+  });
+
+  it('maps projectId, priority, dueDate', async () => {
+    mockNotion.pages.create.mockResolvedValueOnce({
+      id: 't', url: 'u',
+    });
+    await createTask({
+      customerId: 'c',
+      title: 't',
+      projectId: 'proj-1',
+      priority: 'High',
+      dueDate: '2026-05-01',
+    });
+    const props = mockNotion.pages.create.mock.calls[0]![0].properties;
+    expect(props.Project).toEqual({ relation: [{ id: 'proj-1' }] });
+    expect(props.Priority).toEqual({ select: { name: 'High' } });
+    expect(props.Due).toEqual({ date: { start: '2026-05-01' } });
+  });
+
+  it('appends description as paragraph block when present', async () => {
+    mockNotion.pages.create.mockResolvedValueOnce({
+      id: 'task-y', url: 'u',
+    });
+    await createTask({
+      customerId: 'c',
+      title: 't',
+      description: 'Hello body',
+    });
+    expect(mockNotion.blocks.children.append).toHaveBeenCalledWith({
+      block_id: 'task-y',
+      children: [
+        {
+          object: 'block',
+          type: 'paragraph',
+          paragraph: {
+            rich_text: [{ type: 'text', text: { content: 'Hello body' } }],
+          },
+        },
+      ],
+    });
+  });
+
+  it('does NOT call blocks.append when description is empty', async () => {
+    mockNotion.pages.create.mockResolvedValueOnce({ id: 'x', url: 'u' });
+    await createTask({ customerId: 'c', title: 't' });
+    expect(mockNotion.blocks.children.append).not.toHaveBeenCalled();
   });
 });

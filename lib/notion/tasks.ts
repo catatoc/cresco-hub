@@ -82,7 +82,12 @@ export async function queryTasksByCustomerAndTitle(
 export async function createTask(args: {
   customerId: string;
   title: string;
+  description?: string;
   sprintId?: string | null;
+  projectId?: string | null;
+  assigneeIds?: string[];
+  priority?: 'Low' | 'Medium' | 'High' | null;
+  dueDate?: string | null;
 }): Promise<{ id: string; url: string }> {
   const notion = getNotion();
   const properties: Record<string, any> = {
@@ -90,12 +95,34 @@ export async function createTask(args: {
     Status: { status: { name: 'Not Started' } },
     Customer: { relation: [{ id: args.customerId }] },
   };
-  if (args.sprintId) {
-    properties.Sprint = { relation: [{ id: args.sprintId }] };
+  if (args.sprintId) properties.Sprint = { relation: [{ id: args.sprintId }] };
+  if (args.projectId) properties.Project = { relation: [{ id: args.projectId }] };
+  if (args.assigneeIds && args.assigneeIds.length > 0) {
+    properties.Team = { relation: args.assigneeIds.map((id) => ({ id })) };
   }
+  if (args.priority) properties.Priority = { select: { name: args.priority } };
+  if (args.dueDate) properties.Due = { date: { start: args.dueDate } };
+
   const res = await notion.pages.create({
     parent: { database_id: serverEnv.NOTION_DB_TASKS },
     properties,
   });
-  return { id: (res as any).id, url: (res as any).url };
+  const id = (res as any).id as string;
+
+  if (args.description && args.description.trim().length > 0) {
+    await notion.blocks.children.append({
+      block_id: id,
+      children: [
+        {
+          object: 'block',
+          type: 'paragraph',
+          paragraph: {
+            rich_text: [{ type: 'text', text: { content: args.description } }],
+          },
+        },
+      ],
+    });
+  }
+
+  return { id, url: (res as any).url as string };
 }
