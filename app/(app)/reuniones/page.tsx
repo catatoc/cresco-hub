@@ -21,8 +21,11 @@ export default async function ReunionesPage() {
   const now = Date.now();
   const current = pickDefault(meetings, now);
   const nextMeeting = pickNextMeeting(meetings, now);
-  const showBanner =
-    current && current.date && new Date(current.date).getTime() <= now && nextMeeting !== null;
+  const isPast =
+    current !== null &&
+    current.date !== null &&
+    new Date(current.date).getTime() <= now;
+  const bannerMeeting = isPast ? nextMeeting : null;
 
   let blocks: any[] = [];
   let actionItems: Task[] = [];
@@ -55,7 +58,7 @@ export default async function ReunionesPage() {
         <div className="overflow-auto p-7 pb-12">
           {current ? (
             <>
-              {showBanner && nextMeeting && <NextMeetingBanner nextMeeting={nextMeeting} />}
+              {bannerMeeting && <NextMeetingBanner nextMeeting={bannerMeeting} />}
               <HeroMeeting
                 meeting={current}
                 blocks={blocks}
