@@ -2,7 +2,7 @@ import { Topbar } from '@/components/shell/topbar';
 
 export default function Loading() {
   return (
-    <>
+    <div className="contents [view-transition-name:main-content]">
       <Topbar crumbs={[{ label: 'Wiki' }]} />
       <div className="flex-1 grid grid-cols-[260px_1fr] overflow-hidden">
         <aside className="border-r border-border bg-[#f7f7f8] p-2 space-y-1.5">
@@ -28,6 +28,6 @@ export default function Loading() {
           </article>
         </div>
       </div>
-    </>
+    </div>
   );
 }
