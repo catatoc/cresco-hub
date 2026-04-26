@@ -11,6 +11,7 @@ import { HeroMeeting } from '@/components/meetings/hero-meeting';
 import { HistoryPanel } from '@/components/meetings/history-panel';
 import { LastMeetingBanner } from '@/components/meetings/last-meeting-banner';
 import { MeetingsEmpty } from '@/components/meetings/meetings-empty';
+import { PageEnter } from '@/components/motion/page-enter';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,7 +42,7 @@ export default async function ReunionesPage() {
   }
 
   return (
-    <>
+    <PageEnter className="flex flex-col h-full overflow-hidden">
       <Topbar
         crumbs={[
           { label: 'Reuniones' },
@@ -66,6 +67,6 @@ export default async function ReunionesPage() {
         </div>
         <HistoryPanel meetings={meetings} currentId={current?.id} />
       </div>
-    </>
+    </PageEnter>
   );
 }
