@@ -179,3 +179,16 @@
 @media (prefers-reduced-motion: reduce) {
   [data-flashed]  { animation: none; }
 }
+
+@keyframes home-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(63, 159, 92, 0.18); }
+  50% { box-shadow: 0 0 0 5px rgba(63, 159, 92, 0.18); }
+}
+
+.animate-home-pulse {
+  animation: home-pulse 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-home-pulse { animation: none; }
+}
