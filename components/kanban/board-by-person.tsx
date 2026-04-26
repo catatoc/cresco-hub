@@ -34,7 +34,6 @@ export function BoardByPerson({ tasks, setTasks, members, membersById, view }: P
         <PersonSection
           key={g.member?.id ?? '__unassigned__'}
           group={g}
-          allTasks={tasks}
           setTasks={setTasks}
           membersById={membersById}
           view={view}
@@ -51,13 +50,11 @@ export function BoardByPerson({ tasks, setTasks, members, membersById, view }: P
 
 function PersonSection({
   group,
-  allTasks,
   setTasks,
   membersById,
   view,
 }: {
   group: { member: TeamMember | null; tasks: Task[] };
-  allTasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   membersById: Map<string, TeamMember>;
   view: 'classic' | 'week';
