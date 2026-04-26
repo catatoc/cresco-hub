@@ -21,19 +21,24 @@ export function SearchResults({
   term: string;
   onSelect: (item: SearchItem, opts: { metaKey?: boolean }) => void;
 }) {
+  let staggerIndex = 0;
   return (
     <>
       {groups.map((g) => (
         <CommandGroup key={g.type} heading={`${GROUP_LABEL[g.type]} · ${g.count}`}>
-          {g.items.map((it, i) => (
-            <SearchItemRow
-              key={it.id}
-              term={term}
-              item={it}
-              showShortcut={i === 0}
-              onSelect={(opts) => onSelect(it, opts)}
-            />
-          ))}
+          {g.items.map((it, i) => {
+            const sIdx = staggerIndex++;
+            return (
+              <SearchItemRow
+                key={it.id}
+                term={term}
+                item={it}
+                showShortcut={i === 0}
+                staggerIndex={sIdx}
+                onSelect={(opts) => onSelect(it, opts)}
+              />
+            );
+          })}
         </CommandGroup>
       ))}
     </>
