@@ -28,6 +28,12 @@ describe('queryMeetingsByCustomer', () => {
               },
             },
             'Meeting type': { select: { name: 'Weekly' } },
+            Summary: {
+              rich_text: [
+                { plain_text: 'Definimos prioridades. ' },
+                { plain_text: 'Carlos lleva la migración.' },
+              ],
+            },
             Attendees: { people: [{ id: 'user-1' }, { id: 'user-2' }] },
             Customer: { relation: [{ id: 'cust-focus' }] },
             Projects: { relation: [{ id: 'proj-1' }] },
@@ -47,6 +53,7 @@ describe('queryMeetingsByCustomer', () => {
       date: '2026-04-24T10:00:00.000Z',
       endDate: '2026-04-24T11:00:00.000Z',
       meetingType: 'Weekly',
+      summary: 'Definimos prioridades. Carlos lleva la migración.',
       attendeeIds: ['user-1', 'user-2'],
       customerId: 'cust-focus',
       projectIds: ['proj-1'],
@@ -54,6 +61,31 @@ describe('queryMeetingsByCustomer', () => {
       taskIds: ['task-1', 'task-2'],
       wikiIds: ['wiki-1'],
     });
+  });
+
+  it('returns null summary when Summary property is missing', async () => {
+    mockNotion.dataSources.query.mockResolvedValueOnce({
+      results: [
+        {
+          id: 'meeting-2',
+          url: 'https://notion.so/meeting-2',
+          properties: {
+            Name: { title: [{ plain_text: 'Sin summary' }] },
+            Date: { date: { start: '2026-04-01', end: null } },
+            'Meeting type': { select: null },
+            Attendees: { people: [] },
+            Customer: { relation: [{ id: 'cust-focus' }] },
+            Projects: { relation: [] },
+            Team: { relation: [] },
+            Tasks: { relation: [] },
+            Wiki: { relation: [] },
+          },
+        },
+      ],
+    });
+
+    const meetings = await queryMeetingsByCustomer('cust-focus');
+    expect(meetings[0].summary).toBeNull();
   });
 });
 

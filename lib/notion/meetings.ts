@@ -10,6 +10,11 @@ function parseMeeting(row: any): Meeting {
     date: p.Date?.date?.start ?? null,
     endDate: p.Date?.date?.end ?? null,
     meetingType: p['Meeting type']?.select?.name ?? null,
+    summary:
+      ((p.Summary?.rich_text ?? []) as Array<{ plain_text: string }>)
+        .map((t) => t.plain_text)
+        .join('')
+        .trim() || null,
     attendeeIds: (p.Attendees?.people ?? []).map((u: { id: string }) => u.id),
     customerId: p.Customer?.relation?.[0]?.id ?? null,
     projectIds: (p.Projects?.relation ?? []).map((r: { id: string }) => r.id),

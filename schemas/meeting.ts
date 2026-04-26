@@ -6,6 +6,7 @@ export const meetingSchema = z.object({
   date: z.string().nullable(),
   endDate: z.string().nullable(),
   meetingType: z.string().nullable(),
+  summary: z.string().nullable(),
   attendeeIds: z.array(z.string()),       // Notion user IDs (not Team IDs)
   customerId: z.string().nullable(),
   projectIds: z.array(z.string()),
