@@ -161,7 +161,7 @@ export function TaskCard({ task, assignees = [], showDayChip, isOverlay }: Props
         isDone && 'opacity-75',
         isProgress && 'border-[#c9cbe8] shadow-[0_0_0_1px_rgba(94,106,210,.12)]',
         isDragging && !isOverlay && 'opacity-40',
-        isOverlay && 'shadow-lg rotate-2 cursor-grabbing',
+        isOverlay && 'shadow-xl rotate-2 scale-[1.05] cursor-grabbing',
       )}
     >
       <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground mb-1">
