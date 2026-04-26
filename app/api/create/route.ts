@@ -41,11 +41,11 @@ export async function POST(req: Request) {
         customerId: t.customerId,
         title: t.title,
         description: t.description,
-        sprintId: t.sprintId !== undefined ? (t.sprintId ?? null) : undefined,
-        projectId: t.projectId !== undefined ? (t.projectId ?? null) : undefined,
+        sprintId: t.sprintId,
+        projectId: t.projectId,
         assigneeIds: t.assigneeIds,
-        priority: t.priority !== undefined ? (t.priority ?? null) : undefined,
-        dueDate: t.dueDate !== undefined ? (t.dueDate ?? null) : undefined,
+        priority: t.priority,
+        dueDate: t.dueDate,
       });
       return NextResponse.json({ id: created.id, url: created.url });
     } else {
@@ -55,8 +55,8 @@ export async function POST(req: Request) {
         title: w.title,
         emoji: w.emoji,
         categories: w.categories,
-        projectId: w.projectId ?? null,
-        meetingId: w.meetingId ?? null,
+        projectId: w.projectId,
+        meetingId: w.meetingId,
       });
       return NextResponse.json({ id: created.id, url: created.url });
     }
