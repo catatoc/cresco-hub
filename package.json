@@ -9,7 +9,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "typecheck": "tsc --noEmit",
-    "smoke": "tsx scripts/smoke.ts"
+    "smoke": "tsx scripts/smoke.ts",
+    "check:motion": "bash scripts/check-motion-tokens.sh"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
@@ -26,6 +27,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "lucide-react": "^1.11.0",
+    "mermaid": "^11.14.0",
     "motion": "^11.18.2",
     "next": "16.2.4",
     "next-themes": "^0.4.6",
