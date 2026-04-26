@@ -173,6 +173,7 @@ export function TaskCard({ task, assignees = [], showDayChip, isOverlay }: Props
       <Link
         href={`/tareas/${task.id}`}
         onPointerDown={(e) => e.stopPropagation()}
+        style={{ viewTransitionName: `task-${task.id}-title` } as React.CSSProperties}
         className={cn(
           'block text-[13px] leading-tight mb-2 hover:underline',
           isDone && 'line-through text-muted-foreground',
