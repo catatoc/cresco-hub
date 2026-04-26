@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -83,6 +83,21 @@ type Props = {
 export function BoardClassic({ tasks, setTasks, membersById }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [archivedOpen, setArchivedOpen] = useState(false);
+
+  useEffect(() => {
+    if (activeId) {
+      document.body.style.cursor = 'grabbing';
+      document.body.style.userSelect = 'none';
+    } else {
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    }
+    return () => {
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+  }, [activeId]);
+
   const { move } = useMoveTask(setTasks);
 
   const sensors = useSensors(
@@ -141,7 +156,7 @@ export function BoardClassic({ tasks, setTasks, membersById }: Props) {
           <div className="border border-border rounded-lg bg-[#fafafa]">
             <button
               onClick={() => setArchivedOpen((v) => !v)}
-              className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-black/[0.02] transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-black/[0.02] transition-colors cursor-pointer"
             >
               <span
                 className={`w-2.5 h-2.5 rounded-full border-[1.5px] ${archivedColumn.dotClass} bg-current`}
