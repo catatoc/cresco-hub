@@ -6,6 +6,7 @@ import type { Task } from '@/schemas/task';
 import { cn } from '@/lib/utils';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { AssigneeLine } from './assignee-line';
 
 const PRIORITY_COLOR: Record<string, string> = {
   High: '#c78a2c',
@@ -206,11 +207,11 @@ export function TaskCard({ task, assignees = [], showDayChip, isOverlay }: Props
           <span className="ml-auto">
             {new Date(task.dueDate).toLocaleDateString('es', { day: '2-digit', month: 'short' })}
           </span>
-        ) : null}
-        <div className="ml-auto">
-          <AssigneeStack assignees={assignees} />
-        </div>
+        ) : (
+          <span className="ml-auto" />
+        )}
       </div>
+      <AssigneeLine assignees={assignees} />
     </div>
   );
 }
