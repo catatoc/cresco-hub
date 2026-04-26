@@ -1,13 +1,16 @@
 import { cookies } from 'next/headers';
 import { findMemberByEmail } from '@/lib/notion/team';
 import { getCustomers } from '@/lib/notion/customers';
+import type { CustomerIcon } from '@/schemas/customer';
 
 export const SELECTED_CUSTOMER_COOKIE = 'selected-customer-id';
+export const TAREAS_SCOPE_COOKIE = 'tareas-scope';
+export type TareasScope = 'mine' | 'team';
 
 export type CustomerSummary = {
   id: string;
   name: string;
-  icon: string | null;
+  icon: CustomerIcon | null;
 };
 
 export type AppContext = {
@@ -16,7 +19,7 @@ export type AppContext = {
   memberName: string;
   customerId: string;
   customerName: string;
-  customerIcon: string | null;
+  customerIcon: CustomerIcon | null;
   customers: CustomerSummary[];
   projectIds: string[];
   isAdmin: boolean;
