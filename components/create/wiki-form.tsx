@@ -149,7 +149,7 @@ export function WikiForm({
             onChange={(e) => setCreateAnother(e.target.checked)}
             aria-label="Crear otra"
           />
-          <span aria-hidden="true">+ nueva (⇧⌘↵)</span>
+          <span aria-hidden="true">Crear otra (⇧⌘↵)</span>
         </label>
         <div className="flex items-center gap-2">
           {tooLong && (

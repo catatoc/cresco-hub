@@ -57,7 +57,7 @@ describe('WikiForm', () => {
         titleRef={createRef()}
       />,
     );
-    fireEvent.click(screen.getByText(/Crear/i));
+    fireEvent.click(screen.getByRole('button', { name: /Crear y abrir|Creando/ }));
     await waitFor(() => expect(mockPush).toHaveBeenCalledWith('/wiki/wiki-1'));
     expect(mockClose).toHaveBeenCalled();
   });
@@ -76,7 +76,7 @@ describe('WikiForm', () => {
       />,
     );
     fireEvent.click(screen.getByLabelText(/Crear otra/i));
-    fireEvent.click(screen.getByText(/Crear/i));
+    fireEvent.click(screen.getByRole('button', { name: /Crear y abrir|Creando/ }));
     await waitFor(() => expect(mockToast.success).toHaveBeenCalled());
     expect(mockPush).not.toHaveBeenCalledWith('/wiki/wiki-1');
     const opts = mockToast.success.mock.calls[0][1];
