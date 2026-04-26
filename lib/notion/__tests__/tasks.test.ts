@@ -148,4 +148,25 @@ describe('createTask (extended)', () => {
     await createTask({ customerId: 'c', title: 't' });
     expect(mockNotion.blocks.children.append).not.toHaveBeenCalled();
   });
+
+  it('trims description before writing the paragraph block', async () => {
+    mockNotion.pages.create.mockResolvedValueOnce({ id: 'task-z', url: 'u' });
+    await createTask({
+      customerId: 'c',
+      title: 't',
+      description: '  Hello world  ',
+    });
+    const call = mockNotion.blocks.children.append.mock.calls[0]![0];
+    expect(call.children[0].paragraph.rich_text[0].text.content).toBe('Hello world');
+  });
+
+  it('does NOT call blocks.append when description is whitespace only', async () => {
+    mockNotion.pages.create.mockResolvedValueOnce({ id: 'task-w', url: 'u' });
+    await createTask({
+      customerId: 'c',
+      title: 't',
+      description: '   ',
+    });
+    expect(mockNotion.blocks.children.append).not.toHaveBeenCalled();
+  });
 });

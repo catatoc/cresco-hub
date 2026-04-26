@@ -109,7 +109,8 @@ export async function createTask(args: {
   });
   const id = (res as any).id as string;
 
-  if (args.description && args.description.trim().length > 0) {
+  const desc = args.description?.trim();
+  if (desc && desc.length > 0) {
     await notion.blocks.children.append({
       block_id: id,
       children: [
@@ -117,7 +118,7 @@ export async function createTask(args: {
           object: 'block',
           type: 'paragraph',
           paragraph: {
-            rich_text: [{ type: 'text', text: { content: args.description } }],
+            rich_text: [{ type: 'text', text: { content: desc } }],
           },
         },
       ],
