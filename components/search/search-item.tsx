@@ -45,6 +45,7 @@ export function SearchItemRow({
       onSelect={() => onSelect({})}
       aria-label={`${item.title}, ${item.type}${metaParts.length ? ', ' + metaParts.join(', ') : ''}`}
       className="animate-in fade-in slide-in-from-bottom-1 fill-mode-both duration-(--duration-base)"
+      data-stagger-item=""
       style={{ animationDelay: `${staggerIndex * 40}ms` }}
     >
       <span className="w-5 text-center shrink-0">{icon}</span>

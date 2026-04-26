@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import type { Task, TaskStatus } from '@/schemas/task';
 
@@ -20,6 +20,7 @@ function flashFor(status: TaskStatus): FlashKind {
 export function useMoveTask(setTasks: Dispatcher) {
   const [pending, setPending] = useState<Set<string>>(new Set());
   const [flashedColumn, setFlashedColumn] = useState<{ id: string; kind: FlashKind } | null>(null);
+  const flashTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   async function move(taskId: string, newStatus: TaskStatus, columnId?: string) {
     let original: Task[] = [];
@@ -38,7 +39,8 @@ export function useMoveTask(setTasks: Dispatcher) {
       if (!res.ok) throw new Error(await res.text().catch(() => 'failed'));
       if (columnId) {
         setFlashedColumn({ id: columnId, kind: flashFor(newStatus) });
-        setTimeout(() => setFlashedColumn(null), 280);
+        if (flashTimeoutRef.current) clearTimeout(flashTimeoutRef.current);
+        flashTimeoutRef.current = setTimeout(() => setFlashedColumn(null), 280);
       }
     } catch {
       setTasks(original);
@@ -51,6 +53,10 @@ export function useMoveTask(setTasks: Dispatcher) {
       });
     }
   }
+
+  useEffect(() => () => {
+    if (flashTimeoutRef.current) clearTimeout(flashTimeoutRef.current);
+  }, []);
 
   return { move, pending, flashedColumn };
 }

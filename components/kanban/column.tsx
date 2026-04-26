@@ -2,12 +2,11 @@
 
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
+import type { FlashKind } from '@/hooks/use-move-task';
 import { TaskCard } from './card';
 import { cn } from '@/lib/utils';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-
-type FlashKind = 'success' | 'progress' | 'review' | 'neutral' | null;
 
 type Props = {
   id: string;

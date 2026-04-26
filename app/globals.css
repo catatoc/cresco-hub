@@ -232,3 +232,7 @@
     animation: none;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-stagger-item] { animation-delay: 0ms !important; }
+}
