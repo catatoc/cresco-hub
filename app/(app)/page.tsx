@@ -9,6 +9,7 @@ import { MyTasks } from '@/components/home/my-tasks';
 import { LastMeeting } from '@/components/home/last-meeting';
 import { WikiRecents } from '@/components/home/wiki-recents';
 import { ActiveProjects } from '@/components/home/active-projects';
+import { PageEnter } from '@/components/motion/page-enter';
 import type { Task } from '@/schemas/task';
 import { Clock } from 'lucide-react';
 
@@ -40,7 +41,7 @@ export default async function HomePage() {
   const sprintLabel = sprint?.name ?? 'Sin sprint activo';
 
   return (
-    <>
+    <PageEnter className="flex flex-col h-full overflow-hidden">
       <Topbar crumbs={[{ label: 'Home' }]}>
         <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[12px] text-muted-foreground border border-border bg-white">
           <Clock className="w-3 h-3" />
@@ -60,6 +61,6 @@ export default async function HomePage() {
           </div>
         </div>
       </div>
-    </>
+    </PageEnter>
   );
 }
