@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const teamMemberSchema = z.object({
   id: z.string(),
   name: z.string(),
-  email: z.string().email(),
+  email: z.string(),
   role: z.string().nullable(),
   area: z.string().nullable(),
   customerIds: z.array(z.string()), // from "Customers" relation (plural)

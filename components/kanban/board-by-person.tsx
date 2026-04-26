@@ -29,7 +29,7 @@ export function BoardByPerson({ tasks, setTasks, members, membersById, view }: P
   const groups = groupTasksByPerson(tasks, members);
 
   return (
-    <div className="flex-1 flex flex-col gap-3 pb-5 overflow-auto">
+    <div className="flex-1 min-h-0 flex flex-col gap-3 pb-5 overflow-auto">
       {groups.map((g) => (
         <PersonSection
           key={g.member?.id ?? '__unassigned__'}

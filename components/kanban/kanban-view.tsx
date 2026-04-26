@@ -34,7 +34,7 @@ export function KanbanView({
   const membersById = new Map(members.map((m) => [m.id, m]));
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden px-5 pt-5">
+    <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-5 pt-5">
       <div className="flex items-center gap-2.5 mb-4">
         <h1 className="text-[15px] font-semibold">Sprint activo</h1>
         <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[12px] font-medium bg-[#eeeffc] text-[#5e6ad2]">
