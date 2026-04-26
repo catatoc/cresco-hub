@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { EmptyState } from '@/components/common/empty-state';
 
 export function SearchNoResults({ term, onClose }: { term: string; onClose: () => void }) {
   const router = useRouter();
@@ -30,22 +31,19 @@ export function SearchNoResults({ term, onClose }: { term: string; onClose: () =
   }
 
   return (
-    <div className="py-8 px-4 text-center">
-      <div className="text-lg mb-2">🔎 Nada por acá</div>
-      <p className="text-sm text-muted-foreground mb-5">
-        No hay coincidencias en tu workspace actual.
-      </p>
-      <button
-        onClick={create}
-        disabled={creating}
-        className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 rounded-lg text-sm disabled:opacity-50"
-      >
-        {creating ? 'Creando…' : `➕ Crear "${term}" como nueva tarea`}
-      </button>
-      <p className="mt-4 text-[11px] text-muted-foreground">
-        O prueba <code className="bg-muted px-1 py-0.5 rounded">@persona</code> /{' '}
-        <code className="bg-muted px-1 py-0.5 rounded">#tarea</code>
-      </p>
-    </div>
+    <EmptyState
+      icon="🔎"
+      title="Nada por acá"
+      description="No hay coincidencias en tu workspace actual."
+      action={
+        <button
+          onClick={create}
+          disabled={creating}
+          className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 rounded-lg text-sm cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {creating ? 'Creando…' : `➕ Crear "${term}" como nueva tarea`}
+        </button>
+      }
+    />
   );
 }
