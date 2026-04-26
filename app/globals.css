@@ -236,3 +236,13 @@
 @media (prefers-reduced-motion: reduce) {
   [data-stagger-item] { animation-delay: 0ms !important; }
 }
+
+@keyframes empty-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+.empty-bob { animation: empty-bob 2.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .empty-bob { animation: none; }
+}
