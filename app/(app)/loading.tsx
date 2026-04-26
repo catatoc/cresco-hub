@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Loading() {
   return (
-    <div className="contents [view-transition-name:main-content]">
+    <>
       <Topbar crumbs={[{ label: 'Home' }]} />
       <div className="flex-1 overflow-auto px-10 py-10 max-w-[980px] mx-auto w-full">
         <div className="mb-8 space-y-1.5">
@@ -39,6 +39,6 @@ export default function Loading() {
           <Skeleton className="h-40 rounded-lg" />
         </div>
       </div>
-    </div>
+    </>
   );
 }

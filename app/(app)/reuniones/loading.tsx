@@ -2,7 +2,7 @@ import { Topbar } from '@/components/shell/topbar';
 
 export default function Loading() {
   return (
-    <div className="contents [view-transition-name:main-content]">
+    <>
       <Topbar crumbs={[{ label: 'Reuniones' }, { label: 'Cargando…', muted: true }]} />
       <div className="flex-1 grid grid-cols-[1fr_280px] overflow-hidden">
         <div className="overflow-auto p-7">
@@ -42,6 +42,6 @@ export default function Loading() {
           ))}
         </aside>
       </div>
-    </div>
+    </>
   );
 }

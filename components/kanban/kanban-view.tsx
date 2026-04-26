@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { Clock } from 'lucide-react';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
+import type { TareasScope } from '@/lib/auth/context';
 import { BoardClassic } from './board-classic';
 import { BoardWeek } from './board-week';
+import { BoardByPerson } from './board-by-person';
 import { ViewToggle } from './view-toggle';
 import { SprintNav } from './sprint-nav';
 
@@ -15,6 +17,7 @@ type Props = {
   currentSprintId: string | null;
   allSprintIds: string[];
   members: TeamMember[];
+  scope: TareasScope;
 };
 
 export function KanbanView({
@@ -23,6 +26,7 @@ export function KanbanView({
   currentSprintId,
   allSprintIds,
   members,
+  scope,
 }: Props) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [view, setView] = useState<'classic' | 'week'>('classic');
@@ -43,7 +47,15 @@ export function KanbanView({
         </div>
       </div>
 
-      {view === 'classic' ? (
+      {scope === 'team' ? (
+        <BoardByPerson
+          tasks={tasks}
+          setTasks={setTasks}
+          members={members}
+          membersById={membersById}
+          view={view}
+        />
+      ) : view === 'classic' ? (
         <BoardClassic tasks={tasks} setTasks={setTasks} membersById={membersById} />
       ) : (
         <BoardWeek tasks={tasks} setTasks={setTasks} membersById={membersById} />

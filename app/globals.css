@@ -193,10 +193,6 @@
   .animate-home-pulse { animation: none; }
 }
 
-@view-transition {
-  navigation: auto;
-}
-
 ::view-transition-old(main-content),
 ::view-transition-new(main-content) {
   animation-duration: var(--duration-base);

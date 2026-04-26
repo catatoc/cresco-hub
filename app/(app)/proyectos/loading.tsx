@@ -2,7 +2,7 @@ import { Topbar } from '@/components/shell/topbar';
 
 export default function Loading() {
   return (
-    <div className="contents [view-transition-name:main-content]">
+    <>
       <Topbar crumbs={[{ label: 'Proyectos' }]} />
       <div className="flex-1 overflow-auto p-10 max-w-[1100px] mx-auto w-full">
         <div className="flex items-baseline gap-2.5 mb-5">
@@ -25,6 +25,6 @@ export default function Loading() {
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }
