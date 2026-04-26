@@ -1,26 +1,26 @@
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { Meeting } from '@/schemas/meeting';
 
 type Props = {
   name: string;
   stats: { inProgress: number; todo: number; done: number; total: number };
-  upcomingMeeting: Meeting | null;
+  lastMeeting: Meeting | null;
 };
 
-export function Greeting({ name, stats, upcomingMeeting }: Props) {
+export function Greeting({ name, stats, lastMeeting }: Props) {
   const now = new Date();
   const h = now.getHours();
   const salute = h < 12 ? 'Buenos días' : h < 19 ? 'Buenas tardes' : 'Buenas noches';
   const firstName = name.split(' ')[0];
 
-  const todayMeetings = upcomingMeeting && upcomingMeeting.date
-    ? (new Date(upcomingMeeting.date).toDateString() === now.toDateString() ? 1 : 0)
-    : 0;
+  const isToday = lastMeeting
+    ? parseISO(lastMeeting.createdTime).toDateString() === now.toDateString()
+    : false;
 
   const statusLine = [
     stats.inProgress > 0 && `${stats.inProgress} tareas activas`,
-    todayMeetings === 1 && `1 reunión hoy`,
+    isToday && `1 reunión hoy`,
   ].filter(Boolean).join(' · ');
 
   return (

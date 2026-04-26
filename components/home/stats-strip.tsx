@@ -1,9 +1,10 @@
-import { format } from 'date-fns';
+import { format, parseISO, differenceInCalendarDays } from 'date-fns';
+import { es } from 'date-fns/locale';
 import type { Meeting } from '@/schemas/meeting';
 
 type Props = {
   stats: { inProgress: number; todo: number; done: number; total: number };
-  upcomingMeeting: Meeting | null;
+  lastMeeting: Meeting | null;
   overdueCount?: number;
 };
 
@@ -20,24 +21,17 @@ function Stat({ label, value, unit, sub, subClass }: { label: string; value: Rea
   );
 }
 
-function formatAmPm(d: Date): string {
-  return format(d, 'h:mmaaa').replace(/\s/g, '');
-}
-
-export function StatsStrip({ stats, upcomingMeeting, overdueCount = 0 }: Props) {
+export function StatsStrip({ stats, lastMeeting, overdueCount = 0 }: Props) {
   const meetingLabel = (() => {
-    if (!upcomingMeeting?.date) return 'Sin próximas';
-    const d = new Date(upcomingMeeting.date);
+    if (!lastMeeting) return 'Sin reuniones';
+    const d = parseISO(lastMeeting.createdTime);
     const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const diffDays = differenceInCalendarDays(today, d);
 
-    const sameDay = d.toDateString() === today.toDateString();
-    const isTomorrow = d.toDateString() === tomorrow.toDateString();
-
-    if (sameDay) return `Hoy ${formatAmPm(d)}`;
-    if (isTomorrow) return `Mañana ${formatAmPm(d)}`;
-    return format(d, 'd MMM');
+    if (diffDays === 0) return 'Hoy';
+    if (diffDays === 1) return 'Ayer';
+    if (diffDays < 7) return `Hace ${diffDays} días`;
+    return format(d, 'd MMM', { locale: es });
   })();
 
   return (
@@ -57,9 +51,9 @@ export function StatsStrip({ stats, upcomingMeeting, overdueCount = 0 }: Props) 
         subClass="text-[#3f9f5c]"
       />
       <Stat
-        label="Próxima reunión"
+        label="Última reunión"
         value={<span className="text-[16px] leading-none">{meetingLabel}</span>}
-        sub={upcomingMeeting?.title ?? undefined}
+        sub={lastMeeting?.title ?? undefined}
       />
     </div>
   );

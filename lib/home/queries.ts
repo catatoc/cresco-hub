@@ -66,13 +66,7 @@ export async function getHomeData(customerId: string, sprintId: string | null) {
     total: tasks.filter((t) => t.status !== 'Archived').length,
   };
 
-  const now = Date.now();
-  const upcomingMeeting =
-    meetings
-      .filter((m) => m.date && new Date(m.date).getTime() >= now)
-      .sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime())[0] ??
-    meetings[0] ??
-    null;
+  const lastMeeting = meetings[0] ?? null;
 
   const recentWiki = wiki.slice(0, 4);
 
@@ -88,5 +82,5 @@ export async function getHomeData(customerId: string, sprintId: string | null) {
 
   const activeProjects = shapeActiveProjects(projects, tasks);
 
-  return { tasks, stats, upcomingMeeting, recentWiki, myTasksToday, activeProjects };
+  return { tasks, stats, lastMeeting, recentWiki, myTasksToday, activeProjects };
 }

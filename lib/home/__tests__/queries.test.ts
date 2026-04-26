@@ -83,19 +83,17 @@ describe('getHomeData', () => {
     expect(data.stats).toEqual({ inProgress: 1, todo: 1, done: 1, total: 3 });
   });
 
-  it('picks the next upcoming meeting', async () => {
+  it('picks the most recent meeting (first in DESC list)', async () => {
     vi.mocked(queryTasksByCustomerAndSprint).mockResolvedValueOnce([]);
-    const future = new Date(Date.now() + 3600_000).toISOString();
-    const past = new Date(Date.now() - 3 * 86400_000).toISOString();
     vi.mocked(queryMeetingsByCustomer).mockResolvedValueOnce([
-      mkMeeting({ id: 'past', title: 'P', date: past }),
-      mkMeeting({ id: 'next', title: 'N', date: future }),
+      mkMeeting({ id: 'newest', title: 'N', createdTime: '2026-04-24T10:00:00Z' }),
+      mkMeeting({ id: 'older', title: 'O', createdTime: '2026-04-10T10:00:00Z' }),
     ]);
     vi.mocked(queryWikiByCustomer).mockResolvedValueOnce([]);
     vi.mocked(queryProjectsByCustomer).mockResolvedValueOnce([]);
 
     const data = await getHomeData('c', 'sprint-17');
-    expect(data.upcomingMeeting?.id).toBe('next');
+    expect(data.lastMeeting?.id).toBe('newest');
   });
 
   it('limits myTasksToday to 5 and excludes done', async () => {

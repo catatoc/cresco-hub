@@ -6,7 +6,7 @@ import { getTeamMembers } from '@/lib/notion/team';
 import { Greeting } from '@/components/home/greeting';
 import { StatsStrip } from '@/components/home/stats-strip';
 import { MyTasks } from '@/components/home/my-tasks';
-import { NextMeeting } from '@/components/home/next-meeting';
+import { LastMeeting } from '@/components/home/last-meeting';
 import { WikiRecents } from '@/components/home/wiki-recents';
 import { ActiveProjects } from '@/components/home/active-projects';
 import type { Task } from '@/schemas/task';
@@ -49,12 +49,12 @@ export default async function HomePage() {
       </Topbar>
 
       <div className="flex-1 overflow-auto px-10 py-10 max-w-[980px] mx-auto w-full">
-        <Greeting name={ctx.memberName} stats={data.stats} upcomingMeeting={data.upcomingMeeting} />
-        <StatsStrip stats={data.stats} upcomingMeeting={data.upcomingMeeting} overdueCount={overdue} />
+        <Greeting name={ctx.memberName} stats={data.stats} lastMeeting={data.lastMeeting} />
+        <StatsStrip stats={data.stats} lastMeeting={data.lastMeeting} overdueCount={overdue} />
         <MyTasks tasks={data.myTasksToday} membersById={membersById} />
         <ActiveProjects projects={data.activeProjects} membersById={membersById} />
         <div className="grid grid-cols-2 gap-5">
-          <NextMeeting meeting={data.upcomingMeeting} />
+          <LastMeeting meeting={data.lastMeeting} />
           <WikiRecents pages={data.recentWiki} />
         </div>
       </div>
