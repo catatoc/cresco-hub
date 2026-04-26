@@ -4,11 +4,12 @@ import { queryMeetingsByCustomer } from '@/lib/notion/meetings';
 import { getBlocks } from '@/lib/notion/blocks';
 import { getTask } from '@/lib/notion/tasks';
 import { getTeamMembers } from '@/lib/notion/team';
-import { pickDefault } from '@/lib/meetings/select';
+import { pickDefault, pickPreviousMeeting } from '@/lib/meetings/select';
 import type { Task } from '@/schemas/task';
 import type { TeamMember } from '@/schemas/team-member';
 import { HeroMeeting } from '@/components/meetings/hero-meeting';
 import { HistoryPanel } from '@/components/meetings/history-panel';
+import { LastMeetingBanner } from '@/components/meetings/last-meeting-banner';
 import { MeetingsEmpty } from '@/components/meetings/meetings-empty';
 
 export const dynamic = 'force-dynamic';
@@ -18,6 +19,7 @@ export default async function ReunionesPage() {
   const meetings = await queryMeetingsByCustomer(ctx.customerId);
 
   const current = pickDefault(meetings);
+  const lastMeeting = pickPreviousMeeting(meetings, current?.id);
 
   let blocks: any[] = [];
   let actionItems: Task[] = [];
@@ -49,12 +51,15 @@ export default async function ReunionesPage() {
       <div className="flex-1 grid grid-cols-[1fr_280px] overflow-hidden">
         <div className="overflow-auto p-7 pb-12">
           {current ? (
-            <HeroMeeting
-              meeting={current}
-              blocks={blocks}
-              actionItems={actionItems}
-              membersById={membersById}
-            />
+            <>
+              <LastMeetingBanner lastMeeting={lastMeeting} />
+              <HeroMeeting
+                meeting={current}
+                blocks={blocks}
+                actionItems={actionItems}
+                membersById={membersById}
+              />
+            </>
           ) : (
             <MeetingsEmpty />
           )}

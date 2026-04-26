@@ -4,10 +4,12 @@ import { queryMeetingsByCustomer, getMeeting } from '@/lib/notion/meetings';
 import { getBlocks } from '@/lib/notion/blocks';
 import { getTask } from '@/lib/notion/tasks';
 import { getTeamMembers } from '@/lib/notion/team';
+import { pickPreviousMeeting } from '@/lib/meetings/select';
 import type { Task } from '@/schemas/task';
 import { notFound } from 'next/navigation';
 import { HeroMeeting } from '@/components/meetings/hero-meeting';
 import { HistoryPanel } from '@/components/meetings/history-panel';
+import { LastMeetingBanner } from '@/components/meetings/last-meeting-banner';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,11 +38,14 @@ export default async function MeetingDetailPage({
   const members = await getTeamMembers(memberIds);
   const membersById = new Map(members.map((m) => [m.id, m]));
 
+  const lastMeeting = pickPreviousMeeting(meetings, meeting.id);
+
   return (
     <>
       <Topbar crumbs={[{ label: 'Reuniones' }, { label: meeting.title, muted: true }]} />
       <div className="flex-1 grid grid-cols-[1fr_280px] overflow-hidden">
         <div className="overflow-auto p-7 pb-12">
+          <LastMeetingBanner lastMeeting={lastMeeting} />
           <HeroMeeting
             meeting={meeting}
             blocks={blocks}

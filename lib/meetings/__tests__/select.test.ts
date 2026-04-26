@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { pickDefault, pickNextMeeting } from '../select';
+import { pickDefault, pickPreviousMeeting } from '../select';
 import type { Meeting } from '@/schemas/meeting';
 
 function makeMeeting(id: string, createdTime: string): Meeting {
@@ -35,8 +35,31 @@ describe('pickDefault', () => {
   });
 });
 
-describe('pickNextMeeting', () => {
-  it('always returns null (created_time is always past)', () => {
-    expect(pickNextMeeting()).toBeNull();
+describe('pickPreviousMeeting', () => {
+  const m = [
+    makeMeeting('a', '2026-04-24T10:00:00Z'),
+    makeMeeting('b', '2026-04-17T10:00:00Z'),
+    makeMeeting('c', '2026-04-10T10:00:00Z'),
+  ];
+
+  it('returns the meeting immediately after current in the DESC-sorted list', () => {
+    expect(pickPreviousMeeting(m, 'a')?.id).toBe('b');
+    expect(pickPreviousMeeting(m, 'b')?.id).toBe('c');
+  });
+
+  it('returns null when current is the oldest meeting', () => {
+    expect(pickPreviousMeeting(m, 'c')).toBeNull();
+  });
+
+  it('returns null when currentId is undefined', () => {
+    expect(pickPreviousMeeting(m, undefined)).toBeNull();
+  });
+
+  it('returns null when currentId is not in the list', () => {
+    expect(pickPreviousMeeting(m, 'unknown')).toBeNull();
+  });
+
+  it('returns null for empty list', () => {
+    expect(pickPreviousMeeting([], 'a')).toBeNull();
   });
 });
