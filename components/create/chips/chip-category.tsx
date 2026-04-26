@@ -35,7 +35,16 @@ export function ChipCategory({
         {value.length > 0 ? `Categoría · ${value.length}` : '+ Categoría'}
       </button>
       {open && (
-        <div className="absolute z-50 mt-1 left-0 bg-popover border rounded-md shadow-md p-1 min-w-[180px]">
+        <div
+          className="absolute z-50 mt-1 left-0 bg-popover border rounded-md shadow-md p-1 min-w-[180px]"
+          tabIndex={-1}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              e.stopPropagation();
+              setOpen(false);
+            }
+          }}
+        >
           {OPTIONS.map((c) => (
             <button
               key={c}

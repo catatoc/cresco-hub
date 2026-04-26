@@ -46,7 +46,16 @@ export function ChipTeam({
         {value.length > 0 ? `Asignar · ${value.length}` : '+ Asignar'}
       </button>
       {open && (
-        <div className="absolute z-50 mt-1 left-0 bg-popover border rounded-md shadow-md p-1 min-w-[220px]">
+        <div
+          className="absolute z-50 mt-1 left-0 bg-popover border rounded-md shadow-md p-1 min-w-[220px]"
+          tabIndex={-1}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              e.stopPropagation();
+              setOpen(false);
+            }
+          }}
+        >
           <input
             autoFocus
             placeholder="Buscar miembro…"

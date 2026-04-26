@@ -39,7 +39,16 @@ export function ChipProject({
         + Proyecto
       </button>
       {open && (
-        <div className="absolute z-50 mt-1 left-0 bg-popover border rounded-md shadow-md p-1 min-w-[200px] max-h-[240px] overflow-y-auto">
+        <div
+          className="absolute z-50 mt-1 left-0 bg-popover border rounded-md shadow-md p-1 min-w-[200px] max-h-[240px] overflow-y-auto"
+          tabIndex={-1}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              e.stopPropagation();
+              setOpen(false);
+            }
+          }}
+        >
           {loading && !data ? (
             <Skeleton />
           ) : data && data.length > 0 ? (

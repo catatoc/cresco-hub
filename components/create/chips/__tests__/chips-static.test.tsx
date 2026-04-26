@@ -23,6 +23,25 @@ describe('ChipPriority', () => {
     expect(onChange).toHaveBeenCalledWith('Medium');
   });
 
+  it('Esc inside popover closes only the popover (does not bubble)', () => {
+    const onChange = vi.fn();
+    const outerHandler = vi.fn();
+    render(
+      <div onKeyDown={outerHandler}>
+        <ChipPriority value={null} onChange={onChange} />
+      </div>,
+    );
+    fireEvent.click(screen.getByText('+ Prioridad'));
+    expect(screen.getByText('Medium')).toBeInTheDocument(); // popover open
+
+    // press Esc on the popover container
+    const popover = screen.getByText('Medium').closest('[tabindex="-1"]')!;
+    fireEvent.keyDown(popover, { key: 'Escape' });
+
+    expect(screen.queryByText('Medium')).not.toBeInTheDocument(); // popover closed
+    expect(outerHandler).not.toHaveBeenCalled(); // event did not bubble
+  });
+
   it('clears via the ✕ button when value is set', () => {
     const onChange = vi.fn();
     render(<ChipPriority value="High" onChange={onChange} />);

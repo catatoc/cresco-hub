@@ -46,6 +46,7 @@ export function ChipSprint({
             onChange({ id: opt.id, label: opt.label });
             setOpen(false);
           }}
+          onClose={() => setOpen(false)}
         />
       )}
     </span>
@@ -56,13 +57,24 @@ function Popover({
   loading,
   options,
   onPick,
+  onClose,
 }: {
   loading: boolean;
   options: ChipOption[] | null;
   onPick: (o: ChipOption) => void;
+  onClose: () => void;
 }) {
   return (
-    <div className="absolute z-50 mt-1 left-0 bg-popover border rounded-md shadow-md p-1 min-w-[200px] max-h-[240px] overflow-y-auto">
+    <div
+      className="absolute z-50 mt-1 left-0 bg-popover border rounded-md shadow-md p-1 min-w-[200px] max-h-[240px] overflow-y-auto"
+      tabIndex={-1}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          e.stopPropagation();
+          onClose();
+        }
+      }}
+    >
       {loading && !options ? (
         <div className="space-y-1 p-1">
           {[0, 1, 2].map((i) => (

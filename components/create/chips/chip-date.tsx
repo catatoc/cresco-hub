@@ -34,7 +34,16 @@ export function ChipDate({
         + Fecha
       </button>
       {open && (
-        <div className="absolute z-50 mt-1 left-0 bg-popover border rounded-md shadow-md p-2">
+        <div
+          className="absolute z-50 mt-1 left-0 bg-popover border rounded-md shadow-md p-2"
+          tabIndex={-1}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              e.stopPropagation();
+              setOpen(false);
+            }
+          }}
+        >
           <label className="text-[11px] block text-muted-foreground mb-1" htmlFor="chip-date-input">
             Fecha
           </label>

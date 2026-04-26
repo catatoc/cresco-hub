@@ -37,7 +37,16 @@ export function ChipPriority({
         + Prioridad
       </button>
       {open && (
-        <div className="absolute z-50 mt-1 left-0 bg-popover border rounded-md shadow-md p-1 min-w-[120px]">
+        <div
+          className="absolute z-50 mt-1 left-0 bg-popover border rounded-md shadow-md p-1 min-w-[120px]"
+          tabIndex={-1}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              e.stopPropagation();
+              setOpen(false);
+            }
+          }}
+        >
           {OPTIONS.map((p) => (
             <button
               key={p}
