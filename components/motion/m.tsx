@@ -16,3 +16,13 @@
  * `useReducedMotion()` and skip the animation when it returns true.
  */
 export { m, LazyMotion, domAnimation, useReducedMotion, AnimatePresence, LayoutGroup } from 'motion/react';
+
+/**
+ * Cubic-bezier curves matching the CSS tokens in globals.css.
+ *
+ * `motion`'s `transition.ease` accepts a 4-tuple, not a CSS variable —
+ * so JS-driven animations consume these constants instead.
+ */
+export const EASE_LINEAR = [0.32, 0.72, 0, 1] as const;
+export const EASE_SPRING = [0.34, 1.56, 0.64, 1] as const;
+export const EASE_OUT_SOFT = [0.4, 0, 0.2, 1] as const;

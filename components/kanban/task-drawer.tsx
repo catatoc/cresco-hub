@@ -15,7 +15,7 @@ import type { Task } from '@/schemas/task';
 import type { Project } from '@/schemas/project';
 import type { Sprint } from '@/schemas/sprint';
 import type { TeamMember } from '@/schemas/team-member';
-import { m } from '@/components/motion/m';
+import { m, EASE_LINEAR } from '@/components/motion/m';
 
 const PRIORITY_COLOR: Record<string, string> = {
   High: '#c78a2c',
@@ -150,7 +150,7 @@ export function TaskDrawer({
           <m.div
             initial={{ opacity: 0, x: 8 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.18, delay: 0.12, ease: [0.32, 0.72, 0, 1] }}
+            transition={{ duration: 0.18, delay: 0.12, ease: EASE_LINEAR }}
           >
             <SheetTitle className="text-[22px] tracking-[-0.01em] leading-[1.25] font-semibold mb-3">
               {task.title}
@@ -160,7 +160,7 @@ export function TaskDrawer({
           <m.div
             initial={{ opacity: 0, x: 8 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.18, delay: 0.16, ease: [0.32, 0.72, 0, 1] }}
+            transition={{ duration: 0.18, delay: 0.16, ease: EASE_LINEAR }}
             className="flex items-center gap-2 flex-wrap"
           >
             <TaskStatusPill taskId={task.id} status={task.status} />
@@ -215,13 +215,13 @@ export function TaskDrawer({
             <span>
               {assignees.length > 0 ? (
                 <span className="flex flex-wrap items-center gap-1.5">
-                  {assignees.map((m) => (
+                  {assignees.map((member) => (
                     <span
-                      key={m.id}
+                      key={member.id}
                       className="inline-flex items-center gap-1.5 bg-[#f7f7f8] rounded-full pl-0.5 pr-2 py-0.5"
                     >
-                      <AssigneeAvatar member={m} size={18} />
-                      <span className="text-[11px] font-medium">{m.name}</span>
+                      <AssigneeAvatar member={member} size={18} />
+                      <span className="text-[11px] font-medium">{member.name}</span>
                     </span>
                   ))}
                 </span>
