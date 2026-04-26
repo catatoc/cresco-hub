@@ -49,15 +49,23 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+}
 
-  /* Motion durations */
+/*
+ * Motion tokens live in their own @theme (without `inline`) so Tailwind v4
+ * emits them to :root as real CSS custom properties. `@theme inline` only
+ * exposes tokens internally to Tailwind — utilities like
+ * `duration-(--duration-base)` compile to `var(--duration-base)`, which
+ * needs the var to actually exist in the cascade or it resolves to the
+ * initial value (0s) and the animation silently doesn't run.
+ */
+@theme {
   --duration-instant: 80ms;
   --duration-fast: 120ms;
   --duration-base: 180ms;
   --duration-slow: 240ms;
   --duration-celebrate: 320ms;
 
-  /* Motion easings */
   --ease-linear: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
