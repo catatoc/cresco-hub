@@ -1,8 +1,9 @@
 import { LoginForm } from '@/components/auth/login-form';
+import { PageEnter } from '@/components/motion/page-enter';
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-[1fr_520px]">
+    <PageEnter className="min-h-screen grid grid-cols-1 md:grid-cols-[1fr_520px]">
       <section className="relative hidden md:flex flex-col p-12 text-white bg-[#0f0f10] overflow-hidden">
         <div className="absolute -top-40 -left-20 w-[700px] h-[700px] rounded-full bg-[#22c55e]/35 blur-3xl pointer-events-none" />
         <div className="absolute -bottom-40 -right-20 w-[500px] h-[500px] rounded-full bg-[#15803d]/25 blur-3xl pointer-events-none" />
@@ -123,6 +124,6 @@ export default function LoginPage() {
           .
         </p>
       </section>
-    </div>
+    </PageEnter>
   );
 }
