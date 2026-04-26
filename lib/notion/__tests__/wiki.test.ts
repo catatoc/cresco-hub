@@ -6,9 +6,10 @@ vi.mock('@/lib/env', () => ({ serverEnv: { NOTION_DB_WIKI: 'wiki-ds' } }));
 const mockNotion = {
   dataSources: { query: vi.fn() },
   blocks: { children: { list: vi.fn() } },
+  pages: { create: vi.fn() },
 };
 
-import { queryWikiByCustomer } from '../wiki';
+import { queryWikiByCustomer, createWikiPage } from '../wiki';
 
 describe('queryWikiByCustomer', () => {
   beforeEach(() => mockNotion.dataSources.query.mockReset());
@@ -53,5 +54,66 @@ describe('queryWikiByCustomer', () => {
     await queryWikiByCustomer('cust-x');
     const call = mockNotion.dataSources.query.mock.calls[0]![0];
     expect(call.sorts).toEqual([{ timestamp: 'last_edited_time', direction: 'descending' }]);
+  });
+});
+
+describe('createWikiPage', () => {
+  beforeEach(() => mockNotion.pages.create.mockReset());
+
+  it('maps Doc name, Customer, icon emoji', async () => {
+    mockNotion.pages.create.mockResolvedValueOnce({
+      id: 'wiki-x',
+      url: 'https://notion.so/wiki-x',
+    });
+    const out = await createWikiPage({
+      customerId: 'cust-1',
+      title: 'Onboarding',
+      emoji: '📘',
+    });
+    const call = mockNotion.pages.create.mock.calls[0]![0];
+    expect(call.properties['Doc name']).toEqual({
+      title: [{ text: { content: 'Onboarding' } }],
+    });
+    expect(call.properties.Customer).toEqual({
+      relation: [{ id: 'cust-1' }],
+    });
+    expect(call.icon).toEqual({ type: 'emoji', emoji: '📘' });
+    expect(out).toEqual({ id: 'wiki-x', url: 'https://notion.so/wiki-x' });
+  });
+
+  it('maps categories as multi_select', async () => {
+    mockNotion.pages.create.mockResolvedValueOnce({ id: 'w', url: 'u' });
+    await createWikiPage({
+      customerId: 'c',
+      title: 't',
+      emoji: '📄',
+      categories: ['Documentation', 'Planning'],
+    });
+    const props = mockNotion.pages.create.mock.calls[0]![0].properties;
+    expect(props.Category).toEqual({
+      multi_select: [{ name: 'Documentation' }, { name: 'Planning' }],
+    });
+  });
+
+  it('maps projectId and meetingId as relations when present', async () => {
+    mockNotion.pages.create.mockResolvedValueOnce({ id: 'w', url: 'u' });
+    await createWikiPage({
+      customerId: 'c',
+      title: 't',
+      emoji: '📄',
+      projectId: 'proj-1',
+      meetingId: 'meet-1',
+    });
+    const props = mockNotion.pages.create.mock.calls[0]![0].properties;
+    expect(props.Projects).toEqual({ relation: [{ id: 'proj-1' }] });
+    expect(props.Meetings).toEqual({ relation: [{ id: 'meet-1' }] });
+  });
+
+  it('omits Projects/Meetings when not provided', async () => {
+    mockNotion.pages.create.mockResolvedValueOnce({ id: 'w', url: 'u' });
+    await createWikiPage({ customerId: 'c', title: 't', emoji: '📄' });
+    const props = mockNotion.pages.create.mock.calls[0]![0].properties;
+    expect(props.Projects).toBeUndefined();
+    expect(props.Meetings).toBeUndefined();
   });
 });

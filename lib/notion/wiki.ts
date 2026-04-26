@@ -60,3 +60,32 @@ export async function queryWikiByCustomerAndTitle(
   });
   return res.results.filter((r): r is any => 'properties' in r).map(parseWiki);
 }
+
+export async function createWikiPage(args: {
+  customerId: string;
+  title: string;
+  emoji: string;
+  categories?: string[];
+  projectId?: string | null;
+  meetingId?: string | null;
+}): Promise<{ id: string; url: string }> {
+  const notion = getNotion();
+  const properties: Record<string, any> = {
+    'Doc name': { title: [{ text: { content: args.title } }] },
+    Customer: { relation: [{ id: args.customerId }] },
+  };
+  if (args.categories && args.categories.length > 0) {
+    properties.Category = {
+      multi_select: args.categories.map((name) => ({ name })),
+    };
+  }
+  if (args.projectId) properties.Projects = { relation: [{ id: args.projectId }] };
+  if (args.meetingId) properties.Meetings = { relation: [{ id: args.meetingId }] };
+
+  const res = await notion.pages.create({
+    parent: { database_id: serverEnv.NOTION_DB_WIKI },
+    icon: { type: 'emoji', emoji: args.emoji },
+    properties,
+  });
+  return { id: (res as any).id, url: (res as any).url };
+}
