@@ -18,6 +18,7 @@ import type { Task, TaskStatus } from '@/schemas/task';
 import { Column } from './column';
 import { TaskCard } from './card';
 import { useMoveTask } from '@/hooks/use-move-task';
+import { cn } from '@/lib/utils';
 
 /**
  * Column = display bucket. Each column groups one or more Notion status values.
@@ -78,9 +79,15 @@ type Props = {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   membersById: Map<string, TeamMember>;
+  /**
+   * When true, the board lays out as natural-height content (no `flex-1`,
+   * no internal `overflow-auto`). Use it when the board is mounted inside a
+   * parent that already owns vertical scrolling (e.g. `BoardByPerson`).
+   */
+  embedded?: boolean;
 };
 
-export function BoardClassic({ tasks, setTasks, membersById }: Props) {
+export function BoardClassic({ tasks, setTasks, membersById, embedded }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [archivedOpen, setArchivedOpen] = useState(false);
 
@@ -137,7 +144,12 @@ export function BoardClassic({ tasks, setTasks, membersById }: Props) {
       onDragEnd={onDragEnd}
       onDragCancel={() => setActiveId(null)}
     >
-      <div className="flex-1 flex flex-col gap-3 pb-5 overflow-auto">
+      <div
+        className={cn(
+          'flex flex-col gap-3 pb-3',
+          !embedded && 'flex-1 overflow-auto pb-5',
+        )}
+      >
         <div className="grid grid-cols-4 gap-2.5">
           {visibleColumns.map((col) => (
             <Column
@@ -149,6 +161,7 @@ export function BoardClassic({ tasks, setTasks, membersById }: Props) {
               dotFilled={col.dotFilled}
               membersById={membersById}
               flash={flashedColumn?.id === col.id ? flashedColumn.kind : null}
+              embedded={embedded}
             />
           ))}
         </div>

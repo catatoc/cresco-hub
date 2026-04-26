@@ -19,6 +19,7 @@ import { Column } from './column';
 import { TaskCard } from './card';
 import { WeekStripe } from './week-stripe';
 import { useMoveTask } from '@/hooks/use-move-task';
+import { cn } from '@/lib/utils';
 
 type WeekColumn = {
   id: string;
@@ -59,9 +60,14 @@ type Props = {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   membersById: Map<string, TeamMember>;
+  /**
+   * When true, the board lays out as natural-height content (no `flex-1`,
+   * no internal `overflow-auto`). Used inside `BoardByPerson` accordions.
+   */
+  embedded?: boolean;
 };
 
-export function BoardWeek({ tasks, setTasks, membersById }: Props) {
+export function BoardWeek({ tasks, setTasks, membersById, embedded }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const { move } = useMoveTask(setTasks);
   // Week view: ignore Refining-only (triage), In Review, and Archived.
@@ -96,9 +102,19 @@ export function BoardWeek({ tasks, setTasks, membersById }: Props) {
       onDragEnd={onDragEnd}
       onDragCancel={() => setActiveId(null)}
     >
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div
+        className={cn(
+          'flex flex-col',
+          !embedded && 'flex-1 overflow-hidden',
+        )}
+      >
         <WeekStripe tasks={weekTasks} />
-        <div className="flex-1 grid grid-cols-3 gap-2.5 pb-5 overflow-auto">
+        <div
+          className={cn(
+            'grid grid-cols-3 gap-2.5 pb-3',
+            !embedded && 'flex-1 overflow-auto pb-5',
+          )}
+        >
           {COLUMNS.map((col) => (
             <Column
               key={col.id}
@@ -109,6 +125,7 @@ export function BoardWeek({ tasks, setTasks, membersById }: Props) {
               dotFilled={col.dotFilled}
               showDayChip
               membersById={membersById}
+              embedded={embedded}
             />
           ))}
         </div>

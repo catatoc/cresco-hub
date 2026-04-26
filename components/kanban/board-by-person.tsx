@@ -121,12 +121,14 @@ function PersonSection({
               tasks={group.tasks}
               setTasks={setSubsetTasks}
               membersById={membersById}
+              embedded
             />
           ) : (
             <BoardWeek
               tasks={group.tasks}
               setTasks={setSubsetTasks}
               membersById={membersById}
+              embedded
             />
           )}
         </div>

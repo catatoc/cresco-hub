@@ -17,9 +17,16 @@ type Props = {
   showDayChip?: boolean;
   membersById: Map<string, TeamMember>;
   flash?: FlashKind;
+  /**
+   * When true, the column does not stretch to fill its parent and its body
+   * does not own a scroll context. Used when the column is rendered inside
+   * a stacked layout (e.g. accordions in `BoardByPerson`) where the outer
+   * container handles vertical scrolling.
+   */
+  embedded?: boolean;
 };
 
-export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, membersById, flash }: Props) {
+export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, membersById, flash, embedded }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id });
 
   return (
@@ -27,7 +34,8 @@ export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, mem
       ref={setNodeRef}
       data-flashed={flash ?? undefined}
       className={cn(
-        'bg-[#fafafa] border border-border rounded-lg flex flex-col min-h-full transition-colors duration-(--duration-fast) ease-(--ease-linear)',
+        'bg-[#fafafa] border border-border rounded-lg flex flex-col transition-colors duration-(--duration-fast) ease-(--ease-linear)',
+        !embedded && 'min-h-full',
         isOver && 'border-[#5e6ad2] bg-[#eeeffc]/40',
       )}
     >
@@ -37,7 +45,12 @@ export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, mem
         <span className="text-[12px] text-muted-foreground font-medium">{tasks.length}</span>
       </div>
       <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-        <div className="flex-1 p-2 flex flex-col gap-1.5 overflow-auto min-h-[80px]">
+        <div
+          className={cn(
+            'flex-1 p-2 flex flex-col gap-1.5 min-h-[80px]',
+            !embedded && 'overflow-auto',
+          )}
+        >
           {tasks.map((t) => (
             <TaskCard
               key={t.id}
