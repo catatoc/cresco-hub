@@ -2,6 +2,7 @@ import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
 import { queryProjectsByCustomer } from '@/lib/notion/projects';
 import { ProjectsView } from '@/components/projects/projects-view';
+import { PageEnter } from '@/components/motion/page-enter';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +11,7 @@ export default async function ProyectosPage() {
   const projects = await queryProjectsByCustomer(ctx.customerId);
 
   return (
-    <>
+    <PageEnter className="flex flex-col h-full overflow-hidden">
       <Topbar crumbs={[{ label: 'Proyectos' }]} />
       <div className="flex-1 overflow-auto">
         <div className="p-10 max-w-[1100px] mx-auto w-full">
@@ -21,6 +22,6 @@ export default async function ProyectosPage() {
           <ProjectsView projects={projects} />
         </div>
       </div>
-    </>
+    </PageEnter>
   );
 }
