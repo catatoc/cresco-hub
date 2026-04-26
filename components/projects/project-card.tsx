@@ -41,7 +41,7 @@ export function ProjectCard({ project, accentIndex }: Props) {
       href={project.url}
       target="_blank"
       rel="noreferrer"
-      className="relative rounded-xl border border-border p-4 pt-4 bg-white hover:shadow-sm hover:border-[#e1e1e4] transition-all block overflow-hidden"
+      className="relative rounded-xl border border-border p-4 pt-4 bg-white transition-[transform,box-shadow,border-color] duration-(--duration-base) ease-(--ease-linear) hover:-translate-y-px hover:shadow-md hover:border-[#c9cbe8] block overflow-hidden"
     >
       <div className={cn('absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r', accent)} />
 
