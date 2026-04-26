@@ -126,7 +126,8 @@ export function PageEnter({
 - Habilitar en `next.config.ts`: `experimental: { viewTransition: true }`.
 - En `<TaskCard>`: añadir `style={{ viewTransitionName: 'task-' + task.id + '-title' }}` al título y `'-status'` al chip de estado.
 - En `<TaskDetail>`: los mismos elementos reciben los mismos `viewTransitionName`s.
-- El browser interpola automáticamente. Fallback automático en navegadores sin soporte (cae en el `<PageEnter>` del detalle).
+- El browser interpola automáticamente entre las dos vistas con el mismo `viewTransitionName`.
+- **Fallback en navegadores sin soporte (Firefox, Safari < 18):** la navegación ocurre sin shared element. El título y chips aparecen estáticos en su nueva posición; la descripción sigue animándose con `<PageEnter delay={120}>`. UX degradada pero correcta — sin código de fallback manual.
 - Reduced motion respetado nativamente por la API.
 
 ### 5. Animaciones internas del detalle
@@ -226,7 +227,7 @@ Cada `page.tsx` que hoy se beneficiaba de `AnimatedMain` envuelve su root en `<P
 
 ## Riesgos y consideraciones
 
-- **View Transitions API** aún es experimental en Next 15. Si presenta bugs en Safari/Firefox, el fallback automático cae en el `<PageEnter>` del detalle (UX aceptable, sin shared element).
+- **View Transitions API** aún es experimental en Next 15. Si presenta bugs o no está soportada (Firefox, Safari < 18), la navegación funciona sin shared element: la descripción mantiene su `<PageEnter>` y el resto aparece estático en su posición final. UX degradada pero correcta — sin código de fallback manual.
 - **TaskDrawer references**: confirmar via `grep` que solo se usa en `[taskId]/page.tsx` y `(.)tareas/[taskId]/page.tsx`. Confirmado en exploración inicial.
 - **Out of scope** (NO tocar):
   - Lógica de DnD del kanban.
