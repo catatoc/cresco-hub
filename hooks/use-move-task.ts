@@ -6,10 +6,22 @@ import type { Task, TaskStatus } from '@/schemas/task';
 
 type Dispatcher = React.Dispatch<React.SetStateAction<Task[]>>;
 
+export type FlashKind = 'success' | 'progress' | 'review' | 'neutral' | null;
+
+function flashFor(status: TaskStatus): FlashKind {
+  switch (status) {
+    case 'Done': return 'success';
+    case 'In Progress': return 'progress';
+    case 'In Review': return 'review';
+    default: return 'neutral';
+  }
+}
+
 export function useMoveTask(setTasks: Dispatcher) {
   const [pending, setPending] = useState<Set<string>>(new Set());
+  const [flashedColumn, setFlashedColumn] = useState<{ id: string; kind: FlashKind } | null>(null);
 
-  async function move(taskId: string, newStatus: TaskStatus) {
+  async function move(taskId: string, newStatus: TaskStatus, columnId?: string) {
     let original: Task[] = [];
     setTasks((curr) => {
       original = curr;
@@ -24,6 +36,10 @@ export function useMoveTask(setTasks: Dispatcher) {
         body: JSON.stringify({ status: newStatus }),
       });
       if (!res.ok) throw new Error(await res.text().catch(() => 'failed'));
+      if (columnId) {
+        setFlashedColumn({ id: columnId, kind: flashFor(newStatus) });
+        setTimeout(() => setFlashedColumn(null), 280);
+      }
     } catch {
       setTasks(original);
       toast.error('No se pudo mover la tarea. Intenta de nuevo.');
@@ -36,5 +52,5 @@ export function useMoveTask(setTasks: Dispatcher) {
     }
   }
 
-  return { move, pending };
+  return { move, pending, flashedColumn };
 }

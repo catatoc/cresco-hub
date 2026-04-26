@@ -98,7 +98,7 @@ export function BoardClassic({ tasks, setTasks, membersById }: Props) {
     };
   }, [activeId]);
 
-  const { move } = useMoveTask(setTasks);
+  const { move, flashedColumn } = useMoveTask(setTasks);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -121,7 +121,7 @@ export function BoardClassic({ tasks, setTasks, membersById }: Props) {
     if (!targetColumn) return;
     if (targetColumn.statuses.includes(task.status)) return;
 
-    void move(task.id, targetColumn.dropStatus);
+    void move(task.id, targetColumn.dropStatus, targetColumn.id);
   }
 
   const active = tasks.find((t) => t.id === activeId) ?? null;
@@ -148,6 +148,7 @@ export function BoardClassic({ tasks, setTasks, membersById }: Props) {
               dotClass={col.dotClass}
               dotFilled={col.dotFilled}
               membersById={membersById}
+              flash={flashedColumn?.id === col.id ? flashedColumn.kind : null}
             />
           ))}
         </div>
