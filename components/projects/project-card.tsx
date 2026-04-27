@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { Project } from '@/schemas/project';
 import { cn } from '@/lib/utils';
 import {
@@ -18,10 +19,8 @@ export function ProjectCard({ project, accentIndex }: Props) {
     typeof project.completion === 'number' ? Math.round(project.completion * 100) : null;
 
   return (
-    <a
-      href={project.url}
-      target="_blank"
-      rel="noreferrer"
+    <Link
+      href={`/proyectos/${project.id}`}
       className="relative rounded-xl border border-border p-4 pt-4 bg-white transition-[transform,box-shadow,border-color] duration-(--duration-base) ease-(--ease-linear) hover:-translate-y-px hover:shadow-md hover:border-[#c9cbe8] active:bg-[#fafbff] active:border-[#c9cbe8] block overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       <div className={cn('absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r', accent)} />
@@ -82,6 +81,6 @@ export function ProjectCard({ project, accentIndex }: Props) {
           </span>
         )}
       </div>
-    </a>
+    </Link>
   );
 }
