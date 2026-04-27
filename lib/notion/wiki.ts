@@ -61,6 +61,16 @@ export async function queryWikiByCustomerAndTitle(
   return res.results.filter((r): r is any => 'properties' in r).map(parseWiki);
 }
 
+export async function queryWikiByProject(projectId: string): Promise<WikiPage[]> {
+  const notion = getNotion();
+  const res = await notion.dataSources.query({
+    data_source_id: serverEnv.NOTION_DB_WIKI,
+    filter: { property: 'Projects', relation: { contains: projectId } },
+    sorts: [{ timestamp: 'last_edited_time', direction: 'descending' }],
+  });
+  return res.results.filter((r): r is any => 'properties' in r).map(parseWiki);
+}
+
 export async function createWikiPage(args: {
   customerId: string;
   title: string;
