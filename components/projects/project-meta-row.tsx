@@ -8,7 +8,7 @@ type Props = {
 };
 
 function fmt(iso: string): string {
-  const [y, m, d] = iso.split('-').map(Number);
+  const [y, m, d] = iso.split('-').map(Number) as [number, number, number];
   return new Date(y, m - 1, d).toLocaleDateString('es', { day: 'numeric', month: 'short' });
 }
 
