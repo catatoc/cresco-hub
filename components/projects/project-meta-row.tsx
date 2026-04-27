@@ -8,7 +8,8 @@ type Props = {
 };
 
 function fmt(iso: string): string {
-  return new Date(iso).toLocaleDateString('es', { day: 'numeric', month: 'short' });
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('es', { day: 'numeric', month: 'short' });
 }
 
 export function ProjectMetaRow({ startDate, endDate, ownerName, teamCount }: Props) {
