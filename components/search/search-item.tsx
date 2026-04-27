@@ -15,6 +15,7 @@ const TYPE_ICON: Record<SearchItemType['type'], string> = {
 const STATUS_DOT: Record<string, string> = {
   'In Progress': 'bg-[#4f7df3]',
   'Not Started': 'bg-[#c0c4cc]',
+  Testing: 'bg-[#b58a1f]',
   'In Review': 'bg-[#a569bd]',
   Refining: 'bg-[#c0c4cc]',
   Done: 'bg-[#3cb371]',

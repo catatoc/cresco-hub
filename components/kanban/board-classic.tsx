@@ -51,6 +51,14 @@ const COLUMNS: BoardColumn[] = [
     dotFilled: true,
   },
   {
+    id: 'testing',
+    title: 'Testing',
+    statuses: ['Testing'],
+    dropStatus: 'Testing',
+    dotClass: 'border-[#b58a1f] text-[#b58a1f]',
+    dotFilled: true,
+  },
+  {
     id: 'in-review',
     title: 'En revisión',
     statuses: ['In Review'],

@@ -5,17 +5,19 @@ import { cn } from '@/lib/utils';
 
 const STATUS_ORDER: Record<TaskStatus, number> = {
   'In Progress': 0,
-  'In Review':   1,
-  Refining:      2,
-  'Not Started': 3,
-  Done:          4,
-  Archived:      5,
+  Testing:       1,
+  'In Review':   2,
+  Refining:      3,
+  'Not Started': 4,
+  Done:          5,
+  Archived:      6,
 };
 
 const STATUS_PILL: Record<TaskStatus, { bg: string; text: string; dot: string }> = {
   Refining:      { bg: 'bg-[#fafbff]',  text: 'text-muted-foreground', dot: 'bg-[#a0a0a8]' },
   'Not Started': { bg: 'bg-[#fafbff]',  text: 'text-muted-foreground', dot: 'bg-[#a0a0a8]' },
   'In Progress': { bg: 'bg-[#eff6ff]',  text: 'text-[#3a5fcc]',         dot: 'bg-[#3a5fcc]' },
+  Testing:       { bg: 'bg-[#fef9e7]',  text: 'text-[#b58a1f]',         dot: 'bg-[#b58a1f]' },
   'In Review':   { bg: 'bg-[#faf0db]',  text: 'text-[#c78a2c]',         dot: 'bg-[#c78a2c]' },
   Done:          { bg: 'bg-[#e8f5ec]',  text: 'text-[#3f9f5c]',         dot: 'bg-[#3f9f5c]' },
   Archived:      { bg: 'bg-[#fafbff]',  text: 'text-muted-foreground', dot: 'bg-[#a0a0a8]' },
