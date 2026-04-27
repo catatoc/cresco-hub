@@ -64,3 +64,13 @@ export async function queryMeetingsByCustomerAndTitle(
   });
   return res.results.filter((r): r is any => 'properties' in r).map(parseMeeting);
 }
+
+export async function queryMeetingsByProject(projectId: string): Promise<Meeting[]> {
+  const notion = getNotion();
+  const res = await notion.dataSources.query({
+    data_source_id: serverEnv.NOTION_DB_MEETINGS,
+    filter: { property: 'Projects', relation: { contains: projectId } },
+    sorts: [{ timestamp: 'created_time', direction: 'descending' }],
+  });
+  return res.results.filter((r): r is any => 'properties' in r).map(parseMeeting);
+}
