@@ -79,6 +79,15 @@ export async function queryTasksByCustomerAndTitle(
   return res.results.filter((r): r is any => 'properties' in r).map(parseTask);
 }
 
+export async function queryTasksByProject(projectId: string): Promise<Task[]> {
+  const notion = getNotion();
+  const res = await notion.dataSources.query({
+    data_source_id: serverEnv.NOTION_DB_TASKS,
+    filter: { property: 'Project', relation: { contains: projectId } },
+  });
+  return res.results.filter((r): r is any => 'properties' in r).map(parseTask);
+}
+
 export async function createTask(args: {
   customerId: string;
   title: string;
@@ -104,7 +113,7 @@ export async function createTask(args: {
   if (args.dueDate) properties.Due = { date: { start: args.dueDate } };
 
   const res = await notion.pages.create({
-    parent: { database_id: serverEnv.NOTION_DB_TASKS },
+    parent: { data_source_id: serverEnv.NOTION_DB_TASKS },
     properties,
   });
   const id = (res as any).id as string;
