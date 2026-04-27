@@ -10,7 +10,7 @@ export default function LoginPage() {
             Tu proyecto.
           </h1>
           <p className="mt-3 text-sm lg:text-[13px] leading-relaxed text-neutral-600 max-w-[300px]">
-            Tareas, reuniones y wiki. En un solo lugar.
+            Tareas, reuniones y documentación.
           </p>
         </div>
 
@@ -27,24 +27,6 @@ export default function LoginPage() {
           </p>
           <LoginForm />
         </div>
-
-        <p className="mt-auto pt-6 text-xs text-muted-foreground text-center leading-relaxed">
-          Al continuar aceptas los{' '}
-          <a
-            href="#"
-            className="underline decoration-neutral-300 text-neutral-600 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-          >
-            términos
-          </a>{' '}
-          y la{' '}
-          <a
-            href="#"
-            className="underline decoration-neutral-300 text-neutral-600 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-          >
-            política de privacidad
-          </a>
-          .
-        </p>
       </section>
     </PageEnter>
   );

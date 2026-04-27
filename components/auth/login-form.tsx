@@ -63,7 +63,7 @@ export function LoginForm() {
       </Button>
 
       <p className="text-xs text-muted-foreground text-center">
-        Solo correos autorizados por tu PM.
+        Solo correos autorizados.
       </p>
     </div>
   );
