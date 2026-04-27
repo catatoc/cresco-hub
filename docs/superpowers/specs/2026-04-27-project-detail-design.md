@@ -50,7 +50,8 @@ Se evaluaron 3 layouts:
 - `lib/notion/tasks.ts` — agregar `queryTasksByProject(projectId)`.
 - `lib/notion/meetings.ts` — agregar `queryMeetingsByProject(projectId)` (filter por `Projects` relation contains).
 - `lib/notion/wiki.ts` — agregar `queryWikiByProject(projectId)` (filter por `Projects` relation contains).
-- `lib/notion/team.ts` — reutilizar `getTeamMembers(ids)` con `project.teamIds` (la team relation ya existe).
+- `lib/notion/team.ts` — reutilizar `getTeamMembers(ids)` con `project.teamIds`.
+- `lib/notion/users.ts` — reutilizar `getUsers(ids)` con `project.ownerIds` (estos son **Notion user IDs**, no IDs de Team — son entidades distintas y se resuelven por separado).
 
 Todos los queries son del lado server (fetch en el Server Component).
 
@@ -115,23 +116,23 @@ Stack vertical, mismo orden:
 - Display inline, separado por `·`. Color `text-muted-foreground`, font 11px.
 - Items:
   - 📅 `startDate – endDate` (formateado `15 jun – 30 sep` con `toLocaleDateString('es')`). Si solo hay endDate, mostrar `Vence 30 sep`. Si no hay fechas, omitir el chip.
-  - 👤 `Owner: <name>` — primer member de `ownerIds` (resuelto vía `getTeamMembers`). Si no hay owner, omitir.
-  - 👥 `<n> personas` — `teamIds.length` (incluye al owner si está en team).
-  - 🏢 `<customer name>` — opcional, solo si la app va a soportar multi-customer (hoy hay solo uno por context, así que se puede omitir en MVP).
+  - 👤 `Owner: <name>` — primer `NotionUser` resuelto desde `ownerIds` vía `getUsers`. Si no hay owner, omitir el chip.
+  - 👥 `<n> personas` — `teamIds.length` (resuelto vía `getTeamMembers`).
+  - 🏢 Customer chip — **omitido en MVP** (la app es single-customer por sesión).
 
 ### 3. Stats (`project-stats.tsx`)
 
-Grid de 4 tarjetas (`grid-cols-4` desktop, `grid-cols-2` mobile):
+Grid de hasta 4 tarjetas. El grid se adapta a la cantidad real (`grid-cols-{n}` desktop, `grid-cols-2` mobile, donde `n` ∈ {2,3,4}):
 
-1. **Avance** — `Math.round(project.completion * 100)%` con barrita de progreso debajo (gradient idéntico al acento). Si `completion == null`, omitir esta tarjeta y pasar a 3 tarjetas.
-2. **Tareas** — `<done> / <total>`, donde `done = tasks.filter(t => t.status === 'Done' || t.status === 'Archived').length` y `total = tasks.length`.
-3. **Reuniones** — `meetings.length`.
-4. **Días restantes** — `Math.ceil((endDate - now) / day)`. Color amber si <14 días, red si <0 (ya vencido), gris en otro caso. Si no hay endDate, omitir esta tarjeta.
+1. **Avance** — `Math.round(project.completion * 100)%` con barrita de progreso debajo (gradient idéntico al acento). Si `completion == null`, omitir.
+2. **Tareas** — `<done> / <total>`, donde `done = tasks.filter(t => t.status === 'Done' || t.status === 'Archived').length` y `total = tasks.length`. Siempre se muestra (mínimo `0 / 0`).
+3. **Reuniones** — `meetings.length`. Siempre se muestra.
+4. **Días restantes** — `Math.ceil((endDate - now) / day)`. Color amber si <14 días, red si <0 (ya vencido), gris en otro caso. Si no hay endDate, omitir.
 
 ### 4. Módulo Tareas (`project-tasks-module.tsx`)
 
 - Ordenar tasks por status (activas primero: `In Progress` > `In Review` > `Refining` > `Not Started` > `Done` > `Archived`), luego por `dueDate` ascendente.
-- Mostrar las **top 5**. Si hay más, link "Ver todas →" navega a `/tareas?projectId=<id>` (filtro pre-aplicado — requiere extender `tareas/page.tsx` para aceptar query string `projectId`, pero eso queda fuera de MVP; en MVP el link va a `project.url` o se desactiva si no hay filtro listo).
+- Mostrar las **top 5**. Si hay más, link "Ver todas →" navega a `/tareas` (listado global; el filtro `?projectId=` se difiere a post-MVP).
 - Cada fila: checkbox visual (display only — el toggle se hace en el detalle de la tarea), título, due chip ("vence 28 abr" o relativo), status pill.
 - Click en fila → `/tareas/[taskId]`.
 - Empty state: "Sin tareas en este proyecto. + Crea la primera".
@@ -139,22 +140,23 @@ Grid de 4 tarjetas (`grid-cols-4` desktop, `grid-cols-2` mobile):
 ### 5. Módulo Reuniones (`project-meetings-module.tsx`)
 
 - Ordenar por `date` desc (fallback `createdTime`).
-- Mostrar las **top 3**. Link "Ver todas →" navega a `/reuniones?projectId=<id>` (mismo caveat de filtro — MVP puede dejar el link al listado completo sin filtro).
+- Mostrar las **top 3**. Link "Ver todas →" navega a `/reuniones` (listado global; filtro por proyecto difiere a post-MVP).
 - Cada fila: título (bold), small line con `date · meetingType · "<n> acciones"` (donde n = `taskIds.length`).
 - Click → `/reuniones/[meetingId]`.
 - Empty state: "Aún no hay reuniones asociadas a este proyecto".
 
 ### 6. Módulo Equipo (`project-team-module.tsx`)
 
-- Resolver `project.teamIds` vía `getTeamMembers(teamIds)`.
-- Mostrar como chips con avatar (iniciales sobre fondo color) + nombre. El owner lleva `· Owner` en gris a la derecha.
+- Resolver `project.teamIds` vía `getTeamMembers(teamIds)` para los chips.
+- Resolver `project.ownerIds` vía `getUsers(ownerIds)` por separado (NotionUser) para etiquetar al owner por **nombre** debajo del módulo (ej. "Owner: Dani").
+- Chips: avatar (iniciales sobre fondo color) + nombre.
 - Si más de 6 miembros, mostrar primeros 5 + chip `+N`.
 - Sin click action en MVP (solo display). Opcional futuro: hover con email/role.
 
 ### 7. Módulo Wiki (`project-wiki-module.tsx`)
 
 - Ordenar por `lastEditedAt` desc.
-- Mostrar las **top 3**. Link "Ver todo →" navega a `/wiki` (sin filtro por proyecto en MVP — es aceptable porque el wiki global ya muestra todos).
+- Mostrar las **top 3**. Link "Ver todo →" navega a `/wiki` (sin filtro por proyecto en MVP).
 - Cada fila: icon (emoji de Notion o 📄 fallback), título, chip de categoría a la derecha.
 - Click → abre `wikiPage.url` en Notion (la app aún no tiene `/wiki/[id]`). Usar `target="_blank"`.
 - Empty state: "Sin documentación asociada".
@@ -171,17 +173,25 @@ Envolver toda la página en `<PageEnter>` (patrón existente en `proyectos/page.
 
 ## Loading-strategy
 
-Server Component fetcha en paralelo:
+Server Component fetcha en dos rondas:
+
 ```ts
-const [project, tasks, meetings, wiki, members] = await Promise.all([
+// Ronda 1 — todo lo que solo depende de projectId
+const [project, tasks, meetings, wiki] = await Promise.all([
   getProject(projectId),
   queryTasksByProject(projectId),
   queryMeetingsByProject(projectId),
   queryWikiByProject(projectId),
-  // members se resuelve después de project
+]);
+
+if (!project || project.customerId !== ctx.customerId) notFound();
+
+// Ronda 2 — depende de project (Team y Notion users son entidades distintas)
+const [members, owners] = await Promise.all([
+  getTeamMembers(project.teamIds),
+  getUsers(project.ownerIds),
 ]);
 ```
-Luego `getTeamMembers([...project.teamIds, ...project.ownerIds])` (deduped).
 
 ## Testing
 
