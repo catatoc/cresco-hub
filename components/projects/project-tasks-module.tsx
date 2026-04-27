@@ -50,7 +50,7 @@ export function ProjectTasksModule({ tasks }: { tasks: Task[] }) {
   return (
     <Module
       title="Tareas activas"
-      action={tasks.length > 5 ? <span className="text-[11px] text-[#5e6ad2]">Ver todas →</span> : null}
+      action={tasks.length > 5 ? <Link href="/tareas" className="text-[11px] text-[#5e6ad2] hover:underline">Ver todas →</Link> : null}
     >
       <ul className="divide-y divide-[#f5f5f8]">
         {visible.map((t) => {

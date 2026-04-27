@@ -39,10 +39,13 @@ describe('ProjectTasksModule', () => {
       mk({ id: '7', title: 'Sixth active', status: 'In Progress', dueDate: '2026-05-20' }),
     ];
     render(<ProjectTasksModule tasks={tasks} />);
-    const rows = screen.getAllByRole('link');
-    const titles = rows.map((r) => r.textContent ?? '');
+    const taskLinks = screen
+      .getAllByRole('link')
+      .filter((a) => a.getAttribute('href')?.startsWith('/tareas/'));
+    const titles = taskLinks.map((r) => r.textContent ?? '');
     expect(titles[0]).toContain('Active soon');
-    expect(rows.length).toBe(5); // top 5 only
+    expect(taskLinks).toHaveLength(5);
+    expect(screen.getByRole('link', { name: /Ver todas/ })).toHaveAttribute('href', '/tareas');
   });
 
   it('renders each row as a link to /tareas/[id]', () => {
