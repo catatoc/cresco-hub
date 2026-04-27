@@ -33,10 +33,10 @@ export function AssigneeLine({ assignees }: Props) {
 
   return (
     <div
-      className="mt-1.5 pt-1.5 border-t border-dashed border-border flex items-center gap-1.5 text-[11px] text-muted-foreground"
+      className="mt-1.5 pt-1.5 border-t border-dashed border-border flex items-center gap-1.5 text-[11px] text-muted-foreground min-w-0"
       title={fullTitle}
     >
-      <div className="flex items-center">
+      <div className="flex items-center shrink-0">
         {stackVisible.map((m, i) => (
           <span
             key={m.id}
@@ -52,7 +52,7 @@ export function AssigneeLine({ assignees }: Props) {
         )}
       </div>
       <span
-        className="truncate"
+        className="flex-1 min-w-0 truncate"
         title={namesExtra > 0 ? overflowNames : undefined}
       >
         {namesText}

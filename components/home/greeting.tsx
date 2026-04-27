@@ -24,12 +24,13 @@ export function Greeting({ name, stats, lastMeeting }: Props) {
   ].filter(Boolean).join(' · ');
 
   return (
-    <div className="mb-8">
-      <div className="text-[13px] text-muted-foreground mb-1.5 tracking-[0.01em]">
+    <div className="mb-6 sm:mb-8">
+      <div className="text-[13px] text-muted-foreground mb-1.5 tracking-[0.01em] truncate">
         {format(now, "EEEE · d 'de' MMMM · yyyy", { locale: es })}
       </div>
-      <h1 className="text-2xl font-semibold tracking-[-0.01em] mb-1.5">
-        {salute}, {firstName} 👋
+      <h1 className="text-xl sm:text-2xl font-semibold tracking-[-0.01em] mb-1.5 break-words">
+        {salute}, {firstName}
+        <span aria-hidden className="whitespace-nowrap"> 👋</span>
       </h1>
       {statusLine && <p className="text-sm text-[#57575c]">{statusLine}.</p>}
     </div>

@@ -49,25 +49,31 @@ export function BlocksRenderer({ blocks }: { blocks: any[] }) {
         switch (b.type) {
           case 'paragraph':
             return (
-              <p key={b.id} className="text-[14px] leading-[1.65] mb-3">
+              <p key={b.id} className="text-[14px] leading-[1.65] mb-3 break-words">
                 <RenderRich rich={b.paragraph.rich_text} />
               </p>
             );
           case 'heading_1':
             return (
-              <h2 key={b.id} className="text-[22px] font-semibold mt-8 mb-3.5 tracking-[-0.01em]">
+              <h2
+                key={b.id}
+                className="text-lg sm:text-[20px] lg:text-[22px] font-semibold mt-6 sm:mt-7 lg:mt-8 mb-3 sm:mb-3.5 tracking-[-0.01em] break-words"
+              >
                 <RenderRich rich={b.heading_1.rich_text} />
               </h2>
             );
           case 'heading_2':
             return (
-              <h3 key={b.id} className="text-[18px] font-semibold mt-6 mb-3 tracking-[-0.005em]">
+              <h3
+                key={b.id}
+                className="text-base sm:text-[17px] lg:text-[18px] font-semibold mt-5 sm:mt-6 mb-2.5 sm:mb-3 tracking-[-0.005em] break-words"
+              >
                 <RenderRich rich={b.heading_2.rich_text} />
               </h3>
             );
           case 'heading_3':
             return (
-              <h4 key={b.id} className="text-[15px] font-semibold mt-5 mb-2.5">
+              <h4 key={b.id} className="text-sm sm:text-[14px] lg:text-[15px] font-semibold mt-4 sm:mt-5 mb-2 sm:mb-2.5 break-words">
                 <RenderRich rich={b.heading_3.rich_text} />
               </h4>
             );
@@ -114,7 +120,7 @@ export function BlocksRenderer({ blocks }: { blocks: any[] }) {
             return (
               <pre
                 key={b.id}
-                className="p-3 rounded-md bg-[#f7f7f8] text-[12px] font-mono overflow-auto my-3"
+                className="p-3 rounded-md bg-[#f7f7f8] text-[12px] font-mono overflow-x-auto my-3 max-w-full whitespace-pre"
               >
                 <code>{source}</code>
               </pre>

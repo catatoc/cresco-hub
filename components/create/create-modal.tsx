@@ -7,11 +7,23 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { useCreateContext } from './create-provider';
+import {
+  useCreateContext,
+  type CreateMember,
+  type CreateSprintDefault,
+} from './create-provider';
 import { TareaForm } from './tarea-form';
 import { WikiForm } from './wiki-form';
 
-export function CreateModal({ customerId }: { customerId: string }) {
+export function CreateModal({
+  customerId,
+  currentMember,
+  currentSprint,
+}: {
+  customerId: string;
+  currentMember?: CreateMember;
+  currentSprint?: CreateSprintDefault | null;
+}) {
   const { isOpen, type, setType, close } = useCreateContext();
 
   // Title/description shared across type switches (preserved per spec).
@@ -67,6 +79,8 @@ export function CreateModal({ customerId }: { customerId: string }) {
               description={description}
               onDescriptionChange={setDescription}
               titleRef={titleRef}
+              currentMember={currentMember}
+              currentSprint={currentSprint ?? null}
             />
           ) : (
             <WikiForm

@@ -52,7 +52,7 @@ export function ActionItems({ tasks, membersById }: Props) {
             href={`/tareas/${t.id}`}
             key={t.id}
             className={cn(
-              'flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-[#f7f7f8]',
+              'flex items-center gap-2 sm:gap-2.5 px-3 sm:px-3.5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 hover:bg-[#f7f7f8] active:bg-[#eeeffc] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
               i < tasks.length - 1 && 'border-b border-border',
             )}
           >
@@ -70,21 +70,23 @@ export function ActionItems({ tasks, membersById }: Props) {
             </span>
             <span
               className={cn(
-                'text-[13px] flex-1 truncate',
+                'text-[13px] flex-1 min-w-0 truncate',
                 done && 'line-through text-muted-foreground',
               )}
             >
               {t.title}
             </span>
             {t.type && (
-              <span className="px-1.5 rounded text-[11px] font-medium bg-[#eeeffc] text-[#5e6ad2]">
+              <span className="hidden sm:inline-flex px-1.5 rounded text-[11px] font-medium bg-[#eeeffc] text-[#5e6ad2] shrink-0">
                 {t.type}
               </span>
             )}
-            <div className="shrink-0">
+            <div className="shrink-0 min-w-[20px]">
               <AssigneeStack assignees={assignees} />
             </div>
-            <DueCell dueDate={t.dueDate} />
+            <span className="shrink-0">
+              <DueCell dueDate={t.dueDate} />
+            </span>
           </Link>
         );
       })}

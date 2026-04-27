@@ -5,7 +5,8 @@ import {
   DndContext,
   DragOverlay,
   closestCorners,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   KeyboardSensor,
   useSensor,
   useSensors,
@@ -76,7 +77,8 @@ export function BoardWeek({ tasks, setTasks, membersById, embedded }: Props) {
   );
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
@@ -111,22 +113,27 @@ export function BoardWeek({ tasks, setTasks, membersById, embedded }: Props) {
         <WeekStripe tasks={weekTasks} />
         <div
           className={cn(
-            'grid grid-cols-3 gap-2.5 pb-3',
-            !embedded && 'flex-1 overflow-auto pb-5',
+            'flex gap-2.5 overflow-x-auto snap-x snap-mandatory -mx-3 px-3 sm:-mx-4 sm:px-4 lg:mx-0 lg:px-0 lg:grid lg:grid-cols-3 lg:overflow-visible',
+            !embedded && 'flex-1 lg:overflow-auto pb-[calc(1rem+env(safe-area-inset-bottom))] lg:pb-5',
+            '[scrollbar-width:thin]',
           )}
         >
           {COLUMNS.map((col) => (
-            <Column
+            <div
               key={col.id}
-              id={col.id}
-              title={col.title}
-              tasks={weekTasks.filter((t) => col.statuses.includes(t.status))}
-              dotClass={col.dotClass}
-              dotFilled={col.dotFilled}
-              showDayChip
-              membersById={membersById}
-              embedded={embedded}
-            />
+              className="snap-start shrink-0 w-[82vw] sm:w-[320px] lg:w-auto lg:shrink flex flex-col"
+            >
+              <Column
+                id={col.id}
+                title={col.title}
+                tasks={weekTasks.filter((t) => col.statuses.includes(t.status))}
+                dotClass={col.dotClass}
+                dotFilled={col.dotFilled}
+                showDayChip
+                membersById={membersById}
+                embedded={embedded}
+              />
+            </div>
           ))}
         </div>
       </div>

@@ -80,7 +80,7 @@ export function TaskStatusPill({ taskId, status }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          'relative inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium outline-none transition-[transform,background-color,color] duration-(--duration-fast) ease-(--ease-linear) hover:brightness-95 active:scale-[0.97] data-[celebrating=true]:scale-[1.04] data-[celebrating=true]:duration-(--duration-celebrate) data-[celebrating=true]:ease-(--ease-spring)',
+          'relative inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-2 sm:py-0.5 rounded text-[11px] font-medium outline-none transition-[transform,background-color,color] duration-(--duration-fast) ease-(--ease-linear) hover:brightness-95 active:scale-[0.97] data-[celebrating=true]:scale-[1.04] data-[celebrating=true]:duration-(--duration-celebrate) data-[celebrating=true]:ease-(--ease-spring) focus-visible:ring-2 focus-visible:ring-ring',
           style.pill,
           pending && 'opacity-70',
         )}

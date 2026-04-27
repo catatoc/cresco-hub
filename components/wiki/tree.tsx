@@ -56,7 +56,7 @@ function PageRow({ page }: { page: WikiPage }) {
     <Link
       href={`/wiki/${page.id}`}
       className={cn(
-        'flex items-center gap-2 px-1.5 py-1 rounded-md text-[13px] text-muted-foreground hover:bg-black/[0.04] hover:text-foreground',
+        'flex items-center gap-2 px-2 py-2 lg:px-1.5 lg:py-1 min-h-[44px] lg:min-h-0 rounded-md text-[13px] text-muted-foreground hover:bg-black/[0.04] hover:text-foreground active:bg-black/[0.06] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
         active && 'bg-white text-foreground font-medium border border-border shadow-sm',
       )}
     >
@@ -82,7 +82,7 @@ function CategoryGroup({
     <div className="mb-2">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-1 px-2 py-1 text-[10px] uppercase font-semibold tracking-[0.04em] text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+        className="w-full flex items-center gap-1 px-2 py-2 lg:py-1 min-h-[44px] lg:min-h-0 text-[10px] uppercase font-semibold tracking-[0.04em] text-muted-foreground hover:text-foreground active:text-foreground transition-colors cursor-pointer rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
       >
         {open ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
         <span className="flex-1 text-left">{category}</span>
@@ -111,16 +111,16 @@ export function WikiTree({ pages }: { pages: WikiPage[] }) {
   const groups = useMemo(() => groupByCategory(filtered), [filtered]);
 
   return (
-    <aside className="border-r border-border bg-[#f7f7f8] overflow-auto p-2">
-      <div className="flex items-center gap-1.5 p-1.5 bg-white border border-border rounded-md mb-2.5">
-        <Search className="w-3 h-3 text-muted-foreground" />
+    <aside className="lg:border-r border-border bg-[#f7f7f8] overflow-auto p-2 h-full">
+      <div className="flex items-center gap-1.5 p-2 lg:p-1.5 bg-white border border-border rounded-md mb-2.5">
+        <Search className="w-3.5 h-3.5 lg:w-3 lg:h-3 text-muted-foreground shrink-0" />
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Buscar en wiki..."
-          className="flex-1 bg-transparent border-none outline-none text-[12px] placeholder:text-muted-foreground"
+          className="flex-1 min-w-0 bg-transparent border-none outline-none text-[16px] lg:text-[12px] placeholder:text-muted-foreground"
         />
-        <kbd className="text-[10px] px-1 py-0.5 rounded bg-black/[0.06] text-muted-foreground">
+        <kbd className="hidden lg:inline-block text-[10px] px-1 py-0.5 rounded bg-black/[0.06] text-muted-foreground shrink-0">
           ⌘K
         </kbd>
       </div>

@@ -43,19 +43,19 @@ export default async function HomePage() {
   return (
     <PageEnter className="flex flex-col h-full overflow-hidden">
       <Topbar crumbs={[{ label: 'Home' }]}>
-        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[12px] text-muted-foreground border border-border bg-white">
-          <Clock className="w-3 h-3" />
-          {sprintLabel}
+        <span className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[12px] text-muted-foreground border border-border bg-white max-w-[55vw] truncate">
+          <Clock className="w-3 h-3 shrink-0" />
+          <span className="truncate">{sprintLabel}</span>
         </span>
       </Topbar>
 
       <div className="flex-1 overflow-auto">
-        <div className="px-10 py-10 max-w-[980px] mx-auto w-full">
+        <div className="px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10 max-w-[980px] mx-auto w-full">
           <Greeting name={ctx.memberName} stats={data.stats} lastMeeting={data.lastMeeting} />
           <StatsStrip stats={data.stats} lastMeeting={data.lastMeeting} overdueCount={overdue} />
           <MyTasks tasks={data.myTasksToday} membersById={membersById} />
           <ActiveProjects projects={data.activeProjects} membersById={membersById} />
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
             <LastMeeting meeting={data.lastMeeting} />
             <WikiRecents pages={data.recentWiki} />
           </div>

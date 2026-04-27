@@ -11,10 +11,10 @@ export default function Loading() {
 
       {/* Body skeleton */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_280px] overflow-hidden">
-        <div className="overflow-y-auto bg-white">
-          <div className="max-w-[720px] mx-auto px-8 py-8">
-            <div className="h-7 w-3/4 bg-[#eeeff1] rounded animate-pulse mb-3" />
-            <hr className="border-border mt-6 mb-6" />
+        <div className="overflow-y-auto bg-white min-w-0">
+          <div className="max-w-[720px] mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7 lg:py-8">
+            <div className="h-6 sm:h-7 w-3/4 bg-[#eeeff1] rounded animate-pulse mb-3" />
+            <hr className="border-border mt-5 sm:mt-6 mb-5 sm:mb-6" />
             <div className="space-y-3">
               <div className="h-3 w-full bg-[#f7f7f8] rounded animate-pulse" />
               <div className="h-3 w-5/6 bg-[#f7f7f8] rounded animate-pulse" />

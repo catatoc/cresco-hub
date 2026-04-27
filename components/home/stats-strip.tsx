@@ -10,13 +10,17 @@ type Props = {
 
 function Stat({ label, value, unit, sub, subClass }: { label: string; value: React.ReactNode; unit?: string; sub?: string; subClass?: string }) {
   return (
-    <div className="bg-[#f7f7f8] border border-border rounded-lg px-4 py-3.5">
-      <div className="text-[11px] uppercase font-medium tracking-[0.03em] text-muted-foreground mb-1.5">{label}</div>
-      <div className="text-[22px] font-semibold tracking-[-0.01em]">
+    <div className="bg-[#f7f7f8] border border-border rounded-lg px-3 py-3 sm:px-4 sm:py-3.5 min-w-0">
+      <div className="text-[11px] uppercase font-medium tracking-[0.03em] text-muted-foreground mb-1.5 truncate">{label}</div>
+      <div className="text-[20px] sm:text-[22px] font-semibold tracking-[-0.01em] leading-[1.1] truncate">
         {value}
         {unit && <span className="text-[13px] text-muted-foreground font-medium ml-1">{unit}</span>}
       </div>
-      {sub && <div className={`text-[11px] mt-1 ${subClass ?? 'text-muted-foreground'}`}>{sub}</div>}
+      {sub && (
+        <div className={`text-[11px] mt-1 truncate ${subClass ?? 'text-muted-foreground'}`} title={sub}>
+          {sub}
+        </div>
+      )}
     </div>
   );
 }
@@ -35,7 +39,7 @@ export function StatsStrip({ stats, lastMeeting, overdueCount = 0 }: Props) {
   })();
 
   return (
-    <div className="grid grid-cols-4 gap-2 mb-8">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-2.5 mb-6 sm:mb-8">
       <Stat label="En progreso" value={stats.inProgress} sub="tareas activas" />
       <Stat
         label="Por hacer"
@@ -52,7 +56,7 @@ export function StatsStrip({ stats, lastMeeting, overdueCount = 0 }: Props) {
       />
       <Stat
         label="Última reunión"
-        value={<span className="text-[16px] leading-none">{meetingLabel}</span>}
+        value={<span className="text-[15px] sm:text-[16px]">{meetingLabel}</span>}
         sub={lastMeeting?.title ?? undefined}
       />
     </div>

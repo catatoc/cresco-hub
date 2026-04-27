@@ -99,7 +99,7 @@ function PersonSection({
         aria-controls={panelId}
         id={labelId}
         className={cn(
-          'w-full flex items-center gap-3 px-3.5 py-2.5 text-left rounded-lg cursor-pointer',
+          'w-full flex items-center gap-3 px-3 sm:px-3.5 py-2.5 min-h-[44px] sm:min-h-0 text-left rounded-lg cursor-pointer',
           'transition-colors duration-(--duration-fast) ease-(--ease-linear)',
           'hover:bg-black/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5e6ad2]/30',
           open && 'rounded-b-none',
@@ -118,7 +118,7 @@ function PersonSection({
         ) : (
           <span className="w-7 h-7 rounded-full bg-[#ececef] text-[#8a8a91] grid place-items-center text-[10px] font-semibold">?</span>
         )}
-        <span className="flex flex-col leading-tight min-w-0">
+        <span className="flex flex-col leading-tight min-w-0 flex-1">
           <span className="text-[13px] font-semibold truncate">
             {group.member?.name ?? 'Sin asignar'}
           </span>
@@ -128,11 +128,14 @@ function PersonSection({
             </span>
           )}
         </span>
-        <span className="ml-auto flex items-center gap-1.5 shrink-0">
+        <span className="hidden md:flex items-center gap-1.5 shrink-0">
           <CountChip dotClass={STATUS_DOT.todo!} value={counts.todo} />
           <CountChip dotClass={STATUS_DOT.inProgress!} value={counts.inProgress} />
           <CountChip dotClass={STATUS_DOT.inReview!} value={counts.inReview} />
           <CountChip dotClass={STATUS_DOT.done!} value={counts.done} />
+        </span>
+        <span className="md:hidden text-[11px] text-muted-foreground shrink-0 tabular-nums">
+          {group.tasks.length}
         </span>
       </button>
       <AnimatePresence initial={false}>

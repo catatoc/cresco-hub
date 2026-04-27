@@ -45,11 +45,11 @@ export function UserCard({ name, role }: Props) {
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger
-          className="w-5 h-5 grid place-items-center rounded hover:bg-muted/60 outline-none"
+          className="w-9 h-9 -m-2 grid place-items-center rounded hover:bg-muted/60 outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0"
           aria-label="Opciones de usuario"
           disabled={pending}
         >
-          <MoreHorizontal className="w-3 h-3 text-muted-foreground" />
+          <MoreHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="min-w-[160px]">
           <DropdownMenuItem onClick={signOut} className="flex items-center gap-2 text-[13px]">

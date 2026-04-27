@@ -34,12 +34,12 @@ export function SprintNav({ currentSprintId, allSprintIds }: Props) {
   }
 
   const btnBase =
-    'w-6 h-6 border border-border rounded-[5px] bg-white grid place-items-center text-muted-foreground transition-colors';
+    'w-9 h-9 sm:w-6 sm:h-6 border border-border rounded-[5px] bg-white grid place-items-center text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
   const btnEnabled = 'hover:text-foreground hover:bg-[#f7f7f8] cursor-pointer';
   const btnDisabled = 'opacity-50 cursor-not-allowed';
 
   return (
-    <div className="flex gap-1 ml-auto">
+    <div className="flex gap-1">
       {prevId ? (
         <Link
           href={buildHref(prevId)}

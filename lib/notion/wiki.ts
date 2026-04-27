@@ -93,7 +93,7 @@ export async function createWikiPage(args: {
   if (args.meetingId) properties.Meetings = { relation: [{ id: args.meetingId }] };
 
   const res = await notion.pages.create({
-    parent: { database_id: serverEnv.NOTION_DB_WIKI },
+    parent: { data_source_id: serverEnv.NOTION_DB_WIKI },
     icon: { type: 'emoji', emoji: args.emoji },
     properties,
   });

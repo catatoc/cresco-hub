@@ -6,16 +6,28 @@ import { SearchTrigger } from '@/components/search/search-trigger';
 import { CreateTrigger } from '@/components/create/create-trigger';
 import { Home, CheckSquare, Calendar, BookOpen, FolderKanban } from 'lucide-react';
 import { LayoutGroup } from '@/components/motion/m';
+import { cn } from '@/lib/utils';
 
-export function Sidebar({ context }: { context: AppContext }) {
+type SidebarProps = {
+  context: AppContext;
+  className?: string;
+  groupId?: string;
+};
+
+export function Sidebar({ context, className, groupId = 'sidebar-nav' }: SidebarProps) {
   return (
-    <aside className="bg-[#f7f7f8] border-r border-border flex flex-col p-2">
+    <aside
+      className={cn(
+        'bg-[#f7f7f8] border-r border-border flex flex-col p-2 w-[232px] shrink-0 h-full',
+        className,
+      )}
+    >
       <WorkspaceHeader
         current={{ id: context.customerId, name: context.customerName, icon: context.customerIcon }}
         customers={context.customers}
       />
 
-      <LayoutGroup id="sidebar-nav">
+      <LayoutGroup id={groupId}>
         <div className="pb-3">
           <NavItem href="/" icon={<Home className="w-3.5 h-3.5" />} exact>
             Home

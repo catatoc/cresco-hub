@@ -51,10 +51,13 @@ type Props = {
 export function MyTasks({ tasks, membersById }: Props) {
   if (tasks.length === 0) {
     return (
-      <div className="mb-8">
-        <div className="flex items-baseline justify-between mb-3">
-          <h2 className="text-[13px] font-semibold flex items-center gap-2">
-            Tus tareas <span className="text-[12px] font-normal text-muted-foreground">· Hoy y atrasadas</span>
+      <div className="mb-6 sm:mb-8">
+        <div className="flex items-baseline justify-between gap-3 mb-3 min-w-0">
+          <h2 className="text-[13px] font-semibold flex items-baseline gap-2 min-w-0 truncate">
+            <span className="shrink-0">Tus tareas</span>
+            <span className="text-[12px] font-normal text-muted-foreground truncate hidden sm:inline">
+              · Hoy y atrasadas
+            </span>
           </h2>
         </div>
         <div className="border border-dashed border-border rounded-lg p-6 text-center text-sm text-muted-foreground">
@@ -65,12 +68,18 @@ export function MyTasks({ tasks, membersById }: Props) {
   }
 
   return (
-    <div className="mb-8">
-      <div className="flex items-baseline justify-between mb-3">
-        <h2 className="text-[13px] font-semibold flex items-center gap-2">
-          Tus tareas <span className="text-[12px] font-normal text-muted-foreground">· Hoy y atrasadas</span>
+    <div className="mb-6 sm:mb-8">
+      <div className="flex items-baseline justify-between gap-3 mb-3 min-w-0">
+        <h2 className="text-[13px] font-semibold flex items-baseline gap-2 min-w-0 truncate">
+          <span className="shrink-0">Tus tareas</span>
+          <span className="text-[12px] font-normal text-muted-foreground truncate hidden sm:inline">
+            · Hoy y atrasadas
+          </span>
         </h2>
-        <Link href="/tareas" className="text-[12px] text-muted-foreground hover:text-[#5e6ad2]">
+        <Link
+          href="/tareas"
+          className="shrink-0 text-[12px] text-muted-foreground hover:text-[#5e6ad2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+        >
           Ver todas →
         </Link>
       </div>
@@ -84,7 +93,7 @@ export function MyTasks({ tasks, membersById }: Props) {
               href={`/tareas/${t.id}`}
               key={t.id}
               className={cn(
-                'flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-[#f7f7f8]',
+                'flex items-center gap-2.5 px-3 sm:px-3.5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 hover:bg-[#f7f7f8] active:bg-[#f0f0f1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset transition-colors',
                 i < tasks.length - 1 && 'border-b border-border',
               )}
             >
@@ -102,10 +111,16 @@ export function MyTasks({ tasks, membersById }: Props) {
                 }
               />
               <PriorityIcon priority={t.priority} />
-              <span className="text-[13px] flex-1 truncate">{t.title}</span>
-              {t.tags[0] && <TagChip tag={t.tags[0]} />}
-              <DueCell dueDate={t.dueDate} />
-              <div className="shrink-0">
+              <span className="text-[13px] flex-1 min-w-0 truncate">{t.title}</span>
+              {t.tags[0] && (
+                <span className="hidden sm:inline">
+                  <TagChip tag={t.tags[0]} />
+                </span>
+              )}
+              <span className="hidden sm:inline shrink-0">
+                <DueCell dueDate={t.dueDate} />
+              </span>
+              <div className="shrink-0 min-w-[20px]">
                 <AssigneeStack assignees={assignees} size={20} />
               </div>
             </Link>

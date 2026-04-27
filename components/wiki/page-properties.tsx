@@ -17,7 +17,7 @@ export function PageProperties({ page }: Props) {
   if (page.categories.length === 0 && !page.lastEditedAt) return null;
 
   return (
-    <div className="grid grid-cols-[120px_1fr] gap-y-1.5 gap-x-5 p-3.5 bg-[#f7f7f8] border border-border rounded-lg mb-9 text-[12px]">
+    <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] gap-y-2 sm:gap-y-1.5 gap-x-5 p-3 sm:p-3.5 bg-[#f7f7f8] border border-border rounded-lg mb-5 sm:mb-7 lg:mb-9 text-[12px]">
       {page.categories.length > 0 && (
         <>
           <div className="text-muted-foreground font-medium flex items-center gap-1.5">

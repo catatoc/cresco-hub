@@ -2,7 +2,7 @@ import { CalendarDays } from 'lucide-react';
 
 export function MeetingsEmpty() {
   return (
-    <div className="flex flex-col items-center justify-center text-center py-20 px-6 max-w-md mx-auto">
+    <div className="flex flex-col items-center justify-center text-center py-12 px-4 sm:py-16 sm:px-6 lg:py-24 max-w-md mx-auto">
       <div
         className="w-14 h-14 rounded-full bg-[#eeeffc] grid place-items-center mb-5"
         aria-hidden="true"

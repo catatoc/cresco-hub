@@ -21,6 +21,8 @@ export function TareaForm({
   description,
   onDescriptionChange,
   titleRef,
+  currentMember,
+  currentSprint,
 }: {
   customerId: string;
   title: string;
@@ -28,18 +30,28 @@ export function TareaForm({
   description: string;
   onDescriptionChange: (v: string) => void;
   titleRef: Ref<HTMLInputElement>;
+  currentMember?: { id: string; name: string };
+  currentSprint?: { id: string; name: string } | null;
 }) {
   const router = useRouter();
   const { close } = useCreateContext();
   const inherited = useInheritedContext();
 
-  const [sprint, setSprint] = useState<ChipValue | null>(
-    inherited.sprintId ? { id: inherited.sprintId, label: 'Sprint heredado' } : null,
-  );
+  const [sprint, setSprint] = useState<ChipValue | null>(() => {
+    if (inherited.sprintId) {
+      return { id: inherited.sprintId, label: 'Sprint heredado' };
+    }
+    if (currentSprint) {
+      return { id: currentSprint.id, label: currentSprint.name };
+    }
+    return null;
+  });
   const [project, setProject] = useState<ChipValue | null>(
     inherited.projectId ? { id: inherited.projectId, label: 'Proyecto heredado' } : null,
   );
-  const [assignees, setAssignees] = useState<TeamValue[]>([]);
+  const [assignees, setAssignees] = useState<TeamValue[]>(() =>
+    currentMember ? [{ id: currentMember.id, label: currentMember.name }] : [],
+  );
   const [priority, setPriority] = useState<TaskPriority | null>(null);
   const [dueDate, setDueDate] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -85,7 +97,9 @@ export function TareaForm({
         // Preserve type, sprint, project. Clear the rest. Refocus title.
         onTitleChange('');
         onDescriptionChange('');
-        setAssignees([]);
+        setAssignees(
+          currentMember ? [{ id: currentMember.id, label: currentMember.name }] : [],
+        );
         setPriority(null);
         setDueDate(null);
         setSubmitting(false);

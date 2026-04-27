@@ -18,32 +18,35 @@ export function LastMeeting({ meeting }: { meeting: Meeting | null }) {
   const d = parseISO(meeting.createdTime);
 
   return (
-    <div>
-      <div className="flex items-baseline justify-between mb-3">
-        <h2 className="text-[13px] font-semibold">Última reunión</h2>
-        <Link href="/reuniones" className="text-[12px] text-muted-foreground hover:text-[#5e6ad2]">
+    <div className="min-w-0">
+      <div className="flex items-baseline justify-between gap-3 mb-3 min-w-0">
+        <h2 className="text-[13px] font-semibold truncate">Última reunión</h2>
+        <Link
+          href="/reuniones"
+          className="shrink-0 text-[12px] text-muted-foreground hover:text-[#5e6ad2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+        >
           Ver todas →
         </Link>
       </div>
       <Link
         href={`/reuniones/${meeting.id}`}
-        className="block border border-border rounded-lg p-4 bg-gradient-to-b from-[#fdfdfd] to-[#f7f7f8] hover:border-[#c9cbe8] transition-colors"
+        className="block border border-border rounded-lg p-4 bg-gradient-to-b from-[#fdfdfd] to-[#f7f7f8] hover:border-[#c9cbe8] active:border-[#c9cbe8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
       >
-        <div className="flex items-baseline gap-2 mb-2.5">
+        <div className="flex items-baseline gap-2 mb-2.5 flex-wrap">
           <div className="text-2xl font-semibold tracking-[-0.01em]">{format(d, 'd')}</div>
-          <div className="text-[12px] uppercase text-muted-foreground tracking-[0.04em] font-medium">
+          <div className="text-[12px] uppercase text-muted-foreground tracking-[0.04em] font-medium truncate">
             {format(d, 'MMM · EEE', { locale: es })}
           </div>
         </div>
-        <div className="text-[15px] font-medium mb-1.5">{meeting.title}</div>
+        <div className="text-[15px] font-medium mb-1.5 break-words">{meeting.title}</div>
         {meeting.summary && (
-          <p className="text-[12px] text-muted-foreground leading-relaxed line-clamp-2 mb-2">
+          <p className="text-[12px] text-muted-foreground leading-relaxed line-clamp-2 mb-2 break-words">
             {meeting.summary}
           </p>
         )}
         {meeting.meetingType && (
           <div className="text-[12px] text-muted-foreground flex items-center gap-2">
-            <span>{meeting.meetingType}</span>
+            <span className="truncate">{meeting.meetingType}</span>
           </div>
         )}
       </Link>

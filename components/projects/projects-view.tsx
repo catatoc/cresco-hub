@@ -38,11 +38,11 @@ export function ProjectsView({ projects }: { projects: Project[] }) {
     <>
       <Tabs current={tab} counts={counts} onChange={setTab} />
       {visible.length === 0 ? (
-        <div className="border border-dashed border-border rounded-xl p-10 text-center text-sm text-muted-foreground">
+        <div className="border border-dashed border-border rounded-xl p-6 sm:p-10 text-center text-sm text-muted-foreground">
           No hay proyectos en esta categoría.
         </div>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3 lg:gap-4">
           {visible.map((p, i) => <ProjectCard key={p.id} project={p} accentIndex={i} />)}
         </div>
       )}

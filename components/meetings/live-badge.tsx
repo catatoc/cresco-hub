@@ -8,8 +8,12 @@ export function isLive({ now, start, end }: Props): boolean {
 
 export function LiveBadge() {
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#3f9f5c] text-white text-[10px] font-bold uppercase tracking-[0.04em]">
-      <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+    <span
+      role="status"
+      aria-live="polite"
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#3f9f5c] text-white text-[10px] font-bold uppercase tracking-[0.04em] shrink-0"
+    >
+      <span aria-hidden className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
       En vivo
     </span>
   );

@@ -12,7 +12,7 @@ export function ViewToggle({ view, onChange }: Props) {
           key={v}
           onClick={() => onChange(v)}
           className={cn(
-            'px-2.5 py-1 text-[12px] font-medium rounded-[4px] text-muted-foreground hover:text-foreground transition-colors cursor-pointer',
+            'px-3 py-1.5 sm:px-2.5 sm:py-1 text-[12px] font-medium rounded-[4px] text-muted-foreground hover:text-foreground transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
             view === v && 'bg-white text-foreground shadow-sm',
           )}
         >

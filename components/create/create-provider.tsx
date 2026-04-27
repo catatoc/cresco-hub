@@ -53,11 +53,18 @@ function isAnotherDialogOpen(): boolean {
   return document.querySelector('[role="dialog"][data-state="open"]') !== null;
 }
 
+export type CreateMember = { id: string; name: string };
+export type CreateSprintDefault = { id: string; name: string };
+
 export function CreateProvider({
   customerId,
+  currentMember,
+  currentSprint,
   children,
 }: {
   customerId: string;
+  currentMember?: CreateMember;
+  currentSprint?: CreateSprintDefault | null;
   children: ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -104,7 +111,13 @@ export function CreateProvider({
   return (
     <CreateContext.Provider value={{ isOpen, type, open, close, setType }}>
       {children}
-      {isOpen && <CreateModal customerId={customerId} />}
+      {isOpen && (
+        <CreateModal
+          customerId={customerId}
+          currentMember={currentMember}
+          currentSprint={currentSprint ?? null}
+        />
+      )}
     </CreateContext.Provider>
   );
 }

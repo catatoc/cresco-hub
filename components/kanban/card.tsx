@@ -158,16 +158,16 @@ export function TaskCard({ task, assignees = [], showDayChip, isOverlay }: Props
       {...(!isOverlay ? attributes : {})}
       {...(!isOverlay ? listeners : {})}
       className={cn(
-        'bg-white border border-border rounded-md p-2.5 cursor-grab active:cursor-grabbing transition-[transform,box-shadow,border-color] duration-(--duration-base) ease-(--ease-linear) hover:-translate-y-px hover:shadow-md hover:border-[#c9cbe8]',
+        'bg-white border border-border rounded-md p-2.5 min-w-0 cursor-grab active:cursor-grabbing transition-[transform,box-shadow,border-color] duration-(--duration-base) ease-(--ease-linear) hover:-translate-y-px hover:shadow-md hover:border-[#c9cbe8] active:bg-[#fafafa] active:border-[#c9cbe8] touch-manipulation',
         isDone && 'opacity-75',
         isProgress && 'border-[#c9cbe8] shadow-[0_0_0_1px_rgba(94,106,210,.12)]',
         isDragging && !isOverlay && 'opacity-40',
         isOverlay && 'shadow-xl rotate-2 scale-[1.05] cursor-grabbing',
       )}
     >
-      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground mb-1">
+      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground mb-1 min-w-0">
         <PriorityBars priority={task.priority} />
-        {task.type && <span className="font-medium">{task.type}</span>}
+        {task.type && <span className="font-medium truncate">{task.type}</span>}
       </div>
 
       <Link
@@ -175,18 +175,18 @@ export function TaskCard({ task, assignees = [], showDayChip, isOverlay }: Props
         onPointerDown={(e) => e.stopPropagation()}
         style={{ viewTransitionName: `task-${task.id}-title` } as React.CSSProperties}
         className={cn(
-          'block text-[13px] leading-tight mb-2 hover:underline',
+          'block text-[13px] leading-tight mb-2 hover:underline line-clamp-2 break-words focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm',
           isDone && 'line-through text-muted-foreground',
         )}
       >
         {task.title}
       </Link>
 
-      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground min-w-0">
         {task.tags[0] && (
           <span
             className={cn(
-              'px-1.5 rounded text-[11px] font-medium',
+              'px-1.5 rounded text-[11px] font-medium truncate max-w-[60%] shrink',
               TAG_MAP[task.tags[0]] ?? 'bg-[#f7f7f8] text-[#57575c]',
             )}
           >

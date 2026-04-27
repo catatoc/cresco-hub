@@ -16,9 +16,13 @@ export default async function WikiLayout({ children }: { children: React.ReactNo
   return (
     <>
       <WikiTopbar pages={pages} />
-      <div className="flex-1 grid grid-cols-[260px_1fr] overflow-hidden">
-        <WikiTree pages={pages} />
-        <div className="overflow-auto">{children}</div>
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[260px_1fr] overflow-hidden">
+        <div className="hidden lg:block min-h-0">
+          <WikiTree pages={pages} />
+        </div>
+        <div className="overflow-auto min-w-0 pb-[calc(4rem+env(safe-area-inset-bottom)+1rem)] lg:pb-0">
+          {children}
+        </div>
       </div>
     </>
   );

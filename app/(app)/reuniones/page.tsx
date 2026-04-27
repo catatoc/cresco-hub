@@ -9,6 +9,7 @@ import type { Task } from '@/schemas/task';
 import type { TeamMember } from '@/schemas/team-member';
 import { HeroMeeting } from '@/components/meetings/hero-meeting';
 import { HistoryPanel } from '@/components/meetings/history-panel';
+import { MobileHistoryTrigger } from '@/components/meetings/mobile-history-trigger';
 import { LastMeetingBanner } from '@/components/meetings/last-meeting-banner';
 import { MeetingsEmpty } from '@/components/meetings/meetings-empty';
 import { PageEnter } from '@/components/motion/page-enter';
@@ -48,9 +49,11 @@ export default async function ReunionesPage() {
           { label: 'Reuniones' },
           { label: current?.title ?? 'Sin reuniones', muted: true },
         ]}
-      />
-      <div className="flex-1 grid grid-cols-[1fr_280px] overflow-hidden">
-        <div className="overflow-auto p-7 pb-12">
+      >
+        <MobileHistoryTrigger meetings={meetings} currentId={current?.id} />
+      </Topbar>
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_280px] overflow-hidden">
+        <div className="overflow-auto min-w-0 px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10 pb-[calc(4rem+env(safe-area-inset-bottom)+1rem)] lg:pb-12">
           {current ? (
             <>
               <LastMeetingBanner lastMeeting={lastMeeting} />
@@ -65,7 +68,9 @@ export default async function ReunionesPage() {
             <MeetingsEmpty />
           )}
         </div>
-        <HistoryPanel meetings={meetings} currentId={current?.id} />
+        <div className="hidden lg:block min-h-0">
+          <HistoryPanel meetings={meetings} currentId={current?.id} />
+        </div>
       </div>
     </PageEnter>
   );

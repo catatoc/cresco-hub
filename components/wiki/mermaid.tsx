@@ -132,13 +132,13 @@ export function Mermaid({ chart }: { chart: string }) {
             openModal();
           }
         }}
-        className="my-4 flex items-center justify-center overflow-auto cursor-zoom-in rounded-md hover:bg-[#f7f7f8] transition-colors p-2 min-h-[200px]"
+        className="my-4 flex items-center justify-center overflow-x-auto max-w-full cursor-zoom-in rounded-md hover:bg-[#f7f7f8] active:bg-[#f0f0f2] transition-colors p-2 min-h-[140px] sm:min-h-[200px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:max-w-full [&_svg]:h-auto"
         title="Click para ampliar"
       >
         {svg ? (
-          <div dangerouslySetInnerHTML={{ __html: svg }} />
+          <div className="w-full" dangerouslySetInnerHTML={{ __html: svg }} />
         ) : (
-          <div className="w-full h-[180px] bg-[#f7f7f8] rounded-md animate-pulse" />
+          <div className="w-full h-[140px] sm:h-[180px] bg-[#f7f7f8] rounded-md animate-pulse" />
         )}
       </div>
 
@@ -149,7 +149,7 @@ export function Mermaid({ chart }: { chart: string }) {
             if (e.target === e.currentTarget) setOpen(false);
           }}
         >
-          <div className="flex items-center justify-between p-3 text-white">
+          <div className="flex items-center justify-between p-3 pt-[max(0.75rem,env(safe-area-inset-top))] pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] text-white">
             <div className="flex items-center gap-1">
               <button
                 type="button"
@@ -192,7 +192,7 @@ export function Mermaid({ chart }: { chart: string }) {
             </button>
           </div>
           <div
-            className="flex-1 overflow-hidden flex items-center justify-center select-none"
+            className="flex-1 overflow-hidden flex items-center justify-center select-none pb-[env(safe-area-inset-bottom)]"
             onWheel={onWheel}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}

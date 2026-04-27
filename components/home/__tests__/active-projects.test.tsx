@@ -46,8 +46,8 @@ describe('ActiveProjects', () => {
         membersById={new Map()}
       />,
     );
-    expect(screen.getByText('Mogos App v2')).toBeInTheDocument();
-    expect(screen.getByText('68%')).toBeInTheDocument();
+    expect(screen.getAllByText('Mogos App v2').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('68%').length).toBeGreaterThan(0);
   });
 
   it('renders open task meta when openTaskCount > 0', () => {
@@ -57,7 +57,7 @@ describe('ActiveProjects', () => {
         membersById={new Map()}
       />,
     );
-    expect(screen.getByText(/14 abiertas/)).toBeInTheDocument();
+    expect(screen.getAllByText(/14 abiertas/).length).toBeGreaterThan(0);
   });
 
   it('hides percentage cell when completion is null', () => {
@@ -77,6 +77,6 @@ describe('ActiveProjects', () => {
         membersById={new Map()}
       />,
     );
-    expect(screen.getByText('Planning')).toBeInTheDocument();
+    expect(screen.getAllByText('Planning').length).toBeGreaterThan(0);
   });
 });

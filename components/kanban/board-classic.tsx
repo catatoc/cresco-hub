@@ -5,7 +5,8 @@ import {
   DndContext,
   DragOverlay,
   closestCorners,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   KeyboardSensor,
   useSensor,
   useSensors,
@@ -108,7 +109,8 @@ export function BoardClassic({ tasks, setTasks, membersById, embedded }: Props) 
   const { move, flashedColumn } = useMoveTask(setTasks);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
@@ -146,45 +148,55 @@ export function BoardClassic({ tasks, setTasks, membersById, embedded }: Props) 
     >
       <div
         className={cn(
-          'flex flex-col gap-3 pb-3',
-          !embedded && 'flex-1 overflow-auto pb-5',
+          'flex flex-col gap-3',
+          !embedded && 'flex-1 overflow-hidden pb-[calc(1rem+env(safe-area-inset-bottom))] lg:pb-5',
         )}
       >
-        <div className="grid grid-cols-4 gap-2.5">
+        <div
+          className={cn(
+            'flex gap-2.5 overflow-x-auto snap-x snap-mandatory -mx-3 px-3 sm:-mx-4 sm:px-4 lg:mx-0 lg:px-0 lg:grid lg:grid-cols-4 lg:overflow-visible',
+            !embedded && 'flex-1 lg:overflow-auto',
+            '[scrollbar-width:thin]',
+          )}
+        >
           {visibleColumns.map((col) => (
-            <Column
+            <div
               key={col.id}
-              id={col.id}
-              title={col.title}
-              tasks={tasks.filter((t) => col.statuses.includes(t.status))}
-              dotClass={col.dotClass}
-              dotFilled={col.dotFilled}
-              membersById={membersById}
-              flash={flashedColumn?.id === col.id ? flashedColumn.kind : null}
-              embedded={embedded}
-            />
+              className="snap-start shrink-0 w-[80vw] sm:w-[300px] lg:w-auto lg:shrink flex flex-col"
+            >
+              <Column
+                id={col.id}
+                title={col.title}
+                tasks={tasks.filter((t) => col.statuses.includes(t.status))}
+                dotClass={col.dotClass}
+                dotFilled={col.dotFilled}
+                membersById={membersById}
+                flash={flashedColumn?.id === col.id ? flashedColumn.kind : null}
+                embedded={embedded}
+              />
+            </div>
           ))}
         </div>
 
         {archivedTasks.length > 0 && (
-          <div className="border border-border rounded-lg bg-[#fafafa]">
+          <div className="border border-border rounded-lg bg-[#fafafa] shrink-0">
             <button
               onClick={() => setArchivedOpen((v) => !v)}
-              className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-black/[0.02] transition-colors cursor-pointer"
+              className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-black/[0.02] transition-colors cursor-pointer min-w-0"
             >
               <span
-                className={`w-2.5 h-2.5 rounded-full border-[1.5px] ${archivedColumn.dotClass} bg-current`}
+                className={`w-2.5 h-2.5 rounded-full border-[1.5px] shrink-0 ${archivedColumn.dotClass} bg-current`}
               />
-              <span className="text-[12px] font-semibold">{archivedColumn.title}</span>
-              <span className="text-[12px] text-muted-foreground font-medium">
+              <span className="text-[12px] font-semibold truncate">{archivedColumn.title}</span>
+              <span className="text-[12px] text-muted-foreground font-medium shrink-0">
                 {archivedTasks.length}
               </span>
-              <span className="ml-auto text-[11px] text-muted-foreground">
+              <span className="ml-auto text-[11px] text-muted-foreground shrink-0">
                 {archivedOpen ? 'Ocultar' : 'Mostrar'}
               </span>
             </button>
             {archivedOpen && (
-              <div className="p-2 grid grid-cols-4 gap-2 border-t border-border">
+              <div className="p-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 border-t border-border">
                 {archivedTasks.map((t) => (
                   <TaskCard
                     key={t.id}

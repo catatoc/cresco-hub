@@ -38,7 +38,7 @@ export function WorkspaceHeader({ current, customers }: Props) {
 
   if (customers.length <= 1) {
     return (
-      <div className="flex items-center gap-2 px-2 pb-2.5 pt-2 border-b border-border mb-2">
+      <div className="h-9 flex items-center gap-2 px-2 border-b border-border mb-2">
         <CustomerBadge customer={current} />
       </div>
     );
@@ -61,10 +61,11 @@ export function WorkspaceHeader({ current, customers }: Props) {
   }
 
   return (
-    <div className="border-b border-border mb-2">
+    <div className="h-9 border-b border-border mb-2">
       <DropdownMenu>
         <DropdownMenuTrigger
-          className="w-full flex items-center gap-2 px-2 pb-2.5 pt-2 rounded-md hover:bg-muted/60 transition-colors outline-none"
+          className="w-full h-full flex items-center gap-2 px-2 rounded-md hover:bg-muted/60 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label="Cambiar workspace"
           disabled={pendingId !== null}
         >
           <CustomerBadge customer={current} />

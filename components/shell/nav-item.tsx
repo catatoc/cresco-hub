@@ -39,7 +39,7 @@ export function NavItem({ href, icon, kbd, count, children, exact }: Props) {
       {icon}
       <span className="flex-1 truncate">{children}</span>
       {kbd && (
-        <kbd className="text-[10px] px-1 py-0.5 rounded bg-black/[0.06] text-muted-foreground font-[inherit]">
+        <kbd className="hidden lg:inline-block text-[10px] px-1 py-0.5 rounded bg-black/[0.06] text-muted-foreground font-[inherit]">
           {kbd}
         </kbd>
       )}

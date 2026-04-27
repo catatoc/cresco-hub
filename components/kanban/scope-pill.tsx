@@ -25,10 +25,10 @@ export function ScopePill({ scope, myCount, teamCount, sprintId }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md',
-          'text-[12px] font-medium border cursor-pointer transition-colors',
+          'inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-2 sm:py-0.5 rounded-md',
+          'text-[12px] font-medium border cursor-pointer transition-colors shrink-0',
           'bg-[#eeeffc] text-[#5e6ad2] border-[#c9cbe8]',
-          'hover:bg-[#e5e7fa] outline-none',
+          'hover:bg-[#e5e7fa] outline-none focus-visible:ring-2 focus-visible:ring-ring',
         )}
         aria-label="Filtrar tareas por alcance"
       >
