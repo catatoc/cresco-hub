@@ -1,5 +1,5 @@
 import { ExternalLink } from 'lucide-react';
-import { BlocksRenderer } from '@/components/wiki/blocks-renderer';
+import { TaskEditorContainer } from '@/components/edit-tasks/task-editor-container';
 import { PageEnter } from '@/components/motion/page-enter';
 import { TaskDetailHeader } from './task-detail-header';
 import { TaskDetailMetaPanel } from './task-detail-meta-panel';
@@ -53,13 +53,9 @@ export function TaskDetail({ task, blocks, project, sprint, assignees }: Props) 
             <hr className="border-border mt-5 sm:mt-6 mb-5 sm:mb-6" />
 
             <PageEnter delay={120}>
-              {blocks.length > 0 ? (
-                <div className="text-[14px]">
-                  <BlocksRenderer blocks={blocks} />
-                </div>
-              ) : (
-                <p className="text-[13px] text-muted-foreground italic">Sin descripción.</p>
-              )}
+              <div className="text-[14px]">
+                <TaskEditorContainer blocks={blocks} taskId={task.id} />
+              </div>
             </PageEnter>
           </div>
         </div>
