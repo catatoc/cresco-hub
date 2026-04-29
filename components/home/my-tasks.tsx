@@ -5,7 +5,7 @@ import type { Task } from '@/schemas/task';
 import type { Project } from '@/schemas/project';
 import { cn } from '@/lib/utils';
 import { AssigneeStack } from '@/components/kanban/card';
-import { OpenWithClaudeButton } from '@/components/common/open-with-claude-button';
+import { OpenWithClaudeMenu } from '@/components/common/open-with-claude-menu';
 
 const PRIORITY_FILL: Record<string, string> = {
   High: '#c78a2c',
@@ -133,7 +133,7 @@ export function MyTasks({ tasks, membersById, projectsById }: Props) {
                 <AssigneeStack assignees={assignees} size={20} />
               </div>
               <div className="relative shrink-0">
-                <OpenWithClaudeButton
+                <OpenWithClaudeMenu
                   variant="row"
                   task={t}
                   project={t.projectId ? (projectsById.get(t.projectId) ?? null) : null}

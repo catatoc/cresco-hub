@@ -3,7 +3,7 @@ import { CheckSquare } from 'lucide-react';
 import type { Task, TaskStatus } from '@/schemas/task';
 import type { Project } from '@/schemas/project';
 import { cn } from '@/lib/utils';
-import { OpenWithClaudeButton } from '@/components/common/open-with-claude-button';
+import { OpenWithClaudeMenu } from '@/components/common/open-with-claude-menu';
 
 const STATUS_ORDER: Record<TaskStatus, number> = {
   'In Progress': 0,
@@ -91,7 +91,7 @@ export function ProjectTasksModule({ tasks, project }: { tasks: Task[]; project:
                   {t.status}
                 </span>
                 <div className="relative shrink-0">
-                  <OpenWithClaudeButton variant="row" task={t} project={project} description="" />
+                  <OpenWithClaudeMenu variant="row" task={t} project={project} description="" />
                 </div>
               </div>
             </li>

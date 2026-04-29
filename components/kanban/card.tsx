@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { AssigneeLine } from './assignee-line';
-import { OpenWithClaudeButton } from '@/components/common/open-with-claude-button';
+import { OpenWithClaudeMenu } from '@/components/common/open-with-claude-menu';
 
 const PRIORITY_COLOR: Record<string, string> = {
   High: '#c78a2c',
@@ -173,7 +173,7 @@ export function TaskCard({ task, assignees = [], project = null, showDayChip, is
           onPointerDown={(e) => e.stopPropagation()}
           className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 sm:transition-opacity duration-150 max-sm:opacity-100"
         >
-          <OpenWithClaudeButton variant="card" task={task} project={project} description="" />
+          <OpenWithClaudeMenu variant="card" task={task} project={project} description="" />
         </div>
       )}
       <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground mb-1 min-w-0">
