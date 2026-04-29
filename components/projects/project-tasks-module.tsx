@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { CheckSquare } from 'lucide-react';
 import type { Task, TaskStatus } from '@/schemas/task';
+import type { Project } from '@/schemas/project';
 import { cn } from '@/lib/utils';
+import { OpenWithClaudeButton } from '@/components/common/open-with-claude-button';
 
 const STATUS_ORDER: Record<TaskStatus, number> = {
   'In Progress': 0,
@@ -27,7 +29,7 @@ function fmtDue(iso: string): string {
   return `vence ${new Date(iso).toLocaleDateString('es', { day: 'numeric', month: 'short' })}`;
 }
 
-export function ProjectTasksModule({ tasks }: { tasks: Task[] }) {
+export function ProjectTasksModule({ tasks, project }: { tasks: Task[]; project: Project }) {
   if (tasks.length === 0) {
     return (
       <Module title="Tareas activas">
@@ -60,25 +62,27 @@ export function ProjectTasksModule({ tasks }: { tasks: Task[] }) {
           const done = t.status === 'Done' || t.status === 'Archived';
           return (
             <li key={t.id}>
-              <Link
-                href={`/tareas/${t.id}`}
-                className="flex items-center gap-2.5 py-2 px-1 -mx-1 rounded hover:bg-[#fafbff] transition-colors"
-              >
+              <div className="relative flex items-center gap-2.5 py-2 px-1 -mx-1 rounded hover:bg-[#fafbff] transition-colors">
+                <Link
+                  href={`/tareas/${t.id}`}
+                  className="absolute inset-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset rounded"
+                  aria-label={t.title}
+                />
                 <span
                   className={cn(
-                    'w-3.5 h-3.5 rounded border-[1.5px] shrink-0',
+                    'relative w-3.5 h-3.5 rounded border-[1.5px] shrink-0',
                     done ? 'bg-[#3f9f5c] border-[#3f9f5c]' : 'border-[#c9cbe8]',
                   )}
                 />
-                <span className={cn('text-[12.5px] flex-1 min-w-0 truncate', done && 'line-through text-muted-foreground')}>
+                <span className={cn('relative text-[12.5px] flex-1 min-w-0 truncate', done && 'line-through text-muted-foreground')}>
                   {t.title}
                 </span>
                 {t.dueDate && !done && (
-                  <span className="text-[10px] text-muted-foreground shrink-0">{fmtDue(t.dueDate)}</span>
+                  <span className="relative text-[10px] text-muted-foreground shrink-0">{fmtDue(t.dueDate)}</span>
                 )}
                 <span
                   className={cn(
-                    'inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10.5px] font-medium shrink-0',
+                    'relative inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10.5px] font-medium shrink-0',
                     pill.bg,
                     pill.text,
                   )}
@@ -86,7 +90,10 @@ export function ProjectTasksModule({ tasks }: { tasks: Task[] }) {
                   <span className={cn('w-1.5 h-1.5 rounded-full', pill.dot)} />
                   {t.status}
                 </span>
-              </Link>
+                <div className="relative shrink-0">
+                  <OpenWithClaudeButton variant="row" task={t} project={project} description="" />
+                </div>
+              </div>
             </li>
           );
         })}
