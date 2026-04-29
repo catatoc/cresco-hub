@@ -31,7 +31,7 @@ export function LinkPrompt({ initialUrl, onSubmit, onCancel }: Props) {
   }
 
   return (
-    <div className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-white border border-border shadow-md">
+    <div className="edit-tasks-popover inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-white border border-border shadow-md">
       <input
         ref={ref}
         type="text"
