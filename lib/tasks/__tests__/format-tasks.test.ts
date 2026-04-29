@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { serializeTasksJson } from '@/lib/tasks/format-tasks';
+import { serializeTasksJson, serializeTasksMarkdown } from '@/lib/tasks/format-tasks';
 import type { Task } from '@/schemas/task';
 import type { TeamMember } from '@/schemas/team-member';
 
@@ -111,5 +111,69 @@ describe('serializeTasksJson — field mapping', () => {
       'Tarea minima',
       'Implementar copiar tareas',
     ]);
+  });
+});
+
+describe('serializeTasksMarkdown — header', () => {
+  it('starts with a header line containing the count and a date', () => {
+    const md = serializeTasksMarkdown([fullTask], membersWithDani);
+    const firstLine = md.split('\n')[0];
+
+    expect(firstLine).toMatch(/^# 1 tareas \(exportadas \d{4}-\d{2}-\d{2}\)$/);
+  });
+
+  it('uses plural correctly for empty/many', () => {
+    const empty = serializeTasksMarkdown([], new Map());
+    expect(empty.split('\n')[0]).toMatch(/^# 0 tareas /);
+  });
+});
+
+describe('serializeTasksMarkdown — task body', () => {
+  it('renders a full task with all metadata inline and indented continuation lines', () => {
+    const md = serializeTasksMarkdown([fullTask], membersWithDani);
+
+    expect(md).toContain('- [ ] **Implementar copiar tareas** · 🐛 Bug · High · Due 2 may');
+    expect(md).toContain('      Asignados: Dani, Desconocido · Tags: backend, urgent');
+    expect(md).toContain('      https://notion.so/abc123');
+  });
+
+  it('omits empty metadata segments without leaving stray separators', () => {
+    const md = serializeTasksMarkdown([minimalTask], new Map());
+
+    expect(md).toContain('- [ ] **Tarea minima**');
+    expect(md).not.toContain(' · null');
+    expect(md).not.toContain('Asignados:');
+    expect(md).not.toContain('Tags:');
+    expect(md).toContain('      https://notion.so/min');
+  });
+
+  it('drops the assignees/tags continuation line entirely when both are empty', () => {
+    const md = serializeTasksMarkdown([minimalTask], new Map());
+    const lines = md.trim().split('\n');
+
+    // header, blank, line1 (- [ ] ...), line3 (url)
+    expect(lines).toHaveLength(4);
+    expect(lines[2]).toMatch(/^- \[ \] /);
+    expect(lines[3].trim()).toBe('https://notion.so/min');
+  });
+
+  it('formats Spanish dates as "D mes"', () => {
+    const t: Task = { ...minimalTask, dueDate: '2026-11-15' };
+    const md = serializeTasksMarkdown([t], new Map());
+    expect(md).toContain('Due 15 nov');
+  });
+
+  it('omits Due segment when dueDate is unparseable', () => {
+    const t: Task = { ...minimalTask, dueDate: 'not-a-date' };
+    const md = serializeTasksMarkdown([t], new Map());
+    expect(md).not.toContain('Due ');
+  });
+
+  it('preserves task order', () => {
+    const md = serializeTasksMarkdown([minimalTask, fullTask], membersWithDani);
+    const idxMin = md.indexOf('Tarea minima');
+    const idxFull = md.indexOf('Implementar copiar tareas');
+    expect(idxMin).toBeGreaterThan(-1);
+    expect(idxFull).toBeGreaterThan(idxMin);
   });
 });
