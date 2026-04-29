@@ -121,7 +121,7 @@ describe('notionBlocksToProseMirror — base blocks', () => {
       },
     ];
     const out = notionBlocksToProseMirror(blocks);
-    const callout = out.content[0] as { attrs: { emoji: string } };
+    const callout = out.content?.[0] as unknown as { attrs: { emoji: string } };
     expect(callout.attrs.emoji).toBe('💡');
   });
 
@@ -163,7 +163,7 @@ describe('notionBlocksToProseMirror — base blocks', () => {
       { type: 'paragraph', paragraph: { rich_text: [text('after')] } },
     ];
     const out = notionBlocksToProseMirror(blocks);
-    expect(out.content[1]).toEqual({
+    expect(out.content?.[1]).toEqual({
       type: 'unsupported_block',
       attrs: {
         kind: 'toggle',
@@ -209,8 +209,8 @@ describe('notionBlocksToProseMirror — lists', () => {
       { type: 'numbered_list_item', numbered_list_item: { rich_text: [text('two')] } },
     ];
     const out = notionBlocksToProseMirror(blocks);
-    expect((out.content[0] as { type: string }).type).toBe('numbered_list');
-    expect((out.content[0] as { content: unknown[] }).content).toHaveLength(2);
+    expect((out.content?.[0] as { type: string }).type).toBe('numbered_list');
+    expect((out.content?.[0] as { content: unknown[] }).content).toHaveLength(2);
   });
 
   it('groups consecutive to_do blocks under a task_list with checked attrs', () => {
@@ -251,7 +251,7 @@ describe('notionBlocksToProseMirror — lists', () => {
       { type: 'bulleted_list_item', bulleted_list_item: { rich_text: [text('b')] } },
     ];
     const out = notionBlocksToProseMirror(blocks);
-    expect(out.content.map((n) => (n as { type: string }).type)).toEqual([
+    expect(out.content?.map((n) => (n as { type: string }).type)).toEqual([
       'bulleted_list',
       'numbered_list',
       'bulleted_list',
@@ -265,7 +265,7 @@ describe('notionBlocksToProseMirror — lists', () => {
       { type: 'bulleted_list_item', bulleted_list_item: { rich_text: [text('b')] } },
     ];
     const out = notionBlocksToProseMirror(blocks);
-    expect(out.content.map((n) => (n as { type: string }).type)).toEqual([
+    expect(out.content?.map((n) => (n as { type: string }).type)).toEqual([
       'bulleted_list',
       'paragraph',
       'bulleted_list',
@@ -290,7 +290,7 @@ describe('notionBlocksToProseMirror — inline marks', () => {
       },
     ];
     const out = notionBlocksToProseMirror(blocks);
-    expect(out.content[0]).toEqual({
+    expect(out.content?.[0]).toEqual({
       type: 'paragraph',
       content: [{ type: 'text', text: 'Hi', marks: [{ type: 'bold' }] }],
     });
@@ -312,7 +312,7 @@ describe('notionBlocksToProseMirror — inline marks', () => {
       },
     ];
     const out = notionBlocksToProseMirror(blocks);
-    const para = out.content[0] as { content: { marks: { type: string }[] }[] };
+    const para = out.content?.[0] as { content: { marks: { type: string }[] }[] };
     const markNames = para.content[0]!.marks.map((m) => m.type).sort();
     // underline is dropped
     expect(markNames).toEqual(['bold', 'code', 'italic', 'strikethrough']);
@@ -334,7 +334,7 @@ describe('notionBlocksToProseMirror — inline marks', () => {
       },
     ];
     const out = notionBlocksToProseMirror(blocks);
-    expect(out.content[0]).toEqual({
+    expect(out.content?.[0]).toEqual({
       type: 'paragraph',
       content: [
         {
@@ -359,7 +359,7 @@ describe('notionBlocksToProseMirror — inline marks', () => {
       },
     ];
     const out = notionBlocksToProseMirror(blocks);
-    const para = out.content[0] as { content: unknown[] };
+    const para = out.content?.[0] as { content: unknown[] };
     expect(para.content).toEqual([
       { type: 'text', text: 'a', marks: [{ type: 'bold' }] },
       { type: 'text', text: 'b' },
@@ -382,7 +382,7 @@ describe('notionBlocksToProseMirror — inline marks', () => {
       },
     ];
     const out = notionBlocksToProseMirror(blocks);
-    expect(out.content[0]).toEqual({
+    expect(out.content?.[0]).toEqual({
       type: 'code_block',
       attrs: { language: 'js' },
       content: [{ type: 'text', text: 'const x = 1;' }],
