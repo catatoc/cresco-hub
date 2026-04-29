@@ -62,6 +62,8 @@ Total bundle: ~40-50 KB gzipped.
 
 **Read-only sentinel node** — `unsupported_block` with `attrs: { kind: string, raw: object }`. The serializer-in produces this when it encounters a Notion block type the schema doesn't model (toggle, column, embed, synced block, etc.). The editor renders it grayed-out with a label *"Bloque no editable desde el hub: <kind>"* and the schema marks it `atom: true` so the user can delete it whole or move past it but can't edit its content.
 
+**Round-trip limitation:** the stored `raw` payload is the read-shape Notion API response (with `id`, `created_time`, `parent`, `archived`, `has_children`, and read-only `rich_text` shapes). Notion's `blocks.children.append` endpoint rejects these server-only fields, so a save that contains `unsupported_block` nodes will fail at the append stage. Phase 1 deliberately does NOT implement the read→write transform — it's deferred to a later iteration. Until then, users editing tasks with toggles/columns/embeds should expect a `503 append-failed` response. The existing-children delete already ran, so they would lose their body. The recommended UX in Phase 2 is to BLOCK saves on docs that contain `unsupported_block` nodes (with a clear error toast), not silently corrupt them.
+
 ### Serializers
 
 Two pure functions in `lib/edit-tasks/`:
@@ -255,7 +257,7 @@ PATCH /api/tasks/[id]/blocks { blocks: [...] }
 
 A small banner at the top of edit mode (collapsible):
 
-> *Algunos bloques de Notion (toggles, columnas, embeds, syncs) no se pueden editar desde el hub. Aparecen en gris y se conservan al guardar, pero para tocarlos abre la tarea en Notion.*
+> *Algunos bloques de Notion (toggles, columnas, embeds, syncs) no se pueden editar desde el hub. Aparecen en gris. **Por ahora no se pueden guardar tareas que contengan estos bloques** — abre la tarea en Notion para editarla. Próximamente soportaremos guardarlas sin tocarlos.*
 
 Banner shows only when the loaded doc contains at least one `unsupported_block`.
 
