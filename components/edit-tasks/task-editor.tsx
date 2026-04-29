@@ -8,8 +8,11 @@ import { keymap } from 'prosemirror-keymap';
 import { baseKeymap } from 'prosemirror-commands';
 import { dropCursor } from 'prosemirror-dropcursor';
 import { gapCursor } from 'prosemirror-gapcursor';
+import { inputRules } from 'prosemirror-inputrules';
 import { Node as PMNode } from 'prosemirror-model';
 import { editTasksSchema } from '@/lib/edit-tasks/schema';
+import { editTasksInputRules } from '@/lib/edit-tasks/inputrules';
+import { editTasksKeymap } from '@/lib/edit-tasks/keymap';
 
 export type PMNodeJSON = {
   type: string;
@@ -50,6 +53,8 @@ export const TaskEditor = forwardRef<TaskEditorHandle, Props>(function TaskEdito
       plugins: [
         history(),
         keymap({ 'Mod-z': undo, 'Mod-y': redo, 'Mod-Shift-z': redo }),
+        keymap(editTasksKeymap),
+        inputRules({ rules: editTasksInputRules }),
         keymap(baseKeymap),
         dropCursor(),
         gapCursor(),
