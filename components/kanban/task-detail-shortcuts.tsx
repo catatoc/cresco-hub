@@ -14,6 +14,9 @@ type Props = { task: Task; project: Project | null; description: string };
 export function TaskDetailShortcuts({ task, project, description }: Props) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || target?.isContentEditable) return;
       const isMeta = e.metaKey || e.ctrlKey;
       if (isMeta && e.shiftKey && e.key === '.') {
         e.preventDefault();
