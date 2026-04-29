@@ -50,7 +50,7 @@ export function ProjectDetail({
       />
       <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-3 lg:gap-4">
         <div className="flex flex-col gap-3 lg:gap-4 min-w-0">
-          <ProjectTasksModule tasks={tasks} />
+          <ProjectTasksModule tasks={tasks} project={project} />
           <ProjectMeetingsModule meetings={meetings} />
         </div>
         <div className="flex flex-col gap-3 lg:gap-4 min-w-0">

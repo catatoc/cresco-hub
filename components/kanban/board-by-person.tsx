@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import type { Task } from '@/schemas/task';
 import type { TeamMember } from '@/schemas/team-member';
+import type { Project } from '@/schemas/project';
 import { groupTasksByPerson } from '@/lib/tareas/group-by-person';
 import { BoardClassic } from './board-classic';
 import { BoardWeek } from './board-week';
@@ -16,6 +17,7 @@ type Props = {
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   members: TeamMember[];
   membersById: Map<string, TeamMember>;
+  projectsById?: Map<string, Project>;
   view: 'classic' | 'week';
 };
 
@@ -26,7 +28,7 @@ const STATUS_DOT: Record<string, string> = {
   done: 'bg-[#3f9f5c] border-[#3f9f5c]',
 };
 
-export function BoardByPerson({ tasks, setTasks, members, membersById, view }: Props) {
+export function BoardByPerson({ tasks, setTasks, members, membersById, projectsById, view }: Props) {
   const groups = groupTasksByPerson(tasks, members);
 
   return (
@@ -38,6 +40,7 @@ export function BoardByPerson({ tasks, setTasks, members, membersById, view }: P
             group={g}
             setTasks={setTasks}
             membersById={membersById}
+            projectsById={projectsById}
             view={view}
           />
         ))}
@@ -55,11 +58,13 @@ function PersonSection({
   group,
   setTasks,
   membersById,
+  projectsById,
   view,
 }: {
   group: { member: TeamMember | null; tasks: Task[] };
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   membersById: Map<string, TeamMember>;
+  projectsById?: Map<string, Project>;
   view: 'classic' | 'week';
 }) {
   const [open, setOpen] = useState(true);
@@ -160,6 +165,7 @@ function PersonSection({
                   tasks={group.tasks}
                   setTasks={setSubsetTasks}
                   membersById={membersById}
+                  projectsById={projectsById}
                   embedded
                 />
               ) : (
@@ -167,6 +173,7 @@ function PersonSection({
                   tasks={group.tasks}
                   setTasks={setSubsetTasks}
                   membersById={membersById}
+                  projectsById={projectsById}
                   embedded
                 />
               )}

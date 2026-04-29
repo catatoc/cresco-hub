@@ -2,8 +2,10 @@ import Link from 'next/link';
 import { format, isToday, isPast } from 'date-fns';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
+import type { Project } from '@/schemas/project';
 import { cn } from '@/lib/utils';
 import { AssigneeStack } from '@/components/kanban/card';
+import { OpenWithClaudeMenu } from '@/components/common/open-with-claude-menu';
 
 const PRIORITY_FILL: Record<string, string> = {
   High: '#c78a2c',
@@ -46,9 +48,10 @@ function TagChip({ tag }: { tag: string }) {
 type Props = {
   tasks: Task[];
   membersById: Map<string, TeamMember>;
+  projectsById: Map<string, Project>;
 };
 
-export function MyTasks({ tasks, membersById }: Props) {
+export function MyTasks({ tasks, membersById, projectsById }: Props) {
   if (tasks.length === 0) {
     return (
       <div className="mb-6 sm:mb-8">
@@ -89,17 +92,21 @@ export function MyTasks({ tasks, membersById }: Props) {
             .map((id) => membersById.get(id))
             .filter((m): m is TeamMember => !!m);
           return (
-            <Link
-              href={`/tareas/${t.id}`}
+            <div
               key={t.id}
               className={cn(
-                'flex items-center gap-2.5 px-3 sm:px-3.5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 hover:bg-[#f7f7f8] active:bg-[#f0f0f1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset transition-colors',
+                'relative flex items-center gap-2.5 px-3 sm:px-3.5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 hover:bg-[#f7f7f8] active:bg-[#f0f0f1] transition-colors',
                 i < tasks.length - 1 && 'border-b border-border',
               )}
             >
+              <Link
+                href={`/tareas/${t.id}`}
+                className="absolute inset-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+                aria-label={t.title}
+              />
               <span
                 className={cn(
-                  'w-3.5 h-3.5 rounded-full border-[1.5px] shrink-0',
+                  'relative w-3.5 h-3.5 rounded-full border-[1.5px] shrink-0',
                   t.status === 'Done' && 'bg-[#3f9f5c] border-[#3f9f5c]',
                   t.status === 'In Progress' && 'border-[#5e6ad2]',
                   (t.status === 'Not Started' || t.status === 'Refining') && 'border-muted-foreground',
@@ -110,20 +117,30 @@ export function MyTasks({ tasks, membersById }: Props) {
                     : undefined
                 }
               />
-              <PriorityIcon priority={t.priority} />
-              <span className="text-[13px] flex-1 min-w-0 truncate">{t.title}</span>
+              <span className="relative inline-flex">
+                <PriorityIcon priority={t.priority} />
+              </span>
+              <span className="relative text-[13px] flex-1 min-w-0 truncate">{t.title}</span>
               {t.tags[0] && (
-                <span className="hidden sm:inline">
+                <span className="relative hidden sm:inline">
                   <TagChip tag={t.tags[0]} />
                 </span>
               )}
-              <span className="hidden sm:inline shrink-0">
+              <span className="relative hidden sm:inline shrink-0">
                 <DueCell dueDate={t.dueDate} />
               </span>
-              <div className="shrink-0 min-w-[20px]">
+              <div className="relative shrink-0 min-w-[20px]">
                 <AssigneeStack assignees={assignees} size={20} />
               </div>
-            </Link>
+              <div className="relative shrink-0">
+                <OpenWithClaudeMenu
+                  variant="row"
+                  task={t}
+                  project={t.projectId ? (projectsById.get(t.projectId) ?? null) : null}
+                  description=""
+                />
+              </div>
+            </div>
           );
         })}
       </div>

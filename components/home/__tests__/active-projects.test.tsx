@@ -8,6 +8,7 @@ const mkProject = (over: Partial<HomeProject>): HomeProject => ({
   name: 'Test',
   icon: null,
   summary: null,
+  repoUrl: null,
   status: 'In Progress',
   priority: null,
   completion: 0.5,

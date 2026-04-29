@@ -16,6 +16,7 @@ import {
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task, TaskStatus } from '@/schemas/task';
+import type { Project } from '@/schemas/project';
 import { Column } from './column';
 import { TaskCard } from './card';
 import { WeekStripe } from './week-stripe';
@@ -61,6 +62,7 @@ type Props = {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   membersById: Map<string, TeamMember>;
+  projectsById?: Map<string, Project>;
   /**
    * When true, the board lays out as natural-height content (no `flex-1`,
    * no internal `overflow-auto`). Used inside `BoardByPerson` accordions.
@@ -68,7 +70,7 @@ type Props = {
   embedded?: boolean;
 };
 
-export function BoardWeek({ tasks, setTasks, membersById, embedded }: Props) {
+export function BoardWeek({ tasks, setTasks, membersById, projectsById, embedded }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const { move } = useMoveTask(setTasks);
   // Week view: ignore Refining-only (triage), In Review, and Archived.
@@ -131,6 +133,7 @@ export function BoardWeek({ tasks, setTasks, membersById, embedded }: Props) {
                 dotFilled={col.dotFilled}
                 showDayChip
                 membersById={membersById}
+                projectsById={projectsById}
                 embedded={embedded}
               />
             </div>

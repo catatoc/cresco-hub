@@ -12,6 +12,7 @@ const mkProject = (over: Partial<Project> = {}): Project => ({
   name: 'Lanzamiento Amedi v2',
   icon: '🏥',
   summary: 'Lanzar la v2 de la plataforma con onboarding renovado.',
+  repoUrl: null,
   status: 'In Progress',
   priority: 'High',
   completion: 0.62,

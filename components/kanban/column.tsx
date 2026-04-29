@@ -2,6 +2,7 @@
 
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
+import type { Project } from '@/schemas/project';
 import type { FlashKind } from '@/hooks/use-move-task';
 import { TaskCard } from './card';
 import { cn } from '@/lib/utils';
@@ -16,6 +17,7 @@ type Props = {
   dotFilled?: boolean;
   showDayChip?: boolean;
   membersById: Map<string, TeamMember>;
+  projectsById?: Map<string, Project>;
   flash?: FlashKind;
   /**
    * When true, the column does not stretch to fill its parent and its body
@@ -26,7 +28,7 @@ type Props = {
   embedded?: boolean;
 };
 
-export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, membersById, flash, embedded }: Props) {
+export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, membersById, projectsById, flash, embedded }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id });
 
   return (
@@ -59,6 +61,7 @@ export function Column({ id, title, tasks, dotClass, dotFilled, showDayChip, mem
               assignees={t.assigneeIds
                 .map((id) => membersById.get(id))
                 .filter((m): m is TeamMember => !!m)}
+              project={t.projectId ? (projectsById?.get(t.projectId) ?? null) : null}
             />
           ))}
         </div>

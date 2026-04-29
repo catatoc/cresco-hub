@@ -56,6 +56,7 @@ const mkProject = (over: Partial<Project>): Project => ({
   name: '',
   icon: null,
   summary: null,
+  repoUrl: null,
   status: 'In Progress',
   priority: null,
   completion: null,
