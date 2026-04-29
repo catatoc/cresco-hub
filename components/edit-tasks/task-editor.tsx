@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { history, undo, redo } from 'prosemirror-history';
@@ -13,6 +13,8 @@ import { Node as PMNode } from 'prosemirror-model';
 import { editTasksSchema } from '@/lib/edit-tasks/schema';
 import { editTasksInputRules } from '@/lib/edit-tasks/inputrules';
 import { editTasksKeymap } from '@/lib/edit-tasks/keymap';
+import { slashMenuPlugin } from '@/lib/edit-tasks/slash-menu-plugin';
+import { SlashMenu } from './slash-menu';
 
 export type PMNodeJSON = {
   type: string;
@@ -25,11 +27,8 @@ export type PMNodeJSON = {
 export type TaskEditorHandle = {
   getDoc: () => PMNodeJSON;
   hasChanges: () => boolean;
-  /**
-   * Replace the editor's doc with a new JSON. Used in tests and by the
-   * container after a successful save (to reset the pristine baseline).
-   */
   replaceContent: (doc: PMNodeJSON) => void;
+  getView: () => EditorView | null;
 };
 
 type Props = {
@@ -44,6 +43,7 @@ export const TaskEditor = forwardRef<TaskEditorHandle, Props>(function TaskEdito
   const hostRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const initialJSONRef = useRef<string>(JSON.stringify(initialDoc));
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
     if (!hostRef.current) return;
@@ -58,6 +58,7 @@ export const TaskEditor = forwardRef<TaskEditorHandle, Props>(function TaskEdito
         keymap(baseKeymap),
         dropCursor(),
         gapCursor(),
+        slashMenuPlugin(),
       ],
     });
     const view = new EditorView(hostRef.current, {
@@ -66,14 +67,15 @@ export const TaskEditor = forwardRef<TaskEditorHandle, Props>(function TaskEdito
         const next = view.state.apply(tr);
         view.updateState(next);
         onChange();
+        setTick((t) => t + 1);
       },
     });
     viewRef.current = view;
+    setTick((t) => t + 1);
     return () => {
       view.destroy();
       viewRef.current = null;
     };
-    // initialDoc is captured at mount time; further updates use replaceContent.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -95,13 +97,18 @@ export const TaskEditor = forwardRef<TaskEditorHandle, Props>(function TaskEdito
       });
       viewRef.current.updateState(state);
       onChange();
+      setTick((t) => t + 1);
     },
+    getView: () => viewRef.current,
   }));
 
   return (
-    <div
-      ref={hostRef}
-      className="prose prose-sm max-w-none [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-[200px]"
-    />
+    <>
+      <div
+        ref={hostRef}
+        className="prose prose-sm max-w-none [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-[200px]"
+      />
+      <SlashMenu view={viewRef.current} tick={tick} />
+    </>
   );
 });
