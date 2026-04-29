@@ -16,6 +16,7 @@ import {
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task, TaskStatus } from '@/schemas/task';
+import type { Project } from '@/schemas/project';
 import { Column } from './column';
 import { TaskCard } from './card';
 import { useMoveTask } from '@/hooks/use-move-task';
@@ -88,6 +89,7 @@ type Props = {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   membersById: Map<string, TeamMember>;
+  projectsById?: Map<string, Project>;
   /**
    * When true, the board lays out as natural-height content (no `flex-1`,
    * no internal `overflow-auto`). Use it when the board is mounted inside a
@@ -96,7 +98,7 @@ type Props = {
   embedded?: boolean;
 };
 
-export function BoardClassic({ tasks, setTasks, membersById, embedded }: Props) {
+export function BoardClassic({ tasks, setTasks, membersById, projectsById, embedded }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [archivedOpen, setArchivedOpen] = useState(false);
 
@@ -179,6 +181,7 @@ export function BoardClassic({ tasks, setTasks, membersById, embedded }: Props) 
                 dotClass={col.dotClass}
                 dotFilled={col.dotFilled}
                 membersById={membersById}
+                projectsById={projectsById}
                 flash={flashedColumn?.id === col.id ? flashedColumn.kind : null}
                 embedded={embedded}
               />
@@ -212,6 +215,7 @@ export function BoardClassic({ tasks, setTasks, membersById, embedded }: Props) 
                     assignees={t.assigneeIds
                       .map((id) => membersById.get(id))
                       .filter((m): m is TeamMember => !!m)}
+                    project={t.projectId ? (projectsById?.get(t.projectId) ?? null) : null}
                   />
                 ))}
               </div>

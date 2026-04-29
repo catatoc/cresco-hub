@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
+import type { Project } from '@/schemas/project';
 import { cn } from '@/lib/utils';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { AssigneeLine } from './assignee-line';
+import { OpenWithClaudeButton } from '@/components/common/open-with-claude-button';
 
 const PRIORITY_COLOR: Record<string, string> = {
   High: '#c78a2c',
@@ -125,11 +127,12 @@ export function AssigneeStack({
 type Props = {
   task: Task;
   assignees?: TeamMember[];
+  project?: Project | null;
   showDayChip?: boolean;
   isOverlay?: boolean;
 };
 
-export function TaskCard({ task, assignees = [], showDayChip, isOverlay }: Props) {
+export function TaskCard({ task, assignees = [], project = null, showDayChip, isOverlay }: Props) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: task.id, disabled: isOverlay });
 
@@ -158,13 +161,21 @@ export function TaskCard({ task, assignees = [], showDayChip, isOverlay }: Props
       {...(!isOverlay ? attributes : {})}
       {...(!isOverlay ? listeners : {})}
       className={cn(
-        'bg-white border border-border rounded-md p-2.5 min-w-0 cursor-grab active:cursor-grabbing transition-[transform,box-shadow,border-color] duration-(--duration-base) ease-(--ease-linear) hover:-translate-y-px hover:shadow-md hover:border-[#c9cbe8] active:bg-[#fafafa] active:border-[#c9cbe8] touch-manipulation',
+        'group relative bg-white border border-border rounded-md p-2.5 min-w-0 cursor-grab active:cursor-grabbing transition-[transform,box-shadow,border-color] duration-(--duration-base) ease-(--ease-linear) hover:-translate-y-px hover:shadow-md hover:border-[#c9cbe8] active:bg-[#fafafa] active:border-[#c9cbe8] touch-manipulation',
         isDone && 'opacity-75',
         isProgress && 'border-[#c9cbe8] shadow-[0_0_0_1px_rgba(94,106,210,.12)]',
         isDragging && !isOverlay && 'opacity-40',
         isOverlay && 'shadow-xl rotate-2 scale-[1.05] cursor-grabbing',
       )}
     >
+      {!isOverlay && (
+        <div
+          onPointerDown={(e) => e.stopPropagation()}
+          className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 sm:transition-opacity duration-150 max-sm:opacity-100"
+        >
+          <OpenWithClaudeButton variant="card" task={task} project={project} description="" />
+        </div>
+      )}
       <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground mb-1 min-w-0">
         <PriorityBars priority={task.priority} />
         {task.type && <span className="font-medium truncate">{task.type}</span>}

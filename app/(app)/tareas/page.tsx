@@ -8,6 +8,7 @@ import { resolveScope } from '@/lib/tareas/scope';
 import { queryTasksByCustomerAndSprint } from '@/lib/notion/tasks';
 import { getCurrentSprint, getSprint, listSprints } from '@/lib/notion/sprints';
 import { getTeamMembers } from '@/lib/notion/team';
+import { queryProjectsByCustomer } from '@/lib/notion/projects';
 import { KanbanView } from '@/components/kanban/kanban-view';
 import { ScopePill } from '@/components/kanban/scope-pill';
 import { PageEnter } from '@/components/motion/page-enter';
@@ -33,10 +34,13 @@ export default async function TareasPage({
   const cookieStore = await cookies();
   const scope = resolveScope(sp.scope, cookieStore.get(TAREAS_SCOPE_COOKIE)?.value);
 
-  const [sprint, sprints] = await Promise.all([
+  const [sprint, sprints, projects] = await Promise.all([
     sp.sprint ? getSprint(sp.sprint) : getCurrentSprint(),
     listSprints(),
+    queryProjectsByCustomer(ctx.customerId),
   ]);
+
+  const projectsById = new Map(projects.map((p) => [p.id, p]));
 
   const allTasks = await queryTasksByCustomerAndSprint(ctx.customerId, sprint?.id ?? null);
 
@@ -67,6 +71,7 @@ export default async function TareasPage({
         allSprintIds={sprints.map((s) => s.id)}
         members={members}
         scope={scope}
+        projectsById={projectsById}
       />
     </PageEnter>
   );
