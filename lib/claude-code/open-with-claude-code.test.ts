@@ -72,7 +72,7 @@ describe('openWithClaudeCode', () => {
     await openWithClaudeCode({ task, project, description: 'Body.' });
 
     expect(writeText).toHaveBeenCalledTimes(1);
-    const written = writeText.mock.calls[0][0] as string;
+    const written = writeText.mock.calls[0]?.[0] as string;
     expect(written).toContain('Title');
     expect(written).toContain('Notion: https://notion.so/tid');
     expect(written).toContain('Descripción:\nBody.');
