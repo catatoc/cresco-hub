@@ -11,6 +11,7 @@ import { BoardWeek } from './board-week';
 import { BoardByPerson } from './board-by-person';
 import { ViewToggle } from './view-toggle';
 import { SprintNav } from './sprint-nav';
+import { CopyTasksMenu } from './copy-tasks-menu';
 
 type Props = {
   initialTasks: Task[];
@@ -47,6 +48,7 @@ export function KanbanView({
         <div className="flex items-center gap-2.5 ml-auto shrink-0">
           <SprintNav currentSprintId={currentSprintId} allSprintIds={allSprintIds} />
           <ViewToggle view={view} onChange={setView} />
+          <CopyTasksMenu tasks={tasks} membersById={membersById} sprintLabel={sprintLabel} />
         </div>
       </div>
 
