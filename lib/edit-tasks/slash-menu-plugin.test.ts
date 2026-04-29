@@ -23,7 +23,7 @@ describe('slashMenuPlugin', () => {
     const state = buildState('/');
     const placed = state.apply(state.tr.setSelection(TextSelection.create(state.doc, 2)));
     const s = getSlashMenuState(placed);
-    expect(s.active).toBe(true);
+    if (!s.active) throw new Error('expected active');
     expect(s.query).toBe('');
   });
 
@@ -31,7 +31,7 @@ describe('slashMenuPlugin', () => {
     const state = buildState('/hea');
     const placed = state.apply(state.tr.setSelection(TextSelection.create(state.doc, 5)));
     const s = getSlashMenuState(placed);
-    expect(s.active).toBe(true);
+    if (!s.active) throw new Error('expected active');
     expect(s.query).toBe('hea');
   });
 
