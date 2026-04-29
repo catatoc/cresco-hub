@@ -6,6 +6,9 @@ import { TaskDetailMetaPanel } from './task-detail-meta-panel';
 import { TaskDetailMetaStrip } from './task-detail-meta-strip';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { OpenWithClaudeButton } from '@/components/common/open-with-claude-button';
+import { extractPlainText } from '@/lib/claude-code/extract-plain-text';
+import { TaskDetailShortcuts } from './task-detail-shortcuts';
 import type { Task } from '@/schemas/task';
 import type { Project } from '@/schemas/project';
 import type { Sprint } from '@/schemas/sprint';
@@ -26,8 +29,11 @@ export function TaskDetail({ task, blocks, project, sprint, assignees }: Props) 
     ...(task.type ? [{ label: task.type }] : []),
   ];
 
+  const description = extractPlainText(blocks);
+
   return (
     <article className="flex flex-col h-full overflow-hidden">
+      <TaskDetailShortcuts task={task} project={project} description={description} />
       <TaskDetailHeader crumbs={crumbs} />
 
       <TaskDetailMetaStrip task={task} assignees={assignees} project={project} />
@@ -65,18 +71,26 @@ export function TaskDetail({ task, blocks, project, sprint, assignees }: Props) 
       </div>
 
       {/* Footer */}
-      <div className="px-4 sm:px-6 py-2 sm:py-2.5 border-t border-border bg-[#fafafa] flex items-center justify-between gap-3 shrink-0">
+      <div className="px-4 sm:px-6 py-2 sm:py-2.5 border-t border-border bg-[#fafafa] flex items-center justify-between gap-3 flex-wrap shrink-0">
         <span className="hidden sm:inline text-[11px] text-muted-foreground">
-          Esc para volver
+          Esc para volver · <kbd className="font-mono text-[10px] bg-[#eef0f2] rounded px-1 py-[1px]">⌘⇧.</kbd> abrir con Claude
         </span>
-        <a
-          href={task.url}
-          target="_blank"
-          rel="noreferrer"
-          className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'min-h-[40px] sm:min-h-0 ml-auto')}
-        >
-          Abrir en Notion <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
-        </a>
+        <div className="flex items-center gap-2 ml-auto">
+          <a
+            href={task.url}
+            target="_blank"
+            rel="noreferrer"
+            className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'min-h-[40px] sm:min-h-0')}
+          >
+            Abrir en Notion <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
+          </a>
+          <OpenWithClaudeButton
+            variant="cta"
+            task={task}
+            project={project}
+            description={description}
+          />
+        </div>
       </div>
     </article>
   );
