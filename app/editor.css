@@ -3,10 +3,25 @@
    write-mode and read-mode feel identical. */
 
 .ProseMirror {
-  outline: none;
+  outline: none !important;
   min-height: 200px;
   font-size: 14px;
   line-height: 1.65;
+}
+
+.ProseMirror:focus,
+.ProseMirror:focus-within,
+.ProseMirror-focused {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Defensive: kill any focus ring on the host wrapper too */
+.task-editor-host,
+.task-editor-host *:focus,
+.task-editor-host *:focus-visible {
+  outline: none !important;
 }
 
 .ProseMirror p {
