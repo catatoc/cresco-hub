@@ -28,6 +28,7 @@ export default async function HomePage() {
   );
   const members = await getTeamMembers(memberIds);
   const membersById = new Map(members.map((m) => [m.id, m]));
+  const projectsById = new Map(data.projects.map((p) => [p.id, p]));
 
   const overdue = data.tasks.filter(
     (t: Task) =>
@@ -53,7 +54,7 @@ export default async function HomePage() {
         <div className="px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10 max-w-[980px] mx-auto w-full">
           <Greeting name={ctx.memberName} stats={data.stats} lastMeeting={data.lastMeeting} />
           <StatsStrip stats={data.stats} lastMeeting={data.lastMeeting} overdueCount={overdue} />
-          <MyTasks tasks={data.myTasksToday} membersById={membersById} />
+          <MyTasks tasks={data.myTasksToday} membersById={membersById} projectsById={projectsById} />
           <ActiveProjects projects={data.activeProjects} membersById={membersById} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
             <LastMeeting meeting={data.lastMeeting} />

@@ -82,5 +82,5 @@ export async function getHomeData(customerId: string, sprintId: string | null) {
 
   const activeProjects = shapeActiveProjects(projects, tasks);
 
-  return { tasks, stats, lastMeeting, recentWiki, myTasksToday, activeProjects };
+  return { tasks, stats, lastMeeting, recentWiki, myTasksToday, activeProjects, projects };
 }
