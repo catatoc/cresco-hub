@@ -11,6 +11,7 @@ export type TaskExport = {
   dueDate: string | null;
   plannedDate: string | null;
   url: string;
+  content?: string;
 };
 
 export type TasksExportPayload = {
@@ -22,17 +23,22 @@ export type TasksExportPayload = {
 export function serializeTasksJson(
   tasks: Task[],
   membersById: Map<string, TeamMember>,
+  contentByTaskId?: Map<string, string>,
 ): string {
   const payload: TasksExportPayload = {
     exportedAt: new Date().toISOString(),
     count: tasks.length,
-    tasks: tasks.map((t) => taskToExport(t, membersById)),
+    tasks: tasks.map((t) => taskToExport(t, membersById, contentByTaskId)),
   };
   return JSON.stringify(payload, null, 2);
 }
 
-function taskToExport(t: Task, membersById: Map<string, TeamMember>): TaskExport {
-  return {
+function taskToExport(
+  t: Task,
+  membersById: Map<string, TeamMember>,
+  contentByTaskId?: Map<string, string>,
+): TaskExport {
+  const base: TaskExport = {
     title: t.title,
     status: t.status,
     priority: t.priority,
@@ -43,6 +49,10 @@ function taskToExport(t: Task, membersById: Map<string, TeamMember>): TaskExport
     plannedDate: t.plannedDate,
     url: t.url,
   };
+  if (contentByTaskId) {
+    base.content = contentByTaskId.get(t.id) ?? '';
+  }
+  return base;
 }
 
 const MONTHS_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
@@ -61,15 +71,20 @@ function todayIsoDate(): string {
 export function serializeTasksMarkdown(
   tasks: Task[],
   membersById: Map<string, TeamMember>,
+  contentByTaskId?: Map<string, string>,
 ): string {
   const header = `# ${tasks.length} tareas (exportadas ${todayIsoDate()})`;
   if (tasks.length === 0) return header + '\n';
 
-  const items = tasks.map((t) => formatTaskMarkdown(t, membersById));
+  const items = tasks.map((t) => formatTaskMarkdown(t, membersById, contentByTaskId));
   return [header, '', ...items].join('\n');
 }
 
-function formatTaskMarkdown(t: Task, membersById: Map<string, TeamMember>): string {
+function formatTaskMarkdown(
+  t: Task,
+  membersById: Map<string, TeamMember>,
+  contentByTaskId?: Map<string, string>,
+): string {
   const meta1: string[] = [];
   if (t.type) meta1.push(t.type);
   if (t.priority) meta1.push(t.priority);
@@ -87,5 +102,10 @@ function formatTaskMarkdown(t: Task, membersById: Map<string, TeamMember>): stri
 
   const line3 = `      ${t.url}`;
 
-  return [line1, line2, line3].filter(Boolean).join('\n') + '\n';
+  const content = contentByTaskId?.get(t.id);
+  const contentBlock = content && content.trim().length > 0
+    ? '\n      ---\n' + content.split('\n').map((l) => `      ${l}`).join('\n')
+    : null;
+
+  return [line1, line2, line3, contentBlock].filter(Boolean).join('\n') + '\n';
 }

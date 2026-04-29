@@ -177,3 +177,58 @@ describe('serializeTasksMarkdown — task body', () => {
     expect(idxFull).toBeGreaterThan(idxMin);
   });
 });
+
+describe('serializeTasksJson — with content', () => {
+  it('includes a content field when contentByTaskId is provided', () => {
+    const contentMap = new Map<string, string>([
+      ['task-1', '# Heading\nParagraph text'],
+    ]);
+    const json = serializeTasksJson([fullTask], membersWithDani, contentMap);
+    const parsed = JSON.parse(json);
+
+    expect(parsed.tasks[0].content).toBe('# Heading\nParagraph text');
+  });
+
+  it('uses empty string when content map is provided but missing this task', () => {
+    const contentMap = new Map<string, string>();
+    const json = serializeTasksJson([fullTask], membersWithDani, contentMap);
+    const parsed = JSON.parse(json);
+
+    expect(parsed.tasks[0].content).toBe('');
+  });
+
+  it('omits content field when contentByTaskId is undefined', () => {
+    const json = serializeTasksJson([fullTask], membersWithDani);
+    const parsed = JSON.parse(json);
+
+    expect(parsed.tasks[0]).not.toHaveProperty('content');
+  });
+});
+
+describe('serializeTasksMarkdown — with content', () => {
+  it('appends an indented content block under the URL', () => {
+    const contentMap = new Map<string, string>([
+      ['task-1', '# Heading\nParagraph text\n- item'],
+    ]);
+    const md = serializeTasksMarkdown([fullTask], membersWithDani, contentMap);
+
+    expect(md).toContain('      https://notion.so/abc123');
+    expect(md).toContain('      ---');
+    expect(md).toContain('      # Heading');
+    expect(md).toContain('      Paragraph text');
+    expect(md).toContain('      - item');
+  });
+
+  it('omits the content block when content is empty', () => {
+    const contentMap = new Map<string, string>([['task-1', '']]);
+    const md = serializeTasksMarkdown([fullTask], membersWithDani, contentMap);
+
+    expect(md).not.toContain('---');
+  });
+
+  it('omits the content block when contentByTaskId is undefined', () => {
+    const md = serializeTasksMarkdown([fullTask], membersWithDani);
+
+    expect(md).not.toContain('---');
+  });
+});

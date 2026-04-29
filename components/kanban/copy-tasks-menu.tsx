@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Clipboard, Check, FileJson, FileText, Download } from 'lucide-react';
+import { Clipboard, Check, FileJson, FileText, Download, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   DropdownMenu,
@@ -64,10 +64,25 @@ function downloadJsonFile(json: string, filename: string) {
   URL.revokeObjectURL(url);
 }
 
+async function fetchTaskContent(taskId: string): Promise<string> {
+  const res = await fetch(`/api/tasks/${taskId}/blocks`, { method: 'GET' });
+  if (!res.ok) throw new Error(`fetch-content-failed:${res.status}`);
+  const data = (await res.json()) as { content: string };
+  return data.content;
+}
+
+async function fetchAllContents(tasks: Task[]): Promise<Map<string, string>> {
+  const entries = await Promise.all(
+    tasks.map(async (t) => [t.id, await fetchTaskContent(t.id)] as const),
+  );
+  return new Map(entries);
+}
+
 export function CopyTasksMenu({ tasks, membersById, sprintLabel }: Props) {
   const [justCopied, setJustCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
   const count = tasks.length;
-  const disabled = count === 0;
+  const triggerDisabled = count === 0 || loading;
 
   function flashCheck() {
     setJustCopied(true);
@@ -104,7 +119,36 @@ export function CopyTasksMenu({ tasks, membersById, sprintLabel }: Props) {
     toast.success(`${count} tareas descargadas`);
   }
 
-  const tooltipText = disabled ? 'No hay tareas para copiar' : 'Copiar tareas visibles';
+  async function handleCopyWithContent(format: 'json' | 'markdown') {
+    setLoading(true);
+    const loadingToast = toast.loading(`Cargando contenido de ${count} tareas…`);
+    try {
+      const contentMap = await fetchAllContents(tasks);
+      const text = format === 'json'
+        ? serializeTasksJson(tasks, membersById, contentMap)
+        : serializeTasksMarkdown(tasks, membersById, contentMap);
+      const ok = await writeToClipboard(text);
+      toast.dismiss(loadingToast);
+      if (ok) {
+        flashCheck();
+        const label = format === 'json' ? 'JSON' : 'Markdown';
+        toast.success(`${count} tareas copiadas con contenido (${label})`);
+      } else {
+        toast.error('No se pudo copiar al portapapeles');
+      }
+    } catch {
+      toast.dismiss(loadingToast);
+      toast.error('No se pudo cargar el contenido de algunas tareas');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const tooltipText = count === 0
+    ? 'No hay tareas para copiar'
+    : loading
+    ? 'Cargando contenido…'
+    : 'Copiar tareas visibles';
 
   return (
     <TooltipProvider delay={200}>
@@ -114,13 +158,15 @@ export function CopyTasksMenu({ tasks, membersById, sprintLabel }: Props) {
             render={
               <DropdownMenuTrigger
                 aria-label="Copiar tareas visibles"
-                disabled={disabled}
+                disabled={triggerDisabled}
                 className={cn(
                   'inline-flex items-center justify-center w-7 h-7 rounded-md border border-[#e5e7eb] bg-white text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors',
-                  disabled && 'opacity-50 cursor-not-allowed hover:text-gray-500 hover:bg-white',
+                  triggerDisabled && 'opacity-50 cursor-not-allowed hover:text-gray-500 hover:bg-white',
                 )}
               >
-                {justCopied ? (
+                {loading ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : justCopied ? (
                   <Check className="w-3.5 h-3.5 text-emerald-600" />
                 ) : (
                   <Clipboard className="w-3.5 h-3.5" />
@@ -145,6 +191,24 @@ export function CopyTasksMenu({ tasks, membersById, sprintLabel }: Props) {
               <FileText className="w-3.5 h-3.5 text-gray-500" />
               <span className="font-medium">Como Markdown</span>
               <span className="ml-auto text-[11px] text-gray-400">para Linear</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel className="text-[11px] font-normal text-gray-500">
+              Con contenido interno
+            </DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => handleCopyWithContent('json')}
+              className="flex items-center gap-2"
+            >
+              <FileJson className="w-3.5 h-3.5 text-gray-500" />
+              <span className="font-medium">Con contenido (JSON)</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleCopyWithContent('markdown')}
+              className="flex items-center gap-2"
+            >
+              <FileText className="w-3.5 h-3.5 text-gray-500" />
+              <span className="font-medium">Con contenido (Markdown)</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleDownload} className="flex items-center gap-2">

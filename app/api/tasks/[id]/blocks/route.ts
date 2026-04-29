@@ -4,8 +4,10 @@ import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { resolveContext } from '@/lib/auth/context';
 import { getTask } from '@/lib/notion/tasks';
+import { getBlocks } from '@/lib/notion/blocks';
 import { replaceTaskBlocks } from '@/lib/notion/tasks-blocks';
 import { proseMirrorToNotionBlocks } from '@/lib/edit-tasks/serialize-to-notion';
+import { extractPlainText } from '@/lib/claude-code/extract-plain-text';
 
 const bodySchema = z.object({
   doc: z.object({
@@ -15,6 +17,38 @@ const bodySchema = z.object({
 });
 
 type StagedError = Error & { stage?: 'delete' | 'append'; remaining?: number };
+
+export async function GET(
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user?.email) {
+    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  }
+
+  const ctx = await resolveContext(user.email);
+  if (!ctx) {
+    return NextResponse.json({ error: 'no-access' }, { status: 403 });
+  }
+
+  const task = await getTask(id);
+  if (!task) {
+    return NextResponse.json({ error: 'not-found' }, { status: 404 });
+  }
+  if (task.customerId !== ctx.customerId) {
+    return NextResponse.json({ error: 'forbidden' }, { status: 403 });
+  }
+
+  const blocks = await getBlocks(id);
+  const content = extractPlainText(blocks, Number.POSITIVE_INFINITY);
+  return NextResponse.json({ content });
+}
 
 export async function PATCH(
   req: Request,
