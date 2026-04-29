@@ -172,3 +172,103 @@ describe('notionBlocksToProseMirror — base blocks', () => {
     });
   });
 });
+
+describe('notionBlocksToProseMirror — lists', () => {
+  it('groups consecutive bulleted_list_item blocks under a bulleted_list', () => {
+    const blocks = [
+      { type: 'bulleted_list_item', bulleted_list_item: { rich_text: [text('a')] } },
+      { type: 'bulleted_list_item', bulleted_list_item: { rich_text: [text('b')] } },
+    ];
+    expect(notionBlocksToProseMirror(blocks)).toEqual({
+      type: 'doc',
+      content: [
+        {
+          type: 'bulleted_list',
+          content: [
+            {
+              type: 'bulleted_list_item',
+              content: [
+                { type: 'paragraph', content: [{ type: 'text', text: 'a' }] },
+              ],
+            },
+            {
+              type: 'bulleted_list_item',
+              content: [
+                { type: 'paragraph', content: [{ type: 'text', text: 'b' }] },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  it('groups consecutive numbered_list_item blocks under a numbered_list', () => {
+    const blocks = [
+      { type: 'numbered_list_item', numbered_list_item: { rich_text: [text('one')] } },
+      { type: 'numbered_list_item', numbered_list_item: { rich_text: [text('two')] } },
+    ];
+    const out = notionBlocksToProseMirror(blocks);
+    expect((out.content[0] as { type: string }).type).toBe('numbered_list');
+    expect((out.content[0] as { content: unknown[] }).content).toHaveLength(2);
+  });
+
+  it('groups consecutive to_do blocks under a task_list with checked attrs', () => {
+    const blocks = [
+      { type: 'to_do', to_do: { checked: true, rich_text: [text('done')] } },
+      { type: 'to_do', to_do: { checked: false, rich_text: [text('open')] } },
+    ];
+    expect(notionBlocksToProseMirror(blocks)).toEqual({
+      type: 'doc',
+      content: [
+        {
+          type: 'task_list',
+          content: [
+            {
+              type: 'task_item',
+              attrs: { checked: true },
+              content: [
+                { type: 'paragraph', content: [{ type: 'text', text: 'done' }] },
+              ],
+            },
+            {
+              type: 'task_item',
+              attrs: { checked: false },
+              content: [
+                { type: 'paragraph', content: [{ type: 'text', text: 'open' }] },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  it('starts a new list when the type changes', () => {
+    const blocks = [
+      { type: 'bulleted_list_item', bulleted_list_item: { rich_text: [text('a')] } },
+      { type: 'numbered_list_item', numbered_list_item: { rich_text: [text('1')] } },
+      { type: 'bulleted_list_item', bulleted_list_item: { rich_text: [text('b')] } },
+    ];
+    const out = notionBlocksToProseMirror(blocks);
+    expect(out.content.map((n) => (n as { type: string }).type)).toEqual([
+      'bulleted_list',
+      'numbered_list',
+      'bulleted_list',
+    ]);
+  });
+
+  it('breaks a list when an unrelated block sits between items', () => {
+    const blocks = [
+      { type: 'bulleted_list_item', bulleted_list_item: { rich_text: [text('a')] } },
+      { type: 'paragraph', paragraph: { rich_text: [text('mid')] } },
+      { type: 'bulleted_list_item', bulleted_list_item: { rich_text: [text('b')] } },
+    ];
+    const out = notionBlocksToProseMirror(blocks);
+    expect(out.content.map((n) => (n as { type: string }).type)).toEqual([
+      'bulleted_list',
+      'paragraph',
+      'bulleted_list',
+    ]);
+  });
+});
