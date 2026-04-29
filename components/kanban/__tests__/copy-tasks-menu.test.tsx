@@ -58,7 +58,7 @@ describe('<CopyTasksMenu /> — interactions', () => {
     await user.click(await screen.findByText('Como JSON'));
 
     expect(writeText).toHaveBeenCalledTimes(1);
-    const arg = writeText.mock.calls[0][0] as string;
+    const arg = writeText.mock.calls[0]?.[0] as string;
     const parsed = JSON.parse(arg);
     expect(parsed.count).toBe(1);
     expect(parsed.tasks[0].title).toBe('Tarea 1');

@@ -154,7 +154,7 @@ describe('serializeTasksMarkdown — task body', () => {
     // header, blank, line1 (- [ ] ...), line3 (url)
     expect(lines).toHaveLength(4);
     expect(lines[2]).toMatch(/^- \[ \] /);
-    expect(lines[3].trim()).toBe('https://notion.so/min');
+    expect(lines[3]?.trim()).toBe('https://notion.so/min');
   });
 
   it('formats Spanish dates as "D mes"', () => {
