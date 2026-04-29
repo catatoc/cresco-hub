@@ -183,7 +183,6 @@ const marks: { [name: string]: MarkSpec } = {
   code: {
     parseDOM: [{ tag: 'code' }],
     toDOM: () => ['code', 0],
-    excludes: '_',
   },
   link: {
     attrs: { href: { default: '' } },

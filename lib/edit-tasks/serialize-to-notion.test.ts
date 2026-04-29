@@ -236,6 +236,14 @@ describe('proseMirrorToNotionBlocks', () => {
     ]);
   });
 
+  it('skips unsupported_block when raw payload is missing', () => {
+    const doc = {
+      type: 'doc',
+      content: [{ type: 'unsupported_block', attrs: { kind: 'toggle', raw: null } }],
+    };
+    expect(proseMirrorToNotionBlocks(doc)).toEqual([]);
+  });
+
   it('emits link via the rich_text text.link.url field', () => {
     const doc = {
       type: 'doc',

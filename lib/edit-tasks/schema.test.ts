@@ -95,4 +95,14 @@ describe('editTasksSchema', () => {
   it('treats unsupported_block as an atom block', () => {
     expect(editTasksSchema.nodes.unsupported_block!.spec.atom).toBe(true);
   });
+
+  it('allows code mark to coexist with other marks (no exclusion)', () => {
+    const bold = editTasksSchema.marks.bold!.create();
+    const codeMark = editTasksSchema.marks.code!.create();
+    // text() applies the marks at construction; if `code` excluded `_`,
+    // the second mark would be dropped.
+    const text = editTasksSchema.text('x', [bold, codeMark]);
+    const names = text.marks.map((m) => m.type.name).sort();
+    expect(names).toEqual(['bold', 'code']);
+  });
 });

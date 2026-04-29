@@ -135,7 +135,7 @@ function nodeToBlocks(node: PMNode): unknown[] {
         },
       ]);
     case 'unsupported_block':
-      return [node.attrs?.raw];
+      return node.attrs?.raw ? [node.attrs.raw] : [];
     default:
       // Unknown PM node — skip it. Should never happen if the schema is enforced.
       return [];
