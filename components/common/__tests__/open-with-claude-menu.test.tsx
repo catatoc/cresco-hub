@@ -139,3 +139,65 @@ describe('OpenWithClaudeMenu', () => {
     expect(errorToast).toHaveBeenCalled();
   });
 });
+
+describe('OpenWithClaudeMenu variants', () => {
+  it('renders icon-only trigger in row variant (no chevron)', () => {
+    render(
+      <OpenWithClaudeMenu
+        variant="row"
+        task={task}
+        project={project}
+        description=""
+      />,
+    );
+    const trigger = screen.getByRole('button', { name: /open in claude code/i });
+    expect(trigger).toBeInTheDocument();
+    // The cta variant has visible "ChevronDown" SVG; row/card don't.
+    // We assert by checking the trigger text/aria — both variants have the same aria-label.
+    // Visual diff is asserted via missing chevron in DOM:
+    expect(trigger.querySelectorAll('svg').length).toBe(1);
+  });
+
+  it('renders icon-only trigger in card variant (no chevron)', () => {
+    render(
+      <OpenWithClaudeMenu
+        variant="card"
+        task={task}
+        project={project}
+        description=""
+      />,
+    );
+    const trigger = screen.getByRole('button', { name: /open in claude code/i });
+    expect(trigger.querySelectorAll('svg').length).toBe(1);
+  });
+
+  it('renders chevron in cta variant', () => {
+    render(
+      <OpenWithClaudeMenu
+        variant="cta"
+        task={task}
+        project={project}
+        description=""
+      />,
+    );
+    const trigger = screen.getByRole('button', { name: /open in claude code/i });
+    // SquareTerminal + ChevronDown
+    expect(trigger.querySelectorAll('svg').length).toBe(2);
+  });
+
+  it('opens the same three actions regardless of variant', async () => {
+    const user = userEvent.setup();
+    installClipboardMock();
+    render(
+      <OpenWithClaudeMenu
+        variant="row"
+        task={task}
+        project={project}
+        description="x"
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: /open in claude code/i }));
+    expect(await screen.findByText(/copy as prompt/i)).toBeInTheDocument();
+    expect(await screen.findByText(/copy cli command/i)).toBeInTheDocument();
+  });
+});
