@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { LoginForm } from '@/components/auth/login-form';
 import { PageEnter } from '@/components/motion/page-enter';
 
@@ -27,6 +28,16 @@ export default function LoginPage() {
           </p>
           <LoginForm />
         </div>
+
+        <footer className="max-w-sm mx-auto w-full flex items-center justify-center gap-4 text-[11px] text-neutral-400">
+          <Link href="/privacy" className="hover:text-neutral-700 transition-colors">
+            Privacidad
+          </Link>
+          <span aria-hidden className="h-3 w-px bg-neutral-200" />
+          <Link href="/terms" className="hover:text-neutral-700 transition-colors">
+            Términos
+          </Link>
+        </footer>
       </section>
     </PageEnter>
   );
