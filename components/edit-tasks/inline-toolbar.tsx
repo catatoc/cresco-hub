@@ -51,7 +51,7 @@ export function InlineToolbar({ view, tick, onLinkRequest }: Props) {
         top: coords.top - 36,
         zIndex: 50,
       }}
-      className="inline-flex items-center gap-0.5 p-1 rounded-md bg-white border border-border shadow-md"
+      className="edit-tasks-popover inline-flex items-center gap-0.5 p-1 rounded-md bg-white border border-border shadow-md"
     >
       <ToolbarButton label="Bold" onClick={() => run('bold')} active={isActive('bold')}>
         <Bold className="w-3.5 h-3.5" />

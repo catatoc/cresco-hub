@@ -72,7 +72,7 @@ export function SlashMenu({ view, tick }: Props) {
         top: coords.bottom + 4,
         zIndex: 50,
       }}
-      className="min-w-[220px] rounded-lg bg-white border border-border shadow-lg p-1"
+      className="edit-tasks-popover min-w-[220px] rounded-lg bg-white border border-border shadow-lg p-1"
     >
       {filtered.length === 0 && (
         <div className="px-3 py-2 text-[12px] text-muted-foreground">Sin resultados</div>

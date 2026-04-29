@@ -1,0 +1,193 @@
+/* Scoped styles for the ProseMirror editor in components/edit-tasks/.
+   Mirrors the read-mode look in components/wiki/blocks-renderer.tsx so
+   write-mode and read-mode feel identical. */
+
+.ProseMirror {
+  outline: none;
+  min-height: 200px;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.ProseMirror p {
+  margin: 0 0 12px;
+  word-break: break-word;
+}
+
+.ProseMirror h1 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 28px 0 12px;
+}
+
+.ProseMirror h2 {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  margin: 22px 0 11px;
+}
+
+.ProseMirror h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 18px 0 9px;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  margin: 0 0 12px;
+  padding-left: 22px;
+}
+
+.ProseMirror ul {
+  list-style: disc;
+}
+
+.ProseMirror ol {
+  list-style: decimal;
+}
+
+.ProseMirror ul[data-type="task_list"] {
+  list-style: none;
+  padding-left: 4px;
+}
+
+.ProseMirror li[data-type="task_item"] {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.ProseMirror li[data-type="task_item"]::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1.5px solid #c9cbe8;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.ProseMirror li[data-type="task_item"][data-checked="true"]::before {
+  background: #3f9f5c;
+  border-color: #3f9f5c;
+}
+
+.ProseMirror li[data-type="task_item"][data-checked="true"] > p {
+  text-decoration: line-through;
+  color: #8a8a91;
+}
+
+.ProseMirror li > p {
+  margin: 0 0 4px;
+}
+
+.ProseMirror blockquote {
+  border-left: 2px solid hsl(var(--border));
+  padding-left: 12px;
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+  margin: 12px 0;
+}
+
+.ProseMirror hr {
+  border: 0;
+  border-top: 1px solid hsl(var(--border));
+  margin: 20px 0;
+}
+
+.ProseMirror div[data-type="callout"] {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  background: #faf0db;
+  border: 1px solid #efddb6;
+  border-radius: 6px;
+  margin: 16px 0;
+  color: #6b4f18;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ProseMirror div[data-type="callout"]::before {
+  content: attr(data-emoji);
+  flex-shrink: 0;
+}
+
+.ProseMirror div[data-type="callout"] > p {
+  margin: 0;
+  flex: 1;
+}
+
+.ProseMirror pre {
+  background: #f7f7f8;
+  padding: 12px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  overflow-x: auto;
+  margin: 12px 0;
+  white-space: pre;
+}
+
+.ProseMirror pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.ProseMirror code {
+  background: #f7f7f8;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.ProseMirror strong {
+  font-weight: 600;
+}
+
+.ProseMirror em {
+  font-style: italic;
+}
+
+.ProseMirror s {
+  text-decoration: line-through;
+}
+
+.ProseMirror a {
+  color: #5e6ad2;
+  text-decoration: underline;
+}
+
+.ProseMirror div[data-type="unsupported"] {
+  display: block;
+  padding: 10px 12px;
+  background: #f7f7f8;
+  border: 1px dashed hsl(var(--border));
+  border-radius: 6px;
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+  font-style: italic;
+  margin: 12px 0;
+}
+
+/* Floating popovers (slash menu, inline toolbar, link prompt) — fade + slide. */
+.edit-tasks-popover {
+  animation: edit-tasks-popover-in var(--duration-base, 180ms) var(--ease-out-soft, cubic-bezier(0.4, 0, 0.2, 1));
+  transform-origin: top left;
+}
+
+@keyframes edit-tasks-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

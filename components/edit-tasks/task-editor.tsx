@@ -150,10 +150,7 @@ export const TaskEditor = forwardRef<TaskEditorHandle, Props>(function TaskEdito
 
   return (
     <>
-      <div
-        ref={hostRef}
-        className="prose prose-sm max-w-none [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-[200px]"
-      />
+      <div ref={hostRef} className="task-editor-host" />
       <SlashMenu view={viewRef.current} tick={tick} />
       {!linkPromptOpen && (
         <InlineToolbar
