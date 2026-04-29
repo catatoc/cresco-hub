@@ -272,3 +272,120 @@ describe('notionBlocksToProseMirror — lists', () => {
     ]);
   });
 });
+
+describe('notionBlocksToProseMirror — inline marks', () => {
+  it('emits bold mark when annotations.bold=true', () => {
+    const blocks = [
+      {
+        type: 'paragraph',
+        paragraph: {
+          rich_text: [
+            {
+              plain_text: 'Hi',
+              annotations: { bold: true, italic: false, strikethrough: false, underline: false, code: false },
+              href: null,
+            },
+          ],
+        },
+      },
+    ];
+    const out = notionBlocksToProseMirror(blocks);
+    expect(out.content[0]).toEqual({
+      type: 'paragraph',
+      content: [{ type: 'text', text: 'Hi', marks: [{ type: 'bold' }] }],
+    });
+  });
+
+  it('emits multiple marks when several annotations are true', () => {
+    const blocks = [
+      {
+        type: 'paragraph',
+        paragraph: {
+          rich_text: [
+            {
+              plain_text: 'mix',
+              annotations: { bold: true, italic: true, strikethrough: true, underline: true, code: true },
+              href: null,
+            },
+          ],
+        },
+      },
+    ];
+    const out = notionBlocksToProseMirror(blocks);
+    const para = out.content[0] as { content: { marks: { type: string }[] }[] };
+    const markNames = para.content[0]!.marks.map((m) => m.type).sort();
+    // underline is dropped
+    expect(markNames).toEqual(['bold', 'code', 'italic', 'strikethrough']);
+  });
+
+  it('emits link mark when href is set', () => {
+    const blocks = [
+      {
+        type: 'paragraph',
+        paragraph: {
+          rich_text: [
+            {
+              plain_text: 'click',
+              annotations: { bold: false, italic: false, strikethrough: false, underline: false, code: false },
+              href: 'https://example.com',
+            },
+          ],
+        },
+      },
+    ];
+    const out = notionBlocksToProseMirror(blocks);
+    expect(out.content[0]).toEqual({
+      type: 'paragraph',
+      content: [
+        {
+          type: 'text',
+          text: 'click',
+          marks: [{ type: 'link', attrs: { href: 'https://example.com' } }],
+        },
+      ],
+    });
+  });
+
+  it('preserves multiple consecutive runs as separate text nodes', () => {
+    const blocks = [
+      {
+        type: 'paragraph',
+        paragraph: {
+          rich_text: [
+            { plain_text: 'a', annotations: { bold: true, italic: false, strikethrough: false, underline: false, code: false }, href: null },
+            { plain_text: 'b', annotations: { bold: false, italic: false, strikethrough: false, underline: false, code: false }, href: null },
+          ],
+        },
+      },
+    ];
+    const out = notionBlocksToProseMirror(blocks);
+    const para = out.content[0] as { content: unknown[] };
+    expect(para.content).toEqual([
+      { type: 'text', text: 'a', marks: [{ type: 'bold' }] },
+      { type: 'text', text: 'b' },
+    ]);
+  });
+
+  it('does not apply marks inside code_block content', () => {
+    // Code blocks are text-only with no marks per the schema; the serializer
+    // should already strip annotations because it joins rich_text plain.
+    const blocks = [
+      {
+        type: 'code',
+        code: {
+          language: 'js',
+          rich_text: [
+            { plain_text: 'const x = ', annotations: { bold: true, italic: false, strikethrough: false, underline: false, code: false }, href: null },
+            { plain_text: '1;', annotations: { bold: false, italic: false, strikethrough: false, underline: false, code: false }, href: null },
+          ],
+        },
+      },
+    ];
+    const out = notionBlocksToProseMirror(blocks);
+    expect(out.content[0]).toEqual({
+      type: 'code_block',
+      attrs: { language: 'js' },
+      content: [{ type: 'text', text: 'const x = 1;' }],
+    });
+  });
+});

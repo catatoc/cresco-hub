@@ -46,10 +46,22 @@ const LIST_ITEM_TO_PM_TYPE: Record<string, string> = {
 
 function richTextToInlines(rt: NotionRichText[] | undefined): PMNode[] {
   if (!rt || rt.length === 0) return [];
-  // Marks are added in Task 5; for now just emit plain text nodes.
   return rt
     .filter((r) => r.plain_text.length > 0)
-    .map((r) => ({ type: 'text', text: r.plain_text }));
+    .map((r) => {
+      const marks: { type: string; attrs?: Record<string, unknown> }[] = [];
+      const ann = r.annotations ?? {};
+      if (ann.bold) marks.push({ type: 'bold' });
+      if (ann.italic) marks.push({ type: 'italic' });
+      if (ann.strikethrough) marks.push({ type: 'strikethrough' });
+      if (ann.code) marks.push({ type: 'code' });
+      if (typeof r.href === 'string' && r.href.length > 0) {
+        marks.push({ type: 'link', attrs: { href: r.href } });
+      }
+      const node: PMNode = { type: 'text', text: r.plain_text };
+      if (marks.length > 0) node.marks = marks;
+      return node;
+    });
 }
 
 function paragraphFromRichText(rt: NotionRichText[] | undefined): PMNode {
