@@ -15,6 +15,8 @@ import { editTasksInputRules } from '@/lib/edit-tasks/inputrules';
 import { editTasksKeymap } from '@/lib/edit-tasks/keymap';
 import { slashMenuPlugin } from '@/lib/edit-tasks/slash-menu-plugin';
 import { SlashMenu } from './slash-menu';
+import { InlineToolbar } from './inline-toolbar';
+import { LinkPrompt } from './link-prompt';
 
 export type PMNodeJSON = {
   type: string;
@@ -44,6 +46,44 @@ export const TaskEditor = forwardRef<TaskEditorHandle, Props>(function TaskEdito
   const viewRef = useRef<EditorView | null>(null);
   const initialJSONRef = useRef<string>(JSON.stringify(initialDoc));
   const [tick, setTick] = useState(0);
+  const [linkPromptOpen, setLinkPromptOpen] = useState(false);
+  const linkSelectionRef = useRef<{ from: number; to: number } | null>(null);
+
+  function openLinkPrompt() {
+    if (!viewRef.current) return;
+    const { from, to, empty } = viewRef.current.state.selection;
+    if (empty) return;
+    linkSelectionRef.current = { from, to };
+    setLinkPromptOpen(true);
+  }
+
+  function applyLink(url: string) {
+    const view = viewRef.current;
+    const sel = linkSelectionRef.current;
+    if (!view || !sel) {
+      setLinkPromptOpen(false);
+      return;
+    }
+    const linkMark = editTasksSchema.marks.link!.create({ href: url });
+    view.dispatch(view.state.tr.addMark(sel.from, sel.to, linkMark));
+    setLinkPromptOpen(false);
+    view.focus();
+  }
+
+  function cancelLink() {
+    setLinkPromptOpen(false);
+    viewRef.current?.focus();
+  }
+
+  function currentLinkUrl(): string {
+    const view = viewRef.current;
+    const sel = linkSelectionRef.current;
+    if (!view || !sel) return '';
+    const linkType = editTasksSchema.marks.link!;
+    const $from = view.state.doc.resolve(sel.from);
+    const existing = linkType.isInSet($from.marks());
+    return (existing?.attrs.href as string) ?? '';
+  }
 
   useEffect(() => {
     if (!hostRef.current) return;
@@ -53,6 +93,12 @@ export const TaskEditor = forwardRef<TaskEditorHandle, Props>(function TaskEdito
       plugins: [
         history(),
         keymap({ 'Mod-z': undo, 'Mod-y': redo, 'Mod-Shift-z': redo }),
+        keymap({
+          'Mod-k': () => {
+            openLinkPrompt();
+            return true;
+          },
+        }),
         keymap(editTasksKeymap),
         inputRules({ rules: editTasksInputRules }),
         keymap(baseKeymap),
@@ -109,6 +155,25 @@ export const TaskEditor = forwardRef<TaskEditorHandle, Props>(function TaskEdito
         className="prose prose-sm max-w-none [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-[200px]"
       />
       <SlashMenu view={viewRef.current} tick={tick} />
+      {!linkPromptOpen && (
+        <InlineToolbar
+          view={viewRef.current}
+          tick={tick}
+          onLinkRequest={openLinkPrompt}
+        />
+      )}
+      {linkPromptOpen && viewRef.current && linkSelectionRef.current && (
+        <div
+          style={{
+            position: 'fixed',
+            left: viewRef.current.coordsAtPos(linkSelectionRef.current.from).left,
+            top: viewRef.current.coordsAtPos(linkSelectionRef.current.from).top - 44,
+            zIndex: 50,
+          }}
+        >
+          <LinkPrompt initialUrl={currentLinkUrl()} onSubmit={applyLink} onCancel={cancelLink} />
+        </div>
+      )}
     </>
   );
 });
