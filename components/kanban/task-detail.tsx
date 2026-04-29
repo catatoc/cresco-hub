@@ -6,7 +6,7 @@ import { TaskDetailMetaPanel } from './task-detail-meta-panel';
 import { TaskDetailMetaStrip } from './task-detail-meta-strip';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { OpenWithClaudeButton } from '@/components/common/open-with-claude-button';
+import { OpenWithClaudeMenu } from '@/components/common/open-with-claude-menu';
 import { extractPlainText } from '@/lib/claude-code/extract-plain-text';
 import { TaskDetailShortcuts } from './task-detail-shortcuts';
 import type { Task } from '@/schemas/task';
@@ -73,7 +73,7 @@ export function TaskDetail({ task, blocks, project, sprint, assignees }: Props) 
       {/* Footer */}
       <div className="px-4 sm:px-6 py-2 sm:py-2.5 border-t border-border bg-[#fafafa] flex items-center justify-between gap-3 flex-wrap shrink-0">
         <span className="hidden sm:inline text-[11px] text-muted-foreground">
-          Esc para volver · <kbd className="font-mono text-[10px] bg-[#eef0f2] rounded px-1 py-[1px]">⌘⇧.</kbd> abrir con Claude
+          Esc para volver · <kbd className="font-mono text-[10px] bg-[#eef0f2] rounded px-1 py-[1px]">⌘⌥P</kbd> copiar prompt
         </span>
         <div className="flex items-center gap-2 ml-auto">
           <a
@@ -84,8 +84,7 @@ export function TaskDetail({ task, blocks, project, sprint, assignees }: Props) 
           >
             Abrir en Notion <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
           </a>
-          <OpenWithClaudeButton
-            variant="cta"
+          <OpenWithClaudeMenu
             task={task}
             project={project}
             description={description}
