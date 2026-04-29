@@ -19,30 +19,38 @@ export async function replaceTaskBlocks(
 ): Promise<{ ok: true; lastEditedTime: string }> {
   const notion = getNotion();
 
-  const existing = await notion.blocks.children.list({
-    block_id: taskId,
-    page_size: 100,
-  });
-  const existingIds = (existing.results as { id: string }[]).map((r) => r.id);
+  // 1) List existing children, paginating through Notion's 100-per-page limit.
+  const existingIds: string[] = [];
+  let cursor: string | undefined = undefined;
+  do {
+    const res = (await notion.blocks.children.list({
+      block_id: taskId,
+      page_size: 100,
+      ...(cursor ? { start_cursor: cursor } : {}),
+    })) as { results: { id: string }[]; has_more?: boolean; next_cursor?: string | null };
+    for (const r of res.results) existingIds.push(r.id);
+    cursor = res.has_more ? res.next_cursor ?? undefined : undefined;
+  } while (cursor);
 
-  // Delete in reverse so a partial failure leaves a stable suffix-removed state.
+  // 2) Delete in reverse so a partial failure leaves a stable suffix-removed state.
   for (let i = existingIds.length - 1; i >= 0; i--) {
     const id = existingIds[i]!;
     try {
       await notion.blocks.delete({ block_id: id });
-    } catch (cause) {
+    } catch {
       throw makeError('delete', `failed to delete block ${id}`, i + 1);
     }
   }
 
-  if (newBlocks.length > 0) {
+  // 3) Append new children, chunked at 100 per call.
+  for (let off = 0; off < newBlocks.length; off += 100) {
     try {
       await notion.blocks.children.append({
         block_id: taskId,
-        children: newBlocks as never,
+        children: newBlocks.slice(off, off + 100) as never,
       });
-    } catch (cause) {
-      throw makeError('append', 'failed to append new blocks');
+    } catch {
+      throw makeError('append', `failed to append chunk starting at ${off}`);
     }
   }
 

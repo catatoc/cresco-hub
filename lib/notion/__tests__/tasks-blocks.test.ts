@@ -119,3 +119,66 @@ describe('replaceTaskBlocks', () => {
     ).rejects.toMatchObject({ stage: 'append' });
   });
 });
+
+describe('replaceTaskBlocks pagination + chunking', () => {
+  beforeEach(() => {
+    mockNotion.blocks.children.list.mockReset();
+    mockNotion.blocks.children.append.mockReset();
+    mockNotion.blocks.delete.mockReset();
+    mockNotion.pages.retrieve.mockReset();
+  });
+
+  it('paginates list when has_more=true', async () => {
+    mockNotion.blocks.children.list
+      .mockResolvedValueOnce({
+        results: [{ id: 'a-1' }, { id: 'a-2' }],
+        has_more: true,
+        next_cursor: 'cur-1',
+      })
+      .mockResolvedValueOnce({
+        results: [{ id: 'b-1' }],
+        has_more: false,
+        next_cursor: null,
+      });
+    mockNotion.blocks.delete.mockResolvedValue({});
+    mockNotion.blocks.children.append.mockResolvedValueOnce({});
+    mockNotion.pages.retrieve.mockResolvedValueOnce({
+      last_edited_time: '2026-04-29T12:00:00.000Z',
+    });
+
+    await replaceTaskBlocks('task-id', [
+      { type: 'paragraph', paragraph: { rich_text: [] } },
+    ]);
+
+    expect(mockNotion.blocks.children.list).toHaveBeenCalledTimes(2);
+    expect(mockNotion.blocks.children.list).toHaveBeenNthCalledWith(2, {
+      block_id: 'task-id',
+      page_size: 100,
+      start_cursor: 'cur-1',
+    });
+    // 3 ids total, deleted in reverse: b-1, a-2, a-1
+    expect(mockNotion.blocks.delete).toHaveBeenNthCalledWith(1, { block_id: 'b-1' });
+    expect(mockNotion.blocks.delete).toHaveBeenNthCalledWith(2, { block_id: 'a-2' });
+    expect(mockNotion.blocks.delete).toHaveBeenNthCalledWith(3, { block_id: 'a-1' });
+  });
+
+  it('chunks append into groups of 100', async () => {
+    mockNotion.blocks.children.list.mockResolvedValueOnce({ results: [] });
+    mockNotion.blocks.children.append.mockResolvedValue({});
+    mockNotion.pages.retrieve.mockResolvedValueOnce({
+      last_edited_time: '2026-04-29T12:00:00.000Z',
+    });
+
+    const blocks = Array.from({ length: 250 }, (_, i) => ({
+      type: 'paragraph',
+      paragraph: { rich_text: [], i },
+    }));
+    await replaceTaskBlocks('task-id', blocks);
+
+    expect(mockNotion.blocks.children.append).toHaveBeenCalledTimes(3);
+    const calls = mockNotion.blocks.children.append.mock.calls;
+    expect((calls[0]![0] as { children: unknown[] }).children).toHaveLength(100);
+    expect((calls[1]![0] as { children: unknown[] }).children).toHaveLength(100);
+    expect((calls[2]![0] as { children: unknown[] }).children).toHaveLength(50);
+  });
+});
