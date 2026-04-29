@@ -22,6 +22,7 @@ describe('queryProjectsByCustomer', () => {
           properties: {
             'Project name': { title: [{ plain_text: 'Landing redesign' }] },
             Summary: { rich_text: [{ plain_text: 'Revamp of marketing site' }] },
+            'Repo URL': { url: 'https://github.com/example/landing' },
             Status: { status: { name: 'In Progress' } },
             Priority: { select: { name: 'High' } },
             Completion: { rollup: { number: 0.42 } },
@@ -41,6 +42,7 @@ describe('queryProjectsByCustomer', () => {
       name: 'Landing redesign',
       icon: '🚀',
       summary: 'Revamp of marketing site',
+      repoUrl: 'https://github.com/example/landing',
       status: 'In Progress',
       priority: 'High',
       completion: 0.42,
@@ -50,6 +52,26 @@ describe('queryProjectsByCustomer', () => {
       startDate: '2026-04-01',
       endDate: '2026-06-01',
     });
+  });
+
+  it('returns repoUrl as null when Repo URL property is absent', async () => {
+    mockNotion.dataSources.query.mockResolvedValueOnce({
+      results: [
+        {
+          id: 'project-2',
+          url: 'https://notion.so/project-2',
+          icon: null,
+          properties: {
+            'Project name': { title: [{ plain_text: 'No repo project' }] },
+            Customer: { relation: [{ id: 'cust-focus' }] },
+          },
+        },
+      ],
+    });
+
+    const projects = await queryProjectsByCustomer('cust-focus');
+    expect(projects).toHaveLength(1);
+    expect(projects[0]?.repoUrl).toBeNull();
   });
 
   it('filters by Customer relation', async () => {

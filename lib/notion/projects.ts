@@ -10,6 +10,7 @@ function parseProject(row: any): Project {
     name: p['Project name']?.title?.[0]?.plain_text ?? '',
     icon: icon?.type === 'emoji' ? icon.emoji : null,
     summary: p.Summary?.rich_text?.[0]?.plain_text ?? null,
+    repoUrl: p['Repo URL']?.url ?? null,
     status: p.Status?.status?.name ?? null,
     priority: p.Priority?.select?.name ?? null,
     completion: typeof p.Completion?.rollup?.number === 'number' ? p.Completion.rollup.number : null,

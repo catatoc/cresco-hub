@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { Project } from '@/schemas/project';
 
 const mockSupabase = { auth: { getUser: vi.fn() } };
 vi.mock('@/lib/supabase/server', () => ({
@@ -11,8 +12,8 @@ vi.mock('@/lib/notion/sprints', () => ({
   ]),
 }));
 vi.mock('@/lib/notion/projects', () => ({
-  queryProjectsByCustomer: vi.fn(async () => [
-    { id: 'p1', name: 'Mogos', icon: '🚀', summary: null, status: null, priority: null, completion: null, ownerIds: [], customerId: 'c1', teamIds: [], startDate: null, endDate: null, url: 'u' },
+  queryProjectsByCustomer: vi.fn(async (): Promise<Project[]> => [
+    { id: 'p1', name: 'Mogos', icon: '🚀', summary: null, repoUrl: null, status: null, priority: null, completion: null, ownerIds: [], customerId: 'c1', teamIds: [], startDate: null, endDate: null, url: 'https://notion.so/p1' },
   ]),
 }));
 vi.mock('@/lib/notion/team', () => ({
