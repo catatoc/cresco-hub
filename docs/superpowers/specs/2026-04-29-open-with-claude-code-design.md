@@ -147,6 +147,13 @@ This is an intentional tradeoff: rows are a quick "send to Claude" affordance; t
 
 Mockup files persist in `.superpowers/brainstorm/8761-1777466857/content/` (`surfaces.html`, `final.html`).
 
+## Manual setup (one-time)
+
+In the Notion **Projects** database:
+
+1. Add a new property of type **URL**, named exactly `Repo URL`.
+2. For each project that should support "Open with Claude Code", paste the GitHub repo URL (e.g. `https://github.com/me/notion-hub`). Leave empty for projects without a repo — the button still works, the prompt just omits the `Repo:` line.
+
 ## Implementation order
 
 1. Schema + Notion mapping (`projectSchema`, `parseProject`).
