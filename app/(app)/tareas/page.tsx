@@ -3,14 +3,13 @@ import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
-import { TAREAS_SCOPE_COOKIE } from '@/lib/auth/context';
-import { resolveScope } from '@/lib/tareas/scope';
+import { resolveScope, SCOPE_COOKIE } from '@/lib/scope/resolve';
 import { queryTasksByCustomerAndSprintPaginated } from '@/lib/notion/tasks';
 import { getCurrentSprint, getSprint, listSprints } from '@/lib/notion/sprints';
 import { getTeamMembers } from '@/lib/notion/team';
 import { queryProjectsByCustomer } from '@/lib/notion/projects';
 import { KanbanView } from '@/components/kanban/kanban-view';
-import { ScopePill } from '@/components/kanban/scope-pill';
+import { ScopePill } from '@/components/common/scope-pill';
 import { PageEnter } from '@/components/motion/page-enter';
 
 export const dynamic = 'force-dynamic';
@@ -32,7 +31,7 @@ export default async function TareasPage({
   const ctx = await requireContext();
   const sp = await searchParams;
   const cookieStore = await cookies();
-  const scope = resolveScope(sp.scope, cookieStore.get(TAREAS_SCOPE_COOKIE)?.value);
+  const scope = resolveScope('tareas', sp.scope, cookieStore.get(SCOPE_COOKIE.tareas)?.value);
 
   const [sprint, sprints, projects] = await Promise.all([
     sp.sprint ? getSprint(sp.sprint) : getCurrentSprint(),
@@ -61,10 +60,13 @@ export default async function TareasPage({
     <PageEnter className="flex flex-col h-full overflow-hidden">
       <Topbar crumbs={[{ label: 'Tareas' }, { label: crumbLabel, muted: true }]}>
         <ScopePill
+          scopeKey="tareas"
           scope={scope}
           myCount={myTasks.length}
           teamCount={allTasks.length}
-          sprintId={sprint?.id ?? null}
+          redirectPath="/tareas"
+          extraParams={sprint?.id ? { sprint: sprint.id } : {}}
+          labels={{ mine: 'Mías', team: 'Equipo completo' }}
         />
       </Topbar>
       <KanbanView

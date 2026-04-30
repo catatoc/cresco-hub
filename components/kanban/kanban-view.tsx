@@ -5,7 +5,7 @@ import { Clock } from 'lucide-react';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
 import type { Project } from '@/schemas/project';
-import type { TareasScope } from '@/lib/auth/context';
+import type { Scope } from '@/lib/scope/resolve';
 import { BoardClassic } from './board-classic';
 import { BoardWeek } from './board-week';
 import { BoardByPerson } from './board-by-person';
@@ -21,7 +21,7 @@ type Props = {
   currentSprintId: string | null;
   allSprintIds: string[];
   members: TeamMember[];
-  scope: TareasScope;
+  scope: Scope;
   projectsById: Map<string, Project>;
 };
 

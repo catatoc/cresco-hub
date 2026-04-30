@@ -13,7 +13,6 @@ vi.mock('@/lib/supabase/server', () => ({
 }));
 vi.mock('@/lib/auth/context', () => ({
   resolveContext: (email: string) => resolveContext(email),
-  TAREAS_SCOPE_COOKIE: 'unused',
 }));
 vi.mock('@/lib/notion/tasks', () => ({
   getTask: (id: string) => getTask(id),
@@ -83,10 +82,7 @@ describe('PATCH /api/tasks/[id]/blocks', () => {
     getUser.mockReturnValueOnce({ email: 'a@b.com' });
     resolveContext.mockResolvedValueOnce({ customerId: 'c1', memberId: 'm1' });
     getTask.mockResolvedValueOnce({ id: 't1', customerId: 'c1' });
-    replaceTaskBlocks.mockResolvedValueOnce({
-      ok: true,
-      lastEditedTime: '2026-04-29T12:00:00.000Z',
-    });
+    replaceTaskBlocks.mockResolvedValueOnce({ ok: true });
 
     const doc = {
       type: 'doc',
@@ -96,10 +92,7 @@ describe('PATCH /api/tasks/[id]/blocks', () => {
 
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body).toEqual({
-      ok: true,
-      lastEditedTime: '2026-04-29T12:00:00.000Z',
-    });
+    expect(body).toEqual({ ok: true });
     expect(replaceTaskBlocks).toHaveBeenCalledTimes(1);
     const [taskId, blocks] = replaceTaskBlocks.mock.calls[0]!;
     expect(taskId).toBe('t1');

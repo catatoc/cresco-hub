@@ -4,8 +4,6 @@ import { getCustomers } from '@/lib/notion/customers';
 import type { CustomerIcon } from '@/schemas/customer';
 
 export const SELECTED_CUSTOMER_COOKIE = 'selected-customer-id';
-export const TAREAS_SCOPE_COOKIE = 'tareas-scope';
-export type TareasScope = 'mine' | 'team';
 
 export type CustomerSummary = {
   id: string;
