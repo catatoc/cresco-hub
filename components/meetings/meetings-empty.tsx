@@ -1,19 +1,25 @@
-import { CalendarDays } from 'lucide-react';
+import Link from 'next/link';
+import type { Scope } from '@/lib/scope/resolve';
 
-export function MeetingsEmpty() {
+type Props = { scope?: Scope };
+
+export function MeetingsEmpty({ scope = 'team' }: Props) {
+  const isMine = scope === 'mine';
   return (
-    <div className="flex flex-col items-center justify-center text-center py-12 px-4 sm:py-16 sm:px-6 lg:py-24 max-w-md mx-auto">
-      <div
-        className="w-14 h-14 rounded-full bg-[#eeeffc] grid place-items-center mb-5"
-        aria-hidden="true"
-      >
-        <CalendarDays className="w-6 h-6 text-[#5e6ad2]" />
-      </div>
-      <h1 className="text-[15px] font-semibold mb-2">Aún no hay reuniones</h1>
-      <p className="text-[12.5px] text-muted-foreground leading-relaxed">
-        Cuando crees una reunión en Notion para este cliente, aparecerá aquí con su
-        agenda, asistentes y action items.
-      </p>
+    <div className="border border-dashed border-border rounded-lg p-8 text-center text-sm text-muted-foreground">
+      {isMine ? (
+        <>
+          <p className="mb-3">No tienes reuniones todavía.</p>
+          <Link
+            href="/reuniones?scope=team"
+            className="inline-flex items-center gap-1 text-[12px] font-medium text-[#5e6ad2] hover:underline"
+          >
+            Ver todas las del cliente →
+          </Link>
+        </>
+      ) : (
+        <p>Aún no hay reuniones registradas para este cliente.</p>
+      )}
     </div>
   );
 }

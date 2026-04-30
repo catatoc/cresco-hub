@@ -1,6 +1,12 @@
+import { cookies } from 'next/headers';
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
-import { queryMeetingsByCustomer } from '@/lib/notion/meetings';
+import { resolveScope, SCOPE_COOKIE } from '@/lib/scope/resolve';
+import { ScopePill } from '@/components/common/scope-pill';
+import {
+  queryMeetingsByCustomer,
+  queryMeetingsByCustomerAndMember,
+} from '@/lib/notion/meetings';
 import { getBlocks } from '@/lib/notion/blocks';
 import { getTask } from '@/lib/notion/tasks';
 import { getTeamMembers } from '@/lib/notion/team';
@@ -16,9 +22,32 @@ import { PageEnter } from '@/components/motion/page-enter';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ReunionesPage() {
+type SearchParams = Promise<{ scope?: string }>;
+
+export default async function ReunionesPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
   const ctx = await requireContext();
-  const meetings = await queryMeetingsByCustomer(ctx.customerId);
+  const sp = await searchParams;
+  const cookieStore = await cookies();
+  const scope = resolveScope(
+    'reuniones',
+    sp.scope,
+    cookieStore.get(SCOPE_COOKIE.reuniones)?.value,
+  );
+
+  const meetings =
+    scope === 'mine'
+      ? await queryMeetingsByCustomerAndMember(ctx.customerId, ctx.memberId)
+      : await queryMeetingsByCustomer(ctx.customerId);
+
+  const myCount =
+    scope === 'mine'
+      ? meetings.length
+      : meetings.filter((m) => m.teamIds.includes(ctx.memberId)).length;
+  const teamCount = scope === 'team' ? meetings.length : myCount;
 
   const current = pickDefault(meetings);
   const lastMeeting = pickPreviousMeeting(meetings, current?.id);
@@ -50,6 +79,13 @@ export default async function ReunionesPage() {
           { label: current?.title ?? 'Sin reuniones', muted: true },
         ]}
       >
+        <ScopePill
+          scopeKey="reuniones"
+          scope={scope}
+          myCount={myCount}
+          teamCount={teamCount}
+          redirectPath="/reuniones"
+        />
         <MobileHistoryTrigger meetings={meetings} currentId={current?.id} />
       </Topbar>
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_280px] overflow-hidden">
@@ -65,7 +101,7 @@ export default async function ReunionesPage() {
               />
             </>
           ) : (
-            <MeetingsEmpty />
+            <MeetingsEmpty scope={scope} />
           )}
         </div>
         <div className="hidden lg:block min-h-0">
