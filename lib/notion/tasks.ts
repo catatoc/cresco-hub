@@ -176,3 +176,34 @@ export async function queryTasksByCustomerAndSprintPaginated(
     .map(parseTask);
   return { tasks, truncated };
 }
+
+export async function queryTasksByCustomerSprintAndMember(
+  customerId: string,
+  sprintId: string | null,
+  memberId: string,
+): Promise<Task[]> {
+  const notion = getNotion();
+  const filterParts: any[] = [
+    { property: 'Customer', relation: { contains: customerId } },
+  ];
+  if (sprintId) filterParts.push({ property: 'Sprint', relation: { contains: sprintId } });
+  filterParts.push({ property: 'Team', relation: { contains: memberId } });
+
+  const { items } = await queryAllPages<any>(
+    async (cursor) => {
+      const res = await notion.dataSources.query({
+        data_source_id: serverEnv.NOTION_DB_TASKS,
+        filter: { and: filterParts },
+        ...(cursor ? { start_cursor: cursor } : {}),
+      });
+      return {
+        results: res.results,
+        has_more: (res as any).has_more ?? false,
+        next_cursor: (res as any).next_cursor ?? null,
+      };
+    },
+    { cap: Infinity },
+  );
+
+  return items.filter((r: any): r is any => 'properties' in r).map(parseTask);
+}
