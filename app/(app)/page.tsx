@@ -1,24 +1,47 @@
+import { cookies } from 'next/headers';
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
 import { getHomeData } from '@/lib/home/queries';
 import { getCurrentSprint } from '@/lib/notion/sprints';
 import { getTeamMembers } from '@/lib/notion/team';
+import { resolveScope, SCOPE_COOKIE } from '@/lib/scope/resolve';
 import { Greeting } from '@/components/home/greeting';
 import { StatsStrip } from '@/components/home/stats-strip';
 import { MyTasks } from '@/components/home/my-tasks';
 import { LastMeeting } from '@/components/home/last-meeting';
 import { WikiRecents } from '@/components/home/wiki-recents';
 import { ActiveProjects } from '@/components/home/active-projects';
+import { ScopePill } from '@/components/common/scope-pill';
 import { PageEnter } from '@/components/motion/page-enter';
 import type { Task } from '@/schemas/task';
 import { Clock } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
-export default async function HomePage() {
+type SearchParams = Promise<{ scope?: string }>;
+
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
   const ctx = await requireContext();
+  const sp = await searchParams;
+  const cookieStore = await cookies();
+  const scope = resolveScope('home', sp.scope, cookieStore.get(SCOPE_COOKIE.home)?.value);
   const sprint = await getCurrentSprint();
-  const data = await getHomeData(ctx.customerId, sprint?.id ?? null);
+  const data = await getHomeData(
+    ctx.customerId,
+    sprint?.id ?? null,
+    scope === 'mine' ? ctx.memberId : null,
+  );
+
+  // counts feed the pill — UX hint, not exact across modes.
+  const myCount =
+    scope === 'mine'
+      ? data.stats.total
+      : data.tasks.filter((t) => t.assigneeIds.includes(ctx.memberId)).length;
+  const teamCount = scope === 'team' ? data.stats.total : data.tasks.length;
 
   const memberIds = Array.from(
     new Set([
@@ -44,6 +67,13 @@ export default async function HomePage() {
   return (
     <PageEnter className="flex flex-col h-full overflow-hidden">
       <Topbar crumbs={[{ label: 'Home' }]}>
+        <ScopePill
+          scopeKey="home"
+          scope={scope}
+          myCount={myCount}
+          teamCount={teamCount}
+          redirectPath="/"
+        />
         <span className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[12px] text-muted-foreground border border-border bg-white max-w-[55vw] truncate">
           <Clock className="w-3 h-3 shrink-0" />
           <span className="truncate">{sprintLabel}</span>
