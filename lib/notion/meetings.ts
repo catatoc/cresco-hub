@@ -1,6 +1,7 @@
 import { getNotion } from './client';
 import { serverEnv } from '@/lib/env';
 import { meetingSchema, type Meeting } from '@/schemas/meeting';
+import { queryAllPages } from './pagination';
 
 function parseMeeting(row: any): Meeting {
   const p = row.properties as Record<string, any>;
@@ -73,4 +74,33 @@ export async function queryMeetingsByProject(projectId: string): Promise<Meeting
     sorts: [{ timestamp: 'created_time', direction: 'descending' }],
   });
   return res.results.filter((r): r is any => 'properties' in r).map(parseMeeting);
+}
+
+export async function queryMeetingsByCustomerAndMember(
+  customerId: string,
+  memberId: string,
+): Promise<Meeting[]> {
+  const notion = getNotion();
+  const { items } = await queryAllPages<any>(
+    async (cursor) => {
+      const res = await notion.dataSources.query({
+        data_source_id: serverEnv.NOTION_DB_MEETINGS,
+        filter: {
+          and: [
+            { property: 'Customer', relation: { contains: customerId } },
+            { property: 'Team', relation: { contains: memberId } },
+          ],
+        },
+        sorts: [{ timestamp: 'created_time', direction: 'descending' }],
+        ...(cursor ? { start_cursor: cursor } : {}),
+      });
+      return {
+        results: res.results,
+        has_more: (res as any).has_more ?? false,
+        next_cursor: (res as any).next_cursor ?? null,
+      };
+    },
+    { cap: Infinity },
+  );
+  return items.filter((r: any): r is any => 'properties' in r).map(parseMeeting);
 }

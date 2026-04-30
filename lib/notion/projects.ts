@@ -1,6 +1,7 @@
 import { getNotion } from './client';
 import { serverEnv } from '@/lib/env';
 import { projectSchema, type Project } from '@/schemas/project';
+import { queryAllPages } from './pagination';
 
 function parseProject(row: any): Project {
   const p = row.properties as Record<string, any>;
@@ -59,4 +60,32 @@ export async function getProject(id: string): Promise<Project | null> {
   } catch {
     return null;
   }
+}
+
+export async function queryProjectsByCustomerAndMember(
+  customerId: string,
+  memberId: string,
+): Promise<Project[]> {
+  const notion = getNotion();
+  const { items } = await queryAllPages<any>(
+    async (cursor) => {
+      const res = await notion.dataSources.query({
+        data_source_id: serverEnv.NOTION_DB_PROJECTS,
+        filter: {
+          and: [
+            { property: 'Customer', relation: { contains: customerId } },
+            { property: 'Team', relation: { contains: memberId } },
+          ],
+        },
+        ...(cursor ? { start_cursor: cursor } : {}),
+      });
+      return {
+        results: res.results,
+        has_more: (res as any).has_more ?? false,
+        next_cursor: (res as any).next_cursor ?? null,
+      };
+    },
+    { cap: Infinity },
+  );
+  return items.filter((r: any): r is any => 'properties' in r).map(parseProject);
 }
