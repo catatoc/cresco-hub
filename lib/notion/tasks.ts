@@ -1,4 +1,5 @@
 import { getNotion } from './client';
+import { queryAllPages } from './pagination';
 import { serverEnv } from '@/lib/env';
 import { taskSchema, type Task, type TaskStatus } from '@/schemas/task';
 
@@ -135,4 +136,37 @@ export async function createTask(args: {
   }
 
   return { id, url: (res as any).url as string };
+}
+
+export async function queryTasksByCustomerAndSprintPaginated(
+  customerId: string,
+  sprintId: string | null,
+  cap: number = 500,
+): Promise<{ tasks: Task[]; truncated: boolean }> {
+  const notion = getNotion();
+  const baseFilter = { property: 'Customer', relation: { contains: customerId } };
+  const filter = sprintId
+    ? { and: [baseFilter, { property: 'Sprint', relation: { contains: sprintId } }] }
+    : baseFilter;
+
+  const { items, truncated } = await queryAllPages<any>(
+    async (cursor) => {
+      const res = await notion.dataSources.query({
+        data_source_id: serverEnv.NOTION_DB_TASKS,
+        filter,
+        ...(cursor ? { start_cursor: cursor } : {}),
+      });
+      return {
+        results: res.results,
+        has_more: (res as any).has_more ?? false,
+        next_cursor: (res as any).next_cursor ?? null,
+      };
+    },
+    { cap },
+  );
+
+  const tasks = items
+    .filter((r: any): r is any => 'properties' in r)
+    .map(parseTask);
+  return { tasks, truncated };
 }
