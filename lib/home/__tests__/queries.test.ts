@@ -1,18 +1,36 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Task } from '@/schemas/task';
 import type { Meeting } from '@/schemas/meeting';
 import type { Project } from '@/schemas/project';
 
-vi.mock('@/lib/notion/tasks', () => ({ queryTasksByCustomerAndSprint: vi.fn() }));
-vi.mock('@/lib/notion/meetings', () => ({ queryMeetingsByCustomer: vi.fn() }));
+vi.mock('@/lib/notion/tasks', () => ({
+  queryTasksByCustomerAndSprint: vi.fn(),
+  queryTasksByCustomerSprintAndMember: vi.fn(),
+}));
+vi.mock('@/lib/notion/meetings', () => ({
+  queryMeetingsByCustomer: vi.fn(),
+  queryMeetingsByCustomerAndMember: vi.fn(),
+}));
 vi.mock('@/lib/notion/wiki', () => ({ queryWikiByCustomer: vi.fn() }));
-vi.mock('@/lib/notion/projects', () => ({ queryProjectsByCustomer: vi.fn() }));
+vi.mock('@/lib/notion/projects', () => ({
+  queryProjectsByCustomer: vi.fn(),
+  queryProjectsByCustomerAndMember: vi.fn(),
+}));
 
 import { getHomeData } from '../queries';
-import { queryTasksByCustomerAndSprint } from '@/lib/notion/tasks';
-import { queryMeetingsByCustomer } from '@/lib/notion/meetings';
+import {
+  queryTasksByCustomerAndSprint,
+  queryTasksByCustomerSprintAndMember,
+} from '@/lib/notion/tasks';
+import {
+  queryMeetingsByCustomer,
+  queryMeetingsByCustomerAndMember,
+} from '@/lib/notion/meetings';
 import { queryWikiByCustomer } from '@/lib/notion/wiki';
-import { queryProjectsByCustomer } from '@/lib/notion/projects';
+import {
+  queryProjectsByCustomer,
+  queryProjectsByCustomerAndMember,
+} from '@/lib/notion/projects';
 
 const mkTask = (over: Partial<Task>): Task => ({
   id: 't',
@@ -183,5 +201,47 @@ describe('getHomeData', () => {
 
     const data = await getHomeData('c', 'sprint-17');
     expect(data.activeProjects).toHaveLength(6);
+  });
+});
+
+describe('getHomeData with memberId', () => {
+  beforeEach(() => {
+    vi.mocked(queryTasksByCustomerAndSprint).mockClear();
+    vi.mocked(queryTasksByCustomerSprintAndMember).mockClear();
+    vi.mocked(queryMeetingsByCustomer).mockClear();
+    vi.mocked(queryMeetingsByCustomerAndMember).mockClear();
+    vi.mocked(queryWikiByCustomer).mockClear();
+    vi.mocked(queryProjectsByCustomer).mockClear();
+    vi.mocked(queryProjectsByCustomerAndMember).mockClear();
+  });
+
+  it('uses *ByMember queries when memberId provided', async () => {
+    vi.mocked(queryTasksByCustomerSprintAndMember).mockResolvedValueOnce([]);
+    vi.mocked(queryMeetingsByCustomerAndMember).mockResolvedValueOnce([]);
+    vi.mocked(queryWikiByCustomer).mockResolvedValueOnce([]);
+    vi.mocked(queryProjectsByCustomerAndMember).mockResolvedValueOnce([]);
+
+    await getHomeData('cust-1', 'sprint-7', 'mem-7');
+
+    expect(queryTasksByCustomerSprintAndMember).toHaveBeenCalledWith('cust-1', 'sprint-7', 'mem-7');
+    expect(queryMeetingsByCustomerAndMember).toHaveBeenCalledWith('cust-1', 'mem-7');
+    expect(queryProjectsByCustomerAndMember).toHaveBeenCalledWith('cust-1', 'mem-7');
+    expect(queryTasksByCustomerAndSprint).not.toHaveBeenCalled();
+    expect(queryMeetingsByCustomer).not.toHaveBeenCalled();
+    expect(queryProjectsByCustomer).not.toHaveBeenCalled();
+  });
+
+  it('uses *ByCustomer queries when memberId is null', async () => {
+    vi.mocked(queryTasksByCustomerAndSprint).mockResolvedValueOnce([]);
+    vi.mocked(queryMeetingsByCustomer).mockResolvedValueOnce([]);
+    vi.mocked(queryWikiByCustomer).mockResolvedValueOnce([]);
+    vi.mocked(queryProjectsByCustomer).mockResolvedValueOnce([]);
+
+    await getHomeData('cust-1', 'sprint-7', null);
+
+    expect(queryTasksByCustomerAndSprint).toHaveBeenCalledWith('cust-1', 'sprint-7');
+    expect(queryMeetingsByCustomer).toHaveBeenCalledWith('cust-1');
+    expect(queryProjectsByCustomer).toHaveBeenCalledWith('cust-1');
+    expect(queryTasksByCustomerSprintAndMember).not.toHaveBeenCalled();
   });
 });

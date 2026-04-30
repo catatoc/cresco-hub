@@ -1,7 +1,16 @@
-import { queryTasksByCustomerAndSprint } from '@/lib/notion/tasks';
-import { queryMeetingsByCustomer } from '@/lib/notion/meetings';
+import {
+  queryTasksByCustomerAndSprint,
+  queryTasksByCustomerSprintAndMember,
+} from '@/lib/notion/tasks';
+import {
+  queryMeetingsByCustomer,
+  queryMeetingsByCustomerAndMember,
+} from '@/lib/notion/meetings';
 import { queryWikiByCustomer } from '@/lib/notion/wiki';
-import { queryProjectsByCustomer } from '@/lib/notion/projects';
+import {
+  queryProjectsByCustomer,
+  queryProjectsByCustomerAndMember,
+} from '@/lib/notion/projects';
 import type { Project, ProjectStatus } from '@/schemas/project';
 import type { Task } from '@/schemas/task';
 
@@ -47,12 +56,22 @@ function shapeActiveProjects(projects: Project[], tasks: Task[]): HomeProject[] 
     .slice(0, 6);
 }
 
-export async function getHomeData(customerId: string, sprintId: string | null) {
+export async function getHomeData(
+  customerId: string,
+  sprintId: string | null,
+  memberId: string | null = null,
+) {
   const [tasks, meetings, wiki, projects] = await Promise.all([
-    queryTasksByCustomerAndSprint(customerId, sprintId),
-    queryMeetingsByCustomer(customerId),
+    memberId
+      ? queryTasksByCustomerSprintAndMember(customerId, sprintId, memberId)
+      : queryTasksByCustomerAndSprint(customerId, sprintId),
+    memberId
+      ? queryMeetingsByCustomerAndMember(customerId, memberId)
+      : queryMeetingsByCustomer(customerId),
     queryWikiByCustomer(customerId),
-    queryProjectsByCustomer(customerId),
+    memberId
+      ? queryProjectsByCustomerAndMember(customerId, memberId)
+      : queryProjectsByCustomer(customerId),
   ]);
 
   // Spanish labels for UI, mapped from real Notion statuses:
