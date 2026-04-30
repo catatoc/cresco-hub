@@ -12,9 +12,11 @@ import { BoardByPerson } from './board-by-person';
 import { ViewToggle } from './view-toggle';
 import { SprintNav } from './sprint-nav';
 import { CopyTasksMenu } from './copy-tasks-menu';
+import { TruncationBanner } from './truncation-banner';
 
 type Props = {
   initialTasks: Task[];
+  truncated?: boolean;
   sprintLabel: string;
   currentSprintId: string | null;
   allSprintIds: string[];
@@ -25,6 +27,7 @@ type Props = {
 
 export function KanbanView({
   initialTasks,
+  truncated = false,
   sprintLabel,
   currentSprintId,
   allSprintIds,
@@ -51,6 +54,8 @@ export function KanbanView({
           <CopyTasksMenu tasks={tasks} membersById={membersById} sprintLabel={sprintLabel} />
         </div>
       </div>
+
+      {truncated && <TruncationBanner cap={500} />}
 
       {scope === 'team' ? (
         <BoardByPerson

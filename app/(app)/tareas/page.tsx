@@ -5,7 +5,7 @@ import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
 import { TAREAS_SCOPE_COOKIE } from '@/lib/auth/context';
 import { resolveScope } from '@/lib/tareas/scope';
-import { queryTasksByCustomerAndSprint } from '@/lib/notion/tasks';
+import { queryTasksByCustomerAndSprintPaginated } from '@/lib/notion/tasks';
 import { getCurrentSprint, getSprint, listSprints } from '@/lib/notion/sprints';
 import { getTeamMembers } from '@/lib/notion/team';
 import { queryProjectsByCustomer } from '@/lib/notion/projects';
@@ -42,7 +42,10 @@ export default async function TareasPage({
 
   const projectsById = new Map(projects.map((p) => [p.id, p]));
 
-  const allTasks = await queryTasksByCustomerAndSprint(ctx.customerId, sprint?.id ?? null);
+  const { tasks: allTasks, truncated } = await queryTasksByCustomerAndSprintPaginated(
+    ctx.customerId,
+    sprint?.id ?? null,
+  );
 
   const myTasks = allTasks.filter((t) => t.assigneeIds.includes(ctx.memberId));
   const visibleTasks = scope === 'mine' ? myTasks : allTasks;
@@ -66,6 +69,7 @@ export default async function TareasPage({
       </Topbar>
       <KanbanView
         initialTasks={visibleTasks}
+        truncated={truncated && scope === 'team'}
         sprintLabel={sprintLabel}
         currentSprintId={sprint?.id ?? null}
         allSprintIds={sprints.map((s) => s.id)}
