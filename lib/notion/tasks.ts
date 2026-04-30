@@ -26,6 +26,12 @@ function parseTask(row: any): Task {
   });
 }
 
+/**
+ * @deprecated Use `queryTasksByCustomerAndSprintPaginated`. This call hits the
+ * Notion default page_size and silently drops results when there are >100 tasks.
+ * Kept for callers that still depend on the unpaginated shape (search suggestions,
+ * home queries). Will be removed once all call sites migrate.
+ */
 export async function queryTasksByCustomerAndSprint(
   customerId: string,
   sprintId: string | null,
