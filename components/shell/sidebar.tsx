@@ -4,7 +4,7 @@ import { UserCard } from './user-card';
 import { NavItem } from './nav-item';
 import { SearchTrigger } from '@/components/search/search-trigger';
 import { CreateTrigger } from '@/components/create/create-trigger';
-import { Home, CheckSquare, Calendar, BookOpen, FolderKanban } from 'lucide-react';
+import { Home, CheckSquare, Calendar, BookOpen, FolderKanban, Key } from 'lucide-react';
 import { LayoutGroup } from '@/components/motion/m';
 import { cn } from '@/lib/utils';
 
@@ -49,6 +49,18 @@ export function Sidebar({ context, className, groupId = 'sidebar-nav' }: Sidebar
           </NavItem>
           <NavItem href="/proyectos" icon={<FolderKanban className="w-3.5 h-3.5" />}>
             Proyectos
+          </NavItem>
+        </div>
+
+        <div className="pb-3">
+          <div className="text-[11px] uppercase text-muted-foreground font-medium tracking-[0.03em] px-2 pt-1.5 pb-1">
+            Recursos
+          </div>
+          <NavItem
+            href="/usuarios-de-prueba"
+            icon={<Key className="w-3.5 h-3.5" />}
+          >
+            Usuarios de prueba
           </NavItem>
         </div>
       </LayoutGroup>
