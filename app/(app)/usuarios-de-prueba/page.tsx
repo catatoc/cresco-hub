@@ -1,13 +1,13 @@
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
-import { queryTestUsersByCustomer } from '@/lib/notion/test-users';
+import { queryTestUsersForMemberInCustomer } from '@/lib/notion/test-users';
 import { TestUserGrid } from '@/components/test-users/test-user-grid';
 
 export const dynamic = 'force-dynamic';
 
 export default async function TestUsersPage() {
   const ctx = await requireContext();
-  const users = await queryTestUsersByCustomer(ctx.customerId);
+  const users = await queryTestUsersForMemberInCustomer(ctx.memberId, ctx.customerId);
 
   return (
     <>
@@ -22,7 +22,11 @@ export default async function TestUsersPage() {
               Credenciales compartidas para entornos de QA y staging.
             </p>
           </header>
-          <TestUserGrid users={users} customerName={ctx.customerName} />
+          <TestUserGrid
+            users={users}
+            memberName={ctx.memberName}
+            customerName={ctx.customerName}
+          />
         </div>
       </div>
     </>

@@ -17,12 +17,17 @@ function parseTestUser(row: any): TestUser {
   });
 }
 
-export const queryTestUsersByCustomer = cache(
-  async (customerId: string): Promise<TestUser[]> => {
+export const queryTestUsersForMemberInCustomer = cache(
+  async (memberId: string, customerId: string): Promise<TestUser[]> => {
     const notion = getNotion();
     const res = await notion.dataSources.query({
       data_source_id: serverEnv.NOTION_DB_TEST_USERS,
-      filter: { property: 'Customers', relation: { contains: customerId } },
+      filter: {
+        and: [
+          { property: 'Customers', relation: { contains: customerId } },
+          { property: 'Team', relation: { contains: memberId } },
+        ],
+      },
       sorts: [{ property: 'Nombre', direction: 'ascending' }],
     });
     return res.results

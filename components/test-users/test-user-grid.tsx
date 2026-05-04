@@ -7,16 +7,17 @@ const NOTION_DB_URL =
 
 type Props = {
   users: TestUser[];
+  memberName: string;
   customerName: string;
 };
 
-export function TestUserGrid({ users, customerName }: Props) {
+export function TestUserGrid({ users, memberName, customerName }: Props) {
   if (users.length === 0) {
     return (
       <EmptyState
         icon="🔑"
         title="Sin usuarios de prueba"
-        description={`Aún no hay credenciales para ${customerName}. Agrégalas desde Notion.`}
+        description={`Aún no hay credenciales asignadas a ${memberName} para ${customerName}. Agrégalas desde Notion.`}
         action={
           <a
             href={NOTION_DB_URL}

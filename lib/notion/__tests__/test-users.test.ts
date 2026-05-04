@@ -11,21 +11,26 @@ const mockNotion = {
   },
 };
 
-import { queryTestUsersByCustomer } from '../test-users';
+import { queryTestUsersForMemberInCustomer } from '../test-users';
 
-describe('queryTestUsersByCustomer', () => {
+describe('queryTestUsersForMemberInCustomer', () => {
   beforeEach(() => {
     mockNotion.dataSources.query.mockReset();
   });
 
-  it('queries the test-users data source filtering by customer relation', async () => {
+  it('queries the test-users data source filtering by customer AND team relation', async () => {
     mockNotion.dataSources.query.mockResolvedValueOnce({ results: [] });
 
-    await queryTestUsersByCustomer('customer-abc');
+    await queryTestUsersForMemberInCustomer('member-1', 'customer-abc');
 
     expect(mockNotion.dataSources.query).toHaveBeenCalledWith({
       data_source_id: 'ds-test-users',
-      filter: { property: 'Customers', relation: { contains: 'customer-abc' } },
+      filter: {
+        and: [
+          { property: 'Customers', relation: { contains: 'customer-abc' } },
+          { property: 'Team', relation: { contains: 'member-1' } },
+        ],
+      },
       sorts: [{ property: 'Nombre', direction: 'ascending' }],
     });
   });
@@ -42,13 +47,13 @@ describe('queryTestUsersByCustomer', () => {
             Clave: { rich_text: [{ plain_text: 's3cret' }] },
             URL: { url: 'https://staging.app.com' },
             Customers: { relation: [{ id: 'customer-abc' }] },
-            Team: { relation: [{ id: 'team-1' }] },
+            Team: { relation: [{ id: 'member-1' }] },
           },
         },
       ],
     });
 
-    const out = await queryTestUsersByCustomer('customer-abc');
+    const out = await queryTestUsersForMemberInCustomer('member-1', 'customer-abc');
 
     expect(out).toEqual([
       {
@@ -58,7 +63,7 @@ describe('queryTestUsersByCustomer', () => {
         clave: 's3cret',
         url: 'https://staging.app.com',
         customerIds: ['customer-abc'],
-        teamIds: ['team-1'],
+        teamIds: ['member-1'],
         lastEditedAt: '2026-05-03T12:00:00Z',
       },
     ]);
@@ -82,7 +87,7 @@ describe('queryTestUsersByCustomer', () => {
       ],
     });
 
-    const out = await queryTestUsersByCustomer('customer-abc');
+    const out = await queryTestUsersForMemberInCustomer('member-1', 'customer-abc');
 
     expect(out[0]).toMatchObject({
       nombre: 'Sin nombre',
@@ -99,7 +104,7 @@ describe('queryTestUsersByCustomer', () => {
       results: [{ id: 'partial-1' }],
     });
 
-    const out = await queryTestUsersByCustomer('customer-abc');
+    const out = await queryTestUsersForMemberInCustomer('member-1', 'customer-abc');
     expect(out).toEqual([]);
   });
 });
