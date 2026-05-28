@@ -8,7 +8,8 @@ const mockNotion = {
   pages: { retrieve: vi.fn() },
 };
 
-import { getCurrentSprint, listSprints } from '../sprints';
+import type { Sprint } from '@/schemas/sprint';
+import { getCurrentSprint, listSprints, selectUpcomingSprint } from '../sprints';
 
 describe('getCurrentSprint', () => {
   beforeEach(() => mockNotion.dataSources.query.mockReset());
@@ -90,5 +91,51 @@ describe('listSprints', () => {
       name: 'Sprint 7',
       status: 'Current',
     });
+  });
+});
+
+describe('selectUpcomingSprint', () => {
+  const s = (over: Partial<Sprint>): Sprint => ({
+    id: 'x',
+    sprintId: null,
+    name: 'S',
+    status: 'Future',
+    startDate: null,
+    endDate: null,
+    ...over,
+  });
+
+  it('returns the earliest sprint starting after the current sprint ends', () => {
+    const sprints = [
+      s({ id: 'cur', status: 'Current', startDate: '2026-05-18', endDate: '2026-05-31' }),
+      s({ id: 'w2', startDate: '2026-06-08', endDate: '2026-06-14' }),
+      s({ id: 'w1', startDate: '2026-06-01', endDate: '2026-06-07' }),
+    ];
+    expect(selectUpcomingSprint(sprints, '2026-05-28')?.id).toBe('w1');
+  });
+
+  it('falls back to today when there is no current sprint', () => {
+    const sprints = [
+      s({ id: 'past', status: 'Past', startDate: '2026-05-01', endDate: '2026-05-07' }),
+      s({ id: 'next', startDate: '2026-06-01', endDate: '2026-06-07' }),
+    ];
+    expect(selectUpcomingSprint(sprints, '2026-05-28')?.id).toBe('next');
+  });
+
+  it('returns null when no sprint starts after the anchor', () => {
+    const sprints = [
+      s({ id: 'cur', status: 'Current', startDate: '2026-05-18', endDate: '2026-05-31' }),
+      s({ id: 'old', status: 'Past', startDate: '2026-05-01', endDate: '2026-05-07' }),
+    ];
+    expect(selectUpcomingSprint(sprints, '2026-05-28')).toBeNull();
+  });
+
+  it('ignores sprints without a start date', () => {
+    const sprints = [
+      s({ id: 'cur', status: 'Current', startDate: '2026-05-18', endDate: '2026-05-31' }),
+      s({ id: 'nodate', startDate: null }),
+      s({ id: 'w1', startDate: '2026-06-01', endDate: '2026-06-07' }),
+    ];
+    expect(selectUpcomingSprint(sprints, '2026-05-28')?.id).toBe('w1');
   });
 });

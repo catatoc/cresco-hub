@@ -11,6 +11,7 @@ import {
   queryProjectsByCustomer,
   queryProjectsByCustomerAndMember,
 } from '@/lib/notion/projects';
+import { getUpcomingSprint } from '@/lib/notion/sprints';
 import type { Project, ProjectStatus } from '@/schemas/project';
 import type { Task } from '@/schemas/task';
 
@@ -61,7 +62,9 @@ export async function getHomeData(
   sprintId: string | null,
   memberId: string | null = null,
 ) {
-  const [tasks, meetings, wiki, projects] = await Promise.all([
+  const upcomingSprint = await getUpcomingSprint();
+
+  const [tasks, meetings, wiki, projects, upcomingTasksRaw] = await Promise.all([
     memberId
       ? queryTasksByCustomerSprintAndMember(customerId, sprintId, memberId)
       : queryTasksByCustomerAndSprint(customerId, sprintId),
@@ -72,6 +75,11 @@ export async function getHomeData(
     memberId
       ? queryProjectsByCustomerAndMember(customerId, memberId)
       : queryProjectsByCustomer(customerId),
+    upcomingSprint
+      ? memberId
+        ? queryTasksByCustomerSprintAndMember(customerId, upcomingSprint.id, memberId)
+        : queryTasksByCustomerAndSprint(customerId, upcomingSprint.id)
+      : Promise.resolve([] as Task[]),
   ]);
 
   // Spanish labels for UI, mapped from real Notion statuses:
@@ -101,5 +109,19 @@ export async function getHomeData(
 
   const activeProjects = shapeActiveProjects(projects, tasks);
 
-  return { tasks, stats, lastMeeting, recentWiki, myTasksToday, activeProjects, projects };
+  const upcomingTasks = upcomingTasksRaw
+    .filter((t) => t.status !== 'Done' && t.status !== 'Archived')
+    .slice(0, 5);
+
+  return {
+    tasks,
+    stats,
+    lastMeeting,
+    recentWiki,
+    myTasksToday,
+    activeProjects,
+    projects,
+    upcomingSprint,
+    upcomingTasks,
+  };
 }

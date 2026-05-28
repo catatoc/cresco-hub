@@ -16,6 +16,9 @@ vi.mock('@/lib/notion/projects', () => ({
   queryProjectsByCustomer: vi.fn(),
   queryProjectsByCustomerAndMember: vi.fn(),
 }));
+vi.mock('@/lib/notion/sprints', () => ({
+  getUpcomingSprint: vi.fn().mockResolvedValue(null),
+}));
 
 import { getHomeData } from '../queries';
 import {
@@ -31,6 +34,7 @@ import {
   queryProjectsByCustomer,
   queryProjectsByCustomerAndMember,
 } from '@/lib/notion/projects';
+import { getUpcomingSprint } from '@/lib/notion/sprints';
 
 const mkTask = (over: Partial<Task>): Task => ({
   id: 't',
@@ -100,6 +104,30 @@ describe('getHomeData', () => {
 
     const data = await getHomeData('c', 'sprint-17');
     expect(data.stats).toEqual({ inProgress: 1, todo: 1, done: 1, total: 3 });
+  });
+
+  it('surfaces the upcoming sprint and its open tasks (excludes done)', async () => {
+    vi.mocked(getUpcomingSprint).mockResolvedValueOnce({
+      id: 'next-sprint',
+      sprintId: 9,
+      name: 'S 01.06–07.06',
+      status: 'Future',
+      startDate: '2026-06-01',
+      endDate: '2026-06-07',
+    });
+    vi.mocked(queryTasksByCustomerAndSprint)
+      .mockResolvedValueOnce([]) // current sprint
+      .mockResolvedValueOnce([
+        mkTask({ id: 'u1', status: 'Not Started' }),
+        mkTask({ id: 'u2', status: 'Done' }),
+      ]); // upcoming sprint
+    vi.mocked(queryMeetingsByCustomer).mockResolvedValueOnce([]);
+    vi.mocked(queryWikiByCustomer).mockResolvedValueOnce([]);
+    vi.mocked(queryProjectsByCustomer).mockResolvedValueOnce([]);
+
+    const data = await getHomeData('c', 'sprint-17');
+    expect(data.upcomingSprint?.id).toBe('next-sprint');
+    expect(data.upcomingTasks.map((t) => t.id)).toEqual(['u1']);
   });
 
   it('picks the most recent meeting (first in DESC list)', async () => {

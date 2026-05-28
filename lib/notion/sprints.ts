@@ -37,6 +37,29 @@ export async function getCurrentSprint(): Promise<Sprint | null> {
   return parseSprint(row);
 }
 
+/**
+ * Pure selector: given all sprints and today's date (ISO `yyyy-mm-dd`), returns the
+ * next sprint that starts after the current sprint ends — or, when there is no
+ * current sprint, after today. Sprints without a start date are ignored. Returns
+ * null when nothing qualifies.
+ */
+export function selectUpcomingSprint(sprints: Sprint[], today: string): Sprint | null {
+  const current = sprints.find((s) => s.status === 'Current') ?? null;
+  const anchor = current?.endDate ?? today;
+  return (
+    sprints
+      .filter((s): s is Sprint & { startDate: string } => !!s.startDate && s.startDate > anchor)
+      .sort((a, b) => a.startDate.localeCompare(b.startDate))[0] ?? null
+  );
+}
+
+/** The week after the current sprint — what's coming next. */
+export async function getUpcomingSprint(): Promise<Sprint | null> {
+  const sprints = await listSprints();
+  const today = new Date().toISOString().slice(0, 10);
+  return selectUpcomingSprint(sprints, today);
+}
+
 export async function getSprint(id: string): Promise<Sprint | null> {
   const notion = getNotion();
   try {

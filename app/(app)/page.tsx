@@ -8,6 +8,7 @@ import { resolveScope, SCOPE_COOKIE } from '@/lib/scope/resolve';
 import { Greeting } from '@/components/home/greeting';
 import { StatsStrip } from '@/components/home/stats-strip';
 import { MyTasks } from '@/components/home/my-tasks';
+import { UpcomingWeek } from '@/components/home/upcoming-week';
 import { LastMeeting } from '@/components/home/last-meeting';
 import { WikiRecents } from '@/components/home/wiki-recents';
 import { ActiveProjects } from '@/components/home/active-projects';
@@ -46,6 +47,7 @@ export default async function HomePage({
   const memberIds = Array.from(
     new Set([
       ...data.myTasksToday.flatMap((t: Task) => t.assigneeIds),
+      ...data.upcomingTasks.flatMap((t: Task) => t.assigneeIds),
       ...data.activeProjects.flatMap((p) => p.teamIds),
     ]),
   );
@@ -85,6 +87,7 @@ export default async function HomePage({
           <Greeting name={ctx.memberName} stats={data.stats} lastMeeting={data.lastMeeting} />
           <StatsStrip stats={data.stats} lastMeeting={data.lastMeeting} overdueCount={overdue} />
           <MyTasks tasks={data.myTasksToday} membersById={membersById} projectsById={projectsById} />
+          <UpcomingWeek sprint={data.upcomingSprint} tasks={data.upcomingTasks} membersById={membersById} />
           <ActiveProjects projects={data.activeProjects} membersById={membersById} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
             <LastMeeting meeting={data.lastMeeting} />
