@@ -4,7 +4,7 @@ import { UserCard } from './user-card';
 import { NavItem } from './nav-item';
 import { SearchTrigger } from '@/components/search/search-trigger';
 import { CreateTrigger } from '@/components/create/create-trigger';
-import { Home, CheckSquare, Calendar, BookOpen, FolderKanban, Key } from 'lucide-react';
+import { Home, CheckSquare, Calendar, CalendarClock, BookOpen, FolderKanban, Key } from 'lucide-react';
 import { LayoutGroup } from '@/components/motion/m';
 import { cn } from '@/lib/utils';
 
@@ -31,6 +31,9 @@ export function Sidebar({ context, className, groupId = 'sidebar-nav' }: Sidebar
         <div className="pb-3">
           <NavItem href="/" icon={<Home className="w-3.5 h-3.5" />} exact>
             Home
+          </NavItem>
+          <NavItem href="/proxima-semana" icon={<CalendarClock className="w-3.5 h-3.5" />}>
+            Próxima semana
           </NavItem>
         </div>
 

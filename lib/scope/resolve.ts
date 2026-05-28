@@ -1,5 +1,5 @@
 export type Scope = 'mine' | 'team';
-export type ScopeKey = 'home' | 'tareas' | 'reuniones' | 'proyectos';
+export type ScopeKey = 'home' | 'tareas' | 'reuniones' | 'proyectos' | 'proxima-semana';
 
 const VALID: readonly Scope[] = ['mine', 'team'] as const;
 
@@ -8,6 +8,7 @@ export const SCOPE_COOKIE: Record<ScopeKey, string> = {
   tareas: 'tareas-scope',
   reuniones: 'reuniones-scope',
   proyectos: 'proyectos-scope',
+  'proxima-semana': 'proxima-semana-scope',
 };
 
 function isValid(value: unknown): value is Scope {
