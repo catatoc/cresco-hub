@@ -18,6 +18,7 @@ export type AppContext = {
   email: string;
   memberId: string;
   memberName: string;
+  memberGender: 'Male' | 'Female' | null;
   customerId: string;
   customerName: string;
   customerIcon: CustomerIcon | null;
@@ -54,6 +55,7 @@ export async function resolveContext(email: string | null): Promise<AppContext |
     email,
     memberId: member.id,
     memberName: member.name,
+    memberGender: member.gender,
     customerId: active.id,
     customerName: active.name,
     customerIcon: active.icon,

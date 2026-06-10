@@ -12,6 +12,7 @@ const mk = (over: Partial<TeamMember>): TeamMember => ({
   customerIds: [],
   projectIds: [],
   portalSignIn: false,
+  gender: null,
   ...over,
 });
 

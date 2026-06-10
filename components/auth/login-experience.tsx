@@ -151,7 +151,7 @@ export function LoginExperience() {
       <div className={styles.grain} />
 
       <div className={styles.ui}>
-        <div className={styles.eye}>Crecemos contigo.</div>
+        <div className={styles.eye}>Crecemos contigo</div>
         <div className={styles.big}>crescō<span className={styles.d}>.</span></div>
         <button
           className={`${styles.enter} ${loading ? styles.enterLoading : ''}`}

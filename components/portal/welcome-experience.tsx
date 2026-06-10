@@ -11,7 +11,7 @@ import styles from './welcome.module.css';
 const ORDER = ['intro', 's1', 's2', 's3', 'done'] as const;
 const DONE = ORDER.length - 1;
 
-export function WelcomeExperience({ firstName }: { firstName: string }) {
+export function WelcomeExperience({ firstName, gender = null }: { firstName: string; gender?: 'Male' | 'Female' | null }) {
   const [active, setActive] = useState<number | null>(0);
   const [leaving, setLeaving] = useState<number | null>(null);
   const busy = useRef(false);
@@ -98,7 +98,7 @@ export function WelcomeExperience({ firstName }: { firstName: string }) {
         <section className={cls(0)}>
           <div className={styles.rise} style={{ ['--d' as string]: '.2s' }}>
             <div className={`${styles.line} ${styles.long}`}>
-              {firstName}, bienvenido a <span className={styles.ac}>crescō</span> y gracias por confiar en nosotros.
+              {firstName}, {gender === 'Female' ? 'bienvenida' : 'bienvenido'} a <span className={styles.ac}>crescō</span> y gracias por confiar en nosotros.
             </div>
           </div>
         </section>

@@ -16,6 +16,7 @@ function parseTeamMember(row: any, fallbackEmail?: string): TeamMember {
     customerIds: (p.Customers?.relation ?? []).map((r: { id: string }) => r.id),
     projectIds: (p.Projects?.relation ?? []).map((r: { id: string }) => r.id),
     portalSignIn: p['Portal Sign In']?.checkbox ?? false,
+    gender: p.Gender?.select?.name === 'Male' || p.Gender?.select?.name === 'Female' ? p.Gender.select.name : null,
   });
 }
 

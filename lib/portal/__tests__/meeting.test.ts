@@ -27,6 +27,7 @@ const ctx = {
   isAdmin: false,
   isInternal: false,
   portalSignIn: true,
+  memberGender: null,
 } satisfies AppContext;
 
 beforeEach(() => {

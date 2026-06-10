@@ -12,6 +12,7 @@ const member = (id: string, name: string): TeamMember => ({
   customerIds: [],
   projectIds: [],
   portalSignIn: false,
+  gender: null,
 });
 
 const task = (overrides: Partial<Task>): Task => ({

@@ -17,7 +17,7 @@ export default async function PortalPage() {
   // primera entrada (Portal Sign In vacío en Team) → bienvenida; al terminar,
   // el server action marca el checkbox y el refresh cae en el portal
   if (!ctx.portalSignIn) {
-    return <WelcomeExperience firstName={ctx.memberName.split(/\s+/)[0] ?? ctx.memberName} />;
+    return <WelcomeExperience firstName={ctx.memberName.split(/\s+/)[0] ?? ctx.memberName} gender={ctx.memberGender} />;
   }
 
   const [data, payments] = await Promise.all([loadPortalData(ctx), loadPortalPayments(ctx)]);
