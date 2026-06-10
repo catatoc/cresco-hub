@@ -7,13 +7,19 @@ type MockView = {
   state: { selection: { from: number } };
   dispatch: ReturnType<typeof vi.fn>;
   coordsAtPos: (pos: number) => { left: number; top: number; bottom: number; right: number };
+  domAtPos: (pos: number) => { node: Node; offset: number };
+  dom: HTMLElement;
 };
 
 function makeView(): MockView {
+  const dom = document.createElement('div');
+  document.body.appendChild(dom);
   return {
     state: { selection: { from: 5 } },
     dispatch: vi.fn(),
     coordsAtPos: () => ({ left: 100, top: 50, bottom: 70, right: 110 }),
+    domAtPos: () => ({ node: dom, offset: 0 }),
+    dom,
   };
 }
 
@@ -29,10 +35,36 @@ const { inserts } = vi.hoisted(() => ({
 }));
 vi.mock('@/lib/edit-tasks/slash-menu-items', () => ({
   slashMenuItems: [
-    { id: 'heading-1', label: 'Heading 1', insert: inserts['heading-1'] },
-    { id: 'heading-2', label: 'Heading 2', insert: vi.fn() },
-    { id: 'bullet-list', label: 'Bullet list', insert: inserts['bullet-list'] },
+    {
+      id: 'heading-1',
+      label: 'Heading 1',
+      description: 'Big section heading',
+      icon: 'h1',
+      group: 'basic',
+      insert: inserts['heading-1'],
+    },
+    {
+      id: 'heading-2',
+      label: 'Heading 2',
+      description: 'Medium section heading',
+      icon: 'h2',
+      group: 'basic',
+      insert: vi.fn(),
+    },
+    {
+      id: 'bullet-list',
+      label: 'Bullet list',
+      description: 'Create a simple bulleted list',
+      icon: 'bulletList',
+      group: 'lists',
+      insert: inserts['bullet-list'],
+    },
   ],
+  slashMenuGroupLabels: {
+    basic: 'Basic blocks',
+    lists: 'Lists',
+    advanced: 'Advanced',
+  },
 }));
 
 beforeEach(() => {

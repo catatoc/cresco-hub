@@ -130,4 +130,29 @@ describe('TaskEditorContainer', () => {
     expect(refresh).toHaveBeenCalled();
     expect(screen.queryByText(/editando/i)).not.toBeInTheDocument();
   });
+
+  it('does not fire a second save while one is already in flight', async () => {
+    // Hold the first save open so the second click happens during `saving=true`.
+    let resolveFirst!: (v: unknown) => void;
+    (globalThis.fetch as ReturnType<typeof vi.fn>).mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveFirst = (body) =>
+            resolve({ ok: true, status: 200, json: async () => body });
+        }),
+    );
+
+    const user = userEvent.setup();
+    render(<TaskEditorContainer blocks={[mkPara('Hi')]} taskId="t1" />);
+    await user.click(screen.getByRole('button', { name: /editar/i }));
+
+    const trigger = document.querySelector<HTMLButtonElement>('[data-testid="force-save"]');
+    await user.click(trigger!);
+    // Second click while the first is still pending — handleSave should bail
+    // immediately instead of issuing a second fetch.
+    await user.click(trigger!);
+
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1);
+    resolveFirst({ ok: true });
+  });
 });

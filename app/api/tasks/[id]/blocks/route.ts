@@ -16,7 +16,10 @@ const bodySchema = z.object({
   }).passthrough(),
 });
 
-type StagedError = Error & { stage?: 'delete' | 'append'; remaining?: number };
+type StagedError = Error & {
+  stage?: 'delete' | 'append' | 'update';
+  remaining?: number;
+};
 
 export async function GET(
   _req: Request,
@@ -32,12 +35,15 @@ export async function GET(
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
-  const ctx = await resolveContext(user.email);
+  const [ctx, task, blocks] = await Promise.all([
+    resolveContext(user.email),
+    getTask(id),
+    getBlocks(id),
+  ]);
+
   if (!ctx) {
     return NextResponse.json({ error: 'no-access' }, { status: 403 });
   }
-
-  const task = await getTask(id);
   if (!task) {
     return NextResponse.json({ error: 'not-found' }, { status: 404 });
   }
@@ -45,7 +51,6 @@ export async function GET(
     return NextResponse.json({ error: 'forbidden' }, { status: 403 });
   }
 
-  const blocks = await getBlocks(id);
   const content = extractPlainText(blocks, Number.POSITIVE_INFINITY);
   return NextResponse.json({ content });
 }
@@ -64,23 +69,25 @@ export async function PATCH(
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
-  const ctx = await resolveContext(user.email);
+  // resolveContext (member + customers) and getTask are independent — fire
+  // them together. The body parse is also CPU-only and runs concurrently
+  // while the network calls are in flight.
+  const [ctx, task, payload] = await Promise.all([
+    resolveContext(user.email),
+    getTask(id),
+    req.json().catch(() => null),
+  ]);
+
   if (!ctx) {
     return NextResponse.json({ error: 'no-access' }, { status: 403 });
   }
-
-  const task = await getTask(id);
   if (!task) {
     return NextResponse.json({ error: 'not-found' }, { status: 404 });
   }
   if (task.customerId !== ctx.customerId) {
     return NextResponse.json({ error: 'forbidden' }, { status: 403 });
   }
-
-  let payload: unknown;
-  try {
-    payload = await req.json();
-  } catch {
+  if (payload === null) {
     return NextResponse.json({ error: 'invalid-json' }, { status: 400 });
   }
   const parsed = bodySchema.safeParse(payload);
@@ -91,8 +98,8 @@ export async function PATCH(
   const blocks = proseMirrorToNotionBlocks(parsed.data.doc as Parameters<typeof proseMirrorToNotionBlocks>[0]);
 
   try {
-    const result = await replaceTaskBlocks(id, blocks);
-    return NextResponse.json({ ok: true, lastEditedTime: result.lastEditedTime });
+    await replaceTaskBlocks(id, blocks);
+    return NextResponse.json({ ok: true });
   } catch (rawErr) {
     const err = rawErr as StagedError;
     if (err.stage === 'delete') {
@@ -103,6 +110,9 @@ export async function PATCH(
     }
     if (err.stage === 'append') {
       return NextResponse.json({ error: 'append-failed' }, { status: 503 });
+    }
+    if (err.stage === 'update') {
+      return NextResponse.json({ error: 'update-failed' }, { status: 503 });
     }
     return NextResponse.json({ error: 'internal' }, { status: 500 });
   }

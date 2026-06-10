@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import type { EditorView } from 'prosemirror-view';
 import { toggleMark } from 'prosemirror-commands';
 import { Bold, Italic, Strikethrough, Code, Link as LinkIcon } from 'lucide-react';
@@ -25,6 +26,7 @@ export function InlineToolbar({ view, tick, onLinkRequest }: Props) {
   }, [view, tick]);
 
   if (!selectionInfo || !view) return null;
+  if (typeof document === 'undefined') return null;
 
   function run(name: 'bold' | 'italic' | 'strikethrough' | 'code') {
     if (!view) return;
@@ -42,7 +44,7 @@ export function InlineToolbar({ view, tick, onLinkRequest }: Props) {
 
   const coords = view.coordsAtPos(selectionInfo.from);
 
-  return (
+  return createPortal(
     <div
       role="toolbar"
       style={{
@@ -73,7 +75,8 @@ export function InlineToolbar({ view, tick, onLinkRequest }: Props) {
       <ToolbarButton label="Link" onClick={onLinkRequest} active={false}>
         <LinkIcon className="w-3.5 h-3.5" />
       </ToolbarButton>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

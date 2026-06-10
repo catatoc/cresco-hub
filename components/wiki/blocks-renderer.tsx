@@ -89,6 +89,28 @@ export function BlocksRenderer({ blocks }: { blocks: any[] }) {
                 <RenderRich rich={b.numbered_list_item.rich_text} />
               </li>
             );
+          case 'to_do': {
+            const checked = b.to_do?.checked === true;
+            return (
+              <div key={b.id} className="flex items-start gap-2 mb-1">
+                <span
+                  aria-hidden
+                  className={
+                    'mt-1 inline-block h-3.5 w-3.5 rounded-[3px] border-[1.5px] flex-shrink-0 ' +
+                    (checked ? 'bg-[#3f9f5c] border-[#3f9f5c]' : 'border-[#c9cbe8]')
+                  }
+                />
+                <p
+                  className={
+                    'text-[14px] leading-[1.65] m-0 break-words ' +
+                    (checked ? 'line-through text-[#8a8a91]' : '')
+                  }
+                >
+                  <RenderRich rich={b.to_do.rich_text} />
+                </p>
+              </div>
+            );
+          }
           case 'callout':
             return (
               <div

@@ -63,6 +63,7 @@ export function TaskEditorContainer({ blocks, taskId }: Props) {
   }, [mode, dirty, hasUnsupported, saving]);
 
   async function handleSave() {
+    if (saving) return;
     if (!editorRef.current && !isTestEnv()) return;
     if (hasUnsupported) {
       toast.error('Este tipo de bloque no se puede guardar todavía', {
@@ -88,6 +89,10 @@ export function TaskEditorContainer({ blocks, taskId }: Props) {
         } else if (stage === 'append-failed') {
           toast.error('No se pudo guardar', {
             description: 'No se pudo escribir los bloques nuevos. Reintenta.',
+          });
+        } else if (stage === 'update-failed') {
+          toast.error('No se pudo guardar', {
+            description: 'No se pudo actualizar parte del contenido. Reintenta.',
           });
         } else if (res.status === 401 || res.status === 403) {
           toast.error('No tienes acceso para guardar');

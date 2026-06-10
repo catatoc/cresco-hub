@@ -14,6 +14,7 @@ import { editTasksSchema } from '@/lib/edit-tasks/schema';
 import { editTasksInputRules } from '@/lib/edit-tasks/inputrules';
 import { editTasksKeymap } from '@/lib/edit-tasks/keymap';
 import { slashMenuPlugin } from '@/lib/edit-tasks/slash-menu-plugin';
+import { TaskItemView } from '@/lib/edit-tasks/task-item-view';
 import { SlashMenu } from './slash-menu';
 import { InlineToolbar } from './inline-toolbar';
 import { LinkPrompt } from './link-prompt';
@@ -109,6 +110,9 @@ export const TaskEditor = forwardRef<TaskEditorHandle, Props>(function TaskEdito
     });
     const view = new EditorView(hostRef.current, {
       state,
+      nodeViews: {
+        task_item: (node, editorView, getPos) => new TaskItemView(node, editorView, getPos),
+      },
       dispatchTransaction(tr) {
         const next = view.state.apply(tr);
         view.updateState(next);

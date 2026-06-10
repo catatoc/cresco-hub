@@ -36,10 +36,10 @@ describe('slashMenuItems', () => {
         'Heading 3',
         'Bullet list',
         'Numbered list',
-        'Task list',
+        'To-do list',
         'Quote',
         'Divider',
-        'Code block',
+        'Code',
         'Callout',
       ]),
     );

@@ -8,9 +8,27 @@ type Insert = (
   from: number,
 ) => void;
 
+export type SlashMenuIcon =
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'bulletList'
+  | 'numberedList'
+  | 'taskList'
+  | 'quote'
+  | 'divider'
+  | 'codeBlock'
+  | 'callout';
+
+export type SlashMenuGroup = 'basic' | 'lists' | 'advanced';
+
 export type SlashMenuItem = {
   id: string;
   label: string;
+  description: string;
+  icon: SlashMenuIcon;
+  group: SlashMenuGroup;
+  keywords?: string[];
   insert: Insert;
 };
 
@@ -89,14 +107,100 @@ const insertCallout: Insert = (state, dispatch, from) => {
 };
 
 export const slashMenuItems: SlashMenuItem[] = [
-  { id: 'heading-1', label: 'Heading 1', insert: setHeading(1) },
-  { id: 'heading-2', label: 'Heading 2', insert: setHeading(2) },
-  { id: 'heading-3', label: 'Heading 3', insert: setHeading(3) },
-  { id: 'bullet-list', label: 'Bullet list', insert: wrapBulletList },
-  { id: 'numbered-list', label: 'Numbered list', insert: wrapNumberedList },
-  { id: 'task-list', label: 'Task list', insert: wrapTaskList },
-  { id: 'quote', label: 'Quote', insert: wrapQuote },
-  { id: 'divider', label: 'Divider', insert: insertDivider },
-  { id: 'code-block', label: 'Code block', insert: setCodeBlock },
-  { id: 'callout', label: 'Callout', insert: insertCallout },
+  {
+    id: 'heading-1',
+    label: 'Heading 1',
+    description: 'Big section heading',
+    icon: 'h1',
+    group: 'basic',
+    keywords: ['h1', 'titulo', 'title'],
+    insert: setHeading(1),
+  },
+  {
+    id: 'heading-2',
+    label: 'Heading 2',
+    description: 'Medium section heading',
+    icon: 'h2',
+    group: 'basic',
+    keywords: ['h2', 'subtitulo', 'subtitle'],
+    insert: setHeading(2),
+  },
+  {
+    id: 'heading-3',
+    label: 'Heading 3',
+    description: 'Small section heading',
+    icon: 'h3',
+    group: 'basic',
+    keywords: ['h3'],
+    insert: setHeading(3),
+  },
+  {
+    id: 'bullet-list',
+    label: 'Bullet list',
+    description: 'Create a simple bulleted list',
+    icon: 'bulletList',
+    group: 'lists',
+    keywords: ['ul', 'unordered', 'lista'],
+    insert: wrapBulletList,
+  },
+  {
+    id: 'numbered-list',
+    label: 'Numbered list',
+    description: 'Create a list with numbering',
+    icon: 'numberedList',
+    group: 'lists',
+    keywords: ['ol', 'ordered', 'numero'],
+    insert: wrapNumberedList,
+  },
+  {
+    id: 'task-list',
+    label: 'To-do list',
+    description: 'Track tasks with checkboxes',
+    icon: 'taskList',
+    group: 'lists',
+    keywords: ['todo', 'task', 'check', 'pendiente'],
+    insert: wrapTaskList,
+  },
+  {
+    id: 'quote',
+    label: 'Quote',
+    description: 'Capture a quote',
+    icon: 'quote',
+    group: 'advanced',
+    keywords: ['cita', 'blockquote'],
+    insert: wrapQuote,
+  },
+  {
+    id: 'divider',
+    label: 'Divider',
+    description: 'Visually divide sections',
+    icon: 'divider',
+    group: 'advanced',
+    keywords: ['hr', 'linea', 'separator'],
+    insert: insertDivider,
+  },
+  {
+    id: 'code-block',
+    label: 'Code',
+    description: 'Capture a code snippet',
+    icon: 'codeBlock',
+    group: 'advanced',
+    keywords: ['codigo', 'pre'],
+    insert: setCodeBlock,
+  },
+  {
+    id: 'callout',
+    label: 'Callout',
+    description: 'Make writing stand out',
+    icon: 'callout',
+    group: 'advanced',
+    keywords: ['nota', 'note', 'info'],
+    insert: insertCallout,
+  },
 ];
+
+export const slashMenuGroupLabels: Record<SlashMenuGroup, string> = {
+  basic: 'Basic blocks',
+  lists: 'Lists',
+  advanced: 'Advanced',
+};
