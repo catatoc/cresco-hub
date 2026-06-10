@@ -13,6 +13,8 @@ const serverEnvSchema = z.object({
   NOTION_DB_WIKI: z.string().min(10),
   NOTION_DB_SPRINTS: z.string().min(10),
   NOTION_DB_TEST_USERS: z.string().min(10),
+  // opcional: la base Finance (pagos del portal) — si falta, la sección no aparece
+  NOTION_DB_FINANCE: z.string().min(10).optional(),
   NEXT_PUBLIC_APP_URL: z.string().url(),
 });
 

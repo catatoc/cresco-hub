@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 
-const PUBLIC_PATHS = ['/login', '/auth/callback', '/no-access', '/api/auth', '/privacy', '/terms'];
+// /api/portal hace su propia auth (Bearer token de la app móvil), no cookies
+const PUBLIC_PATHS = ['/login', '/auth/callback', '/auth/mobile', '/no-access', '/api/auth', '/api/portal', '/privacy', '/terms'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

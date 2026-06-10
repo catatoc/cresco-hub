@@ -9,11 +9,11 @@ const LAST_UPDATED = '29 de abril de 2026';
 
 export default function PrivacyPage() {
   return (
-    <article className="prose prose-neutral max-w-none">
-      <h1 className="text-3xl font-semibold tracking-[-0.02em] text-neutral-900 mb-2">
+    <article className="max-w-none">
+      <h1 className="text-3xl font-medium tracking-[-0.035em] text-[#1A1612] mb-2">
         Política de Privacidad
       </h1>
-      <p className="text-sm text-neutral-500 mb-10">Última actualización: {LAST_UPDATED}</p>
+      <p className="text-sm text-[#8C8377] mb-10">Última actualización: {LAST_UPDATED}</p>
 
       <Section title="1. Introducción">
         <p>
@@ -58,7 +58,7 @@ export default function PrivacyPage() {
           (perfil básico y correo). El uso de la información obtenida desde APIs de Google se adhiere a la{' '}
           <a
             href="https://developers.google.com/terms/api-services-user-data-policy"
-            className="underline underline-offset-2 hover:text-neutral-900"
+            className="underline underline-offset-2 decoration-[#7E9A80] text-[#2A3B2D] hover:text-[#3D5240]"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -88,7 +88,7 @@ export default function PrivacyPage() {
           Puedes revocar el acceso de crescō a tu cuenta de Google en cualquier momento desde{' '}
           <a
             href="https://myaccount.google.com/permissions"
-            className="underline underline-offset-2 hover:text-neutral-900"
+            className="underline underline-offset-2 decoration-[#7E9A80] text-[#2A3B2D] hover:text-[#3D5240]"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -110,7 +110,7 @@ export default function PrivacyPage() {
           Para cualquier duda sobre esta política o el manejo de tus datos, escríbenos a{' '}
           <a
             href="mailto:hola@recordarte.com"
-            className="underline underline-offset-2 hover:text-neutral-900"
+            className="underline underline-offset-2 decoration-[#7E9A80] text-[#2A3B2D] hover:text-[#3D5240]"
           >
             hola@recordarte.com
           </a>
@@ -124,8 +124,8 @@ export default function PrivacyPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mb-8">
-      <h2 className="text-base font-semibold tracking-tight text-neutral-900 mb-3">{title}</h2>
-      <div className="text-sm leading-relaxed text-neutral-700 space-y-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-2 [&_a]:text-neutral-900">
+      <h2 className="text-base font-medium tracking-[-0.02em] text-[#1A1612] mb-3">{title}</h2>
+      <div className="text-sm leading-relaxed text-[#5C544A] space-y-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-2 [&_strong]:text-[#1A1612] [&_strong]:font-medium [&_ul]:marker:text-[#7E9A80]">
         {children}
       </div>
     </section>

@@ -15,6 +15,7 @@ function parseTeamMember(row: any, fallbackEmail?: string): TeamMember {
     area: p.Area?.select?.name ?? null,
     customerIds: (p.Customers?.relation ?? []).map((r: { id: string }) => r.id),
     projectIds: (p.Projects?.relation ?? []).map((r: { id: string }) => r.id),
+    portalSignIn: p['Portal Sign In']?.checkbox ?? false,
   });
 }
 
@@ -64,19 +65,5 @@ export async function queryMembersByCustomerAndName(
   });
   return res.results
     .filter((r): r is any => 'properties' in r)
-    .map((row): TeamMember => {
-      const p = row.properties as Record<string, any>;
-      return teamMemberSchema.parse({
-        id: row.id,
-        name: p.Name?.title?.[0]?.plain_text ?? '',
-        email: p.Email?.email ?? '',
-        role:
-          typeof p.Role?.rich_text?.[0]?.plain_text === 'string'
-            ? p.Role.rich_text[0].plain_text
-            : null,
-        area: p.Area?.select?.name ?? null,
-        customerIds: (p.Customers?.relation ?? []).map((r: { id: string }) => r.id),
-        projectIds: (p.Projects?.relation ?? []).map((r: { id: string }) => r.id),
-      });
-    });
+    .map((row): TeamMember => parseTeamMember(row));
 }

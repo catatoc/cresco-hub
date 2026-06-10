@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { requireContext } from '@/lib/auth/require-context';
 import { Sidebar } from '@/components/shell/sidebar';
 import { MobileSidebar } from '@/components/shell/mobile-sidebar';
@@ -16,6 +17,8 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const ctx = await requireContext();
+  // los clientes viven en el portal, no en el hub interno
+  if (!ctx.isInternal) redirect('/portal');
   const currentSprint = await getCurrentSprint().catch(() => null);
   return (
     <>

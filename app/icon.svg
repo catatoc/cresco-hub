@@ -1,18 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#7384da"/>
-      <stop offset="1" stop-color="#5263c8"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="url(#g)"/>
+  <!-- crescō · la "c" en moss sobre arena, con el punto de la marca -->
+  <rect width="64" height="64" rx="14" fill="#EFEAE0"/>
   <path
     d="M44 22.5
        a13.5 13.5 0 1 0 0 19
        l-4.4 -3.7
        a8 8 0 1 1 0 -11.6 z"
-    fill="#fff"
+    fill="#3D5240"
     fill-rule="evenodd"
   />
-  <circle cx="48" cy="18" r="4.2" fill="#fff" opacity="0.95"/>
+  <circle cx="48" cy="18" r="4.2" fill="#7E9A80"/>
 </svg>

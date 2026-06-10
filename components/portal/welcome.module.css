@@ -1,0 +1,83 @@
+/* Bienvenida del portal del cliente — misma atmósfera que la bienvenida de
+   onboarding-cresco (escena oscura → handoff hacia la superficie clara). */
+.root{
+  --bg:#EFEAE0; --ink:#1A1612; --ink-soft:#5C544A; --muted:#8C8377;
+  --line:#D4CCBC; --accent:#3D5240; --moss-lt:#7E9A80;
+  --ease:cubic-bezier(.22,1,.36,1); --ease-soft:cubic-bezier(.4,0,.2,1);
+  position:fixed; inset:0; overflow:hidden; z-index:50;
+  background:#15110d; color:#EFEAE0;
+  font-family:var(--font-inter),'Inter',system-ui,-apple-system,sans-serif; -webkit-font-smoothing:antialiased;
+}
+.root *{box-sizing:border-box;margin:0;padding:0}
+
+/* ── living background (oscuro) ── */
+.atmos{position:absolute;inset:0;z-index:0;overflow:hidden;background:#15110d}
+.glow{position:absolute;border-radius:50%;filter:blur(60px)}
+.g1{width:62vw;height:62vw;background:radial-gradient(circle,rgba(61,82,64,.55),transparent 66%);opacity:.7;
+  top:-12vw;left:54vw;animation:drift1 22s ease-in-out infinite}
+.g2{width:46vw;height:46vw;background:radial-gradient(circle,rgba(61,82,64,.3),transparent 70%);opacity:.5;
+  bottom:-14vw;left:-8vw;animation:drift2 26s ease-in-out infinite}
+.grain{position:absolute;inset:0;opacity:.4;mix-blend-mode:overlay;
+  background-image:radial-gradient(rgba(239,234,224,.05) .5px,transparent .5px);background-size:3px 3px}
+.vig{position:absolute;inset:0;box-shadow:inset 0 0 26vw rgba(0,0,0,.5)}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-5vw,4vw) scale(1.08)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(6vw,-3vw) scale(1.12)}}
+
+/* ── wordmark ── */
+.mark{position:absolute;top:34px;left:40px;z-index:20;display:flex;align-items:center;gap:9px;
+  font-weight:500;font-size:17px;letter-spacing:-.03em;color:#EFEAE0;
+  opacity:0;transform:translateY(-6px);animation:markin 1s var(--ease) .3s forwards}
+.mark .dot{width:7px;height:7px;border-radius:50%;background:var(--moss-lt);animation:pulse 2.6s var(--ease) infinite}
+.mark .d{color:var(--moss-lt)}
+@keyframes markin{to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:.4;transform:scale(.82)}50%{opacity:1;transform:scale(1)}}
+@media(max-width:600px){.mark{top:24px;left:24px}}
+
+/* ── escenas ── */
+.stage{position:absolute;inset:0;z-index:10;display:grid;place-items:center;padding:8vh 7vw}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:8vh 7vw;pointer-events:none;opacity:0;visibility:hidden}
+.scene.active{opacity:1;visibility:visible;pointer-events:auto}
+.rise{opacity:0;transform:translateY(22px);filter:blur(10px)}
+.scene.active .rise{opacity:1;transform:none;filter:none;
+  transition:opacity .9s var(--ease) var(--d,0s),transform 1s var(--ease) var(--d,0s),filter .9s var(--ease) var(--d,0s)}
+.scene.leaving .rise{opacity:0;transform:translateY(-14px);filter:blur(7px);
+  transition:opacity .5s var(--ease-soft),transform .55s var(--ease-soft),filter .5s var(--ease-soft)}
+
+.line{font-weight:500;font-size:clamp(34px,5.4vw,66px);letter-spacing:-.04em;line-height:1.05;max-width:16ch;color:#F3EEE4}
+.line .ac{color:var(--moss-lt)}
+/* frases largas: tipografía menor y más aire, sin perder el tono de slide */
+.line.long{font-size:clamp(24px,3.6vw,42px);line-height:1.18;max-width:26ch;letter-spacing:-.03em}
+
+/* done · handoff */
+.ring{width:120px;height:120px;position:relative;margin-bottom:34px}
+.ring svg{transform:rotate(-90deg)}
+.ring .ctr{position:absolute;inset:0;display:grid;place-items:center;font-size:26px}
+.big{font-weight:500;font-size:clamp(32px,5vw,48px);letter-spacing:-.035em;line-height:1.05;color:#F3EEE4}
+.below{font-weight:300;font-size:clamp(16px,2.2vw,19px);color:rgba(239,234,224,.62);margin-top:18px;max-width:44ch}
+.adv{margin-top:44px;display:inline-flex;align-items:center;gap:11px;cursor:pointer;
+  background:var(--accent);border:.5pt solid var(--accent);color:#EFEAE0;border-radius:100px;padding:15px 30px;
+  font-family:inherit;font-size:15.5px;font-weight:500;letter-spacing:-.01em;transition:.4s var(--ease)}
+.adv:hover{transform:translateY(-2px);box-shadow:0 16px 40px -18px rgba(0,0,0,.6)}
+.adv:disabled{opacity:.65;cursor:default;transform:none;box-shadow:none}
+.adv .arr{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#EFEAE0;color:var(--accent);font-size:12px;transition:transform .3s}
+.adv:hover .arr{transform:translateX(2px)}
+
+/* progreso · la línea que crece */
+.progress{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:7px;
+  opacity:0;transition:opacity .8s var(--ease)}
+.progress.show{opacity:1}
+.progress .seg{width:34px;height:3px;border-radius:99px;background:rgba(239,234,224,.18);overflow:hidden;position:relative}
+.progress .seg::after{content:'';position:absolute;inset:0;background:var(--moss-lt);transform:scaleX(0);transform-origin:left;transition:transform .7s var(--ease)}
+.progress .seg.on::after{transform:scaleX(1)}
+
+.skip{position:absolute;top:34px;right:40px;z-index:20;background:none;border:none;font-family:inherit;font-size:13px;
+  color:rgba(239,234,224,.5);cursor:pointer;letter-spacing:-.005em;opacity:0;transition:opacity .8s var(--ease),color .3s}
+.skip.show{opacity:1}.skip:hover{color:#EFEAE0}
+@media(max-width:600px){.skip{top:24px;right:24px}}
+
+.hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:20;font-size:11px;
+  color:rgba(239,234,224,.4);letter-spacing:-.005em;opacity:0;transition:opacity 1s ease}
+.hint.show{opacity:.7}
+
+@media(prefers-reduced-motion:reduce){.root *{animation:none!important}.scene .rise{transition:opacity .3s!important}}

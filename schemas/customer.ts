@@ -18,6 +18,7 @@ export const customerSchema = z.object({
   icon: customerIconSchema.nullable(),
   status: customerStatusSchema.nullable(),
   type: customerTypeSchema.nullable(),
+  logo: z.string().nullable(),
 });
 
 export type Customer = z.infer<typeof customerSchema>;

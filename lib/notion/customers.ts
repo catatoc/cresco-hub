@@ -28,6 +28,7 @@ export async function getCustomer(id: string): Promise<Customer | null> {
       icon: parseIcon((page as any).icon),
       status: p.Status?.status?.name ?? null,
       type: p.Type?.select?.name ?? null,
+      logo: typeof p.Logo?.url === 'string' ? p.Logo.url : null,
     });
   } catch {
     return null;

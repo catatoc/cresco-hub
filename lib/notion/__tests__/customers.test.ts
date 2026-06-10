@@ -30,6 +30,7 @@ describe('getCustomer', () => {
       icon: { type: 'emoji', value: '🎯' },
       status: 'Active',
       type: 'Customer',
+      logo: null,
     });
   });
 

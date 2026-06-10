@@ -54,7 +54,7 @@ const minimalTask: Task = {
 };
 
 const membersWithDani = new Map<string, TeamMember>([
-  ['user-1', { id: 'user-1', name: 'Dani', email: 'd@x', role: null, area: null, customerIds: [], projectIds: [] }],
+  ['user-1', { id: 'user-1', name: 'Dani', email: 'd@x', role: null, area: null, customerIds: [], projectIds: [], portalSignIn: false }],
 ]);
 
 describe('serializeTasksJson — field mapping', () => {
