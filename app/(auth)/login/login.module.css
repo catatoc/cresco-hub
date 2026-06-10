@@ -37,6 +37,12 @@
 
 .range{position:absolute;left:0;right:0;bottom:0;width:100%;height:74%;z-index:3}
 .range svg{position:absolute;bottom:0;left:0;width:100%;height:100%}
+/* móvil/portrait: el slice centrado recorta la cima animada (x≈300-430 del
+   viewBox 1440) — ensanchamos y corremos el encuadre para que quede en cuadro */
+@media(max-width:840px){
+  .range{height:64%}
+  .range svg{width:260%;left:-20%}
+}
 .layer{will-change:transform;transition:transform .6s cubic-bezier(.2,.8,.3,1)}
 
 /* la luz que escala la cima · símbolo de crecer */
