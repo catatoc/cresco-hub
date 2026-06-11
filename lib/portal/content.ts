@@ -7,8 +7,10 @@
 //    quotes, divisores, imágenes y diagramas mermaid. Nada de child pages,
 //    code (salvo mermaid), embeds ni links a Notion (los rich text se aplanan
 //    a plain_text, así los links internos mueren ahí)
-//  - todo lo que está debajo del ÚLTIMO divisor de la página se trata como
-//    notas internas (referencias a repos, sub-páginas) y NO se expone
+//  - una sección bajo un heading "Interno" / "Notas internas" se omite entera
+//  - un colofón corto y sin headings tras el ÚLTIMO divisor (p. ej.
+//    "Referencia: docs/... en el repo") se trata como notas internas; un
+//    divisor estilístico en medio del contenido NO corta nada
 import { getNotion } from '@/lib/notion/client';
 import type { AppContext } from '@/lib/auth/context';
 
@@ -35,12 +37,38 @@ const KIND_OF: Record<string, ProjectBlock['kind']> = {
   callout: 'callout',
   quote: 'quote',
 };
+const HEADING_LEVEL: Record<string, number> = { heading_1: 1, heading_2: 2, heading_3: 3 };
+const HEADING_KINDS = new Set<ProjectBlock['kind']>(['h1', 'h2', 'h3']);
+
+// headings que marcan una sección solo-crescō (se compara sin emojis ni acentos)
+const norm = (s: string) =>
+  s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z\s]/g, '').trim();
+const INTERNAL_HEADINGS = new Set([
+  'interno', 'internal', 'notas internas', 'internal notes', 'solo cresco', 'referencias internas',
+]);
 
 /** Convierte los bloques top-level de la página del proyecto al modelo del portal. */
 export function parseProjectBlocks(blocks: any[]): ProjectBlock[] {
   const out: ProjectBlock[] = [];
+  let skipBelow: number | null = null; // nivel del heading "Interno" que estamos saltando
+
   for (const b of blocks) {
     const type: string = b?.type ?? '';
+
+    const level = HEADING_LEVEL[type];
+    if (level !== undefined) {
+      const text = richText(b, type);
+      if (skipBelow !== null && level <= skipBelow) skipBelow = null; // salió de la sección
+      if (INTERNAL_HEADINGS.has(norm(text))) {
+        skipBelow = level;
+        continue;
+      }
+      if (skipBelow !== null) continue;
+      if (text) out.push({ kind: KIND_OF[type]!, text });
+      continue;
+    }
+    if (skipBelow !== null) continue;
+
     if (type === 'divider') {
       out.push({ kind: 'divider', text: '' });
       continue;
@@ -72,9 +100,17 @@ export function parseProjectBlocks(blocks: any[]): ProjectBlock[] {
     }
   }
 
-  // lo que sigue al último divisor son notas internas → fuera (y el divisor también)
+  // colofón: si tras el último divisor solo queda un cierre corto y sin
+  // headings (referencias a repos, notas sueltas), se trata como interno.
+  // Un divisor estilístico con contenido real después no corta nada.
   const lastDivider = out.map((b) => b.kind).lastIndexOf('divider');
-  const visible = lastDivider >= 0 ? out.slice(0, lastDivider) : out;
+  let visible = out;
+  if (lastDivider >= 0) {
+    const tail = out.slice(lastDivider + 1);
+    if (tail.length <= 2 && !tail.some((b) => HEADING_KINDS.has(b.kind))) {
+      visible = out.slice(0, lastDivider);
+    }
+  }
 
   // un divisor al final sin contenido después no aporta nada
   while (visible.length && visible[visible.length - 1]!.kind === 'divider') visible.pop();

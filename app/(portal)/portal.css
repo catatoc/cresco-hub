@@ -344,3 +344,17 @@
 @media (prefers-reduced-motion: reduce) {
   .cp-page *, .cp-scene * { animation-duration: .01ms !important; }
 }
+
+/* ── error boundary (la montaña detrás; tarjeta glass con reintentar) ── */
+.cp-err { position: relative; z-index: 2; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+.cp-err-card { width: 420px; max-width: 100%; text-align: center; padding: 34px 36px 32px; border-radius: 22px;
+  background: rgba(247,243,234,.78); -webkit-backdrop-filter: blur(30px) saturate(1.15); backdrop-filter: blur(30px) saturate(1.15);
+  border: .5pt solid rgba(255,255,255,.6); }
+.cp-err-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--cp-clay); animation: cp-pulse 2.2s ease-in-out infinite; }
+.cp-err-card h2 { font-size: 21px; font-weight: 500; letter-spacing: -.03em; margin: 14px 0 0; }
+.cp-err-card p { font-size: 13.5px; font-weight: 300; color: var(--cp-ink-soft); margin: 8px 0 0; line-height: 1.55; }
+.cp-err-card button { margin-top: 22px; font: inherit; font-size: 14px; font-weight: 500; letter-spacing: -.01em;
+  color: var(--cp-paper); background: var(--cp-ink); border: none; border-radius: 100px; padding: 12px 30px; cursor: pointer;
+  transition: transform .2s var(--cp-ease), opacity .2s var(--cp-ease); }
+.cp-err-card button:hover { opacity: .92; }
+.cp-err-card button:active { transform: scale(.98); }

@@ -84,20 +84,50 @@ describe('parseProjectBlocks', () => {
     ]);
   });
 
-  it('corta todo lo que sigue al último divisor (notas internas)', () => {
+  it('corta el colofón corto sin headings tras el último divisor (notas internas)', () => {
     const out = parseProjectBlocks([
       { type: 'heading_2', heading_2: rt('Objetivo') },
       { type: 'paragraph', paragraph: rt('contenido') },
-      { type: 'divider', divider: {} },
-      { type: 'paragraph', paragraph: rt('más contenido') },
       { type: 'divider', divider: {} },
       { type: 'paragraph', paragraph: rt('Referencia: docs/audit en el repo') },
     ]);
     expect(out).toEqual([
       { kind: 'h2', text: 'Objetivo' },
       { kind: 'p', text: 'contenido' },
-      { kind: 'divider', text: '' },
-      { kind: 'p', text: 'más contenido' },
+    ]);
+  });
+
+  it('un divisor estilístico con contenido real después NO corta nada', () => {
+    const out = parseProjectBlocks([
+      { type: 'heading_2', heading_2: rt('Resumen ejecutivo') },
+      { type: 'quote', quote: rt('Sistema multicanal de recordatorios') },
+      { type: 'divider', divider: {} },
+      { type: 'heading_2', heading_2: rt('El problema hoy') },
+      { type: 'bulleted_list_item', bulleted_list_item: rt('20-30% de ausencias') },
+      { type: 'heading_2', heading_2: rt('Visión por fases') },
+      { type: 'paragraph', paragraph: rt('Fase 1 — Piloto') },
+    ]);
+    expect(out).toHaveLength(7);
+    expect(out[2]).toEqual({ kind: 'divider', text: '' });
+    expect(out[6]).toEqual({ kind: 'p', text: 'Fase 1 — Piloto' });
+  });
+
+  it('omite la sección bajo un heading "Interno" / "Notas internas" (con emoji y acentos)', () => {
+    const out = parseProjectBlocks([
+      { type: 'heading_2', heading_2: rt('Objetivo') },
+      { type: 'paragraph', paragraph: rt('visible') },
+      { type: 'heading_2', heading_2: rt('🔒 Notas internas') },
+      { type: 'paragraph', paragraph: rt('credenciales del server') },
+      { type: 'heading_3', heading_3: rt('sub-sección interna') },
+      { type: 'bulleted_list_item', bulleted_list_item: rt('secreto') },
+      { type: 'heading_2', heading_2: rt('Cierre') },
+      { type: 'paragraph', paragraph: rt('también visible') },
+    ]);
+    expect(out).toEqual([
+      { kind: 'h2', text: 'Objetivo' },
+      { kind: 'p', text: 'visible' },
+      { kind: 'h2', text: 'Cierre' },
+      { kind: 'p', text: 'también visible' },
     ]);
   });
 
