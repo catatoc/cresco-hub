@@ -1,13 +1,15 @@
 'use client';
 
-import { useState, useTransition, type CSSProperties } from 'react';
+import { useEffect, useState, useTransition, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { PortalScene } from './scene';
 import { Brand } from './brand';
+import { BriefMermaid } from './brief-mermaid';
 import { PortalTimeline, taskState } from './timeline';
-import { toggleMyTask } from '@/app/(portal)/actions';
+import { toggleMyTask, getProjectBrief } from '@/app/(portal)/actions';
 import { timelineGeom, TODAY, type PortalData, type PortalProject, type PortalTask, type DeckHealth } from '@/lib/portal/data';
 import type { PortalPayments } from '@/lib/portal/payments';
+import type { ProjectBlock } from '@/lib/portal/content';
 
 const HEALTH_LABEL: Record<DeckHealth, string> = { track: 'on track', risk: 'en riesgo', off: 'off track', block: 'bloqueado' };
 const TODAY_MS = Date.parse(TODAY + 'T00:00:00Z');
@@ -25,9 +27,71 @@ function Av({ initials, color, size = 30 }: { initials: string; color: string; s
   );
 }
 
+// El brief: los bloques de la página del proyecto en Notion, en lenguaje crescō
+function Brief({ blocks }: { blocks: ProjectBlock[] }) {
+  let num = 0;
+  return (
+    <>
+      {blocks.map((b, i) => {
+        const d = { '--d': `${0.05 + Math.min(i, 14) * 0.035}s` } as CSSProperties;
+        if (b.kind !== 'oli') num = 0;
+        switch (b.kind) {
+          case 'h1':
+          case 'h2':
+            return <div className="cp-bh cp-rb" style={d} key={i}>{b.text}</div>;
+          case 'h3':
+            return <div className="cp-bh3 cp-rb" style={d} key={i}>{b.text}</div>;
+          case 'li':
+            return <div className="cp-bli cp-rb" style={d} key={i}><i />{b.text}</div>;
+          case 'oli':
+            num += 1;
+            return <div className="cp-bli cp-rb" style={d} key={i}><span className="cp-bnum">{num}.</span>{b.text}</div>;
+          case 'callout':
+            return <div className="cp-bcall cp-rb" style={d} key={i}>{b.icon && <span className="cp-bico">{b.icon}</span>}<span>{b.text}</span></div>;
+          case 'quote':
+            return <div className="cp-bq cp-rb" style={d} key={i}>{b.text}</div>;
+          case 'mermaid':
+            return <div className="cp-rb" style={d} key={i}><BriefMermaid chart={b.text} /></div>;
+          case 'img':
+            return (
+              <figure className="cp-bimg cp-rb" style={d} key={i}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={b.url} alt={b.text || 'Imagen del proyecto'} loading="lazy" />
+                {b.text && <figcaption>{b.text}</figcaption>}
+              </figure>
+            );
+          case 'divider':
+            return <hr className="cp-bdiv" key={i} />;
+          default:
+            return <p className="cp-bp cp-rb" style={d} key={i}>{b.text}</p>;
+        }
+      })}
+    </>
+  );
+}
+
+function BriefSkeleton() {
+  const w = [60, 92, 84, 0, 40, 88, 76, 64];
+  return (
+    <div style={{ paddingTop: 6 }}>
+      {w.map((pct, i) =>
+        pct ? (
+          <span key={i} className="cp-sk" style={{ width: `${pct}%`, height: 12, display: 'block', marginBottom: 12 }} />
+        ) : (
+          <span key={i} style={{ display: 'block', height: 10 }} />
+        ),
+      )}
+    </div>
+  );
+}
+
 export function PortalHome({ data, payments }: { data: PortalData; payments: PortalPayments }) {
   const { projects, myTasks, meetings } = data;
   const [openId, setOpenId] = useState<string | null>(null);
+  const [sheetTasks, setSheetTasks] = useState(false); // brief ⇄ tareas dentro del drawer
+  // cache con timestamp: las urls de imagen firmadas por Notion expiran (~1h),
+  // así que un brief viejo se refresca en silencio al reabrir el proyecto
+  const [briefs, setBriefs] = useState<Record<string, { blocks: ProjectBlock[]; at: number }>>({});
   const [taskOpen, setTaskOpen] = useState<{ task: PortalTask; project: PortalProject } | null>(null);
   const [payOpen, setPayOpen] = useState(false);
   const [drawerClosing, setDrawerClosing] = useState(false);
@@ -39,7 +103,46 @@ export function PortalHome({ data, payments }: { data: PortalData; payments: Por
   const open = openId ? projects.find((p) => p.id === openId) ?? null : null;
   const isDone = (t: PortalTask) => doneOverride[t.id] ?? t.done;
 
-  const closeDrawer = () => { setDrawerClosing(true); setTimeout(() => { setOpenId(null); setDrawerClosing(false); }, 300); };
+  const BRIEF_STALE_MS = 10 * 60_000;
+  const cacheBrief = (id: string, blocks: ProjectBlock[]) =>
+    setBriefs((m) => ({ ...m, [id]: { blocks, at: Date.now() } }));
+
+  // prefetch de los briefs (secuencial, gentil con Notion): abrir es instantáneo
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      for (const p of projects) {
+        try {
+          const blocks = await getProjectBrief(p.id);
+          if (cancelled) return;
+          setBriefs((m) => (m[p.id] ? m : { ...m, [p.id]: { blocks, at: Date.now() } }));
+        } catch {
+          // al abrir el proyecto se reintenta
+        }
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // el brief se carga al abrir si el prefetch no llegó; sin brief → directo a tareas
+  const brief = open ? briefs[open.id]?.blocks : undefined;
+  const briefLoading = !!open && brief === undefined;
+  const briefEmpty = brief !== undefined && brief.length === 0;
+  const showTasks = sheetTasks || briefEmpty;
+
+  function openProject(p: PortalProject) {
+    setOpenId(p.id);
+    setSheetTasks(false);
+    const cached = briefs[p.id];
+    if (!cached || Date.now() - cached.at > BRIEF_STALE_MS) {
+      void getProjectBrief(p.id)
+        .then((blocks) => cacheBrief(p.id, blocks))
+        .catch(() => { if (!cached) cacheBrief(p.id, []); });
+    }
+  }
+
+  const closeDrawer = () => { setDrawerClosing(true); setTimeout(() => { setOpenId(null); setDrawerClosing(false); setSheetTasks(false); }, 300); };
   const closeTask = () => { setModalClosing(true); setTimeout(() => { setTaskOpen(null); setModalClosing(false); }, 280); };
   const closePay = () => { setPayClosing(true); setTimeout(() => { setPayOpen(false); setPayClosing(false); }, 280); };
 
@@ -102,7 +205,7 @@ export function PortalHome({ data, payments }: { data: PortalData; payments: Por
           {projects.map((p, i) => {
             const geom = timelineGeom(p);
             return (
-              <div className="cp-row cp-rb" key={p.id} style={{ '--d': `${0.3 + Math.min(i, 8) * 0.06}s` } as CSSProperties} onClick={() => setOpenId(p.id)}>
+              <div className="cp-row cp-rb" key={p.id} style={{ '--d': `${0.3 + Math.min(i, 8) * 0.06}s` } as CSSProperties} onClick={() => openProject(p)}>
                 <span className="cp-idx">{String(i + 1).padStart(2, '0')}</span>
                 <div className="cp-rowhead">
                   <div className="cp-info">
@@ -187,41 +290,58 @@ export function PortalHome({ data, payments }: { data: PortalData; payments: Por
         </div>
       </div>
 
-      {/* ── drawer: tareas del proyecto (lectura; las tuyas, marcables) ── */}
+      {/* ── drawer: brief del proyecto + sus tareas (lectura; las tuyas, marcables) ── */}
       {open && (
         <>
           <div className={`cp-scrim ${drawerClosing ? 'closing' : ''}`} onClick={closeDrawer} />
           <div className={`cp-sheet ${drawerClosing ? 'closing' : ''}`}>
             <div className="cp-shead">
-              <div className="cp-stop"><span className="cp-sl">Tareas del proyecto</span><button className="cp-x" onClick={closeDrawer}>×</button></div>
+              <div className="cp-stop"><span className="cp-sl">{showTasks ? 'Tareas del proyecto' : 'Tu proyecto'}</span><button className="cp-x" onClick={closeDrawer}>×</button></div>
               <h3>{open.name}</h3>
               <div className="cp-sm">
                 {openDone} de {open.tasks.length} listas{openLate ? <> · <b>{openLate} atrasada{openLate > 1 ? 's' : ''}</b></> : null}
               </div>
             </div>
-            <div className="cp-slist">
-              {open.tasks.map((t) => {
-                const done = isDone(t);
-                const late = overdue(t, done);
-                const st = done ? { cls: 'done', label: 'lista' } : late ? { cls: 'late', label: 'atrasada' } : taskState(t);
-                return (
-                  <div className={`cp-task ${done ? 'done' : ''}`} key={t.id}>
-                    <button className="cp-ck" disabled={!t.mine} onClick={() => toggle(t)} title={t.mine ? 'Marcar / desmarcar' : 'Esta la lleva crescō'}>
-                      {done ? '✓' : ''}
-                    </button>
-                    <div className="cp-tb">
-                      <div className="cp-tt">{t.title}</div>
-                      <div className="cp-tw">
-                        {t.assignee ? `${t.assignee.name} · ` : ''}
-                        {late ? <span className="late">⚠ venció {t.due ? fmtDue(t.due) : ''}</span> : t.due ? fmtDue(t.due) : 'sin fecha'}
+            {showTasks ? (
+              <div className="cp-slist">
+                {open.tasks.map((t) => {
+                  const done = isDone(t);
+                  const late = overdue(t, done);
+                  const st = done ? { cls: 'done', label: 'lista' } : late ? { cls: 'late', label: 'atrasada' } : taskState(t);
+                  return (
+                    <div className={`cp-task ${done ? 'done' : ''}`} key={t.id}>
+                      <button className="cp-ck" disabled={!t.mine} onClick={() => toggle(t)} title={t.mine ? 'Marcar / desmarcar' : 'Esta la lleva crescō'}>
+                        {done ? '✓' : ''}
+                      </button>
+                      <div className="cp-tb">
+                        <div className="cp-tt">{t.title}</div>
+                        <div className="cp-tw">
+                          {t.assignee ? `${t.assignee.name} · ` : ''}
+                          {late ? <span className="late">⚠ venció {t.due ? fmtDue(t.due) : ''}</span> : t.due ? fmtDue(t.due) : 'sin fecha'}
+                        </div>
                       </div>
+                      <span className={`cp-tpill ${st.cls}`}>{st.label}</span>
                     </div>
-                    <span className={`cp-tpill ${st.cls}`}>{st.label}</span>
-                  </div>
-                );
-              })}
-              {!open.tasks.length && <div className="cp-empty">Este proyecto todavía no tiene tareas.</div>}
-            </div>
+                  );
+                })}
+                {!open.tasks.length && <div className="cp-empty">Este proyecto todavía no tiene tareas.</div>}
+              </div>
+            ) : (
+              <div className="cp-brief">
+                {briefLoading ? <BriefSkeleton /> : <Brief blocks={brief ?? []} />}
+              </div>
+            )}
+            {(!showTasks || !briefEmpty) && (
+              <div className="cp-sfoot">
+                {showTasks ? (
+                  <button className="cp-sbtn ghost" onClick={() => setSheetTasks(false)}>← Volver al brief</button>
+                ) : (
+                  <button className="cp-sbtn" onClick={() => setSheetTasks(true)}>
+                    Ver tareas · {openDone} de {open.tasks.length} →
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </>
       )}

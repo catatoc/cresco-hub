@@ -244,6 +244,41 @@
 .cp-ck[disabled] { cursor: default; opacity: .55; }
 .cp-ck[disabled]:hover { border-color: var(--cp-line); }
 
+/* ── brief del proyecto (contenido de la página de Notion, en el drawer) ── */
+.cp-brief { flex: 1; overflow-y: auto; padding: 16px 24px 10px; }
+.cp-bh { font-size: 14.5px; font-weight: 600; letter-spacing: -.02em; color: var(--cp-ink); margin: 20px 0 6px; }
+.cp-brief > .cp-bh:first-child, .cp-brief > .cp-bcall:first-child { margin-top: 2px; }
+.cp-bh3 { font-size: 13px; font-weight: 600; color: var(--cp-ink-soft); margin: 15px 0 4px; }
+.cp-bp { font-size: 13.5px; font-weight: 300; line-height: 1.65; color: var(--cp-ink-soft); margin: 7px 0; }
+.cp-bli { display: flex; gap: 9px; font-size: 13.5px; font-weight: 300; line-height: 1.6; color: var(--cp-ink-soft); margin: 5px 0; }
+.cp-bli i { width: 4.5px; height: 4.5px; border-radius: 50%; background: var(--cp-moss-lt); flex: none; margin-top: 8px; }
+.cp-bli .cp-bnum { color: var(--cp-moss); font-weight: 500; flex: none; min-width: 15px; font-size: 12.5px; padding-top: 1px; }
+.cp-bcall { display: flex; gap: 10px; background: rgba(61,82,64,.07); border: .5pt solid rgba(61,82,64,.14);
+  border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.6; color: var(--cp-ink-soft); margin: 12px 0; }
+.cp-bcall .cp-bico { flex: none; font-size: 15px; line-height: 1.4; }
+.cp-bq { border-left: 2px solid var(--cp-moss-lt); padding-left: 12px; font-size: 13.5px; font-weight: 300;
+  font-style: italic; line-height: 1.6; color: var(--cp-ink-soft); margin: 10px 0; }
+.cp-bdiv { border: none; border-top: .5pt solid rgba(212,204,188,.8); margin: 16px 0; }
+.cp-bmm { margin: 12px 0; padding: 10px 6px; border: .5pt solid var(--cp-line-soft); border-radius: 12px;
+  background: rgba(255,255,255,.4); overflow-x: auto; display: flex; justify-content: center; }
+.cp-bmm svg { max-width: 100%; height: auto; }
+.cp-bmm-sk { display: block; width: 100%; height: 150px; border-radius: 12px; margin: 12px 0; }
+.cp-bimg { margin: 12px 0; }
+.cp-bimg img { display: block; width: 100%; height: auto; border-radius: 12px; border: .5pt solid var(--cp-line-soft); }
+.cp-bimg figcaption { font-size: 11.5px; color: var(--cp-muted); margin-top: 6px; text-align: center; }
+.cp-sfoot { position: relative; padding: 13px 24px calc(15px + env(safe-area-inset-bottom));
+  border-top: .5pt solid rgba(212,204,188,.6); background: rgba(247,243,234,.7); }
+/* fade sutil: insinúa que el brief sigue debajo del botón */
+.cp-sfoot::before { content: ''; position: absolute; left: 0; right: 0; top: -30px; height: 30px;
+  background: linear-gradient(to bottom, rgba(247,243,234,0), rgba(247,243,234,.85)); pointer-events: none; }
+.cp-sbtn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 100px;
+  border: .5pt solid var(--cp-ink); background: var(--cp-ink); color: var(--cp-paper); font-family: inherit;
+  font-size: 13.5px; font-weight: 500; letter-spacing: -.01em; padding: 12px 18px; cursor: pointer;
+  transition: transform .25s var(--cp-ease), opacity .25s var(--cp-ease); }
+.cp-sbtn:hover { opacity: .92; }
+.cp-sbtn:active { transform: scale(.99); }
+.cp-sbtn.ghost { background: transparent; border-color: var(--cp-line); color: var(--cp-ink-soft); }
+
 /* ── modal de tarea (clic en punto de la línea) ── */
 @keyframes cp-tmin { from { opacity: 0; transform: translateY(14px) scale(.985) } to { opacity: 1; transform: none } }
 @keyframes cp-tmout { from { opacity: 1; transform: none } to { opacity: 0; transform: translateY(12px) scale(.985) } }
