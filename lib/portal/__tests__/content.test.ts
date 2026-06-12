@@ -22,7 +22,7 @@ const ctx = {
   projectIds: [],
   isAdmin: false,
   isInternal: false,
-  portalSignIn: true,
+  portalSignIn: true, portalOnboarding: true,
   memberGender: null,
 } satisfies AppContext;
 

@@ -41,7 +41,7 @@ describe('findMemberByEmail', () => {
       area: 'Design',
       customerIds: ['customer-123', 'customer-456'],
       projectIds: ['proj-A', 'proj-B'],
-      portalSignIn: false,
+      portalSignIn: false, portalOnboarding: false,
       gender: null,
     });
     expect(mockNotion.dataSources.query).toHaveBeenCalledWith({

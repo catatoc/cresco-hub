@@ -26,5 +26,5 @@ export default async function PortalPage() {
     loadPortalPayments(ctx),
     loadPortalDocuments(ctx),
   ]);
-  return <PortalHome data={data} payments={payments} documents={documents} />;
+  return <PortalHome data={data} payments={payments} documents={documents} showTour={!ctx.portalOnboarding} />;
 }

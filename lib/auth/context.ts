@@ -30,6 +30,8 @@ export type AppContext = {
   isInternal: boolean;
   /** checkbox "Portal Sign In" en Team — false = nunca ha entrado al portal (ve la bienvenida) */
   portalSignIn: boolean;
+  /** checkbox "Portal Onboarding Check" en Team — false = no ha visto el tour del portal */
+  portalOnboarding: boolean;
 };
 
 export async function resolveContext(email: string | null): Promise<AppContext | null> {
@@ -65,5 +67,6 @@ export async function resolveContext(email: string | null): Promise<AppContext |
     isAdmin,
     isInternal: email.toLowerCase().endsWith(INTERNAL_DOMAIN),
     portalSignIn: member.portalSignIn,
+    portalOnboarding: member.portalOnboarding,
   };
 }

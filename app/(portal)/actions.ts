@@ -2,7 +2,7 @@
 
 import { requireContext } from '@/lib/auth/require-context';
 import { toggleTaskForMember } from '@/lib/portal/toggle';
-import { markPortalSignIn } from '@/lib/portal/welcome';
+import { markPortalSignIn, markPortalOnboarding } from '@/lib/portal/welcome';
 import { loadProjectContent, type ProjectBlock } from '@/lib/portal/content';
 import { loadProposalContent } from '@/lib/portal/documents';
 
@@ -32,4 +32,11 @@ export async function getProjectBrief(projectId: string): Promise<ProjectBlock[]
 export async function getProposal(): Promise<{ title: string; blocks: ProjectBlock[] } | null> {
   const ctx = await requireContext();
   return loadProposalContent(ctx);
+}
+
+// El cliente terminó (o saltó) el tour de coachmarks → marca
+// "Portal Onboarding Check" en su página de Team.
+export async function completePortalTour(): Promise<{ ok: boolean }> {
+  const ctx = await requireContext();
+  return markPortalOnboarding(ctx);
 }

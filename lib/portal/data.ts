@@ -93,7 +93,7 @@ function pillFromStatus(s: string | null): string {
   switch (s) {
     case 'In Progress': return 'en curso';
     case 'Paused': return 'en pausa';
-    case 'Planning': case 'Backlog': return 'arrancando';
+    case 'Starting': case 'Planning': case 'Backlog': return 'arrancando';
     default: return (s ?? 'en curso').toLowerCase();
   }
 }
@@ -216,10 +216,10 @@ export async function loadPortalData(ctx: AppContext): Promise<PortalData> {
     ),
   ]);
 
-  // proyectos visibles para el cliente: en curso y en pausa
+  // proyectos visibles para el cliente: arrancando, en curso y en pausa
   const visible = projRows.filter((r: any) => {
     const s = r.properties.Status?.status?.name ?? null;
-    return s === 'In Progress' || s === 'Paused';
+    return s === 'In Progress' || s === 'Paused' || s === 'Starting';
   });
   const projects = await Promise.all(
     visible.map(async (row: any) => {

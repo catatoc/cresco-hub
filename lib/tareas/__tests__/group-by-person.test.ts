@@ -11,7 +11,7 @@ const member = (id: string, name: string): TeamMember => ({
   area: null,
   customerIds: [],
   projectIds: [],
-  portalSignIn: false,
+  portalSignIn: false, portalOnboarding: false,
   gender: null,
 });
 

@@ -6,6 +6,7 @@ import { PortalScene } from './scene';
 import { Brand } from './brand';
 import { Brief, BriefSkeleton } from './brief';
 import { DocumentsCapsule } from './capsule';
+import { PortalTour } from './tour';
 import { PortalTimeline, taskState } from './timeline';
 import { toggleMyTask, getProjectBrief } from '@/app/(portal)/actions';
 import { timelineGeom, TODAY, type PortalData, type PortalProject, type PortalTask, type DeckHealth } from '@/lib/portal/data';
@@ -29,7 +30,7 @@ function Av({ initials, color, size = 30 }: { initials: string; color: string; s
   );
 }
 
-export function PortalHome({ data, payments, documents }: { data: PortalData; payments: PortalPayments; documents: PortalDocuments }) {
+export function PortalHome({ data, payments, documents, showTour }: { data: PortalData; payments: PortalPayments; documents: PortalDocuments; showTour: boolean }) {
   const { projects, myTasks, meetings } = data;
   const [openId, setOpenId] = useState<string | null>(null);
   const [sheetTasks, setSheetTasks] = useState(false); // brief ⇄ tareas dentro del drawer
@@ -106,7 +107,7 @@ export function PortalHome({ data, payments, documents }: { data: PortalData; pa
         <div className="cp-topbar cp-r" style={{ '--d': '.04s' } as CSSProperties}>
           <Brand logo={data.customerLogo} name={data.customerName} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div className="cp-ucard">
+            <div className="cp-ucard" id="cp-t-user">
               <Av initials={data.memberName.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase()} color="#4A5C6B" />
               <div>
                 <div className="cp-unm">{data.memberName}</div>
@@ -134,7 +135,7 @@ export function PortalHome({ data, payments, documents }: { data: PortalData; pa
         <DocumentsCapsule payments={payments} documents={documents} />
 
         {/* ── board de proyectos ── */}
-        <div className="cp-glass cp-rb" style={{ '--d': '.22s' } as CSSProperties}>
+        <div className="cp-glass cp-rb" id="cp-t-board" style={{ '--d': '.22s' } as CSSProperties}>
           <div className="cp-ghead">
             <span className="cp-ttl">
               Tus proyectos <span>· {projects.length} en curso</span>
@@ -178,7 +179,7 @@ export function PortalHome({ data, payments, documents }: { data: PortalData; pa
 
         {/* ── tus tareas + tus reuniones ── */}
         <div className="cp-lower">
-          <div className="cp-glass cp-rb" style={{ '--d': '.4s' } as CSSProperties}>
+          <div className="cp-glass cp-rb" id="cp-t-tareas" style={{ '--d': '.4s' } as CSSProperties}>
             <div className="cp-ghead">
               <span className="cp-ttl">Tus tareas con crescō <span>· {myOpen} abierta{myOpen !== 1 ? 's' : ''}</span></span>
             </div>
@@ -204,7 +205,7 @@ export function PortalHome({ data, payments, documents }: { data: PortalData; pa
             {myTasks.length > 0 && <div className="cp-hint">Solo tú puedes marcar estas — son tuyas.</div>}
           </div>
 
-          <div className="cp-glass cp-rb" style={{ '--d': '.48s' } as CSSProperties}>
+          <div className="cp-glass cp-rb" id="cp-t-reuniones" style={{ '--d': '.48s' } as CSSProperties}>
             <div className="cp-ghead">
               <span className="cp-ttl">Tus reuniones <span>· resúmenes</span></span>
               <Link className="cp-seeall" href="/portal/reuniones">ver todas →</Link>
@@ -228,6 +229,8 @@ export function PortalHome({ data, payments, documents }: { data: PortalData; pa
 
         </div>
       </div>
+
+      <PortalTour autoStart={showTour} />
 
       {/* ── drawer: brief del proyecto + sus tareas (lectura; las tuyas, marcables) ── */}
       {open && (

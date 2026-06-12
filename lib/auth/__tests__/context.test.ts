@@ -34,7 +34,7 @@ describe('resolveContext', () => {
 
   it('returns null when member has no customerIds', async () => {
     vi.mocked(findMemberByEmail).mockResolvedValueOnce({
-      id: 'm-1', name: 'Dani', email: 'd@x.com', role: null, area: null, customerIds: [], projectIds: [], portalSignIn: false, gender: null,
+      id: 'm-1', name: 'Dani', email: 'd@x.com', role: null, area: null, customerIds: [], projectIds: [], portalSignIn: false, portalOnboarding: false, gender: null,
     });
     const ctx = await resolveContext('d@x.com');
     expect(ctx).toBeNull();
@@ -43,7 +43,7 @@ describe('resolveContext', () => {
   it('returns null when no customers can be retrieved', async () => {
     vi.mocked(findMemberByEmail).mockResolvedValueOnce({
       id: 'm-1', name: 'Dani', email: 'd@x.com', role: null, area: null,
-      customerIds: ['customer-123'], projectIds: ['p-1'], portalSignIn: false, gender: null,
+      customerIds: ['customer-123'], projectIds: ['p-1'], portalSignIn: false, portalOnboarding: false, gender: null,
     });
     vi.mocked(getCustomers).mockResolvedValueOnce([]);
     const ctx = await resolveContext('d@x.com');
@@ -53,7 +53,7 @@ describe('resolveContext', () => {
   it('returns context with first customer when no cookie is set', async () => {
     vi.mocked(findMemberByEmail).mockResolvedValueOnce({
       id: 'm-1', name: 'Dani', email: 'd@x.com', role: null, area: null,
-      customerIds: ['customer-123'], projectIds: ['p-1'], portalSignIn: false, gender: null,
+      customerIds: ['customer-123'], projectIds: ['p-1'], portalSignIn: false, portalOnboarding: false, gender: null,
     });
     vi.mocked(getCustomers).mockResolvedValueOnce([
       {
@@ -82,6 +82,7 @@ describe('resolveContext', () => {
       isAdmin: false,
       isInternal: false,
       portalSignIn: false,
+      portalOnboarding: false,
       memberGender: null,
     });
   });
@@ -89,7 +90,7 @@ describe('resolveContext', () => {
   it('picks selected customer from cookie when valid', async () => {
     vi.mocked(findMemberByEmail).mockResolvedValueOnce({
       id: 'm-1', name: 'Dani', email: 'd@x.com', role: null, area: null,
-      customerIds: ['c-1', 'c-2'], projectIds: [], portalSignIn: false, gender: null,
+      customerIds: ['c-1', 'c-2'], projectIds: [], portalSignIn: false, portalOnboarding: false, gender: null,
     });
     vi.mocked(getCustomers).mockResolvedValueOnce([
       { id: 'c-1', name: 'A', icon: null, status: null, type: null, logo: null },
@@ -106,7 +107,7 @@ describe('resolveContext', () => {
   it('falls back to first customer when cookie id is not in member list', async () => {
     vi.mocked(findMemberByEmail).mockResolvedValueOnce({
       id: 'm-1', name: 'Dani', email: 'd@x.com', role: null, area: null,
-      customerIds: ['c-1', 'c-2'], projectIds: [], portalSignIn: false, gender: null,
+      customerIds: ['c-1', 'c-2'], projectIds: [], portalSignIn: false, portalOnboarding: false, gender: null,
     });
     vi.mocked(getCustomers).mockResolvedValueOnce([
       { id: 'c-1', name: 'A', icon: null, status: null, type: null, logo: null },

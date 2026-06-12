@@ -153,7 +153,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
 
   return (
     <>
-      <div className="cp-capsule-wrap cp-rb" style={{ '--d': '.17s' } as React.CSSProperties}>
+      <div className="cp-capsule-wrap cp-rb" id="cp-t-capsula" style={{ '--d': '.17s' } as React.CSSProperties}>
         <div className="cp-capsule" ref={capRef} onMouseLeave={() => setLens(null)}>
           {lens && <span className="cp-lens" style={{ left: lens.left, width: lens.width }} />}
           {chips.map((c) => (
