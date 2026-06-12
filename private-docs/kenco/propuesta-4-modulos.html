@@ -1011,8 +1011,8 @@
   @media print {
     /* el body en pantalla es flex-row (deck): en papel debe apilar las páginas */
     body { display: block; padding: 0; background: white; }
-    .page { box-shadow: none; border: none; page-break-after: always; }
-    .phase-page,
+    .page { box-shadow: none; border: none; page-break-after: auto; }
+    .phase-page { display: none !important; }
     body.view-phase .onepager { display: flex !important; }
     .tl-row.clickable {
       cursor: default;
@@ -1057,7 +1057,7 @@
       <div class="stat"><span class="l">Inicio</span><span class="v">1 ago <em>2026</em></span></div>
       <div class="stat"><span class="l">Entrega</span><span class="v">31 ene <em>2027</em></span></div>
       <div class="stat"><span class="l">Módulos</span><span class="v">4 <em>+ Brain</em></span></div>
-      <div class="stat"><span class="l">Inversión</span><span class="v">USD <em>15.000</em></span></div>
+      <div class="stat"><span class="l">Inversión</span><span class="v">USD <em>18.000</em></span></div>
     </div>
   </div>
 
@@ -1116,7 +1116,7 @@
         <div class="tl-bar-track">
           <div class="tl-bar big" style="left:0%;width:33.33%">ago–sep</div>
         </div>
-        <span class="tl-amt"><span class="pct">25%</span>$3.750</span>
+        <span class="tl-amt"><span class="pct">25%</span>$4.500</span>
       </div>
 
       <div class="tl-row">
@@ -1124,7 +1124,7 @@
         <div class="tl-bar-track">
           <div class="tl-bar" style="left:33.33%;width:33.34%">oct–nov</div>
         </div>
-        <span class="tl-amt"><span class="pct">25%</span>$3.750</span>
+        <span class="tl-amt"><span class="pct">25%</span>$4.500</span>
       </div>
 
       <div class="tl-row">
@@ -1132,7 +1132,7 @@
         <div class="tl-bar-track">
           <div class="tl-bar" style="left:66.67%;width:16.66%">dic</div>
         </div>
-        <span class="tl-amt"><span class="pct">25%</span>$3.750</span>
+        <span class="tl-amt"><span class="pct">25%</span>$4.500</span>
       </div>
 
       <div class="tl-row">
@@ -1140,7 +1140,7 @@
         <div class="tl-bar-track">
           <div class="tl-bar" style="left:83.33%;width:16.67%">ene</div>
         </div>
-        <span class="tl-amt"><span class="pct">25%</span>$3.750</span>
+        <span class="tl-amt"><span class="pct">25%</span>$4.500</span>
       </div>
 
       <div class="tl-row">
@@ -1175,8 +1175,8 @@
       <div class="inversion-eyebrow">Inversión</div>
       <div class="inversion-grid">
         <div class="inversion-price">
-          <div class="price-amount"><span class="price-currency">USD</span>15.000<span class="price-rate"> total</span></div>
-          <div class="price-meta">6 meses · 4 módulos · USD 3.750 por módulo · pago contra firma</div>
+          <div class="price-amount"><span class="price-currency">USD</span>18.000<span class="price-rate"> total</span></div>
+          <div class="price-meta">6 meses · 4 módulos · USD 4.500 por módulo · pago contra firma</div>
         </div>
         <div class="inversion-team">
           <div class="inversion-label">El alcance</div>
@@ -1190,7 +1190,7 @@
         </div>
       </div>
       <p class="inversion-note">
-        <em>Cada módulo se libera contra firma del entregable: USD 3.750 por módulo firmado. El Kenco Brain (listo el 1 de agosto) y la formación continua van incluidos sin costo adicional. Kenco escoge los módulos 2, 3 y 4 del menú de departamentos antes del arranque — y puede reordenar su secuencia según prioridad comercial.</em>
+        <em>Cada módulo se libera contra firma del entregable: USD 4.500 por módulo firmado. El Kenco Brain (listo el 1 de agosto) y la formación continua van incluidos sin costo adicional. Kenco escoge los módulos 2, 3 y 4 del menú de departamentos antes del arranque — y puede reordenar su secuencia según prioridad comercial.</em>
       </p>
     </div>
   </div>
@@ -1300,7 +1300,7 @@
       <span class="phase-title">Imprenta digital</span>
       <span class="phase-status">primero</span>
     </div>
-    <span class="phase-subtitle">El esqueleto del sistema · complejidad alta · ago–sep · 2 meses · 25% · USD 3.750</span>
+    <span class="phase-subtitle">El esqueleto del sistema · complejidad alta · ago–sep · 2 meses · 25% · USD 4.500</span>
   </div>
 
   <div class="phase-mini-timeline">
@@ -1347,7 +1347,7 @@
   <div class="phase-section">
     <div class="phase-section-lbl">Inversión</div>
     <div class="phase-section-body">
-      <strong>USD 3.750</strong> · 25% del proyecto · liberado contra firma del entregable.
+      <strong>USD 4.500</strong> · 25% del proyecto · liberado contra firma del entregable.
     </div>
   </div>
 
@@ -1381,7 +1381,7 @@
       <span class="phase-title">El menú</span>
       <span class="phase-status">escoge 3</span>
     </div>
-    <span class="phase-subtitle">Kenco escoge 3 de estos 4 departamentos · oct–ene · USD 3.750 por módulo</span>
+    <span class="phase-subtitle">Kenco escoge 3 de estos 4 departamentos · oct–ene · USD 4.500 por módulo</span>
   </div>
 
   <div class="phase-mini-timeline">
@@ -1446,7 +1446,7 @@
   <div class="phase-section">
     <div class="phase-section-lbl">Inversión</div>
     <div class="phase-section-body">
-      <strong>USD 3.750 por módulo</strong> (3 módulos · 75% del proyecto) · cada uno liberado contra firma de su entregable. Si un módulo no cierra, el siguiente no arranca.
+      <strong>USD 4.500 por módulo</strong> (3 módulos · 75% del proyecto) · cada uno liberado contra firma de su entregable. Si un módulo no cierra, el siguiente no arranca.
     </div>
   </div>
 
