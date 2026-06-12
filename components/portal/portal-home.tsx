@@ -127,7 +127,7 @@ export function PortalHome({ data, payments, documents }: { data: PortalData; pa
 
         <div className="cp-greet cp-rb" style={{ '--d': '.12s' } as CSSProperties}>
           <h1>Hola, {data.firstName}.</h1>
-          <p>Tu proyecto es ahora también <b>el nuestro</b> — estamos muy felices de acompañarte en el desarrollo tecnológico y con todo lo que esté a nuestro alcance para impulsarlo.</p>
+          <p>Este es el estado de tu proyecto con <b>crescō</b>.</p>
         </div>
 
         {/* ── la cápsula: documentos del cliente (pagos · propuesta · accesos · infra) ── */}

@@ -68,7 +68,7 @@
 
 .cp-greet { padding: 0 26px; margin-bottom: 22px; }
 .cp-greet h1 { font-weight: 500; font-size: clamp(26px, 3.6vw, 34px); letter-spacing: -.04em; margin: 0; }
-.cp-greet p { font-weight: 300; font-size: 14.5px; color: var(--cp-ink-soft); margin: 6px 0 0; max-width: 62ch; line-height: 1.55; }
+.cp-greet p { font-weight: 300; font-size: 14.5px; color: var(--cp-ink-soft); margin: 6px 0 0; }
 .cp-greet p b { font-weight: 500; color: var(--cp-ink); }
 
 /* ── glass ── */

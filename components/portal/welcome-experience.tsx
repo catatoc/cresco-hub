@@ -116,7 +116,7 @@ export function WelcomeExperience({ firstName, gender = null }: { firstName: str
         <section className={cls(2)}>
           <div className={styles.rise} style={{ ['--d' as string]: '.2s' }}>
             <div className={`${styles.line} ${styles.long}`}>
-              Tu proyecto es ahora también <span className={styles.ac}>el nuestro</span> — estamos muy felices de acompañarte y ayudarte con la parte tecnológica y todo lo que podamos aportar.
+              Tu proyecto es ahora también <span className={styles.ac}>el nuestro</span> — estamos muy felices de acompañarte en el desarrollo tecnológico y con todo lo que esté a nuestro alcance para impulsarlo.
             </div>
           </div>
         </section>
