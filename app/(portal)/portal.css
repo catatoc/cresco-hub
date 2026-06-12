@@ -446,3 +446,15 @@
   .cp-svc { grid-template-columns: 1fr auto; }
   .cp-svc-bar { display: none; }
 }
+
+/* simulador de infraestructura: slider de usuarios activos */
+.cp-sim { padding: 2px 0 14px; border-bottom: .5pt solid rgba(212,204,188,.45); margin-bottom: 4px; }
+.cp-sim-range { width: 100%; accent-color: var(--cp-moss); cursor: pointer; height: 22px; }
+.cp-sim-stops { display: flex; justify-content: space-between; margin-top: 2px; }
+.cp-sim-stop { border: 0; background: transparent; font: inherit; font-size: 10px; font-weight: 500;
+  color: var(--cp-muted); padding: 3px 6px; border-radius: 99px; cursor: pointer;
+  transition: color .25s var(--cp-ease), background .25s var(--cp-ease); font-feature-settings: "tnum" 1; }
+.cp-sim-stop:hover { color: var(--cp-ink-soft); }
+.cp-sim-stop.on { color: var(--cp-moss-deep); background: rgba(218,226,217,.8); font-weight: 600; }
+.cp-svc-bar i { transition: width .45s var(--cp-ease); }
+.cp-infra-big, .cp-svc-amt { transition: opacity .2s var(--cp-ease); }

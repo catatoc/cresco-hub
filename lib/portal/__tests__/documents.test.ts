@@ -10,7 +10,8 @@ const mockNotion = { dataSources: { query: vi.fn() }, blocks: { children: { list
 import { parseTestUserRow, parseInfraRow, monthlyOf, hostOf, loadPortalDocuments } from '../documents';
 import type { AppContext } from '@/lib/auth/context';
 
-const ctx = { customerId: 'customer-amedi', memberId: 'm-1' } as AppContext;
+// customerName sin stack en el repo → ejercita el camino de Finance/Notion
+const ctx = { customerId: 'customer-x', memberId: 'm-1', customerName: 'distribuidora lara' } as AppContext;
 
 beforeEach(() => {
   mockNotion.dataSources.query.mockReset();
@@ -127,5 +128,40 @@ describe('loadPortalDocuments', () => {
     expect(docs.infra?.items.map((i) => i.name)).toEqual(['Render · API']);
     expect(docs.infra?.monthlyLabel).toBe('$19');
     expect(docs.infra?.yearlyLabel).toBe('$228');
+  });
+});
+
+describe('buildInfraFromStack + stacks del repo', () => {
+  it('amedi: el baseline cuadra y la matriz es monótona no-decreciente', async () => {
+    const { findInfraStack } = await import('../infra-stacks');
+    const { buildInfraFromStack } = await import('../documents');
+    const stack = findInfraStack('amedi salud');
+    expect(stack).not.toBeNull();
+    const infra = buildInfraFromStack(stack!);
+
+    // "hoy" (~200 usuarios): 7+19+20+25+15+8+1.50
+    expect(infra.monthlyLabel).toBe('$95.50');
+    expect(infra.sim?.stops[0]).toBe(200);
+
+    // crecer en usuarios nunca abarata el total (los tiers solo suben)
+    const totals = infra.sim!.totalByStop;
+    for (let i = 1; i < totals.length; i++) expect(totals[i]!).toBeGreaterThanOrEqual(totals[i - 1]!);
+    // y la matriz de cada servicio acompaña los escalones
+    for (const s of infra.sim!.items) expect(s.byStop).toHaveLength(infra.sim!.stops.length);
+  });
+
+  it('clientes sin stack en el repo no traen simulador', async () => {
+    const { findInfraStack } = await import('../infra-stacks');
+    expect(findInfraStack('distribuidora lara')).toBeNull();
+    expect(findInfraStack('mogos logística')).toBeNull();
+  });
+
+  it('un cliente con stack usa el modelo aunque Finance esté configurada', async () => {
+    env.NOTION_DB_FINANCE = 'finance-db';
+    mockNotion.dataSources.query.mockResolvedValue({ results: [], has_more: false });
+    const amediCtx = { ...ctx, customerName: 'amedi salud' } as AppContext;
+    const docs = await loadPortalDocuments(amediCtx);
+    expect(docs.infra?.sim).not.toBeNull();
+    expect(docs.infra?.monthlyLabel).toBe('$95.50');
   });
 });

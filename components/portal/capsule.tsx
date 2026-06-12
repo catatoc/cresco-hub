@@ -87,6 +87,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
   const [closing, setClosing] = useState(false);
   // propuesta lazy: undefined = sin pedir · null = no hay · objeto = lista
   const [proposal, setProposal] = useState<{ title: string; blocks: ProjectBlock[] } | null | undefined>(undefined);
+  const [stop, setStop] = useState(0); // escalón del simulador (0 = hoy)
   const capRef = useRef<HTMLDivElement>(null);
   const [lens, setLens] = useState<{ left: number; width: number } | null>(null);
 
@@ -119,6 +120,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
 
   function openDoc(key: DocKey) {
     setOpen(key);
+    if (key === 'infra') setStop(0); // el simulador siempre abre en "hoy"
     if (key === 'propuesta' && proposal === undefined) {
       void getProposal()
         .then((p) => setProposal(p))
@@ -213,30 +215,86 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                 </div>
               )}
 
-              {open === 'infra' && infra && (
-                <div className="cp-tmb">
-                  <div className="cp-infra-hero">
-                    <div>
-                      <span className="cp-infra-big">{infra.monthlyLabel}<small> / mes</small></span>
-                      <div className="cp-infra-sub">costo estimado de tu infraestructura</div>
-                    </div>
-                    <div className="cp-infra-yr"><b>{infra.yearlyLabel}</b>estimado anual</div>
-                  </div>
-                  {infra.items.map((s) => (
-                    <div className="cp-svc" key={s.id}>
-                      <div>
-                        <div className="cp-svc-n">{s.name}</div>
-                        {s.detail && <div className="cp-svc-d">{s.detail}</div>}
+              {open === 'infra' && infra && (() => {
+                const sim = infra.sim;
+                if (!sim) {
+                  // lista plana (Finance) — sin simulador
+                  return (
+                    <div className="cp-tmb">
+                      <div className="cp-infra-hero">
+                        <div>
+                          <span className="cp-infra-big">{infra.monthlyLabel}<small> / mes</small></span>
+                          <div className="cp-infra-sub">costo estimado de tu infraestructura</div>
+                        </div>
+                        <div className="cp-infra-yr"><b>{infra.yearlyLabel}</b>estimado anual</div>
                       </div>
-                      <div className="cp-svc-bar"><i style={{ width: `${Math.max(6, Math.round((s.monthly / maxMonthly) * 100))}%` }} /></div>
-                      <div className="cp-svc-amt">{s.monthlyLabel}<small>/mes</small></div>
+                      {infra.items.map((s) => (
+                        <div className="cp-svc" key={s.id}>
+                          <div>
+                            <div className="cp-svc-n">{s.name}</div>
+                            {s.detail && <div className="cp-svc-d">{s.detail}</div>}
+                          </div>
+                          <div className="cp-svc-bar"><i style={{ width: `${Math.max(6, Math.round((s.monthly / maxMonthly) * 100))}%` }} /></div>
+                          <div className="cp-svc-amt">{s.monthlyLabel}<small>/mes</small></div>
+                        </div>
+                      ))}
+                      <div className="cp-doc-note" style={{ marginTop: 14 }}>
+                        <b>Estimado, no factura.</b> Los servicios están a tu nombre; la cifra real puede variar con el uso.
+                      </div>
                     </div>
-                  ))}
-                  <div className="cp-doc-note" style={{ marginTop: 14 }}>
-                    <b>Estimado, no factura.</b> Los servicios están a tu nombre; la cifra real puede variar con el uso.
+                  );
+                }
+                // simulador: "¿y si llegamos a X usuarios?"
+                const users = sim.stops[stop]!;
+                const maxAtStop = Math.max(...sim.items.map((s) => s.byStop[stop]!), 1);
+                const fmtUsers = users.toLocaleString('es-VE');
+                return (
+                  <div className="cp-tmb">
+                    <div className="cp-infra-hero">
+                      <div>
+                        <span className="cp-infra-big">{sim.totalLabelByStop[stop]}<small> / mes</small></span>
+                        <div className="cp-infra-sub">
+                          {stop === 0 ? <>hoy · ~{fmtUsers} usuarios activos</> : <>con ~<b>{fmtUsers}</b> usuarios activos</>}
+                        </div>
+                      </div>
+                      <div className="cp-infra-yr"><b>{sim.yearlyLabelByStop[stop]}</b>estimado anual</div>
+                    </div>
+                    <div className="cp-sim">
+                      <input
+                        type="range"
+                        className="cp-sim-range"
+                        min={0}
+                        max={sim.stops.length - 1}
+                        step={1}
+                        value={stop}
+                        onChange={(e) => setStop(Number(e.target.value))}
+                        aria-label="usuarios activos"
+                      />
+                      <div className="cp-sim-stops">
+                        {sim.stops.map((u, i) => (
+                          <button key={u} className={`cp-sim-stop ${i === stop ? 'on' : ''}`} onClick={() => setStop(i)}>
+                            {i === 0 ? 'hoy' : u >= 1000 ? `${u / 1000}k` : u}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    {sim.items.map((s) => (
+                      <div className="cp-svc" key={s.name}>
+                        <div>
+                          <div className="cp-svc-n">{s.name}</div>
+                          {s.detail && <div className="cp-svc-d">{s.detail}</div>}
+                        </div>
+                        <div className="cp-svc-bar"><i style={{ width: `${Math.max(6, Math.round((s.byStop[stop]! / maxAtStop) * 100))}%` }} /></div>
+                        <div className="cp-svc-amt">{s.labelByStop[stop]}<small>/mes</small></div>
+                      </div>
+                    ))}
+                    <div className="cp-doc-note" style={{ marginTop: 14 }}>
+                      <b>Estimado, no factura.</b> La proyección sigue los planes reales de cada proveedor
+                      (Render, Vercel, Supabase, Postmark) y el uso crece contigo — mover el control no contrata nada.
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
             </div>
           </div>
         </>

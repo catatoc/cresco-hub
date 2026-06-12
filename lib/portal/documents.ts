@@ -9,6 +9,7 @@ import { serverEnv } from '@/lib/env';
 import { queryAllRaw } from './data';
 import { money } from './payments';
 import { parseProjectBlocks, type ProjectBlock } from './content';
+import { findInfraStack, type InfraStackDef } from './infra-stacks';
 import type { AppContext } from '@/lib/auth/context';
 
 export interface PortalProposal {
@@ -34,10 +35,20 @@ export interface PortalInfraItem {
   monthlyLabel: string;
 }
 
+// El simulador: matriz precalculada en el server ("¿y si llegamos a X usuarios?")
+export interface PortalInfraSim {
+  stops: number[]; // usuarios activos por escalón; el primero es "hoy"
+  items: { name: string; detail: string | null; byStop: number[]; labelByStop: string[] }[];
+  totalByStop: number[];
+  totalLabelByStop: string[];
+  yearlyLabelByStop: string[];
+}
+
 export interface PortalInfra {
   items: PortalInfraItem[];
   monthlyLabel: string;
   yearlyLabel: string;
+  sim: PortalInfraSim | null; // null = lista plana desde Finance (sin slider)
 }
 
 export interface PortalDocuments {
@@ -170,6 +181,51 @@ function buildInfra(rows: any[]): PortalInfra | null {
     items,
     monthlyLabel: money(Math.round(total * 100) / 100),
     yearlyLabel: money(Math.round(total * 12)),
+    sim: null,
+  };
+}
+
+const cents = (n: number) => Math.round(n * 100) / 100;
+
+/** Construye el run-rate (en el baseline) + la matriz del simulador. */
+export function buildInfraFromStack(stack: InfraStackDef): PortalInfra {
+  const stops = stack.stops.includes(stack.baselineUsers)
+    ? stack.stops
+    : [stack.baselineUsers, ...stack.stops];
+
+  const simItems = stack.services
+    .map((s) => {
+      const byStop = stops.map((u) => cents(s.monthlyAt(u)));
+      return {
+        name: s.name,
+        detail: s.detail || null,
+        byStop,
+        labelByStop: byStop.map((m) => money(m)),
+      };
+    })
+    .sort((a, b) => b.byStop[0]! - a.byStop[0]!);
+
+  const totalByStop = stops.map((_, i) =>
+    cents(simItems.reduce((sum, s) => sum + s.byStop[i]!, 0)),
+  );
+
+  return {
+    items: simItems.map((s, idx) => ({
+      id: `stack-${idx}`,
+      name: s.name,
+      detail: s.detail,
+      monthly: s.byStop[0]!,
+      monthlyLabel: s.labelByStop[0]!,
+    })),
+    monthlyLabel: money(totalByStop[0]!),
+    yearlyLabel: money(Math.round(totalByStop[0]! * 12)),
+    sim: {
+      stops,
+      items: simItems,
+      totalByStop,
+      totalLabelByStop: totalByStop.map((t) => money(t)),
+      yearlyLabelByStop: totalByStop.map((t) => money(Math.round(t * 12))),
+    },
   };
 }
 
@@ -198,6 +254,9 @@ export async function loadPortalDocuments(ctx: AppContext): Promise<PortalDocume
         return [] as PortalTestUser[];
       }),
     (async () => {
+      // primero el modelo del repo (trae simulador); Finance queda de respaldo
+      const stack = ctx.customerName ? findInfraStack(ctx.customerName) : null;
+      if (stack) return buildInfraFromStack(stack);
       const dataSourceId = serverEnv.NOTION_DB_FINANCE;
       if (!dataSourceId) return null;
       const rows = await queryAllRaw(dataSourceId, {
