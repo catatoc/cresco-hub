@@ -88,6 +88,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
   // propuesta lazy: undefined = sin pedir · null = no hay · objeto = lista
   const [proposal, setProposal] = useState<{ title: string; blocks: ProjectBlock[] } | null | undefined>(undefined);
   const [stop, setStop] = useState(0); // escalón del simulador (0 = hoy)
+  const [groupsOpen, setGroupsOpen] = useState<Record<string, boolean>>({}); // acordeones
   const capRef = useRef<HTMLDivElement>(null);
   const [lens, setLens] = useState<{ left: number; width: number } | null>(null);
 
@@ -246,8 +247,34 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                 }
                 // simulador: "¿y si llegamos a X usuarios?"
                 const users = sim.stops[stop]!;
-                const maxAtStop = Math.max(...sim.items.map((s) => s.byStop[stop]!), 1);
                 const fmtUsers = users.toLocaleString('es-VE');
+                const fmtMoney = (n: number) =>
+                  new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    minimumFractionDigits: Number.isInteger(n) ? 0 : 2,
+                    maximumFractionDigits: 2,
+                  }).format(n);
+                // filas: servicios sueltos + grupos (acordeón) con su total sumado
+                type SimItem = (typeof sim.items)[number];
+                const rows: { name: string; detail: string | null; byStop: number[]; children?: SimItem[] }[] = [];
+                const byGroup = new Map<string, SimItem[]>();
+                for (const s of sim.items) {
+                  if (!s.group) { rows.push(s); continue; }
+                  if (!byGroup.has(s.group)) byGroup.set(s.group, []);
+                  byGroup.get(s.group)!.push(s);
+                }
+                for (const [g, children] of byGroup) {
+                  rows.push({
+                    name: g,
+                    detail: `${children.length} servicios web en Render · según uso`,
+                    byStop: sim.stops.map((_, i) => children.reduce((sum, c) => sum + c.byStop[i]!, 0)),
+                    children,
+                  });
+                }
+                rows.sort((a, b) => b.byStop[0]! - a.byStop[0]!);
+                const maxAtStop = Math.max(...rows.map((r) => r.byStop[stop]!), 1);
+                const bar = (v: number) => `${Math.max(6, Math.round((v / maxAtStop) * 100))}%`;
                 return (
                   <div className="cp-tmb">
                     <div className="cp-infra-hero">
@@ -278,19 +305,51 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                         ))}
                       </div>
                     </div>
-                    {sim.items.map((s) => (
-                      <div className="cp-svc" key={s.name}>
-                        <div>
-                          <div className="cp-svc-n">{s.name}</div>
-                          {s.detail && <div className="cp-svc-d">{s.detail}</div>}
+                    {rows.map((r) => {
+                      if (!r.children) {
+                        return (
+                          <div className="cp-svc" key={r.name}>
+                            <div>
+                              <div className="cp-svc-n">{r.name}</div>
+                              {r.detail && <div className="cp-svc-d">{r.detail}</div>}
+                            </div>
+                            <div className="cp-svc-bar"><i style={{ width: bar(r.byStop[stop]!) }} /></div>
+                            <div className="cp-svc-amt">{fmtMoney(r.byStop[stop]!)}<small>/mes</small></div>
+                          </div>
+                        );
+                      }
+                      const isOpen = !!groupsOpen[r.name];
+                      return (
+                        <div key={r.name}>
+                          <button
+                            className="cp-svc cp-svc-group"
+                            onClick={() => setGroupsOpen((m) => ({ ...m, [r.name]: !isOpen }))}
+                            aria-expanded={isOpen}
+                          >
+                            <div>
+                              <div className="cp-svc-n"><span className={`cp-chev ${isOpen ? 'open' : ''}`}>▸</span>{r.name}</div>
+                              {r.detail && <div className="cp-svc-d">{r.detail}</div>}
+                            </div>
+                            <div className="cp-svc-bar"><i style={{ width: bar(r.byStop[stop]!) }} /></div>
+                            <div className="cp-svc-amt">{fmtMoney(r.byStop[stop]!)}<small>/mes</small></div>
+                          </button>
+                          {isOpen && r.children.map((c) => (
+                            <div className="cp-svc cp-svc-sub" key={c.name}>
+                              <div>
+                                <div className="cp-svc-n">{c.name}</div>
+                                {c.detail && <div className="cp-svc-d">{c.detail}</div>}
+                              </div>
+                              <div className="cp-svc-bar"><i style={{ width: bar(c.byStop[stop]!) }} /></div>
+                              <div className="cp-svc-amt">{c.labelByStop[stop]}<small>/mes</small></div>
+                            </div>
+                          ))}
                         </div>
-                        <div className="cp-svc-bar"><i style={{ width: `${Math.max(6, Math.round((s.byStop[stop]! / maxAtStop) * 100))}%` }} /></div>
-                        <div className="cp-svc-amt">{s.labelByStop[stop]}<small>/mes</small></div>
-                      </div>
-                    ))}
+                      );
+                    })}
                     <div className="cp-doc-note" style={{ marginTop: 14 }}>
-                      <b>Estimado, no factura.</b> La proyección sigue los planes reales de cada proveedor
-                      (Render, Supabase, DigitalOcean, Postmark) y el uso crece contigo — mover el control no contrata nada.
+                      <b>Estimado, no factura.</b> Los montos son aproximados y dependerán del uso real;
+                      la proyección sigue los planes de cada proveedor (Render, Supabase, DigitalOcean,
+                      Postmark) — mover el control no contrata nada.
                     </div>
                   </div>
                 );

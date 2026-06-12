@@ -139,11 +139,12 @@ describe('buildInfraFromStack + stacks del repo', () => {
     expect(stack).not.toBeNull();
     const infra = buildInfraFromStack(stack!);
 
-    // "hoy" (~200 usuarios): 4 Render Starter (7×4) + Supabase 25 + Spaces 5
-    // + Postmark 15 + WhatsApp 8 + dominio 1.50
-    expect(infra.monthlyLabel).toBe('$82.50');
+    // "hoy" (~200 usuarios): API Standard 25 + 3 Starter (7×3) + Supabase 25
+    // + Spaces 5 + Postmark 15 + WhatsApp 8 + dominio 1.50
+    expect(infra.monthlyLabel).toBe('$100.50');
     expect(infra.sim?.stops[0]).toBe(200);
-    expect(infra.sim?.items.filter((s) => s.name.startsWith('Render'))).toHaveLength(4);
+    // los 4 servidores comparten grupo → acordeón en el portal
+    expect(infra.sim?.items.filter((s) => s.group === 'Servidores · producción')).toHaveLength(4);
 
     // crecer en usuarios nunca abarata el total (los tiers solo suben)
     const totals = infra.sim!.totalByStop;
@@ -164,6 +165,6 @@ describe('buildInfraFromStack + stacks del repo', () => {
     const amediCtx = { ...ctx, customerName: 'amedi salud' } as AppContext;
     const docs = await loadPortalDocuments(amediCtx);
     expect(docs.infra?.sim).not.toBeNull();
-    expect(docs.infra?.monthlyLabel).toBe('$82.50');
+    expect(docs.infra?.monthlyLabel).toBe('$100.50');
   });
 });

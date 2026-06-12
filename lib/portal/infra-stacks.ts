@@ -11,6 +11,8 @@ export interface InfraServiceDef {
   detail: string;
   /** costo mensual estimado en USD para `users` usuarios activos */
   monthlyAt: (users: number) => number;
+  /** servicios con el mismo group se muestran como acordeón (p. ej. los servidores) */
+  group?: string;
 }
 
 export interface InfraStackDef {
@@ -40,24 +42,28 @@ const AMEDI: InfraStackDef = {
   stops: [200, 500, 1_000, 2_500, 5_000, 10_000],
   services: [
     {
-      name: 'Render · API',
-      detail: 'servidor NestJS — el corazón',
-      monthlyAt: tiers([[1_000, 7], [5_000, 25], [Infinity, 85]]),
+      name: 'API',
+      detail: 'servidor NestJS — el corazón · plan Standard',
+      monthlyAt: tiers([[5_000, 25], [Infinity, 85]]),
+      group: 'Servidores · producción',
     },
     {
-      name: 'Render · web del paciente',
+      name: 'Web del paciente',
       detail: 'app de citas (client)',
       monthlyAt: tiers([[2_500, 7], [Infinity, 25]]),
+      group: 'Servidores · producción',
     },
     {
-      name: 'Render · consultorio',
+      name: 'Consultorio',
       detail: 'panel del doctor',
       monthlyAt: tiers([[5_000, 7], [Infinity, 25]]),
+      group: 'Servidores · producción',
     },
     {
-      name: 'Render · admin',
+      name: 'Admin',
       detail: 'panel de la clínica',
       monthlyAt: tiers([[10_000, 7], [Infinity, 25]]),
+      group: 'Servidores · producción',
     },
     {
       name: 'Supabase · base de datos + auth',
