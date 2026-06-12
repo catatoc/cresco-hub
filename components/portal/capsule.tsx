@@ -89,6 +89,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
   const [proposal, setProposal] = useState<{ title: string; blocks: ProjectBlock[] } | null | undefined>(undefined);
   const [stop, setStop] = useState(0); // escalón del simulador (0 = hoy)
   const [groupsOpen, setGroupsOpen] = useState<Record<string, boolean>>({}); // acordeones
+  const [infoOpen, setInfoOpen] = useState<Record<string, boolean>>({}); // ⓘ por servicio
   const capRef = useRef<HTMLDivElement>(null);
   const [lens, setLens] = useState<{ left: number; width: number } | null>(null);
 
@@ -257,7 +258,11 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                   }).format(n);
                 // filas: servicios sueltos + grupos (acordeón) con su total sumado
                 type SimItem = (typeof sim.items)[number];
-                const rows: { name: string; detail: string | null; byStop: number[]; children?: SimItem[] }[] = [];
+                const GROUP_INFO: Record<string, string> = {
+                  'Servidores · producción':
+                    'Las computadoras donde vive tu aplicación — una por cada herramienta, para que ninguna afecte a las otras.',
+                };
+                const rows: { name: string; detail: string | null; info: string | null; byStop: number[]; children?: SimItem[] }[] = [];
                 const byGroup = new Map<string, SimItem[]>();
                 for (const s of sim.items) {
                   if (!s.group) { rows.push(s); continue; }
@@ -268,6 +273,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                   rows.push({
                     name: g,
                     detail: `${children.length} servicios web en Render · según uso`,
+                    info: GROUP_INFO[g] ?? null,
                     byStop: sim.stops.map((_, i) => children.reduce((sum, c) => sum + c.byStop[i]!, 0)),
                     children,
                   });
@@ -275,6 +281,17 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                 rows.sort((a, b) => b.byStop[0]! - a.byStop[0]!);
                 const maxAtStop = Math.max(...rows.map((r) => r.byStop[stop]!), 1);
                 const bar = (v: number) => `${Math.max(6, Math.round((v / maxAtStop) * 100))}%`;
+                const infoBtn = (id: string, info: string | null) =>
+                  info ? (
+                    <span
+                      className={`cp-svc-i ${infoOpen[id] ? 'on' : ''}`}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`qué es ${id}`}
+                      onClick={(e) => { e.stopPropagation(); setInfoOpen((m) => ({ ...m, [id]: !m[id] })); }}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); setInfoOpen((m) => ({ ...m, [id]: !m[id] })); } }}
+                    >i</span>
+                  ) : null;
                 return (
                   <div className="cp-tmb">
                     <div className="cp-infra-hero">
@@ -308,39 +325,46 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                     {rows.map((r) => {
                       if (!r.children) {
                         return (
-                          <div className="cp-svc" key={r.name}>
-                            <div>
-                              <div className="cp-svc-n">{r.name}</div>
-                              {r.detail && <div className="cp-svc-d">{r.detail}</div>}
+                          <div className="cp-svc-wrap" key={r.name}>
+                            <div className="cp-svc">
+                              <div>
+                                <div className="cp-svc-n">{r.name}{infoBtn(r.name, r.info)}</div>
+                                {r.detail && <div className="cp-svc-d">{r.detail}</div>}
+                              </div>
+                              <div className="cp-svc-bar"><i style={{ width: bar(r.byStop[stop]!) }} /></div>
+                              <div className="cp-svc-amt">{fmtMoney(r.byStop[stop]!)}<small>/mes</small></div>
                             </div>
-                            <div className="cp-svc-bar"><i style={{ width: bar(r.byStop[stop]!) }} /></div>
-                            <div className="cp-svc-amt">{fmtMoney(r.byStop[stop]!)}<small>/mes</small></div>
+                            {infoOpen[r.name] && r.info && <div className="cp-svc-info">{r.info}</div>}
                           </div>
                         );
                       }
                       const isOpen = !!groupsOpen[r.name];
                       return (
-                        <div key={r.name}>
+                        <div className="cp-svc-wrap" key={r.name}>
                           <button
                             className="cp-svc cp-svc-group"
                             onClick={() => setGroupsOpen((m) => ({ ...m, [r.name]: !isOpen }))}
                             aria-expanded={isOpen}
                           >
                             <div>
-                              <div className="cp-svc-n"><span className={`cp-chev ${isOpen ? 'open' : ''}`}>▸</span>{r.name}</div>
+                              <div className="cp-svc-n"><span className={`cp-chev ${isOpen ? 'open' : ''}`}>▸</span>{r.name}{infoBtn(r.name, r.info)}</div>
                               {r.detail && <div className="cp-svc-d">{r.detail}</div>}
                             </div>
                             <div className="cp-svc-bar"><i style={{ width: bar(r.byStop[stop]!) }} /></div>
                             <div className="cp-svc-amt">{fmtMoney(r.byStop[stop]!)}<small>/mes</small></div>
                           </button>
+                          {infoOpen[r.name] && r.info && <div className="cp-svc-info">{r.info}</div>}
                           {isOpen && r.children.map((c) => (
-                            <div className="cp-svc cp-svc-sub" key={c.name}>
-                              <div>
-                                <div className="cp-svc-n">{c.name}</div>
-                                {c.detail && <div className="cp-svc-d">{c.detail}</div>}
+                            <div key={c.name}>
+                              <div className="cp-svc cp-svc-sub">
+                                <div>
+                                  <div className="cp-svc-n">{c.name}{infoBtn(c.name, c.info)}</div>
+                                  {c.detail && <div className="cp-svc-d">{c.detail}</div>}
+                                </div>
+                                <div className="cp-svc-bar"><i style={{ width: bar(c.byStop[stop]!) }} /></div>
+                                <div className="cp-svc-amt">{c.labelByStop[stop]}<small>/mes</small></div>
                               </div>
-                              <div className="cp-svc-bar"><i style={{ width: bar(c.byStop[stop]!) }} /></div>
-                              <div className="cp-svc-amt">{c.labelByStop[stop]}<small>/mes</small></div>
+                              {infoOpen[c.name] && c.info && <div className="cp-svc-info sub">{c.info}</div>}
                             </div>
                           ))}
                         </div>

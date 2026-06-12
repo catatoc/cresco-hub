@@ -38,7 +38,7 @@ export interface PortalInfraItem {
 // El simulador: matriz precalculada en el server ("¿y si llegamos a X usuarios?")
 export interface PortalInfraSim {
   stops: number[]; // usuarios activos por escalón; el primero es "hoy"
-  items: { name: string; detail: string | null; byStop: number[]; labelByStop: string[]; group: string | null }[];
+  items: { name: string; detail: string | null; info: string | null; byStop: number[]; labelByStop: string[]; group: string | null }[];
   totalByStop: number[];
   totalLabelByStop: string[];
   yearlyLabelByStop: string[];
@@ -199,6 +199,7 @@ export function buildInfraFromStack(stack: InfraStackDef): PortalInfra {
       return {
         name: s.name,
         detail: s.detail || null,
+        info: s.info ?? null,
         byStop,
         labelByStop: byStop.map((m) => money(m)),
         group: s.group ?? null,
