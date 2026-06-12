@@ -168,3 +168,31 @@ describe('buildInfraFromStack + stacks del repo', () => {
     expect(docs.infra?.monthlyLabel).toBe('$100.50');
   });
 });
+
+describe('doc-files (documentos privados)', () => {
+  it('kenco encuentra su propuesta; otro cliente recibe null', async () => {
+    const { findDocFile, docFilesForCustomer } = await import('../doc-files');
+    expect(findDocFile('kenco-propuesta', 'Kenco')?.title).toBe('Propuesta · cuatro módulos');
+    expect(findDocFile('kenco-propuesta', 'amedi salud')).toBeNull();
+    expect(findDocFile('no-existe', 'Kenco')).toBeNull();
+    expect(docFilesForCustomer('distribuidora lara')).toEqual([]);
+  });
+
+  it('docFilePath rechaza escapes fuera de private-docs', async () => {
+    const { docFilePath } = await import('../doc-files');
+    expect(docFilePath('kenco/propuesta.pdf')).toContain('private-docs');
+    expect(() => docFilePath('../lib/env.ts')).toThrow();
+  });
+
+  it('el catálogo prefiere el archivo del repo sobre la Wiki', async () => {
+    mockNotion.dataSources.query.mockResolvedValue({ results: [], has_more: false });
+    const kencoCtx = { ...ctx, customerName: 'Kenco' } as AppContext;
+    const docs = await loadPortalDocuments(kencoCtx);
+    expect(docs.proposal).toEqual({
+      kind: 'file',
+      slug: 'kenco-propuesta',
+      title: 'Propuesta · cuatro módulos',
+      chipState: 'v3.0 · 4 módulos',
+    });
+  });
+});

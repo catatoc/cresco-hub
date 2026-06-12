@@ -104,7 +104,12 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
     });
   }
   if (documents.proposal) {
-    chips.push({ key: 'propuesta', label: 'propuesta', state: documents.proposal.dateLabel, alert: false });
+    chips.push({
+      key: 'propuesta',
+      label: 'propuesta',
+      state: documents.proposal.kind === 'file' ? documents.proposal.chipState : documents.proposal.dateLabel,
+      alert: false,
+    });
   }
   if (documents.testUsers.length) {
     const n = documents.testUsers.length;
@@ -121,6 +126,11 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
   };
 
   function openDoc(key: DocKey) {
+    // propuesta-archivo (microsite rico): navega al visor gateado, no abre modal
+    if (key === 'propuesta' && documents.proposal?.kind === 'file') {
+      window.location.assign(`/portal/docs/${documents.proposal.slug}`);
+      return;
+    }
     setOpen(key);
     if (key === 'infra') setStop(0); // el simulador siempre abre en "hoy"
     if (key === 'propuesta' && proposal === undefined) {
