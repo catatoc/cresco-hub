@@ -290,7 +290,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                     ))}
                     <div className="cp-doc-note" style={{ marginTop: 14 }}>
                       <b>Estimado, no factura.</b> La proyección sigue los planes reales de cada proveedor
-                      (Render, Vercel, Supabase, Postmark) y el uso crece contigo — mover el control no contrata nada.
+                      (Render, Supabase, DigitalOcean, Postmark) y el uso crece contigo — mover el control no contrata nada.
                     </div>
                   </div>
                 );

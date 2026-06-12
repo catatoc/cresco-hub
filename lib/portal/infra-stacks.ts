@@ -30,31 +30,44 @@ const tiers =
   };
 
 // ── amedi · salud ────────────────────────────────────────────────────────────
-// Stack real del repo: API NestJS (Docker → Render), client/admin/consultorio
-// (Next.js → Vercel), Supabase auth + storage, Postmark, WhatsApp Cloud API.
+// Stack real del repo: 4 servicios web en Render (api NestJS + client,
+// consultorio y admin en Next.js), Supabase Pro (base de datos + auth),
+// DigitalOcean Spaces + CDN (archivos), Postmark, WhatsApp Cloud API.
+// Cada servidor escala su plan por separado según el tráfico que recibe:
+// el API primero, la web del paciente después, consultorio y admin al final.
 const AMEDI: InfraStackDef = {
   baselineUsers: 200,
   stops: [200, 500, 1_000, 2_500, 5_000, 10_000],
   services: [
     {
       name: 'Render · API',
-      detail: 'servicio web NestJS',
-      monthlyAt: tiers([[500, 7], [5_000, 25], [Infinity, 85]]),
+      detail: 'servidor NestJS — el corazón',
+      monthlyAt: tiers([[1_000, 7], [5_000, 25], [Infinity, 85]]),
     },
     {
-      name: 'Render · PostgreSQL',
-      detail: 'base de datos',
-      monthlyAt: tiers([[2_000, 19], [10_000, 55], [Infinity, 185]]),
+      name: 'Render · web del paciente',
+      detail: 'app de citas (client)',
+      monthlyAt: tiers([[2_500, 7], [Infinity, 25]]),
     },
     {
-      name: 'Vercel · web + admin',
-      detail: 'portal del paciente y paneles',
-      monthlyAt: tiers([[5_000, 20], [Infinity, 40]]),
+      name: 'Render · consultorio',
+      detail: 'panel del doctor',
+      monthlyAt: tiers([[5_000, 7], [Infinity, 25]]),
     },
     {
-      name: 'Supabase · auth + archivos',
-      detail: 'autenticación y almacenamiento',
-      monthlyAt: tiers([[100_000, 25], [Infinity, 75]]),
+      name: 'Render · admin',
+      detail: 'panel de la clínica',
+      monthlyAt: tiers([[10_000, 7], [Infinity, 25]]),
+    },
+    {
+      name: 'Supabase · base de datos + auth',
+      detail: 'plan Pro · crece con cómputo',
+      monthlyAt: tiers([[5_000, 25], [Infinity, 75]]),
+    },
+    {
+      name: 'DigitalOcean Spaces',
+      detail: 'archivos + CDN · 250 GB incluidos',
+      monthlyAt: tiers([[10_000, 5], [Infinity, 10]]),
     },
     {
       name: 'Postmark · correos',
