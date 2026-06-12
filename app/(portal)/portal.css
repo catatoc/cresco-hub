@@ -541,3 +541,12 @@
   .cp-dv-title { display: none; } /* en móvil: volver · candado · PDF */
   .cp-dv-bar { padding: 8px 10px; }
 }
+
+/* visor en pantallas muy angostas: el sello queda en puntico, nada se corta */
+@media (max-width: 400px) {
+  .cp-dv-bar { gap: 8px; }
+  .cp-dv-back { padding: 7px 8px; font-size: 12px; }
+  .cp-dv-lock { padding: 4px 7px; }
+  .cp-dv-lock-t { display: none; }
+  .cp-dv-pdf { padding: 7px 8px 7px 12px; font-size: 11.5px; }
+}

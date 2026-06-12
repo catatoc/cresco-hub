@@ -29,7 +29,7 @@ export default async function DocViewerPage({ params }: { params: Promise<{ slug
           <span className="cp-dv-m">{doc.meta}</span>
         </div>
         <div className="cp-dv-actions">
-          <span className="cp-dv-lock"><i />solo {ctx.customerName.toLowerCase()}</span>
+          <span className="cp-dv-lock"><i /><span className="cp-dv-lock-t">solo {ctx.customerName.toLowerCase()}</span></span>
           {doc.pdf && (
             <a className="cp-dv-pdf" href={`/portal/docs/${doc.slug}/pdf`}>
               descargar PDF <span className="cp-dv-circ">↓</span>
