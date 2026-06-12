@@ -509,3 +509,35 @@
 .cp-svc-info { font-size: 11px; font-weight: 300; color: var(--cp-ink-soft); line-height: 1.6;
   padding: 0 90px 11px 2px; animation: cp-rise .35s var(--cp-ease) both; }
 .cp-svc-info.sub { padding-left: 22px; }
+
+/* ── visor de documentos privados (/portal/docs/[slug]) ──────────────────
+   La propuesta es la protagonista: barra oscura mínima, el documento llena
+   el resto. Colores literales — el visor no vive dentro de .cp-page. */
+.cp-dv { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column; background: #101312; }
+.cp-dv-bar { display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 10px 18px; background: rgba(16,19,18,.92);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  border-bottom: .5pt solid rgba(247,243,234,.12); flex: none; }
+.cp-dv-back { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 500;
+  color: rgba(247,243,234,.75); text-decoration: none; padding: 7px 12px; border-radius: 99px;
+  transition: background .25s, color .25s; white-space: nowrap; }
+.cp-dv-back:hover { background: rgba(247,243,234,.1); color: #F7F3EA; }
+.cp-dv-title { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.cp-dv-w { font-weight: 500; font-size: 14px; color: #F7F3EA; letter-spacing: -.02em; white-space: nowrap; }
+.cp-dv-m { font-size: 11px; color: rgba(247,243,234,.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cp-dv-actions { display: flex; align-items: center; gap: 8px; }
+.cp-dv-lock { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 500;
+  color: #9DC1A1; background: rgba(61,82,64,.35); border: .5pt solid rgba(125,154,128,.4);
+  border-radius: 99px; padding: 4px 11px; white-space: nowrap; }
+.cp-dv-lock i { width: 6px; height: 6px; border-radius: 50%; background: #7E9A80; animation: cp-dotpulse 2.4s ease-in-out infinite; }
+.cp-dv-pdf { display: inline-flex; align-items: center; gap: 8px; background: #F7F3EA; color: #1A1612;
+  border-radius: 99px; padding: 8px 9px 8px 15px; font-size: 12px; font-weight: 500;
+  text-decoration: none; transition: transform .25s; white-space: nowrap; }
+.cp-dv-pdf:hover { transform: translateY(-1px); }
+.cp-dv-circ { width: 20px; height: 20px; border-radius: 50%; background: #3D5240; display: inline-flex;
+  align-items: center; justify-content: center; font-size: 10px; color: #fff; }
+.cp-dv-frame { flex: 1; border: 0; width: 100%; background: #fff; }
+@media (max-width: 560px) {
+  .cp-dv-title { display: none; } /* en móvil: volver · candado · PDF */
+  .cp-dv-bar { padding: 8px 10px; }
+}

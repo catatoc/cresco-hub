@@ -10,13 +10,15 @@ import { queryAllRaw } from './data';
 import { money } from './payments';
 import { parseProjectBlocks, type ProjectBlock } from './content';
 import { findInfraStack, type InfraStackDef } from './infra-stacks';
+import { docFilesForCustomer } from './doc-files';
 import type { AppContext } from '@/lib/auth/context';
 
-export interface PortalProposal {
-  id: string;
-  title: string;
-  dateLabel: string | null; // última edición — "12 mar"
-}
+// La propuesta tiene dos fuentes: un archivo privado del repo (microsite
+// rico → abre el visor /portal/docs/[slug]) o un doc de Wiki con categoría
+// Proposal (→ modal de bloques). El archivo manda si existe.
+export type PortalProposal =
+  | { kind: 'file'; slug: string; title: string; chipState: string }
+  | { kind: 'wiki'; id: string; title: string; dateLabel: string | null };
 
 export interface PortalTestUser {
   id: string;
@@ -80,6 +82,7 @@ export function hostOf(url: string | null): string | null {
 function parseProposalRow(row: any): PortalProposal {
   const p = row.properties as Record<string, any>;
   return {
+    kind: 'wiki',
     id: row.id,
     title: p['Doc name']?.title?.[0]?.plain_text ?? 'Propuesta',
     dateLabel: row.last_edited_time ? dayMonth(row.last_edited_time) : null,
@@ -233,13 +236,23 @@ export function buildInfraFromStack(stack: InfraStackDef): PortalInfra {
 
 // ── catálogo ─────────────────────────────────────────────────────────────────
 export async function loadPortalDocuments(ctx: AppContext): Promise<PortalDocuments> {
+  // archivo privado del repo primero (microsite rico); Wiki como respaldo
+  const fileDoc = ctx.customerName ? docFilesForCustomer(ctx.customerName)[0] : undefined;
+
   const [proposal, testUsers, infra] = await Promise.all([
-    findProposalRow(ctx)
-      .then((row) => (row ? parseProposalRow(row) : null))
-      .catch((e) => {
-        console.error('[portal] proposal lookup failed', e);
-        return null;
-      }),
+    fileDoc
+      ? Promise.resolve<PortalProposal>({
+          kind: 'file',
+          slug: fileDoc.slug,
+          title: fileDoc.title,
+          chipState: fileDoc.chipState,
+        })
+      : findProposalRow(ctx)
+          .then((row) => (row ? parseProposalRow(row) : null))
+          .catch((e) => {
+            console.error('[portal] proposal lookup failed', e);
+            return null;
+          }),
     queryAllRaw(
       serverEnv.NOTION_DB_TEST_USERS,
       {

@@ -1,0 +1,1591 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F8F4ED">
+
+<title>crescō · propuesta Kenco · cuatro módulos</title>
+<meta name="description" content="Propuesta Kenco × crescō · 6 meses · Sistema Operativo de Kenco en 4 módulos · resumen ejecutivo en una página">
+<meta name="author" content="Carlos Carrasquero">
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,450;0,500;0,600;1,400;1,500&amp;display=swap">
+
+<style>
+  :root {
+    --bg: #F8F4ED;
+    --paper: #FBF8F1;
+    --ink: #1A1612;
+    --ink-soft: #5C544A;
+    --accent: #4A7A52;
+    --accent-soft: #DAE2D9;
+    --accent-deep: #2A3B2D;
+    --line: #D4CCBC;
+    --line-soft: #E2DBCC;
+    --muted: #8C8377;
+    --sans: 'Inter', system-ui, sans-serif;
+    --mono: 'Inter', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
+  }
+
+  /* ═════ wordmarks ═════ */
+  .cresco-mark {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 26px;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+    line-height: 1;
+  }
+  .cresco-mark em {
+    font-style: normal;
+    color: var(--accent);
+    margin-left: -2px;
+  }
+
+  .kenco-mark {
+    display: inline-flex;
+    align-items: center;
+    height: 18px;
+  }
+  .kenco-mark svg {
+    height: 18px;
+    width: auto;
+    display: block;
+    shape-rendering: geometricPrecision;
+  }
+  .kenco-mark svg path { fill: var(--ink); }
+  .kenco-mark svg path:last-child { fill: var(--accent); }
+
+  .lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .lockup .x {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: lowercase;
+    padding-bottom: 2px;
+  }
+
+  /* ═════ página A4 única ═════ */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 10mm 16mm 9mm;
+    background: var(--bg);
+    border: 0.5pt solid var(--line);
+    box-shadow: 0 1px 3px rgba(26,22,18,0.06);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12mm;
+    overflow: hidden;
+  }
+
+  /* ═════ TOP BAR ═════ */
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 6mm;
+    border-bottom: 0.5pt solid var(--line);
+  }
+  .top-meta {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+    text-align: right;
+    line-height: 1.55;
+  }
+  .top-meta b { color: var(--ink); font-weight: 500; }
+  .top-meta .pulse {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  /* ═════ HERO ═════ */
+  .hero { display: flex; flex-direction: column; gap: 24px; }
+
+  .eyebrow {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 24px;
+    height: 0.5pt;
+    background: var(--accent);
+  }
+
+  .hero-title {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 34px;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: var(--ink);
+    max-width: 95%;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+  .hero-title .ac { color: var(--accent); }
+
+  .hero-sub {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 75ch;
+    margin-top: 2px;
+  }
+  .hero-sub b { font-style: normal; font-weight: 500; color: var(--ink); }
+
+  /* tech-strip */
+  .tech-strip {
+    margin-top: 8px;
+    padding-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+    line-height: 1.4;
+  }
+  .tech-strip .ts-label {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+  .tech-strip .ts-label.end { margin-left: auto; }
+  .tech-strip .tag {
+    background: var(--paper);
+    border: 0.5pt solid var(--accent);
+    color: var(--accent-deep);
+    padding: 4px 11px;
+    border-radius: 99px;
+    font-weight: 500;
+    font-size: 11.5px;
+  }
+
+  /* stats strip */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 0.5pt solid var(--line);
+    border-bottom: 0.5pt solid var(--line);
+    padding: 7px 0;
+    margin-top: 2px;
+  }
+  .stat {
+    padding: 0 14px;
+    border-right: 0.5pt solid var(--line-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .stat:first-child { padding-left: 0; }
+  .stat:last-child { border-right: none; }
+  .stat .l {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+  }
+  .stat .v {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat .v em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  /* ═════ section header ═════ */
+  .sec-head {
+    font-family: var(--sans);
+    font-size: 17px;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 0.5pt solid var(--line);
+  }
+  .sec-head::before {
+    content: "";
+    width: 4px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 1px;
+  }
+
+  /* ═════ bloques apilados (entregables + incluidos) ═════ */
+  .cols {
+    display: flex;
+    flex-direction: column;
+    gap: 10mm;
+  }
+  .col {
+    max-width: 90ch;
+  }
+  /* hint bajo sec-head · indica interactividad */
+  .sec-hint {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+    margin-top: -10px;
+    margin-bottom: 14px;
+  }
+
+  /* === leyenda del gantt · pequeña, sin caja, tipo footnote === */
+  .tl-legend {
+    margin-top: 3mm;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 14px;
+    font-family: var(--sans);
+    font-size: 9.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .tl-legend-title {
+    font-style: italic;
+    color: var(--muted);
+    letter-spacing: -0.005em;
+    flex-shrink: 0;
+  }
+  .tl-legend-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: contents;
+  }
+  .tl-legend-items li {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .tl-legend-items strong {
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+  .tl-legend-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 6px;
+    background: transparent;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+  .tl-legend-swatch.swatch-solid {
+    background: var(--accent);
+  }
+  .tl-legend-swatch.swatch-progress {
+    background: repeating-linear-gradient(135deg, var(--accent), var(--accent) 2px, #5d8d65 2px, #5d8d65 4px);
+  }
+  .tl-legend-swatch.swatch-dim {
+    background: transparent;
+    border: 0.5pt dashed var(--accent);
+  }
+  .tl-legend-pill {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 6.5px;
+    padding: 1px 5px;
+    border-radius: 99px;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  /* === bloque de inversión · jerarquía clara, USD prominente === */
+  .inversion-block {
+    margin-top: 10mm;
+    padding-top: 8mm;
+    border-top: 0.5pt solid var(--line);
+  }
+  .inversion-eyebrow {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: -0.005em;
+    margin-bottom: 6px;
+  }
+  .inversion-grid {
+    display: grid;
+    grid-template-columns: minmax(220px, auto) 1fr;
+    gap: 16mm;
+    align-items: start;
+  }
+  .inversion-price {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .price-amount {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 52px;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--ink);
+    display: flex;
+    align-items: baseline;
+  }
+  .price-currency {
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink-soft);
+    font-weight: 400;
+    margin-right: 8px;
+  }
+  .price-rate {
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ink-soft);
+    font-weight: 400;
+    margin-left: 2px;
+  }
+  .price-meta {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+    margin-top: 4px;
+  }
+  .inversion-team {
+    display: flex;
+    flex-direction: column;
+  }
+  .inversion-label {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: -0.005em;
+    margin-bottom: 8px;
+  }
+  .inversion-team ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+  .inversion-team li {
+    padding-left: 14px;
+    position: relative;
+  }
+  .inversion-team li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+  .inversion-note {
+    margin-top: 8mm;
+    padding-top: 6mm;
+    border-top: 0.5pt solid var(--line-soft);
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    max-width: 85ch;
+  }
+
+  /* === sección mayor · usado para Cronograma (más prominente que sec-head) === */
+  .major-section {
+    margin-top: 14mm;
+    padding-top: 8mm;
+    border-top: 1.5pt solid var(--accent);
+  }
+  .major-section .major-eyebrow {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: -0.005em;
+    margin-bottom: 4px;
+  }
+  .major-section .major-title {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 26px;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .major-section .major-hint {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+    margin-bottom: 18px;
+  }
+
+  .col h3 {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin-bottom: 4px;
+    line-height: 1.25;
+  }
+  ul.bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  ul.bullets li {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    padding-left: 11px;
+    position: relative;
+  }
+  ul.bullets li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 6.5px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  ul.bullets li strong { color: var(--ink); font-weight: 500; }
+  ul.bullets li em { font-style: italic; color: var(--ink); }
+
+  /* ═════ MINI GANTT · 6 fases secuenciales ═════ */
+  /* ::after sobre .timeline · dibuja líneas verticales discontinuas
+     que cruzan filas y gaps in-between (gap: 9px) en la zona de barras */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    position: relative;
+    --tl-track-left: 173px;
+    --tl-track-right: 98px;
+  }
+  .timeline::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--tl-track-left);
+    right: var(--tl-track-right);
+    pointer-events: none;
+    z-index: 2;
+    background-image:
+      linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
+      linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
+      linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
+      linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
+      linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%);
+    background-size: 1px 3px;
+    background-position: 16.666% 0, 33.333% 0, 50% 0, 66.666% 0, 83.333% 0;
+    background-repeat: repeat-y;
+  }
+  .tl-row {
+    display: grid;
+    grid-template-columns: 155px 1fr 80px;
+    gap: 12px;
+    align-items: center;
+  }
+  .tl-row.clickable {
+    cursor: pointer;
+    padding: 3px 6px;
+    margin: -3px -6px;
+    border-radius: 3px;
+    transition: background 120ms ease;
+  }
+  .tl-row.clickable:hover {
+    background: rgba(74, 122, 82, 0.06);
+  }
+  .tl-row.clickable:hover .tl-name { color: var(--accent); }
+  .tl-row.clickable:hover .tl-bar { filter: brightness(1.08); }
+  .tl-row.clickable:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .tl-name {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tl-name .code {
+    font-family: var(--mono);
+    font-size: 8.5px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .tl-name .live-pill {
+    font-family: var(--mono);
+    font-size: 6.5px;
+    background: var(--accent);
+    color: var(--bg);
+    padding: 1px 5px;
+    border-radius: 99px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .tl-name .live-pill::before {
+    content: "";
+    width: 4px; height: 4px;
+    background: var(--accent-soft);
+    border-radius: 50%;
+  }
+  .tl-bar-track {
+    height: 20px;
+    background: var(--paper);
+    border-radius: 2px;
+    border: 0.5pt solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .tl-bar {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: var(--accent);
+    border-radius: 1px;
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    color: var(--bg);
+    font-family: var(--sans);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .tl-bar.dim {
+    background: transparent;
+    border: 0.5pt dashed var(--accent);
+    color: var(--accent);
+  }
+  .tl-bar.big {
+    background: var(--accent);
+  }
+  .tl-amt {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+    text-align: right;
+    font-weight: 500;
+  }
+  .tl-amt .pct {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 9.5px;
+    color: var(--muted);
+    display: block;
+    letter-spacing: -0.005em;
+    margin-bottom: 1px;
+    font-weight: 400;
+  }
+  .tl-amt.cross { color: var(--accent); }
+
+  .tl-axis {
+    display: grid;
+    grid-template-columns: 155px 1fr 80px;
+    gap: 12px;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .tl-axis .ticks {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 9px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+  .tl-axis .ticks span { text-align: center; }
+  .tl-axis .ticks span.q { color: var(--ink); font-weight: 500; }
+
+  /* ═════ FOOTER ═════ */
+  .footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 4mm;
+    border-top: 0.5pt solid var(--line);
+    background: var(--bg);
+    z-index: 2;
+  }
+  .footer .left { max-width: 60%; }
+  .footer .cta-label {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+  .footer .cta-text {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .footer .cta-text strong { color: var(--ink); font-weight: 500; }
+
+  /* ═════ PHASE PAGE SYSTEM ═════ */
+  .onepager,
+  .phase-page {
+    opacity: 1;
+    transition: opacity 180ms ease;
+  }
+  body.routing .onepager,
+  body.routing .phase-page {
+    opacity: 0;
+  }
+  .phase-page { display: none; }
+  body.view-phase .onepager { display: none; }
+
+  /* phase blueprint */
+  .phase-breadcrumb {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+    padding-bottom: 6mm;
+    border-bottom: 0.5pt solid var(--line);
+  }
+  .phase-breadcrumb .sep { margin: 0 6px; opacity: 0.5; }
+  .phase-breadcrumb .current { color: var(--accent); font-weight: 500; }
+
+  .phase-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 4mm 0 6mm;
+  }
+  .phase-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .phase-code-mark {
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 32px;
+    color: var(--accent);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .phase-title {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 32px;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .phase-status {
+    font-family: var(--mono);
+    font-size: 8px;
+    background: var(--accent);
+    color: var(--bg);
+    padding: 3px 7px;
+    border-radius: 99px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .phase-subtitle {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    margin-top: 4px;
+  }
+
+  .phase-mini-timeline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5mm 0;
+    border-top: 0.5pt solid var(--line);
+    border-bottom: 0.5pt solid var(--line);
+  }
+  .phase-mini-bar {
+    flex: 1;
+    height: 10px;
+    background: var(--paper);
+    border: 0.5pt solid var(--line);
+    border-radius: 1px;
+    position: relative;
+    overflow: hidden;
+  }
+  .phase-mini-fill {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: var(--accent);
+    border-radius: 1px;
+  }
+  .phase-mini-fill.dim {
+    background: transparent;
+    border: 0.5pt dashed var(--accent);
+  }
+  .phase-mini-label {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+  }
+  .phase-mini-label.cur { color: var(--accent); font-weight: 500; }
+
+  .phase-section {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 16px;
+    padding: 5mm 0;
+    border-top: 0.5pt solid var(--line-soft);
+  }
+  .phase-section:first-of-type { border-top: none; }
+  .phase-section-lbl {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+    padding-top: 2px;
+    font-weight: 500;
+  }
+  .phase-section-body {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .phase-section-body strong { color: var(--ink); font-weight: 500; }
+  .phase-section-body em { font-style: italic; color: var(--ink); }
+  .phase-section-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 6px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .phase-section-body li {
+    padding-left: 12px;
+    position: relative;
+  }
+  .phase-section-body li::before {
+    content: "–";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .phase-nav {
+    margin-top: auto;
+    padding-top: 5mm;
+    border-top: 0.5pt solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 12px;
+    letter-spacing: -0.005em;
+  }
+  .phase-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 120ms ease;
+  }
+  .phase-nav a:hover { color: var(--accent); }
+  .phase-nav .nxt { color: var(--ink); font-weight: 500; }
+  .phase-nav .nxt:hover { color: var(--accent); }
+
+  .phase-back {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+    text-decoration: none;
+    transition: color 120ms ease;
+  }
+  .phase-back:hover { color: var(--accent); }
+
+  /* ═════ RESPONSIVE ═════ */
+  @media (max-width: 900px) {
+    body { padding: 0; align-items: stretch; }
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      height: auto;
+      padding: 24px 20px 32px;
+      border: none;
+      box-shadow: none;
+      gap: 28px;
+      overflow: visible;
+    }
+    .top { flex-direction: column; align-items: flex-start; gap: 10px; padding-bottom: 16px; }
+    .top-meta { text-align: left; }
+    .hero-title { font-size: 26px; max-width: 100%; line-height: 1.1; }
+    .hero-sub { font-size: 13px; line-height: 1.55; }
+    .sec-head { font-size: 15px; margin-bottom: 12px; }
+    .sec-head::before { height: 16px; }
+    .tech-strip { gap: 6px; font-size: 10.5px; }
+    .tech-strip .tag { font-size: 9.5px; padding: 3px 9px; }
+    .tech-strip .ts-label.end { margin-left: 0; width: 100%; margin-top: 4px; }
+    .stats {
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 0;
+      padding: 12px 0;
+    }
+    .stat { padding: 4px 12px; border-right: 0.5pt solid var(--line-soft); border-bottom: none; }
+    .stat:nth-child(2n) { border-right: none; padding-right: 0; }
+    .stat:nth-child(2n+1) { padding-left: 0; }
+    .stat .v { font-size: 14.5px; }
+    .cols { grid-template-columns: 1fr; gap: 32px; }
+    .tl-row { grid-template-columns: 96px 1fr 60px; gap: 8px; }
+    .tl-row.clickable { padding: 6px 6px; margin: -6px -6px; }
+    .tl-name { font-size: 11px; letter-spacing: -0.005em; }
+    .tl-name .code { font-size: 9px; }
+    .tl-name .live-pill { font-size: 7px; padding: 1px 5px; }
+    .tl-bar { font-size: 8px; padding: 0 5px; }
+    .tl-amt { font-size: 10.5px; }
+    .tl-amt .pct { font-size: 9px; }
+    .tl-axis { grid-template-columns: 96px 1fr 60px; gap: 8px; }
+    .tl-axis .ticks { grid-template-columns: repeat(5, 1fr); font-size: 9px; }
+    .tl-axis .ticks span:not(.q) { display: none; }
+    .timeline { --tl-track-left: 110px; --tl-track-right: 74px; }
+    .footer { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .footer .left { max-width: 100%; }
+    .footer .cta-text { font-size: 13px; }
+
+    /* Major section · cronograma */
+    .major-section { margin-top: 28px; padding-top: 20px; }
+    .major-section .major-title { font-size: 22px; line-height: 1.15; }
+    .major-section .major-hint { font-size: 12px; margin-bottom: 14px; }
+
+    /* Legend bajo el gantt */
+    .tl-legend { font-size: 9px; gap: 3px 10px; }
+
+    /* Inversion block · stack columns en mobile */
+    .inversion-block { margin-top: 28px; padding-top: 20px; }
+    .inversion-grid { grid-template-columns: 1fr; gap: 24px; }
+    .inversion-eyebrow { font-size: 12px; }
+    .price-amount { font-size: 40px; }
+    .price-currency { font-size: 16px; margin-right: 6px; }
+    .price-rate { font-size: 14px; }
+    .price-meta { font-size: 12px; line-height: 1.45; }
+    .inversion-label { font-size: 12px; }
+    .inversion-team ul { font-size: 12.5px; gap: 6px; }
+    .inversion-team li { padding-left: 13px; }
+    .inversion-note { margin-top: 20px; padding-top: 16px; font-size: 11.5px; line-height: 1.55; }
+
+    .phase-breadcrumb { font-size: 11px; padding-bottom: 16px; line-height: 1.5; }
+    .phase-hero { padding: 12px 0 20px; }
+    .phase-title-row { flex-wrap: wrap; gap: 8px; }
+    .phase-code-mark { font-size: 24px; }
+    .phase-title { font-size: 24px; }
+    .phase-subtitle { font-size: 13px; }
+    .phase-mini-timeline { padding: 12px 0; gap: 8px; }
+    .phase-mini-label { font-size: 10px; }
+    .phase-section { grid-template-columns: 1fr; gap: 8px; padding: 16px 0; }
+    .phase-section-lbl { font-size: 11px; padding-top: 0; }
+    .phase-section-body { font-size: 13.5px; }
+    .phase-nav { flex-wrap: wrap; gap: 12px; font-size: 11px; }
+  }
+
+  @media (max-width: 420px) {
+    .page { padding: 20px 16px 28px; gap: 24px; }
+    .hero-title { font-size: 22px; }
+    .stat .v { font-size: 13.5px; }
+    .tl-row { grid-template-columns: 82px 1fr 54px; gap: 6px; }
+    .tl-axis { grid-template-columns: 82px 1fr 54px; gap: 6px; }
+    .timeline { --tl-track-left: 94px; --tl-track-right: 66px; }
+    .tl-bar { font-size: 7.5px; padding: 0 4px; }
+    .tl-name { font-size: 10.5px; }
+    .tl-amt { font-size: 10px; }
+    .tl-amt .pct { font-size: 8.5px; }
+    .phase-title { font-size: 22px; }
+    .phase-code-mark { font-size: 22px; }
+    .major-section .major-title { font-size: 20px; }
+    .price-amount { font-size: 34px; }
+    .price-currency { font-size: 14px; }
+    .price-rate { font-size: 13px; }
+  }
+
+  @media print {
+    body { padding: 0; background: white; }
+    .page { box-shadow: none; border: none; page-break-after: always; }
+    .phase-page,
+    body.view-phase .onepager { display: flex !important; }
+    .tl-row.clickable {
+      cursor: default;
+      padding: 0;
+      margin: 0;
+      background: transparent !important;
+    }
+    .phase-back,
+    .phase-nav { display: none !important; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     ONE-PAGER · RESUMEN EJECUTIVO · V3 · CUATRO MÓDULOS
+     ════════════════════════════════════════════════════════════════════ -->
+<section class="page onepager">
+
+  <div class="top">
+    <span class="lockup">
+      <span class="kenco-mark" aria-label="Kenco"><svg xmlns="http://www.w3.org/2000/svg" viewBox="180 220 1120 260"><path d="M404.41 263.83h-81.14l-63.44 89.67H258V220.93h-73.2V474.9H258v-85.4h1.83l65.88 85.4h88.46l-86.02-108.58z"/><path d="M502.3 258.95c-67.71 0-114.68 46.97-114.68 110.41 0 62.22 45.75 111.63 124.44 111.63 54.9 0 80.52-24.4 80.52-24.4l-23.18-45.75s-19.52 14.03-54.29 14.03c-29.28 0-51.24-12.81-56.73-42.09h151.29s.61-7.32.61-15.25c-.01-64.66-40.88-108.58-107.98-108.58zm-43.31 87.84c5.49-23.79 21.35-34.77 42.7-34.77 22.57 0 37.21 15.25 39.65 34.77h-82.35z"/><path d="M997.71 419.39c-32.33 0-54.9-19.52-54.9-50.02 0-30.5 22.57-50.02 54.9-50.02 25.62 0 42.09 10.98 42.09 10.98l20.74-53.68s-22.57-17.69-69.54-17.69c-73.81 0-122.01 47.58-122.01 110.41 0 62.22 48.19 110.41 122.01 110.41 46.97 0 68.32-17.69 68.32-17.69l-19.52-53.68c.01 0-16.47 10.98-42.09 10.98z"/><path d="M1175.56 258.95c-65.88 0-119.57 43.92-119.57 111.63 0 66.49 53.68 109.19 119.57 109.19 65.88 0 120.18-42.7 120.18-109.19-.01-67.71-54.3-111.63-120.18-111.63zm0 162.88c-28.67 0-48.19-20.74-48.19-52.46 0-31.11 19.52-52.46 48.19-52.46 29.28 0 48.8 21.35 48.8 52.46 0 31.72-19.52 52.46-48.8 52.46z"/><path d="M626.31 263.91v210.91h73.09V330.57h80.14v144.25h73.09V330.57l-73.09-66.66z"/></svg></span>
+      <span class="x">×</span>
+      <span class="cresco-mark">crescō<em>.</em></span>
+    <div class="top-meta">
+      <span class="pulse"></span><b>Propuesta</b><br>
+      Kenco × crescō · V3.0 · Junio 2026
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1 class="hero-title">
+      Sistema Operativo de Kenco<br>
+      <em>cuatro módulos, <span class="ac">toda la operación</span></em>
+    </h1>
+    <p class="hero-sub">
+      Seis meses — del <b>1 de agosto de 2026</b> al <b>31 de enero de 2027</b>. Arrancamos por <b>imprenta digital</b> y Kenco escoge los otros tres departamentos del menú. El <b>Kenco Brain llega listo el 1 de agosto, sin costo</b>: es la base sobre la que todos los módulos hablan, cotizan y deciden. Cada módulo se libera contra firma del entregable: si uno no cierra, el siguiente no arranca.
+    </p>
+
+    <div class="stats">
+      <div class="stat"><span class="l">Inicio</span><span class="v">1 ago <em>2026</em></span></div>
+      <div class="stat"><span class="l">Entrega</span><span class="v">31 ene <em>2027</em></span></div>
+      <div class="stat"><span class="l">Módulos</span><span class="v">4 <em>+ Brain</em></span></div>
+      <div class="stat"><span class="l">Inversión</span><span class="v">USD <em>15.000</em></span></div>
+    </div>
+  </div>
+
+  <div class="cols">
+
+    <div class="col">
+      <div class="sec-head">Lo que se construye</div>
+      <ul class="bullets">
+        <li><strong>Kenco Brain</strong> · listo el 1 de agosto, <em>sin costo</em>. Esencia, voz e identidad de Kenco documentadas y operables — el filtro que hace que cada cotización, WhatsApp y reporte suene a Kenco y no a una máquina.</li>
+        <li><strong>Módulo 1 · Imprenta digital</strong> · el primero, fijo. Cotizador USD/Bs sincronizado con BCV, hub central de órdenes editable, validación IA pre-producción y reporte diario gerencial. <em>El esqueleto que después se replica en cada departamento.</em></li>
+        <li><strong>Módulos 2, 3 y 4 · a elección de Kenco</strong> · el mismo esqueleto probado en imprenta digital, adaptado al flujo real de cada departamento: sus variables de cotización, sus órdenes, su validación y sus reportes.</li>
+        <li><strong>Formación continua</strong> · capacitaciones durante todo el proyecto — no solo al final. El equipo aprende sobre cada módulo mientras se construye.</li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <div class="sec-head">El menú · Kenco escoge 3</div>
+      <p class="sec-hint">Imprenta digital va de primero. Estos son los candidatos para los módulos 2, 3 y 4.</p>
+      <ul class="bullets">
+        <li><strong>Gigantografía</strong> · <em>complejidad alta</em> · banners, vinil, rotulación, sublimación, gran formato. Cotización por m², materiales y acabados.</li>
+        <li><strong>Textil</strong> · <em>complejidad alta en confección y gorras</em> · confección, gorras, bordados y marroquinería. Tallas, curvas, materiales y técnicas de marcado. Si entra, definimos juntos qué sub-áreas cubre el módulo.</li>
+        <li><strong>Taller</strong> · stands, corpóreos, señaléticas, corte y grabado láser. Cotización por proyecto, con piezas y materiales.</li>
+        <li><strong>Encuadernación</strong> · libretas, calendarios, cajas, álbumes. Cotización por tiraje y acabados (foil, bajo relieve).</li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <div class="sec-head">Incluidos en la inversión</div>
+      <ul class="bullets">
+        <li><strong>Kenco Brain completo</strong> · manual de marca vivo + assets, entregado el 1 de agosto sin costo.</li>
+        <li><strong>Aviso por WhatsApp</strong> al cliente en cada cambio de estado de su orden, en todos los módulos.</li>
+        <li><strong>PDF de presupuesto</strong> con marca Kenco enviado por correo.</li>
+        <li><strong>Reporte diario a gerencia</strong> con ventas, conversión y cuellos de botella por departamento.</li>
+        <li><strong>Formación continua + skills internas Anthropic</strong> para todo el equipo, durante todo el proyecto.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="major-section">
+    <div class="major-eyebrow">Cómo se entrega</div>
+    <h2 class="major-title">Cronograma · 4 módulos secuenciales</h2>
+    
+    <div class="timeline">
+
+      <div class="tl-row">
+        <span class="tl-name"><span class="code">brain</span>Kenco Brain<span class="live-pill">listo 1 ago</span></span>
+        <div class="tl-bar-track">
+          <div class="tl-bar dim" style="left:0%;width:6%"></div>
+        </div>
+        <span class="tl-amt cross">incluido</span>
+      </div>
+
+      <div class="tl-row">
+        <span class="tl-name"><span class="code">m1</span>Imprenta digital<span class="live-pill">primero</span></span>
+        <div class="tl-bar-track">
+          <div class="tl-bar big" style="left:0%;width:33.33%">ago–sep</div>
+        </div>
+        <span class="tl-amt"><span class="pct">25%</span>$3.750</span>
+      </div>
+
+      <div class="tl-row">
+        <span class="tl-name"><span class="code">m2</span>Departamento a elección</span>
+        <div class="tl-bar-track">
+          <div class="tl-bar" style="left:33.33%;width:33.34%">oct–nov</div>
+        </div>
+        <span class="tl-amt"><span class="pct">25%</span>$3.750</span>
+      </div>
+
+      <div class="tl-row">
+        <span class="tl-name"><span class="code">m3</span>Departamento a elección</span>
+        <div class="tl-bar-track">
+          <div class="tl-bar" style="left:66.67%;width:16.66%">dic</div>
+        </div>
+        <span class="tl-amt"><span class="pct">25%</span>$3.750</span>
+      </div>
+
+      <div class="tl-row">
+        <span class="tl-name"><span class="code">m4</span>Departamento a elección</span>
+        <div class="tl-bar-track">
+          <div class="tl-bar" style="left:83.33%;width:16.67%">ene</div>
+        </div>
+        <span class="tl-amt"><span class="pct">25%</span>$3.750</span>
+      </div>
+
+      <div class="tl-row">
+        <span class="tl-name"><span class="code">+</span>Formación continua</span>
+        <div class="tl-bar-track">
+          <div class="tl-bar dim" style="left:0%;width:100%">6 meses · entrega 31 ene</div>
+        </div>
+        <span class="tl-amt cross">incluido</span>
+      </div>
+
+    </div>
+
+    <div class="tl-axis">
+      <span></span>
+      <div class="ticks" style="grid-template-columns: repeat(6, 1fr);">
+        <span class="q">ago</span><span>sep</span><span class="q">oct</span><span>nov</span><span class="q">dic</span><span>ene</span>
+      </div>
+      <span></span>
+    </div>
+
+    <div class="tl-legend">
+      <span class="tl-legend-title">Cómo leer el cronograma</span>
+      <ul class="tl-legend-items">
+        <li><span class="tl-legend-swatch"></span><strong>ago–ene</strong> · 6 meses</li>
+        <li><span class="tl-legend-swatch swatch-solid"></span><strong>Barra sólida</strong> · módulo con costo</li>
+        <li><span class="tl-legend-swatch swatch-dim"></span><strong>Barra punteada</strong> · incluido sin costo</li>
+        <li><span class="tl-legend-pill">primero</span><strong>Pill verde</strong> · arranque fijo del sistema</li>
+      </ul>
+    </div>
+
+    <div class="inversion-block">
+      <div class="inversion-eyebrow">Inversión</div>
+      <div class="inversion-grid">
+        <div class="inversion-price">
+          <div class="price-amount"><span class="price-currency">USD</span>15.000<span class="price-rate"> total</span></div>
+          <div class="price-meta">6 meses · 4 módulos · USD 3.750 por módulo · pago contra firma</div>
+        </div>
+        <div class="inversion-team">
+          <div class="inversion-label">El alcance</div>
+          <ul>
+            <li>Kenco Brain entregado y operable (incluido)</li>
+            <li>4 departamentos con cotizador, órdenes y validación IA</li>
+            <li>Hub central: toda la operación en un solo lugar</li>
+            <li>Reportes gerenciales por departamento</li>
+            <li>Formación continua al equipo durante todo el proyecto</li>
+          </ul>
+        </div>
+      </div>
+      <p class="inversion-note">
+        <em>Cada módulo se libera contra firma del entregable: USD 3.750 por módulo firmado. El Kenco Brain (listo el 1 de agosto) y la formación continua van incluidos sin costo adicional. Kenco escoge los módulos 2, 3 y 4 del menú de departamentos antes del arranque — y puede reordenar su secuencia según prioridad comercial.</em>
+      </p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     BRAIN · KENCO BRAIN · incluido
+     ════════════════════════════════════════════════════════════════════ -->
+<section class="page phase-page" id="brain">
+
+  <div class="top">
+    <span class="lockup">
+      <span class="kenco-mark" aria-label="Kenco"><svg xmlns="http://www.w3.org/2000/svg" viewBox="180 220 1120 260"><path d="M404.41 263.83h-81.14l-63.44 89.67H258V220.93h-73.2V474.9H258v-85.4h1.83l65.88 85.4h88.46l-86.02-108.58z"/><path d="M502.3 258.95c-67.71 0-114.68 46.97-114.68 110.41 0 62.22 45.75 111.63 124.44 111.63 54.9 0 80.52-24.4 80.52-24.4l-23.18-45.75s-19.52 14.03-54.29 14.03c-29.28 0-51.24-12.81-56.73-42.09h151.29s.61-7.32.61-15.25c-.01-64.66-40.88-108.58-107.98-108.58zm-43.31 87.84c5.49-23.79 21.35-34.77 42.7-34.77 22.57 0 37.21 15.25 39.65 34.77h-82.35z"/><path d="M997.71 419.39c-32.33 0-54.9-19.52-54.9-50.02 0-30.5 22.57-50.02 54.9-50.02 25.62 0 42.09 10.98 42.09 10.98l20.74-53.68s-22.57-17.69-69.54-17.69c-73.81 0-122.01 47.58-122.01 110.41 0 62.22 48.19 110.41 122.01 110.41 46.97 0 68.32-17.69 68.32-17.69l-19.52-53.68c.01 0-16.47 10.98-42.09 10.98z"/><path d="M1175.56 258.95c-65.88 0-119.57 43.92-119.57 111.63 0 66.49 53.68 109.19 119.57 109.19 65.88 0 120.18-42.7 120.18-109.19-.01-67.71-54.3-111.63-120.18-111.63zm0 162.88c-28.67 0-48.19-20.74-48.19-52.46 0-31.11 19.52-52.46 48.19-52.46 29.28 0 48.8 21.35 48.8 52.46 0 31.72-19.52 52.46-48.8 52.46z"/><path d="M626.31 263.91v210.91h73.09V330.57h80.14v144.25h73.09V330.57l-73.09-66.66z"/></svg></span>
+      <span class="x">×</span>
+      <span class="cresco-mark">crescō<em>.</em></span>
+    <a href="#" class="phase-back">← Volver a la propuesta</a>
+  </div>
+
+  <div class="phase-breadcrumb">
+    Propuesta <span class="sep">/</span> Módulos <span class="sep">/</span> <span class="current">Kenco Brain</span>
+  </div>
+
+  <div class="phase-hero">
+    <div class="phase-title-row">
+      <span class="phase-code-mark">brain/</span>
+      <span class="phase-title">Kenco Brain</span>
+      <span class="phase-status">incluido</span>
+    </div>
+    <span class="phase-subtitle">La marca de Kenco documentada y operable · listo el 1 de agosto · sin costo</span>
+  </div>
+
+  <div class="phase-mini-timeline">
+    <span class="phase-mini-label cur">1 ago</span>
+    <div class="phase-mini-bar"><div class="phase-mini-fill dim" style="left:0%;width:6%;"></div></div>
+    <span class="phase-mini-label">31 ene</span>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">¿Qué es?</div>
+    <div class="phase-section-body">
+      El sistema de marca completo de Kenco, que ya estamos construyendo juntos: <strong>esencia</strong> (misión, posicionamiento, cliente ideal), <strong>voz</strong> (cómo habla Kenco en IG, WhatsApp y cotizaciones), <strong>identidad visual</strong> (logo, paleta con valores de impresión CMYK/Pantone, tipografía, patrones) y un <strong>manual vivo navegable</strong> con todos los assets descargables.
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">¿Por qué importa?</div>
+    <div class="phase-section-body">
+      <strong>Es el filtro de todo lo que viene.</strong> Cada cotización, cada WhatsApp y cada reporte que genere el sistema pasa por el Kenco Brain: sin él, la AI suena genérica; con él, conserva la voz, el criterio y la personalidad de Kenco. Por eso lo entregamos primero — y por eso entra sin costo en esta propuesta.
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">Entregables</div>
+    <div class="phase-section-body">
+      <ul>
+        <li>Manual de marca vivo publicado (esencia + voz + identidad)</li>
+        <li>Paleta con equivalencias de impresión (HEX/RGB/CMYK/Pantone/RAL)</li>
+        <li>Sistema de logo completo en SVG + PNG</li>
+        <li>Guía de voz con ejemplos por canal y glosario</li>
+        <li>Plantillas de aplicación (presentación, papelería, redes)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">¿Cuándo está listo?</div>
+    <div class="phase-section-body">
+      <strong>1 de agosto de 2026</strong> — el mismo día que arranca el módulo 1. Los módulos nacen con el Brain ya operando.
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">Inversión</div>
+    <div class="phase-section-body">
+      <strong>Sin costo.</strong> Incluido en la propuesta como base del sistema.
+    </div>
+  </div>
+
+  <div class="phase-nav">
+    <a href="#" class="prev">← Propuesta</a>
+    <a href="#m1" class="nxt">M1 · Imprenta digital →</a>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     M1 · IMPRENTA DIGITAL · primero · 25%
+     ════════════════════════════════════════════════════════════════════ -->
+<section class="page phase-page" id="m1">
+
+  <div class="top">
+    <span class="lockup">
+      <span class="kenco-mark" aria-label="Kenco"><svg xmlns="http://www.w3.org/2000/svg" viewBox="180 220 1120 260"><path d="M404.41 263.83h-81.14l-63.44 89.67H258V220.93h-73.2V474.9H258v-85.4h1.83l65.88 85.4h88.46l-86.02-108.58z"/><path d="M502.3 258.95c-67.71 0-114.68 46.97-114.68 110.41 0 62.22 45.75 111.63 124.44 111.63 54.9 0 80.52-24.4 80.52-24.4l-23.18-45.75s-19.52 14.03-54.29 14.03c-29.28 0-51.24-12.81-56.73-42.09h151.29s.61-7.32.61-15.25c-.01-64.66-40.88-108.58-107.98-108.58zm-43.31 87.84c5.49-23.79 21.35-34.77 42.7-34.77 22.57 0 37.21 15.25 39.65 34.77h-82.35z"/><path d="M997.71 419.39c-32.33 0-54.9-19.52-54.9-50.02 0-30.5 22.57-50.02 54.9-50.02 25.62 0 42.09 10.98 42.09 10.98l20.74-53.68s-22.57-17.69-69.54-17.69c-73.81 0-122.01 47.58-122.01 110.41 0 62.22 48.19 110.41 122.01 110.41 46.97 0 68.32-17.69 68.32-17.69l-19.52-53.68c.01 0-16.47 10.98-42.09 10.98z"/><path d="M1175.56 258.95c-65.88 0-119.57 43.92-119.57 111.63 0 66.49 53.68 109.19 119.57 109.19 65.88 0 120.18-42.7 120.18-109.19-.01-67.71-54.3-111.63-120.18-111.63zm0 162.88c-28.67 0-48.19-20.74-48.19-52.46 0-31.11 19.52-52.46 48.19-52.46 29.28 0 48.8 21.35 48.8 52.46 0 31.72-19.52 52.46-48.8 52.46z"/><path d="M626.31 263.91v210.91h73.09V330.57h80.14v144.25h73.09V330.57l-73.09-66.66z"/></svg></span>
+      <span class="x">×</span>
+      <span class="cresco-mark">crescō<em>.</em></span>
+    <a href="#" class="phase-back">← Volver a la propuesta</a>
+  </div>
+
+  <div class="phase-breadcrumb">
+    Propuesta <span class="sep">/</span> Módulos <span class="sep">/</span> <span class="current">M1 · Imprenta digital</span>
+  </div>
+
+  <div class="phase-hero">
+    <div class="phase-title-row">
+      <span class="phase-code-mark">m1/</span>
+      <span class="phase-title">Imprenta digital</span>
+      <span class="phase-status">primero</span>
+    </div>
+    <span class="phase-subtitle">El esqueleto del sistema · complejidad alta · ago–sep · 2 meses · 25% · USD 3.750</span>
+  </div>
+
+  <div class="phase-mini-timeline">
+    <span class="phase-mini-label cur">ago–sep</span>
+    <div class="phase-mini-bar"><div class="phase-mini-fill" style="left:0%;width:33.33%;"></div></div>
+    <span class="phase-mini-label">31 ene</span>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">¿Qué hacemos?</div>
+    <div class="phase-section-body">
+      El módulo que define el patrón de todos los demás. <strong>Cotizador inteligente USD/Bs</strong> conectado al BCV, <strong>hub central de órdenes editable</strong> para ventas y planta, <strong>validación con IA</strong> de resolución, formato y sangrado antes de que el arte llegue a producción, y reportes gerenciales automáticos. Construido por iteraciones con sesiones de cocreación — cada ciclo termina con software en uso en un entorno de prueba.
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">¿Por qué va primero?</div>
+    <div class="phase-section-body">
+      Es el departamento que ya levantamos juntos en el descubrimiento: conocemos cómo entra una orden, cómo se cotiza y cómo se valida un arte. <strong>Aquí se prueba el esqueleto completo</strong> — cotizador, órdenes, validación, reportes — que después se replica en los otros tres departamentos con mucho menos riesgo.
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">Entregables</div>
+    <div class="phase-section-body">
+      <ul>
+        <li>Cotizador USD/Bs sincronizado con BCV</li>
+        <li>Hub central de órdenes (visualización + edición)</li>
+        <li>Validación IA pre-producción (resolución, formato, sangrado)</li>
+        <li>PDF de presupuesto con marca Kenco enviado por correo</li>
+        <li>Reporte diario gerencial (ventas, conversión, cuellos de botella)</li>
+        <li>Avisos automáticos por WhatsApp en cada cambio de estado</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">¿Cuándo está listo?</div>
+    <div class="phase-section-body">
+      <strong>Sistema en uso real por planta y firmado por dirección.</strong> Sin firma del módulo 1, el módulo 2 no arranca. La validación es del uso, no del código.
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">Inversión</div>
+    <div class="phase-section-body">
+      <strong>USD 3.750</strong> · 25% del proyecto · liberado contra firma del entregable.
+    </div>
+  </div>
+
+  <div class="phase-nav">
+    <a href="#brain" class="prev">← Kenco Brain</a>
+    <a href="#menu" class="nxt">M2–M4 · El menú →</a>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     MENU · M2–M4 · DEPARTAMENTOS A ELECCIÓN
+     ════════════════════════════════════════════════════════════════════ -->
+<section class="page phase-page" id="menu">
+
+  <div class="top">
+    <span class="lockup">
+      <span class="kenco-mark" aria-label="Kenco"><svg xmlns="http://www.w3.org/2000/svg" viewBox="180 220 1120 260"><path d="M404.41 263.83h-81.14l-63.44 89.67H258V220.93h-73.2V474.9H258v-85.4h1.83l65.88 85.4h88.46l-86.02-108.58z"/><path d="M502.3 258.95c-67.71 0-114.68 46.97-114.68 110.41 0 62.22 45.75 111.63 124.44 111.63 54.9 0 80.52-24.4 80.52-24.4l-23.18-45.75s-19.52 14.03-54.29 14.03c-29.28 0-51.24-12.81-56.73-42.09h151.29s.61-7.32.61-15.25c-.01-64.66-40.88-108.58-107.98-108.58zm-43.31 87.84c5.49-23.79 21.35-34.77 42.7-34.77 22.57 0 37.21 15.25 39.65 34.77h-82.35z"/><path d="M997.71 419.39c-32.33 0-54.9-19.52-54.9-50.02 0-30.5 22.57-50.02 54.9-50.02 25.62 0 42.09 10.98 42.09 10.98l20.74-53.68s-22.57-17.69-69.54-17.69c-73.81 0-122.01 47.58-122.01 110.41 0 62.22 48.19 110.41 122.01 110.41 46.97 0 68.32-17.69 68.32-17.69l-19.52-53.68c.01 0-16.47 10.98-42.09 10.98z"/><path d="M1175.56 258.95c-65.88 0-119.57 43.92-119.57 111.63 0 66.49 53.68 109.19 119.57 109.19 65.88 0 120.18-42.7 120.18-109.19-.01-67.71-54.3-111.63-120.18-111.63zm0 162.88c-28.67 0-48.19-20.74-48.19-52.46 0-31.11 19.52-52.46 48.19-52.46 29.28 0 48.8 21.35 48.8 52.46 0 31.72-19.52 52.46-48.8 52.46z"/><path d="M626.31 263.91v210.91h73.09V330.57h80.14v144.25h73.09V330.57l-73.09-66.66z"/></svg></span>
+      <span class="x">×</span>
+      <span class="cresco-mark">crescō<em>.</em></span>
+    <a href="#" class="phase-back">← Volver a la propuesta</a>
+  </div>
+
+  <div class="phase-breadcrumb">
+    Propuesta <span class="sep">/</span> Módulos <span class="sep">/</span> <span class="current">M2–M4 · El menú de departamentos</span>
+  </div>
+
+  <div class="phase-hero">
+    <div class="phase-title-row">
+      <span class="phase-code-mark">m2–m4/</span>
+      <span class="phase-title">El menú</span>
+      <span class="phase-status">escoge 3</span>
+    </div>
+    <span class="phase-subtitle">Kenco escoge 3 de estos 4 departamentos · oct–ene · USD 3.750 por módulo</span>
+  </div>
+
+  <div class="phase-mini-timeline">
+    <span class="phase-mini-label">1 ago</span>
+    <div class="phase-mini-bar"><div class="phase-mini-fill" style="left:33.33%;width:66.67%;"></div></div>
+    <span class="phase-mini-label cur">oct–ene</span>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">¿Cómo funciona?</div>
+    <div class="phase-section-body">
+      Cada módulo replica el esqueleto probado en imprenta digital, adaptado al flujo real del departamento: <strong>cotizador con sus variables propias</strong>, <strong>órdenes conectadas al hub central</strong>, <strong>validación pre-producción específica</strong> y <strong>reportes gerenciales</strong>. Kenco escoge los 3 departamentos antes del arranque y define su orden según prioridad comercial.
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">Gigantografía</div>
+    <div class="phase-section-body">
+      <em>Complejidad alta.</em> Banners, vinil autoadhesivo, rotulación, sublimación, material POP y gran formato.
+      <ul>
+        <li>Cotización por m², material y acabado (laminado mate/brillante)</li>
+        <li>Validación de artes en gran formato (resolución a escala real)</li>
+        <li>Órdenes con medidas, instalación y fecha de evento</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">Textil</div>
+    <div class="phase-section-body">
+      <em>Complejidad alta en confección y gorras.</em> Confección, gorras, bordados y marroquinería.
+      <ul>
+        <li>Cotización por prenda, talla, curva y técnica de marcado</li>
+        <li>Órdenes con fichas técnicas por producto</li>
+        <li>Si entra, definimos juntos qué sub-áreas cubre el módulo</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">Taller</div>
+    <div class="phase-section-body">
+      Stands, corpóreos, señaléticas, mobiliario, corte y grabado láser.
+      <ul>
+        <li>Cotización por proyecto: piezas, materiales y mano de obra</li>
+        <li>Órdenes con planos, fechas de montaje y sitio</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">Encuadernación</div>
+    <div class="phase-section-body">
+      Libretas, calendarios, cajas, álbumes, carpetas y sobres.
+      <ul>
+        <li>Cotización por tiraje, formato y acabado (foil, bajo relieve)</li>
+        <li>Órdenes con pruebas de color y fechas de tiraje</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">Inversión</div>
+    <div class="phase-section-body">
+      <strong>USD 3.750 por módulo</strong> (3 módulos · 75% del proyecto) · cada uno liberado contra firma de su entregable. Si un módulo no cierra, el siguiente no arranca.
+    </div>
+  </div>
+
+  <div class="phase-nav">
+    <a href="#m1" class="prev">← M1 · Imprenta digital</a>
+    <a href="#cierre" class="nxt">Formación + entrega →</a>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     CIERRE · FORMACIÓN CONTINUA + ENTREGA · sin costo
+     ════════════════════════════════════════════════════════════════════ -->
+<section class="page phase-page" id="cierre">
+
+  <div class="top">
+    <span class="lockup">
+      <span class="kenco-mark" aria-label="Kenco"><svg xmlns="http://www.w3.org/2000/svg" viewBox="180 220 1120 260"><path d="M404.41 263.83h-81.14l-63.44 89.67H258V220.93h-73.2V474.9H258v-85.4h1.83l65.88 85.4h88.46l-86.02-108.58z"/><path d="M502.3 258.95c-67.71 0-114.68 46.97-114.68 110.41 0 62.22 45.75 111.63 124.44 111.63 54.9 0 80.52-24.4 80.52-24.4l-23.18-45.75s-19.52 14.03-54.29 14.03c-29.28 0-51.24-12.81-56.73-42.09h151.29s.61-7.32.61-15.25c-.01-64.66-40.88-108.58-107.98-108.58zm-43.31 87.84c5.49-23.79 21.35-34.77 42.7-34.77 22.57 0 37.21 15.25 39.65 34.77h-82.35z"/><path d="M997.71 419.39c-32.33 0-54.9-19.52-54.9-50.02 0-30.5 22.57-50.02 54.9-50.02 25.62 0 42.09 10.98 42.09 10.98l20.74-53.68s-22.57-17.69-69.54-17.69c-73.81 0-122.01 47.58-122.01 110.41 0 62.22 48.19 110.41 122.01 110.41 46.97 0 68.32-17.69 68.32-17.69l-19.52-53.68c.01 0-16.47 10.98-42.09 10.98z"/><path d="M1175.56 258.95c-65.88 0-119.57 43.92-119.57 111.63 0 66.49 53.68 109.19 119.57 109.19 65.88 0 120.18-42.7 120.18-109.19-.01-67.71-54.3-111.63-120.18-111.63zm0 162.88c-28.67 0-48.19-20.74-48.19-52.46 0-31.11 19.52-52.46 48.19-52.46 29.28 0 48.8 21.35 48.8 52.46 0 31.72-19.52 52.46-48.8 52.46z"/><path d="M626.31 263.91v210.91h73.09V330.57h80.14v144.25h73.09V330.57l-73.09-66.66z"/></svg></span>
+      <span class="x">×</span>
+      <span class="cresco-mark">crescō<em>.</em></span>
+    <a href="#" class="phase-back">← Volver a la propuesta</a>
+  </div>
+
+  <div class="phase-breadcrumb">
+    Propuesta <span class="sep">/</span> Módulos <span class="sep">/</span> <span class="current">Formación continua + entrega</span>
+  </div>
+
+  <div class="phase-hero">
+    <div class="phase-title-row">
+      <span class="phase-code-mark">+/</span>
+      <span class="phase-title">Formación + entrega</span>
+      <span class="phase-status">incluido</span>
+    </div>
+    <span class="phase-subtitle">Adopción real durante todo el proyecto · entrega final 31 de enero de 2027 · sin costo</span>
+  </div>
+
+  <div class="phase-mini-timeline">
+    <span class="phase-mini-label cur">1 ago</span>
+    <div class="phase-mini-bar"><div class="phase-mini-fill dim" style="left:0%;width:100%;"></div></div>
+    <span class="phase-mini-label cur">31 ene</span>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">¿Qué hacemos?</div>
+    <div class="phase-section-body">
+      <strong>La formación no es una fase al final: corre en paralelo a todo el proyecto.</strong> Con cada módulo que se entrega, el equipo del departamento se capacita en su uso y en el ecosistema Anthropic (Claude, skills internas, comandos del día a día). Al cierre: handoff técnico documentado, manuales por rol y plan de evolución sugerido.
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">¿Por qué importa?</div>
+    <div class="phase-section-body">
+      Sin adopción, ningún sistema sobrevive. Capacitar mientras se construye — y no al final — hace que cada departamento llegue al 31 de enero <strong>ya operando su módulo solo</strong>, sin dependencia de crescō para el día a día.
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">Entregables</div>
+    <div class="phase-section-body">
+      <ul>
+        <li>Sesiones de formación por módulo (operativa + planta + dirección)</li>
+        <li>Manuales operativos por rol</li>
+        <li>Set de skills custom de Kenco (cotizar, validar arte, generar reporte)</li>
+        <li>Documentación técnica completa del sistema</li>
+        <li>Plan de evolución sugerido para los próximos 12 meses</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">¿Cuándo está listo?</div>
+    <div class="phase-section-body">
+      <strong>31 de enero de 2027</strong> · los 4 módulos firmados, el equipo operando autónomamente y el sistema entregado completo.
+    </div>
+  </div>
+
+  <div class="phase-section">
+    <div class="phase-section-lbl">Inversión</div>
+    <div class="phase-section-body">
+      <strong>Sin costo.</strong> La formación continua y la entrega final están incluidas en el alcance del proyecto.
+    </div>
+  </div>
+
+  <div class="phase-nav">
+    <a href="#menu" class="prev">← M2–M4 · El menú</a>
+    <a href="#" class="nxt">Volver a la propuesta →</a>
+  </div>
+
+</section>
+
+<script>
+  (function () {
+    const ROUTES = ['brain', 'm1', 'menu', 'cierre'];
+
+    function currentRoute() {
+      const hash = window.location.hash.slice(1);
+      return ROUTES.includes(hash) ? hash : null;
+    }
+
+    function showRoute() {
+      document.body.classList.add('routing');
+
+      setTimeout(() => {
+        const route = currentRoute();
+        document.body.classList.toggle('view-phase', route !== null);
+
+        document.querySelectorAll('.phase-page').forEach(page => {
+          page.style.display = page.id === route ? 'flex' : 'none';
+        });
+
+        window.scrollTo({ top: 0, behavior: 'instant' });
+
+        requestAnimationFrame(() => {
+          document.body.classList.remove('routing');
+        });
+      }, 180);
+    }
+
+    window.addEventListener('hashchange', showRoute);
+    window.addEventListener('DOMContentLoaded', showRoute);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      const route = currentRoute();
+      if (route === null) return;
+
+      const idx = ROUTES.indexOf(route);
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        window.location.hash = idx > 0 ? '#' + ROUTES[idx - 1] : '#';
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        window.location.hash = idx < ROUTES.length - 1 ? '#' + ROUTES[idx + 1] : '#';
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        window.location.hash = '#';
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>
