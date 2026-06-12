@@ -283,7 +283,9 @@
 @keyframes cp-tmin { from { opacity: 0; transform: translateY(14px) scale(.985) } to { opacity: 1; transform: none } }
 @keyframes cp-tmout { from { opacity: 1; transform: none } to { opacity: 0; transform: translateY(12px) scale(.985) } }
 .cp-tm-wrap { position: fixed; inset: 0; z-index: 71; display: flex; align-items: center; justify-content: center; padding: 30px; }
-.cp-tm { width: 430px; max-width: 92vw; border-radius: 20px; background: rgba(247,243,234,.96);
+/* min-width: 0 — el modal es flex item del wrap; sin esto su min-content
+   (un email largo en accesos) le gana al max-width y desborda en móvil */
+.cp-tm { width: 430px; max-width: 92vw; min-width: 0; border-radius: 20px; background: rgba(247,243,234,.96);
   -webkit-backdrop-filter: blur(34px) saturate(1.2); backdrop-filter: blur(34px) saturate(1.2);
   border: .5pt solid rgba(255,255,255,.6); box-shadow: 0 50px 120px -40px rgba(26,22,18,.6);
   padding: 20px 22px 22px; animation: cp-tmin .4s var(--cp-ease) both; }
@@ -394,7 +396,9 @@
 
 /* accesos: tarjetas de credenciales */
 .cp-cred-grid { display: grid; grid-template-columns: 1fr; gap: 12px; padding-bottom: 6px; }
-.cp-cred { background: rgba(239,234,224,.75); border: .5pt solid rgba(212,204,188,.6);
+/* min-width: 0 — sin esto el email largo fija el min-content del grid item
+   y la tarjeta se desborda del modal en móvil (el 1fr no puede encogerse) */
+.cp-cred { min-width: 0; background: rgba(239,234,224,.75); border: .5pt solid rgba(212,204,188,.6);
   border-radius: 14px; padding: 14px 15px 12px; }
 .cp-cred-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
 .cp-rol { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 600;
@@ -410,7 +414,7 @@
   background: rgba(247,243,234,.85); border: .5pt solid rgba(212,204,188,.5); margin-bottom: 5px; }
 .cp-kv-k { font-size: 9px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
   color: var(--cp-muted); width: 46px; flex: none; }
-.cp-kv-v { flex: 1; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px;
+.cp-kv-v { flex: 1; min-width: 0; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px;
   color: var(--cp-ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; user-select: all; }
 .cp-kv-btn { border: 0; background: transparent; cursor: pointer; font: inherit; font-size: 10.5px;
   font-weight: 500; color: var(--cp-muted); padding: 2px 5px; border-radius: 5px;
@@ -445,6 +449,18 @@
   .cp-chip-st { display: none; } /* en móvil, el chip respira: solo punto + nombre */
   .cp-svc { grid-template-columns: 1fr auto; }
   .cp-svc-bar { display: none; }
+
+  /* modal ancho a casi pantalla completa, anclado arriba (no lo corta el viewport) */
+  .cp-tm-wrap { padding: 14px 10px; align-items: flex-start; }
+  .cp-tm.cp-tmw { width: 100%; max-height: calc(100dvh - 28px); padding: 16px 8px 16px 14px; }
+  .cp-tm.cp-tmw .cp-tmh { padding-right: 6px; }
+  .cp-tm.cp-tmw .cp-tmb { padding-right: 6px; }
+
+  /* credenciales compactas: el valor trunca, los botones nunca se salen */
+  .cp-cred { padding: 13px 13px 11px; }
+  .cp-kv { gap: 6px; padding: 6px 7px; }
+  .cp-kv-k { width: 36px; font-size: 8.5px; }
+  .cp-kv-btn { font-size: 10px; padding: 2px 3px; }
 }
 
 /* simulador de infraestructura: slider de usuarios activos */
