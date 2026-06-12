@@ -17,7 +17,7 @@ import type { AppContext } from '@/lib/auth/context';
 // rico → abre el visor /portal/docs/[slug]) o un doc de Wiki con categoría
 // Proposal (→ modal de bloques). El archivo manda si existe.
 export type PortalProposal =
-  | { kind: 'file'; slug: string; title: string; chipState: string }
+  | { kind: 'file'; slug: string; title: string; chipState: string; meta?: string; hasPdf?: boolean }
   | { kind: 'wiki'; id: string; title: string; dateLabel: string | null };
 
 export interface PortalTestUser {
@@ -246,6 +246,8 @@ export async function loadPortalDocuments(ctx: AppContext): Promise<PortalDocume
           slug: fileDoc.slug,
           title: fileDoc.title,
           chipState: fileDoc.chipState,
+          meta: fileDoc.meta,
+          hasPdf: Boolean(fileDoc.pdf),
         })
       : findProposalRow(ctx)
           .then((row) => (row ? parseProposalRow(row) : null))

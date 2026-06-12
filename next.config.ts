@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     '/portal/docs/[slug]/raw': ['./private-docs/**/*'],
     '/portal/docs/[slug]/pdf': ['./private-docs/**/*'],
+    '/api/portal/docs/[slug]/raw': ['./private-docs/**/*'],
+    '/api/portal/docs/[slug]/pdf': ['./private-docs/**/*'],
   },
 };
 

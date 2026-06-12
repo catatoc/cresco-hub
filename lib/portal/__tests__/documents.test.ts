@@ -193,6 +193,8 @@ describe('doc-files (documentos privados)', () => {
       slug: 'kenco-propuesta',
       title: 'Propuesta · cuatro módulos',
       chipState: 'v3.0 · 4 módulos',
+      meta: 'kenco × crescō · v3.0 · junio 2026',
+      hasPdf: true,
     });
   });
 });
