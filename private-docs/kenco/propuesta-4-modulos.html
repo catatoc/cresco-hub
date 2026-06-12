@@ -1009,7 +1009,8 @@
   }
 
   @media print {
-    body { padding: 0; background: white; }
+    /* el body en pantalla es flex-row (deck): en papel debe apilar las páginas */
+    body { display: block; padding: 0; background: white; }
     .page { box-shadow: none; border: none; page-break-after: always; }
     .phase-page,
     body.view-phase .onepager { display: flex !important; }
