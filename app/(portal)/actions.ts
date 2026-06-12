@@ -4,6 +4,7 @@ import { requireContext } from '@/lib/auth/require-context';
 import { toggleTaskForMember } from '@/lib/portal/toggle';
 import { markPortalSignIn } from '@/lib/portal/welcome';
 import { loadProjectContent, type ProjectBlock } from '@/lib/portal/content';
+import { loadProposalContent } from '@/lib/portal/documents';
 
 // Marca/desmarca una tarea del cliente (portal web). La verificación de
 // ownership vive en toggleTaskForMember (compartida con el API móvil).
@@ -24,4 +25,11 @@ export async function completePortalWelcome(): Promise<{ ok: boolean }> {
 export async function getProjectBrief(projectId: string): Promise<ProjectBlock[]> {
   const ctx = await requireContext();
   return (await loadProjectContent(ctx, projectId)) ?? [];
+}
+
+// La propuesta del cliente (Wiki con categoría Proposal) — se carga lazy al
+// abrir el chip en la cápsula. El gate por Customer vive en el query.
+export async function getProposal(): Promise<{ title: string; blocks: ProjectBlock[] } | null> {
+  const ctx = await requireContext();
+  return loadProposalContent(ctx);
 }
