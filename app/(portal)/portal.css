@@ -614,3 +614,7 @@
 @media (prefers-reduced-motion: reduce) {
   .cp-tour-veil, .cp-tour-ring, .cp-tour-card { transition: none; }
 }
+
+/* el tour mientras la página viaja: seguimiento 1:1, sin transición — el
+   morph de .55s solo anima entre pasos, nunca contra el scroll del teléfono */
+.cp-tour-noanim { transition: none !important; }

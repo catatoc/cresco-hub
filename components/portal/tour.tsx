@@ -88,7 +88,18 @@ export function PortalTour({ autoStart }: { autoStart: boolean }) {
     return () => clearTimeout(t);
   }, [autoStart, start]);
 
-  // geometría: imperativa vía refs (sin re-render por pixel)
+  // transiciones del velo/aro/tarjeta: apagadas mientras la página viaja
+  // (siguen al foco 1:1) y reactivadas al aterrizar — el morph solo anima
+  // entre pasos, nunca contra el scroll. Sin esto, en el teléfono el aro
+  // va elástico detrás de su sección y el smooth scroll se ve a tirones.
+  const setAnim = useCallback((on: boolean) => {
+    [veilT, veilB, veilL, veilR, ring, card].forEach((n) =>
+      n.current?.classList.toggle('cp-tour-noanim', !on),
+    );
+  }, []);
+
+  // geometría: imperativa vía refs (sin re-render por pixel) y SIN scroll —
+  // el scroll se decide una sola vez por paso, nunca desde aquí
   const layout = useCallback(() => {
     const s = steps[step];
     if (!s) return;
@@ -124,21 +135,55 @@ export function PortalTour({ autoStart }: { autoStart: boolean }) {
       c.style.top = '';
       c.style.bottom = '';
     }
-
-    // el foco siempre visible
-    if (b.top < 0 || b.bottom > H) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [steps, step]);
+
+  // al cambiar de paso: UN solo scroll (si hace falta), calculado a mano —
+  // en móvil descuenta la hoja del tour para que el foco no quede tapado
+  useEffect(() => {
+    if (!active) return;
+    const s = steps[step];
+    const el = s && document.getElementById(s.target);
+    if (!el) return;
+    const b = el.getBoundingClientRect();
+    const H = window.innerHeight;
+    const sheetH = window.innerWidth <= MOBILE ? (card.current?.offsetHeight ?? 0) + 28 : 0;
+    const visible = H - sheetH;
+    const fits = b.top >= 8 && b.bottom <= visible - 8;
+    if (fits) {
+      layout();
+      return;
+    }
+    setAnim(false); // el velo viaja pegado, sin pelear con su transición
+    const targetY = window.scrollY + b.top - Math.max(16, (visible - b.height) / 2);
+    window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+    layout();
+  }, [active, steps, step, layout, setAnim]);
 
   useEffect(() => {
     if (!active) return;
-    layout();
-    window.addEventListener('resize', layout);
-    window.addEventListener('scroll', layout, { passive: true });
-    return () => {
-      window.removeEventListener('resize', layout);
-      window.removeEventListener('scroll', layout);
+    let settle: ReturnType<typeof setTimeout>;
+    const onScroll = () => {
+      // mientras la página se mueve, seguir 1:1; al asentarse, volver el morph
+      setAnim(false);
+      layout();
+      clearTimeout(settle);
+      settle = setTimeout(() => setAnim(true), 140);
     };
-  }, [active, layout]);
+    const onScrollEnd = () => {
+      clearTimeout(settle);
+      layout();
+      setAnim(true);
+    };
+    window.addEventListener('resize', layout);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scrollend', onScrollEnd);
+    return () => {
+      clearTimeout(settle);
+      window.removeEventListener('resize', layout);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scrollend', onScrollEnd);
+    };
+  }, [active, layout, setAnim]);
 
   // teclado: ← → Enter Esc
   useEffect(() => {
