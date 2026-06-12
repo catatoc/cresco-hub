@@ -4,11 +4,13 @@ import { useEffect, useState, useTransition, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { PortalScene } from './scene';
 import { Brand } from './brand';
-import { BriefMermaid } from './brief-mermaid';
+import { Brief, BriefSkeleton } from './brief';
+import { DocumentsCapsule } from './capsule';
 import { PortalTimeline, taskState } from './timeline';
 import { toggleMyTask, getProjectBrief } from '@/app/(portal)/actions';
 import { timelineGeom, TODAY, type PortalData, type PortalProject, type PortalTask, type DeckHealth } from '@/lib/portal/data';
 import type { PortalPayments } from '@/lib/portal/payments';
+import type { PortalDocuments } from '@/lib/portal/documents';
 import type { ProjectBlock } from '@/lib/portal/content';
 
 const HEALTH_LABEL: Record<DeckHealth, string> = { track: 'on track', risk: 'en riesgo', off: 'off track', block: 'bloqueado' };
@@ -27,65 +29,7 @@ function Av({ initials, color, size = 30 }: { initials: string; color: string; s
   );
 }
 
-// El brief: los bloques de la página del proyecto en Notion, en lenguaje crescō
-function Brief({ blocks }: { blocks: ProjectBlock[] }) {
-  let num = 0;
-  return (
-    <>
-      {blocks.map((b, i) => {
-        const d = { '--d': `${0.05 + Math.min(i, 14) * 0.035}s` } as CSSProperties;
-        if (b.kind !== 'oli') num = 0;
-        switch (b.kind) {
-          case 'h1':
-          case 'h2':
-            return <div className="cp-bh cp-rb" style={d} key={i}>{b.text}</div>;
-          case 'h3':
-            return <div className="cp-bh3 cp-rb" style={d} key={i}>{b.text}</div>;
-          case 'li':
-            return <div className="cp-bli cp-rb" style={d} key={i}><i />{b.text}</div>;
-          case 'oli':
-            num += 1;
-            return <div className="cp-bli cp-rb" style={d} key={i}><span className="cp-bnum">{num}.</span>{b.text}</div>;
-          case 'callout':
-            return <div className="cp-bcall cp-rb" style={d} key={i}>{b.icon && <span className="cp-bico">{b.icon}</span>}<span>{b.text}</span></div>;
-          case 'quote':
-            return <div className="cp-bq cp-rb" style={d} key={i}>{b.text}</div>;
-          case 'mermaid':
-            return <div className="cp-rb" style={d} key={i}><BriefMermaid chart={b.text} /></div>;
-          case 'img':
-            return (
-              <figure className="cp-bimg cp-rb" style={d} key={i}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={b.url} alt={b.text || 'Imagen del proyecto'} loading="lazy" />
-                {b.text && <figcaption>{b.text}</figcaption>}
-              </figure>
-            );
-          case 'divider':
-            return <hr className="cp-bdiv" key={i} />;
-          default:
-            return <p className="cp-bp cp-rb" style={d} key={i}>{b.text}</p>;
-        }
-      })}
-    </>
-  );
-}
-
-function BriefSkeleton() {
-  const w = [60, 92, 84, 0, 40, 88, 76, 64];
-  return (
-    <div style={{ paddingTop: 6 }}>
-      {w.map((pct, i) =>
-        pct ? (
-          <span key={i} className="cp-sk" style={{ width: `${pct}%`, height: 12, display: 'block', marginBottom: 12 }} />
-        ) : (
-          <span key={i} style={{ display: 'block', height: 10 }} />
-        ),
-      )}
-    </div>
-  );
-}
-
-export function PortalHome({ data, payments }: { data: PortalData; payments: PortalPayments }) {
+export function PortalHome({ data, payments, documents }: { data: PortalData; payments: PortalPayments; documents: PortalDocuments }) {
   const { projects, myTasks, meetings } = data;
   const [openId, setOpenId] = useState<string | null>(null);
   const [sheetTasks, setSheetTasks] = useState(false); // brief ⇄ tareas dentro del drawer
@@ -93,10 +37,8 @@ export function PortalHome({ data, payments }: { data: PortalData; payments: Por
   // así que un brief viejo se refresca en silencio al reabrir el proyecto
   const [briefs, setBriefs] = useState<Record<string, { blocks: ProjectBlock[]; at: number }>>({});
   const [taskOpen, setTaskOpen] = useState<{ task: PortalTask; project: PortalProject } | null>(null);
-  const [payOpen, setPayOpen] = useState(false);
   const [drawerClosing, setDrawerClosing] = useState(false);
   const [modalClosing, setModalClosing] = useState(false);
-  const [payClosing, setPayClosing] = useState(false);
   const [doneOverride, setDoneOverride] = useState<Record<string, boolean>>({});
   const [, startTransition] = useTransition();
 
@@ -144,7 +86,6 @@ export function PortalHome({ data, payments }: { data: PortalData; payments: Por
 
   const closeDrawer = () => { setDrawerClosing(true); setTimeout(() => { setOpenId(null); setDrawerClosing(false); setSheetTasks(false); }, 300); };
   const closeTask = () => { setModalClosing(true); setTimeout(() => { setTaskOpen(null); setModalClosing(false); }, 280); };
-  const closePay = () => { setPayClosing(true); setTimeout(() => { setPayOpen(false); setPayClosing(false); }, 280); };
 
   // marcar/desmarcar — solo tareas propias (el server action lo re-verifica)
   function toggle(t: PortalTask) {
@@ -187,12 +128,10 @@ export function PortalHome({ data, payments }: { data: PortalData; payments: Por
         <div className="cp-greet cp-rb" style={{ '--d': '.12s' } as CSSProperties}>
           <h1>Hola, {data.firstName}.</h1>
           <p>Este es el estado de tu proyecto con <b>crescō</b>.</p>
-          {payments.pendingTotal > 0 && (
-            <button className="cp-paylink" onClick={() => setPayOpen(true)}>
-              Tienes {payments.items.filter((p) => !p.paid).length === 1 ? 'un pago pendiente' : `${payments.items.filter((p) => !p.paid).length} pagos pendientes`} · <b>{payments.pendingLabel}</b> <span className="cp-paylink-go">ver detalle →</span>
-            </button>
-          )}
         </div>
+
+        {/* ── la cápsula: documentos del cliente (pagos · propuesta · accesos · infra) ── */}
+        <DocumentsCapsule payments={payments} documents={documents} />
 
         {/* ── board de proyectos ── */}
         <div className="cp-glass cp-rb" style={{ '--d': '.22s' } as CSSProperties}>
@@ -370,40 +309,6 @@ export function PortalHome({ data, payments }: { data: PortalData; payments: Por
         );
       })()}
 
-      {/* ── modal de pagos (clic en la línea del saludo) ── */}
-      {payOpen && (
-        <>
-          <div className={`cp-scrim ${payClosing ? 'closing' : ''}`} style={{ zIndex: 70 }} onClick={closePay} />
-          <div className="cp-tm-wrap" onClick={closePay}>
-            <div className={`cp-tm ${payClosing ? 'closing' : ''}`} onClick={(e) => e.stopPropagation()}>
-              <div className="cp-tmh"><span className="cp-tmp">Pagos · con crescō</span><button className="cp-x" onClick={closePay}>×</button></div>
-              <div className="cp-pay-hero">
-                {payments.pendingTotal > 0 ? (
-                  <>
-                    <span className="cp-pay-big">{payments.pendingLabel}</span>
-                    <span className="cp-pay-sub">pendiente · {payments.items.length} pago{payments.items.length !== 1 ? 's' : ''}</span>
-                  </>
-                ) : (
-                  <span className="cp-pay-ok">Estás al día 🌱</span>
-                )}
-              </div>
-              {payments.items.map((p) => (
-                <div className="cp-pcard" key={p.id}>
-                  <div className="cp-pcard-top">
-                    <span className="cp-pcard-tt">{p.description}</span>
-                    <span className={`cp-tpill ${p.paid ? 'done' : 'pend'}`}>{p.paid ? 'pagado' : 'pendiente'}</span>
-                  </div>
-                  {p.notes && <div className="cp-pcard-notes">{p.notes}</div>}
-                  <div className="cp-pcard-foot">
-                    <span className="cp-pcard-meta">{p.paid ? p.dateLabel ?? '' : p.dateLabel ? `vence ${p.dateLabel}` : 'fecha por definir'}</span>
-                    <span className="cp-pcard-amt">{p.amountLabel}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
     </main>
   );
 }
