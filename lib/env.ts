@@ -15,6 +15,9 @@ const serverEnvSchema = z.object({
   NOTION_DB_TEST_USERS: z.string().min(10),
   // opcional: la base Finance (pagos del portal) — si falta, la sección no aparece
   NOTION_DB_FINANCE: z.string().min(10).optional(),
+  // Bearer secret for the error-sync cron route (Fase 5). Optional so a missing
+  // value never breaks app boot — the route just rejects all calls when unset.
+  CRON_SECRET: z.string().min(16).optional(),
   NEXT_PUBLIC_APP_URL: z.string().url(),
 });
 

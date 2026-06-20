@@ -19,6 +19,8 @@
 .DS_Store
 .env*
 !.env.example
+# local secrets — ready-to-paste SQL seeds with real API keys (never commit)
+supabase/*.local.sql
 .pnp.*
 .pnpm-debug.log*
 .superpowers/
