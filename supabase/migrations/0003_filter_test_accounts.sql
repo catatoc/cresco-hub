@@ -8,8 +8,11 @@
 alter table public.integration_sources
   add column if not exists filter_test_accounts boolean not null default true;
 
--- RPC now returns the toggle.
-create or replace function public.get_enabled_error_sources()
+-- RPC now returns the toggle. Drop first — Postgres can't change a function's
+-- return type (new column in RETURNS TABLE) with CREATE OR REPLACE.
+drop function if exists public.get_enabled_error_sources();
+
+create function public.get_enabled_error_sources()
 returns table (
   source_id            uuid,
   provider             text,
