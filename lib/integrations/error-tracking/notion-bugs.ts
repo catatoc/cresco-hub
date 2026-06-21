@@ -18,6 +18,8 @@ export interface BugTaskRow {
   externalStatus: string | null;
   externalCount: number | null;
   externalLastSeen: string | null;
+  /** Environments currently recorded on the task (for new-environment detection). */
+  environments: string[];
 }
 
 /** Where a new Bug task gets attached in Notion (from the registry row). */
@@ -37,6 +39,7 @@ function parseBugRow(page: { id: string; properties: Record<string, any> }): Bug
     externalStatus: p['External Status']?.select?.name ?? null,
     externalCount: typeof p['External Count']?.number === 'number' ? p['External Count'].number : null,
     externalLastSeen: p['External Last Seen']?.date?.start ?? null,
+    environments: (p.Environment?.multi_select ?? []).map((o: { name: string }) => o.name),
   };
 }
 
@@ -222,6 +225,61 @@ export async function setBugSnapshot(taskId: string, snapshot: 'open' | 'closed'
     properties: {
       'Last Synced Status': { rich_text: [{ type: 'text', text: { content: snapshot } }] },
     },
+  });
+}
+
+/** Overwrite the Environment multi-select with the given set. */
+export async function setEnvironments(taskId: string, environments: string[]): Promise<void> {
+  await getNotion().pages.update({
+    page_id: taskId,
+    properties: { Environment: { multi_select: environments.map((name) => ({ name })) } },
+  });
+}
+
+/** Note that the bug surfaced in environment(s) it wasn't seen in before. */
+export async function appendNewEnvNote(taskId: string, newEnvironments: string[]): Promise<void> {
+  await getNotion().blocks.children.append({
+    block_id: taskId,
+    children: [
+      {
+        object: 'block',
+        type: 'callout',
+        callout: {
+          icon: { type: 'emoji', emoji: '🌍' },
+          rich_text: [
+            { type: 'text', text: { content: `Apareció en nuevo ambiente: ${newEnvironments.join(', ')}` } },
+          ],
+        },
+      },
+    ],
+  });
+}
+
+/** Note that the bug came back after a quiet stretch with no activity. */
+export async function appendResurfacedNote(
+  taskId: string,
+  quietDays: number,
+  issue: NormalizedIssue,
+): Promise<void> {
+  await getNotion().blocks.children.append({
+    block_id: taskId,
+    children: [
+      {
+        object: 'block',
+        type: 'callout',
+        callout: {
+          icon: { type: 'emoji', emoji: '⚡' },
+          rich_text: [
+            {
+              type: 'text',
+              text: {
+                content: `Resurgió tras ${quietDays} días sin actividad — última vez ${fmtTs(issue.lastSeen)}`,
+              },
+            },
+          ],
+        },
+      },
+    ],
   });
 }
 

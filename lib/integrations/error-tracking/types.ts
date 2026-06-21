@@ -29,6 +29,9 @@ export interface ProviderAdapter {
 
   /** Optional: a sample event's context (URL, env, top frame, replay) for the body. */
   getIssueContext?(externalId: string): Promise<IssueContext | null>;
+
+  /** Optional: the distinct environments the issue currently appears in. */
+  listEnvironments?(externalId: string): Promise<string[]>;
 }
 
 /**

@@ -130,6 +130,28 @@ export class PostHogAdapter implements ProviderAdapter {
     };
   }
 
+  /** Distinct environments the issue currently appears in (from event URL hosts). */
+  async listEnvironments(externalId: string): Promise<string[]> {
+    const sql =
+      'SELECT DISTINCT properties.$current_url FROM events ' +
+      "WHERE event = '$exception' AND properties.$exception_issue_id = {issueId} LIMIT 200";
+    const res = (await this.fetchJson(`/api/projects/${this.config.projectId}/query/`, {
+      method: 'POST',
+      body: JSON.stringify({
+        refresh: 'blocking',
+        query: { kind: 'HogQLQuery', query: sql, values: { issueId: externalId } },
+      }),
+    })) as { results?: unknown[][] } | null;
+
+    return [
+      ...new Set(
+        (res?.results ?? [])
+          .map((r) => deriveEnvironment(((r as unknown[])[0] as string | null) ?? null))
+          .filter((e): e is string => e !== null),
+      ),
+    ].sort();
+  }
+
   private normalize(row: PostHogIssueRow): NormalizedIssue {
     const agg = row.aggregations ?? {};
     return normalizedIssueSchema.parse({

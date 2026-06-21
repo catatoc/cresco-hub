@@ -7,6 +7,9 @@ vi.mock('@/lib/integrations/error-tracking/notion-bugs', () => ({
   setBugInternalStatus: vi.fn(async () => undefined),
   setBugSnapshot: vi.fn(async () => undefined),
   appendReopenNote: vi.fn(async () => undefined),
+  setEnvironments: vi.fn(async () => undefined),
+  appendNewEnvNote: vi.fn(async () => undefined),
+  appendResurfacedNote: vi.fn(async () => undefined),
 }));
 vi.mock('@/lib/integrations/error-tracking/registry', () => ({
   markErrorSourceSynced: vi.fn(async () => undefined),
@@ -66,6 +69,7 @@ function bugRow(over: Partial<BugTaskRow> = {}): BugTaskRow {
     externalStatus: 'active',
     externalCount: 10,
     externalLastSeen: '2026-06-02T00:00:00Z',
+    environments: [],
     ...over,
   };
 }
@@ -76,6 +80,7 @@ function adapterWith(issues: NormalizedIssue[], context: IssueContext | null = n
     listIssues: vi.fn(async () => issues),
     resolveIssue: vi.fn(async () => undefined),
     getIssueContext: vi.fn(async () => context),
+    listEnvironments: vi.fn(async () => [] as string[]),
   };
 }
 
@@ -146,6 +151,47 @@ describe('reconcileSource', () => {
     await reconcileSource({ source: SOURCE, adapter, limiter });
 
     expect(bugs.updateBugMirror).toHaveBeenCalledWith('task-1', expect.objectContaining({ occurrences: 11 }));
+  });
+
+  it('notes a new environment and merges it into Environment', async () => {
+    vi.mocked(bugs.listBugTasks).mockResolvedValueOnce([bugRow({ externalCount: 5, environments: ['dev'] })]);
+    const adapter = adapterWith([issue({ occurrences: 11 })]);
+    adapter.listEnvironments = vi.fn(async () => ['dev', 'production']);
+    const res = await reconcileSource({ source: SOURCE, adapter, limiter });
+    expect(bugs.setEnvironments).toHaveBeenCalledWith('task-1', ['dev', 'production']);
+    expect(bugs.appendNewEnvNote).toHaveBeenCalledWith('task-1', ['production']);
+    expect(res.newEnvironments).toBe(1);
+  });
+
+  it('does NOT note an environment already recorded', async () => {
+    vi.mocked(bugs.listBugTasks).mockResolvedValueOnce([
+      bugRow({ externalCount: 5, environments: ['dev', 'production'] }),
+    ]);
+    const adapter = adapterWith([issue({ occurrences: 11 })]);
+    adapter.listEnvironments = vi.fn(async () => ['dev', 'production']);
+    const res = await reconcileSource({ source: SOURCE, adapter, limiter });
+    expect(bugs.appendNewEnvNote).not.toHaveBeenCalled();
+    expect(res.newEnvironments).toBe(0);
+  });
+
+  it('notes resurfacing after a quiet stretch', async () => {
+    vi.mocked(bugs.listBugTasks).mockResolvedValueOnce([
+      bugRow({ externalCount: 5, externalLastSeen: '2026-06-10T00:00:00Z', environments: ['dev'] }),
+    ]);
+    const adapter = adapterWith([issue({ occurrences: 6, lastSeen: '2026-06-20T00:00:00Z' })]);
+    const res = await reconcileSource({ source: SOURCE, adapter, limiter });
+    expect(bugs.appendResurfacedNote).toHaveBeenCalled();
+    expect(res.resurfaced).toBe(1);
+  });
+
+  it('does NOT note resurfacing when activity is continuous', async () => {
+    vi.mocked(bugs.listBugTasks).mockResolvedValueOnce([
+      bugRow({ externalCount: 5, externalLastSeen: '2026-06-20T00:00:00Z', environments: ['dev'] }),
+    ]);
+    const adapter = adapterWith([issue({ occurrences: 6, lastSeen: '2026-06-20T01:00:00Z' })]);
+    const res = await reconcileSource({ source: SOURCE, adapter, limiter });
+    expect(bugs.appendResurfacedNote).not.toHaveBeenCalled();
+    expect(res.resurfaced).toBe(0);
   });
 
   it('closes the Notion task when the provider resolved it', async () => {

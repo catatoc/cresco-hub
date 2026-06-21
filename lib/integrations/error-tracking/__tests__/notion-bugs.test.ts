@@ -71,6 +71,7 @@ describe('listBugTasks', () => {
         externalStatus: null,
         externalCount: null,
         externalLastSeen: null,
+        environments: [],
       },
     ]);
   });
