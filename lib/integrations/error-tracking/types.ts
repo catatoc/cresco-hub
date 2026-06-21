@@ -8,7 +8,7 @@ export interface IssueContext {
   os: string | null; // "iOS 26.0.0"
   handled: boolean | null; // false = uncaught
   topFrame: string | null; // "fn @ file:line"
-  environment: string | null; // dev / staging / production (from the URL host)
+  environments: string[]; // all environments the issue appears in (from event URL hosts)
   replayUrl: string | null; // session replay
 }
 

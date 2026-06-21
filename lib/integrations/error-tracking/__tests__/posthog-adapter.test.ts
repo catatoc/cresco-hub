@@ -113,7 +113,10 @@ describe('PostHogAdapter.getIssueContext', () => {
       },
     ]);
     global.fetch = mockFetch(200, {
-      results: [['https://app/login', 'Chrome', '147', 'Mac OS X', '10.15.7', 'sess-1', exList]],
+      results: [
+        ['https://app/login', 'Chrome', '147', 'Mac OS X', '10.15.7', 'sess-1', exList],
+        ['http://localhost:4000/x', 'Chrome', '147', 'Mac', '1', 'sess-2', null],
+      ],
     });
     expect(await adapter.getIssueContext('issue-1')).toEqual({
       currentUrl: 'https://app/login',
@@ -121,7 +124,7 @@ describe('PostHogAdapter.getIssueContext', () => {
       os: 'Mac OS X 10.15.7',
       handled: false,
       topFrame: 'doLogin @ app/login.ts:42',
-      environment: 'production',
+      environments: ['dev', 'production'],
       replayUrl: 'https://us.posthog.com/project/94699/replay/sess-1',
     });
   });

@@ -154,7 +154,7 @@ describe('createBugTask', () => {
         os: 'Mac OS X',
         handled: false,
         topFrame: 'fn @ a.ts:1',
-        environment: 'dev',
+        environments: ['dev'],
         replayUrl: 'https://ph/replay/s1',
       },
     });
@@ -162,6 +162,7 @@ describe('createBugTask', () => {
     expect(call.properties['Task name'].title[0].text.content).toBe(
       '[dev] bug(posthog): DOMException — AbortError: Lock was stolen',
     );
+    expect(call.properties.Environment).toEqual({ multi_select: [{ name: 'dev' }] });
     const children = mockNotion.blocks.children.append.mock.calls[0]![0].children;
     expect(children[1].callout.icon.emoji).toBe('📍');
     const ctxText = children[1].callout.rich_text[0].text.content;

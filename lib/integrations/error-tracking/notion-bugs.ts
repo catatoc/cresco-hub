@@ -106,7 +106,7 @@ function summaryBlocks(issue: NormalizedIssue, context: IssueContext | null): an
 
   if (context) {
     const ctx: string[] = [];
-    if (context.environment) ctx.push(`ambiente: ${context.environment}`);
+    if (context.environments.length) ctx.push(`ambiente: ${context.environments.join(', ')}`);
     if (context.currentUrl) ctx.push(`url: ${context.currentUrl}`);
     const env = [context.browser, context.os].filter(Boolean).join(' · ');
     if (env) ctx.push(`entorno: ${env}`);
@@ -143,8 +143,11 @@ export async function createBugTask(args: {
   const { externalKey, issue, target, internalStatus, lastSyncedStatus, context } = args;
   const notion = getNotion();
 
-  const envTag =
-    context?.environment && context.environment !== 'production' ? `[${context.environment}] ` : '';
+  // [dev]/[staging] prefix only when the bug is non-prod ONLY; if it also hits prod
+  // it's a real bug → no prefix (but Environment still lists every env it touches).
+  const envs = context?.environments ?? [];
+  const devOnly = envs.length > 0 && !envs.includes('production');
+  const envTag = devOnly ? `[${envs.join('/')}] ` : '';
   const title = `${envTag}bug(${issue.provider}): ${issue.name} — ${issue.description}`
     .trim()
     .slice(0, 200);
@@ -163,6 +166,7 @@ export async function createBugTask(args: {
   if (target.notionProviderId) properties.Source = { relation: [{ id: target.notionProviderId }] };
   if (target.notionCustomerId) properties.Customer = { relation: [{ id: target.notionCustomerId }] };
   if (target.notionProjectId) properties.Project = { relation: [{ id: target.notionProjectId }] };
+  if (envs.length) properties.Environment = { multi_select: envs.map((name) => ({ name })) };
 
   const res = await notion.pages.create({
     parent: { data_source_id: serverEnv.NOTION_DB_TASKS },

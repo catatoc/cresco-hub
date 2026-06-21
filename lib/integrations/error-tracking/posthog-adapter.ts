@@ -80,7 +80,7 @@ export class PostHogAdapter implements ProviderAdapter {
       'SELECT properties.$current_url, properties.$browser, properties.$browser_version, ' +
       'properties.$os, properties.$os_version, properties.$session_id, properties.$exception_list ' +
       "FROM events WHERE event = '$exception' AND properties.$exception_issue_id = {issueId} " +
-      'ORDER BY timestamp DESC LIMIT 1';
+      'ORDER BY timestamp DESC LIMIT 20';
 
     const res = (await this.fetchJson(`/api/projects/${this.config.projectId}/query/`, {
       method: 'POST',
@@ -92,7 +92,8 @@ export class PostHogAdapter implements ProviderAdapter {
       }),
     })) as { results?: unknown[][] } | null;
 
-    const row = res?.results?.[0];
+    const rows = res?.results ?? [];
+    const row = rows[0];
     if (!row) return null;
     const [url, browser, browserV, os, osV, sessionId, exList] = row as [
       string | null,
@@ -107,13 +108,22 @@ export class PostHogAdapter implements ProviderAdapter {
     const join = (parts: Array<string | null>) => parts.filter(Boolean).join(' ').trim() || null;
     const { handled, topFrame } = parseExceptionList(exList);
 
+    // Distinct environments across the sampled events — a bug can span dev + prod.
+    const environments = [
+      ...new Set(
+        rows
+          .map((r) => deriveEnvironment(((r as unknown[])[0] as string | null) ?? null))
+          .filter((e): e is string => e !== null),
+      ),
+    ].sort();
+
     return {
       currentUrl: url || null,
       browser: join([browser, browserV]),
       os: join([os, osV]),
       handled,
       topFrame,
-      environment: deriveEnvironment(url || null),
+      environments,
       replayUrl: sessionId
         ? `${this.config.host}/project/${this.config.projectId}/replay/${sessionId}`
         : null,

@@ -100,7 +100,7 @@ describe('reconcileSource', () => {
       os: 'Mac OS X',
       handled: false,
       topFrame: 'fn @ a.ts:1',
-      environment: 'dev',
+      environments: ['dev'],
       replayUrl: 'https://ph/replay/s1',
     };
     const adapter = adapterWith([issue({ occurrences: 10 })], ctx);
