@@ -27,6 +27,7 @@ const adapter = new PostHogAdapter({
   host: 'https://us.posthog.com',
   projectId: '94699',
   apiKey: 'phx_test',
+  filterTestAccounts: true,
 });
 
 describe('PostHogAdapter.listIssues', () => {
@@ -65,6 +66,7 @@ describe('PostHogAdapter.listIssues', () => {
     expect(sent.refresh).toBe('force_blocking');
     expect(sent.query.kind).toBe('ErrorTrackingQuery');
     expect(sent.query.volumeResolution).toBe(1);
+    expect(sent.query.filterTestAccounts).toBe(true);
     expect(sent.query.dateRange.date_from).toBe('2026-06-01T00:00:00.000Z');
     expect((init.headers as Record<string, string>).Authorization).toBe('Bearer phx_test');
   });
@@ -119,6 +121,7 @@ describe('PostHogAdapter.getIssueContext', () => {
       os: 'Mac OS X 10.15.7',
       handled: false,
       topFrame: 'doLogin @ app/login.ts:42',
+      environment: 'production',
       replayUrl: 'https://us.posthog.com/project/94699/replay/sess-1',
     });
   });

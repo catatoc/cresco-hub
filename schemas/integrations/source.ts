@@ -22,6 +22,8 @@ export const errorSourceSchema = z
     notion_customer_id: z.string().nullable(),
     notion_provider_id: z.string().nullable(),
     min_occurrences: z.number().int().nonnegative(),
+    // Tolerant default so the code is safe to deploy before migration 0003 lands.
+    filter_test_accounts: z.boolean().default(true),
     last_synced_at: z.string().nullable(),
   })
   .transform((r) => ({
@@ -34,6 +36,7 @@ export const errorSourceSchema = z
     notionCustomerId: r.notion_customer_id,
     notionProviderId: r.notion_provider_id,
     minOccurrences: r.min_occurrences,
+    filterTestAccounts: r.filter_test_accounts,
     lastSyncedAt: r.last_synced_at,
   }));
 export type ErrorSource = z.infer<typeof errorSourceSchema>;

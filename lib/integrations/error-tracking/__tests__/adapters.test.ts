@@ -13,6 +13,7 @@ const base: ErrorSource = {
   notionCustomerId: null,
   notionProviderId: null,
   minOccurrences: 3,
+  filterTestAccounts: true,
   lastSyncedAt: null,
 };
 

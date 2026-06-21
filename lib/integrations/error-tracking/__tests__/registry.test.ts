@@ -16,6 +16,7 @@ const ROW = {
   notion_customer_id: null,
   notion_provider_id: '5df37376-a170-4e62-a29d-032971b39ff7',
   min_occurrences: 3,
+  filter_test_accounts: false,
   last_synced_at: null,
 };
 
@@ -34,6 +35,7 @@ describe('getEnabledErrorSources', () => {
       externalProjectId: '94699',
       notionProviderId: '5df37376-a170-4e62-a29d-032971b39ff7',
       minOccurrences: 3,
+      filterTestAccounts: false,
     });
   });
 

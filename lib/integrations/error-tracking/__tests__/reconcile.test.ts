@@ -33,6 +33,7 @@ const SOURCE: ErrorSource = {
   notionCustomerId: 'cust-amedi',
   notionProviderId: 'prov-ph',
   minOccurrences: 3,
+  filterTestAccounts: true,
   lastSyncedAt: null,
 };
 
@@ -99,6 +100,7 @@ describe('reconcileSource', () => {
       os: 'Mac OS X',
       handled: false,
       topFrame: 'fn @ a.ts:1',
+      environment: 'dev',
       replayUrl: 'https://ph/replay/s1',
     };
     const adapter = adapterWith([issue({ occurrences: 10 })], ctx);

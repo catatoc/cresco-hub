@@ -12,6 +12,8 @@ export interface PostHogAdapterConfig {
   projectId: string;
   /** Personal API key with scopes: query:read, error_tracking:read, error_tracking:write */
   apiKey: string;
+  /** Exclude PostHog's internal/test accounts from the issue list. */
+  filterTestAccounts: boolean;
 }
 
 /** One row of the ErrorTrackingQuery response (only the fields we map). */
@@ -57,7 +59,7 @@ export class PostHogAdapter implements ProviderAdapter {
           limit: 200,
           offset: 0,
           volumeResolution: 1,
-          filterTestAccounts: true,
+          filterTestAccounts: this.config.filterTestAccounts,
         },
       }),
     })) as { results?: PostHogIssueRow[] } | null;
@@ -111,6 +113,7 @@ export class PostHogAdapter implements ProviderAdapter {
       os: join([os, osV]),
       handled,
       topFrame,
+      environment: deriveEnvironment(url || null),
       replayUrl: sessionId
         ? `${this.config.host}/project/${this.config.projectId}/replay/${sessionId}`
         : null,
@@ -157,6 +160,21 @@ export class PostHogAdapter implements ProviderAdapter {
     const text = await res.text();
     return text ? JSON.parse(text) : null;
   }
+}
+
+/** Infer the environment from the page host: localhost/dev/staging → non-prod, else production. */
+function deriveEnvironment(url: string | null): string | null {
+  if (!url) return null;
+  let host: string;
+  try {
+    host = new URL(url).hostname;
+  } catch {
+    return null;
+  }
+  if (host === 'localhost' || host === '127.0.0.1' || host.endsWith('.local')) return 'dev';
+  if (host.includes('staging')) return 'staging';
+  if (host.startsWith('dev.') || host.includes('.ngrok.')) return 'dev';
+  return 'production';
 }
 
 /** Extract handled-ness + the top (preferably in-app) stack frame from $exception_list. */

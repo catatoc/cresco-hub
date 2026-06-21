@@ -106,6 +106,7 @@ function summaryBlocks(issue: NormalizedIssue, context: IssueContext | null): an
 
   if (context) {
     const ctx: string[] = [];
+    if (context.environment) ctx.push(`ambiente: ${context.environment}`);
     if (context.currentUrl) ctx.push(`url: ${context.currentUrl}`);
     const env = [context.browser, context.os].filter(Boolean).join(' · ');
     if (env) ctx.push(`entorno: ${env}`);
@@ -142,7 +143,11 @@ export async function createBugTask(args: {
   const { externalKey, issue, target, internalStatus, lastSyncedStatus, context } = args;
   const notion = getNotion();
 
-  const title = `bug(${issue.provider}): ${issue.name} — ${issue.description}`.trim().slice(0, 200);
+  const envTag =
+    context?.environment && context.environment !== 'production' ? `[${context.environment}] ` : '';
+  const title = `${envTag}bug(${issue.provider}): ${issue.name} — ${issue.description}`
+    .trim()
+    .slice(0, 200);
   const properties: Record<string, any> = {
     'Task name': { title: [{ text: { content: title } }] },
     Type: { select: { name: BUG_TYPE } },

@@ -30,6 +30,7 @@ const SRC = (id: string) =>
     notionCustomerId: null,
     notionProviderId: null,
     minOccurrences: 3,
+    filterTestAccounts: true,
     lastSyncedAt: null,
   }) as never;
 
