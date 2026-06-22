@@ -3,7 +3,8 @@ import { updateSession } from '@/lib/supabase/middleware';
 
 // /api/portal hace su propia auth (Bearer token de la app móvil), no cookies.
 // /api/cron hace su propia auth (CRON_SECRET), disparado por Supabase Cron.
-const PUBLIC_PATHS = ['/login', '/auth/callback', '/auth/mobile', '/no-access', '/api/auth', '/api/portal', '/api/cron', '/privacy', '/terms'];
+// /api/webhooks hace su propia auth (RELEASE_WEBHOOK_SECRET), disparado por la automatización de Notion.
+const PUBLIC_PATHS = ['/login', '/auth/callback', '/auth/mobile', '/no-access', '/api/auth', '/api/portal', '/api/cron', '/api/webhooks', '/privacy', '/terms'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
