@@ -63,8 +63,13 @@ describe('POST /api/webhooks/release-published', () => {
     expect(fetchMock).toHaveBeenCalledOnce();
     const [calledUrl, init] = fetchMock.mock.calls[0];
     expect(calledUrl).toBe('https://routine.example/trigger');
-    expect((init?.headers as Record<string, string>).authorization).toBe('Bearer routine-token-1234567890');
-    expect(JSON.parse(init?.body as string)).toEqual({ release_id: 'rel-123' });
+    const headers = init?.headers as Record<string, string>;
+    expect(headers.authorization).toBe('Bearer routine-token-1234567890');
+    expect(headers['anthropic-version']).toBe('2023-06-01');
+    expect(headers['anthropic-beta']).toBe('experimental-cc-routine-2026-04-01');
+    // The routine "fire" body is { text }, an extra turn — with the release id embedded.
+    const body = JSON.parse(init?.body as string);
+    expect(body.text).toContain('rel-123');
   });
 
   it('accepts the secret + release_id via query params', async () => {

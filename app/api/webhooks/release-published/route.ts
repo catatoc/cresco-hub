@@ -66,13 +66,20 @@ export async function POST(request: Request): Promise<Response> {
 
   let forwarded: Response;
   try {
+    // Claude Code routine "fire" API: the body's `text` is an extra turn appended to the
+    // routine's session (we put the release id in it), and these two headers are required
+    // by the (beta) endpoint. URL is .../v1/claude_code/routines/<trigger-id>/fire.
     forwarded = await fetch(routineUrl, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
         authorization: `Bearer ${routineToken}`,
+        'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'experimental-cc-routine-2026-04-01',
       },
-      body: JSON.stringify({ release_id: releaseId }),
+      body: JSON.stringify({
+        text: `Release published: ${releaseId}. Esa página de la base Releases es la materia prima de esta corrida — síguela según el SKILL.md de release-publish.`,
+      }),
     });
   } catch (e) {
     console.error('[release-published] forward failed:', e instanceof Error ? e.message : e);
