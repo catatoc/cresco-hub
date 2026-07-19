@@ -61,7 +61,7 @@ describe('OpenWithClaudeMenu', () => {
       <OpenWithClaudeMenu task={task} project={project} description="" />,
     );
     expect(
-      screen.getByRole('button', { name: /open in claude code/i }),
+      screen.getByRole('button', { name: /abrir en claude code/i }),
     ).toBeInTheDocument();
   });
 
@@ -70,10 +70,10 @@ describe('OpenWithClaudeMenu', () => {
     render(
       <OpenWithClaudeMenu task={task} project={project} description="" />,
     );
-    await user.click(screen.getByRole('button', { name: /open in claude code/i }));
-    expect(await screen.findByText(/copy as prompt/i)).toBeInTheDocument();
-    expect(await screen.findByText(/open in claude code/i)).toBeInTheDocument();
-    expect(await screen.findByText(/copy cli command/i)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /abrir en claude code/i }));
+    expect(await screen.findByText(/copiar como prompt/i)).toBeInTheDocument();
+    expect(await screen.findByText(/abrir en claude code/i)).toBeInTheDocument();
+    expect(await screen.findByText(/copiar comando cli/i)).toBeInTheDocument();
   });
 
   it('Copy as prompt copies the built prompt to clipboard and shows success toast', async () => {
@@ -82,8 +82,8 @@ describe('OpenWithClaudeMenu', () => {
     render(
       <OpenWithClaudeMenu task={task} project={project} description="Body" />,
     );
-    await user.click(screen.getByRole('button', { name: /open in claude code/i }));
-    const label = await screen.findByText(/copy as prompt/i);
+    await user.click(screen.getByRole('button', { name: /abrir en claude code/i }));
+    const label = await screen.findByText(/copiar como prompt/i);
     const menuItem = label.closest('[role="menuitem"]') as HTMLElement;
     await user.click(menuItem);
     expect(writeText).toHaveBeenCalledTimes(1);
@@ -99,8 +99,8 @@ describe('OpenWithClaudeMenu', () => {
     render(
       <OpenWithClaudeMenu task={task} project={project} description="x" />,
     );
-    await user.click(screen.getByRole('button', { name: /open in claude code/i }));
-    const items = await screen.findAllByText(/open in claude code/i);
+    await user.click(screen.getByRole('button', { name: /abrir en claude code/i }));
+    const items = await screen.findAllByText(/abrir en claude code/i);
     // Click the menu item, not the trigger
     const menuItem = items.find((el) => el.closest('[role="menuitem"]'))!;
     await user.click(menuItem);
@@ -113,8 +113,8 @@ describe('OpenWithClaudeMenu', () => {
     render(
       <OpenWithClaudeMenu task={task} project={project} description="x" />,
     );
-    await user.click(screen.getByRole('button', { name: /open in claude code/i }));
-    const label = await screen.findByText(/copy cli command/i);
+    await user.click(screen.getByRole('button', { name: /abrir en claude code/i }));
+    const label = await screen.findByText(/copiar comando cli/i);
     const menuItem = label.closest('[role="menuitem"]') as HTMLElement;
     await user.click(menuItem);
     expect(writeText).toHaveBeenCalledTimes(1);
@@ -132,8 +132,8 @@ describe('OpenWithClaudeMenu', () => {
     render(
       <OpenWithClaudeMenu task={task} project={project} description="" />,
     );
-    await user.click(screen.getByRole('button', { name: /open in claude code/i }));
-    const label = await screen.findByText(/copy as prompt/i);
+    await user.click(screen.getByRole('button', { name: /abrir en claude code/i }));
+    const label = await screen.findByText(/copiar como prompt/i);
     const menuItem = label.closest('[role="menuitem"]') as HTMLElement;
     await user.click(menuItem);
     expect(errorToast).toHaveBeenCalled();
@@ -150,7 +150,7 @@ describe('OpenWithClaudeMenu variants', () => {
         description=""
       />,
     );
-    const trigger = screen.getByRole('button', { name: /open in claude code/i });
+    const trigger = screen.getByRole('button', { name: /abrir en claude code/i });
     expect(trigger).toBeInTheDocument();
     // The cta variant has visible "ChevronDown" SVG; row/card don't.
     // We assert by checking the trigger text/aria — both variants have the same aria-label.
@@ -167,7 +167,7 @@ describe('OpenWithClaudeMenu variants', () => {
         description=""
       />,
     );
-    const trigger = screen.getByRole('button', { name: /open in claude code/i });
+    const trigger = screen.getByRole('button', { name: /abrir en claude code/i });
     expect(trigger.querySelectorAll('svg').length).toBe(1);
   });
 
@@ -180,7 +180,7 @@ describe('OpenWithClaudeMenu variants', () => {
         description=""
       />,
     );
-    const trigger = screen.getByRole('button', { name: /open in claude code/i });
+    const trigger = screen.getByRole('button', { name: /abrir en claude code/i });
     // SquareTerminal + ChevronDown
     expect(trigger.querySelectorAll('svg').length).toBe(2);
   });
@@ -196,8 +196,8 @@ describe('OpenWithClaudeMenu variants', () => {
         description="x"
       />,
     );
-    await user.click(screen.getByRole('button', { name: /open in claude code/i }));
-    expect(await screen.findByText(/copy as prompt/i)).toBeInTheDocument();
-    expect(await screen.findByText(/copy cli command/i)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /abrir en claude code/i }));
+    expect(await screen.findByText(/copiar como prompt/i)).toBeInTheDocument();
+    expect(await screen.findByText(/copiar comando cli/i)).toBeInTheDocument();
   });
 });

@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronDown, Check } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
@@ -28,9 +29,11 @@ export function ScopePill({
   teamCount,
   redirectPath,
   extraParams = {},
-  labels = { mine: 'Yo', team: 'Equipo' },
+  labels,
 }: Props) {
-  const triggerLabel = scope === 'mine' ? labels.mine : labels.team;
+  const t = useTranslations('common.scope');
+  const resolvedLabels = labels ?? { mine: t('mine'), team: t('team') };
+  const triggerLabel = scope === 'mine' ? resolvedLabels.mine : resolvedLabels.team;
 
   return (
     <DropdownMenu>
@@ -41,7 +44,7 @@ export function ScopePill({
           'bg-[#eeeffc] text-[#5e6ad2] border-[#c9cbe8]',
           'hover:bg-[#e5e7fa] outline-none focus-visible:ring-2 focus-visible:ring-ring',
         )}
-        aria-label={`Filtrar ${scopeKey} por alcance`}
+        aria-label={t('filterAria', { scopeKey })}
       >
         {triggerLabel}
         <ChevronDown className="w-3 h-3" />
@@ -49,13 +52,13 @@ export function ScopePill({
       <DropdownMenuContent align="end" className="min-w-[220px]">
         <ScopeItem
           active={scope === 'mine'}
-          label={labels.mine}
+          label={resolvedLabels.mine}
           count={myCount}
           onClick={() => setScope(scopeKey, 'mine', redirectPath, extraParams)}
         />
         <ScopeItem
           active={scope === 'team'}
-          label={labels.team}
+          label={resolvedLabels.team}
           count={teamCount}
           onClick={() => setScope(scopeKey, 'team', redirectPath, extraParams)}
         />

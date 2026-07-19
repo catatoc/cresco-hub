@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { getTranslations } from 'next-intl/server';
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
 import { getHomeData } from '@/lib/home/queries';
@@ -27,6 +28,7 @@ export default async function HomePage({
   searchParams: SearchParams;
 }) {
   const ctx = await requireContext();
+  const t = await getTranslations('home.page');
   const sp = await searchParams;
   const cookieStore = await cookies();
   const scope = resolveScope('home', sp.scope, cookieStore.get(SCOPE_COOKIE.home)?.value);
@@ -64,11 +66,11 @@ export default async function HomePage({
       new Date(t.dueDate).toDateString() !== new Date().toDateString(),
   ).length;
 
-  const sprintLabel = sprint?.name ?? 'Sin sprint activo';
+  const sprintLabel = sprint?.name ?? t('noActiveSprint');
 
   return (
     <PageEnter className="flex flex-col h-full overflow-hidden">
-      <Topbar crumbs={[{ label: 'Home' }]}>
+      <Topbar crumbs={[{ label: t('crumb') }]}>
         <ScopePill
           scopeKey="home"
           scope={scope}

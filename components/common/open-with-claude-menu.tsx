@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronDown, SquareTerminal, Clipboard, ExternalLink, TerminalSquare } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
   DropdownMenu,
@@ -25,8 +26,6 @@ type Props = {
   className?: string;
 };
 
-const TRIGGER_LABEL = 'Open in Claude Code';
-
 async function copyToClipboard(text: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(text);
@@ -45,16 +44,18 @@ export function OpenWithClaudeMenu({
   variant = 'cta',
   className,
 }: Props) {
+  const t = useTranslations('common.claude');
+
   async function handleCopyPrompt() {
     const prompt = buildPrompt({ task, project, description });
     const ok = await copyToClipboard(prompt);
     if (ok) {
-      toast.success('Prompt copiado al portapapeles', {
-        description: 'Pégalo en Claude Code, ChatGPT, Cursor, o tu terminal.',
+      toast.success(t('promptCopied'), {
+        description: t('promptCopiedDesc'),
       });
     } else {
-      toast.error('No se pudo copiar el prompt', {
-        description: 'Hay un fallback en la consola del navegador.',
+      toast.error(t('promptCopyError'), {
+        description: t('consoleFallback'),
       });
     }
   }
@@ -68,12 +69,12 @@ export function OpenWithClaudeMenu({
     const cmd = buildCliCommand({ prompt, repoPath: null });
     const ok = await copyToClipboard(cmd);
     if (ok) {
-      toast.success('Comando copiado al portapapeles', {
-        description: 'Pégalo en tu terminal local. Si tienes el repo, agrega `cd <ruta> && ` delante.',
+      toast.success(t('cliCopied'), {
+        description: t('cliCopiedDesc'),
       });
     } else {
-      toast.error('No se pudo copiar el comando', {
-        description: 'Hay un fallback en la consola del navegador.',
+      toast.error(t('cliCopyError'), {
+        description: t('consoleFallback'),
       });
     }
   }
@@ -81,7 +82,7 @@ export function OpenWithClaudeMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label={TRIGGER_LABEL}
+        aria-label={t('openInClaudeCode')}
         className={cn(
           // base — focus ring + transitions shared by all variants
           'transition-[transform,filter,background-color,color,border-color] duration-(--duration-fast) ease-(--ease-linear)',
@@ -117,16 +118,16 @@ export function OpenWithClaudeMenu({
       <DropdownMenuContent align="end" className="min-w-[220px]">
         <DropdownMenuItem onClick={handleCopyPrompt} className="flex items-center gap-2 text-[12.5px]">
           <Clipboard className="w-3.5 h-3.5 text-muted-foreground" aria-hidden />
-          <span className="flex-1">Copy as prompt</span>
+          <span className="flex-1">{t('copyAsPrompt')}</span>
           <kbd className="font-mono text-[10px] bg-[#eef0f2] rounded px-1 py-[1px] text-muted-foreground">⌘⌥P</kbd>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleOpenInClaude} className="flex items-center gap-2 text-[12.5px]">
           <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" aria-hidden />
-          <span className="flex-1">Open in Claude Code</span>
+          <span className="flex-1">{t('openInClaudeCode')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleCopyCli} className="flex items-center gap-2 text-[12.5px]">
           <TerminalSquare className="w-3.5 h-3.5 text-muted-foreground" aria-hidden />
-          <span className="flex-1">Copy CLI command</span>
+          <span className="flex-1">{t('copyCli')}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

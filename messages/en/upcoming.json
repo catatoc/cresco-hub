@@ -1,0 +1,35 @@
+{
+  "page": {
+    "crumb": "Next week",
+    "empty": "No next week planned yet.",
+    "tasksCount": "{count, plural, one {# task} other {# tasks}}",
+    "detail": "Detail",
+    "dateFormat": "MMM d"
+  },
+  "scope": {
+    "mine": "Mine",
+    "team": "Whole team"
+  },
+  "taskList": {
+    "empty": "Nothing planned for next week yet.",
+    "priority": "Priority {label}",
+    "dateFormat": "MMM d"
+  },
+  "status": {
+    "Refining": "Refining",
+    "Not Started": "Not started",
+    "In Progress": "In progress",
+    "Testing": "Testing",
+    "In Review": "In review",
+    "Done": "Done",
+    "Archived": "Archived"
+  },
+  "priority": {
+    "High": "High",
+    "Medium": "Medium",
+    "Low": "Low"
+  },
+  "timeline": {
+    "empty": "No dated tasks this week."
+  }
+}

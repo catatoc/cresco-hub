@@ -1,15 +1,18 @@
 import { format, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useLocale, useTranslations } from 'next-intl';
+import { dateLocale } from '@/lib/i18n/date-locale';
 import type { Meeting } from '@/schemas/meeting';
 import Link from 'next/link';
 
 export function LastMeeting({ meeting }: { meeting: Meeting | null }) {
+  const t = useTranslations('home.lastMeeting');
+  const locale = useLocale();
   if (!meeting) {
     return (
       <div>
-        <h2 className="text-[13px] font-semibold mb-3">Última reunión</h2>
+        <h2 className="text-[13px] font-semibold mb-3">{t('title')}</h2>
         <div className="border border-dashed border-border rounded-lg p-6 text-center text-sm text-muted-foreground">
-          Aún no hay reuniones registradas.
+          {t('empty')}
         </div>
       </div>
     );
@@ -20,12 +23,12 @@ export function LastMeeting({ meeting }: { meeting: Meeting | null }) {
   return (
     <div className="min-w-0">
       <div className="flex items-baseline justify-between gap-3 mb-3 min-w-0">
-        <h2 className="text-[13px] font-semibold truncate">Última reunión</h2>
+        <h2 className="text-[13px] font-semibold truncate">{t('title')}</h2>
         <Link
           href="/reuniones"
           className="shrink-0 text-[12px] text-muted-foreground hover:text-[#5e6ad2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
         >
-          Ver todas →
+          {t('seeAll')}
         </Link>
       </div>
       <Link
@@ -35,7 +38,7 @@ export function LastMeeting({ meeting }: { meeting: Meeting | null }) {
         <div className="flex items-baseline gap-2 mb-2.5 flex-wrap">
           <div className="text-2xl font-semibold tracking-[-0.01em]">{format(d, 'd')}</div>
           <div className="text-[12px] uppercase text-muted-foreground tracking-[0.04em] font-medium truncate">
-            {format(d, 'MMM · EEE', { locale: es })}
+            {format(d, t('monthDowFormat'), { locale: dateLocale(locale) })}
           </div>
         </div>
         <div className="text-[15px] font-medium mb-1.5 break-words">{meeting.title}</div>

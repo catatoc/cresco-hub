@@ -1,0 +1,27 @@
+{
+  "userCard": {
+    "options": "Opciones de usuario",
+    "signOut": "Cerrar sesión"
+  },
+  "memberRole": "Miembro · {customer}",
+  "sidebar": {
+    "home": "Home",
+    "nextWeek": "Próxima semana",
+    "workspace": "Workspace",
+    "tasks": "Tareas",
+    "meetings": "Reuniones",
+    "wiki": "Wiki",
+    "projects": "Proyectos",
+    "resources": "Recursos",
+    "testUsers": "Usuarios de prueba"
+  },
+  "workspaceHeader": {
+    "switch": "Cambiar workspace"
+  },
+  "bottomNav": {
+    "ariaLabel": "Navegación principal"
+  },
+  "mobileSidebar": {
+    "openMenu": "Abrir menú"
+  }
+}

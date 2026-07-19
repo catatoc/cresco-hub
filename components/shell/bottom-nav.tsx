@@ -2,29 +2,31 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Home, CheckSquare, Calendar, BookOpen, FolderKanban } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LayoutGroup, m } from '@/components/motion/m';
 
 const ITEMS = [
-  { href: '/', label: 'Home', icon: Home, exact: true },
-  { href: '/tareas', label: 'Tareas', icon: CheckSquare },
-  { href: '/reuniones', label: 'Reuniones', icon: Calendar },
-  { href: '/wiki', label: 'Wiki', icon: BookOpen },
-  { href: '/proyectos', label: 'Proyectos', icon: FolderKanban },
+  { href: '/', labelKey: 'sidebar.home', icon: Home, exact: true },
+  { href: '/tareas', labelKey: 'sidebar.tasks', icon: CheckSquare },
+  { href: '/reuniones', labelKey: 'sidebar.meetings', icon: Calendar },
+  { href: '/wiki', labelKey: 'sidebar.wiki', icon: BookOpen },
+  { href: '/proyectos', labelKey: 'sidebar.projects', icon: FolderKanban },
 ];
 
 export function BottomNav() {
+  const t = useTranslations('shell');
   const pathname = usePathname();
 
   return (
     <nav
-      aria-label="Navegación principal"
+      aria-label={t('bottomNav.ariaLabel')}
       className="fixed bottom-0 left-0 right-0 z-30 lg:hidden border-t border-border/60 bg-white/65 supports-[backdrop-filter]:bg-white/55 backdrop-blur-xl backdrop-saturate-150 shadow-[0_-1px_0_rgba(255,255,255,0.6)_inset] pb-[env(safe-area-inset-bottom)]"
     >
       <LayoutGroup id="bottom-nav">
         <ul className="flex items-stretch justify-around h-16">
-          {ITEMS.map(({ href, label, icon: Icon, exact }) => {
+          {ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
             const active = exact
               ? pathname === href
               : pathname === href || pathname.startsWith(`${href}/`);
@@ -55,7 +57,7 @@ export function BottomNav() {
                       active && 'text-[#5e6ad2]',
                     )}
                   />
-                  <span className="relative truncate max-w-full">{label}</span>
+                  <span className="relative truncate max-w-full">{t(labelKey)}</span>
                 </Link>
               </li>
             );

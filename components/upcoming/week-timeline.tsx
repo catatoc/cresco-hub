@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import type { Task } from '@/schemas/task';
 import { buildWeekDays, taskBarSpan, type BarSpan } from '@/lib/upcoming/week';
 import { cn } from '@/lib/utils';
@@ -17,9 +18,10 @@ const GRID = { gridTemplateColumns: 'minmax(150px, 1.4fr) repeat(7, 1fr)' } as c
 type Props = { weekStart: string; tasks: Task[] };
 
 export function WeekTimeline({ weekStart, tasks }: Props) {
+  const t = useTranslations('upcoming.timeline');
   const days = buildWeekDays(weekStart);
   const rows = tasks
-    .map((t) => ({ task: t, bar: taskBarSpan(weekStart, t.plannedDate, t.dueDate) }))
+    .map((task) => ({ task, bar: taskBarSpan(weekStart, task.plannedDate, task.dueDate) }))
     .filter((r): r is { task: Task; bar: BarSpan } => r.bar !== null);
 
   return (
@@ -38,7 +40,7 @@ export function WeekTimeline({ weekStart, tasks }: Props) {
 
         {rows.length === 0 ? (
           <div className="text-sm text-muted-foreground py-6 text-center">
-            Sin tareas con fecha en esta semana.
+            {t('empty')}
           </div>
         ) : (
           <div className="flex flex-col gap-1.5">
