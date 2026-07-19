@@ -11,6 +11,7 @@ import { money } from './payments';
 import { parseProjectBlocks, type ProjectBlock } from './content';
 import { findInfraStack, type InfraStackDef } from './infra-stacks';
 import { docFilesForCustomer } from './doc-files';
+import { portalDict, dayMonthLabel, pick, type PortalLocale } from './i18n';
 import type { AppContext } from '@/lib/auth/context';
 
 // La propuesta tiene dos fuentes: un archivo privado del repo (microsite
@@ -59,12 +60,6 @@ export interface PortalDocuments {
   infra: PortalInfra | null;
 }
 
-const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-const dayMonth = (iso: string): string | null => {
-  const d = new Date(iso.slice(0, 10) + 'T00:00:00Z');
-  return Number.isNaN(d.getTime()) ? null : `${d.getUTCDate()} ${MES[d.getUTCMonth()]}`;
-};
-
 const plain = (prop: any): string =>
   ((prop?.rich_text ?? []) as any[]).map((t) => t.plain_text).join('').trim();
 
@@ -79,13 +74,13 @@ export function hostOf(url: string | null): string | null {
 }
 
 // ── propuesta ────────────────────────────────────────────────────────────────
-function parseProposalRow(row: any): PortalProposal {
+function parseProposalRow(row: any, locale: PortalLocale = 'es'): PortalProposal {
   const p = row.properties as Record<string, any>;
   return {
     kind: 'wiki',
     id: row.id,
-    title: p['Doc name']?.title?.[0]?.plain_text ?? 'Propuesta',
-    dateLabel: row.last_edited_time ? dayMonth(row.last_edited_time) : null,
+    title: p['Doc name']?.title?.[0]?.plain_text ?? portalDict(locale).proposalDefaultTitle,
+    dateLabel: row.last_edited_time ? dayMonthLabel(row.last_edited_time, locale) : null,
   };
 }
 
@@ -110,6 +105,7 @@ async function findProposalRow(ctx: AppContext): Promise<any | null> {
  */
 export async function loadProposalContent(
   ctx: AppContext,
+  locale: PortalLocale = 'es',
 ): Promise<{ title: string; blocks: ProjectBlock[] } | null> {
   const row = await findProposalRow(ctx);
   if (!row) return null;
@@ -127,16 +123,16 @@ export async function loadProposalContent(
     cursor = res.has_more ? res.next_cursor : undefined;
   } while (cursor);
 
-  return { title: parseProposalRow(row).title, blocks: parseProjectBlocks(blocks) };
+  return { title: parseProposalRow(row, locale).title, blocks: parseProjectBlocks(blocks) };
 }
 
 // ── usuarios de prueba ───────────────────────────────────────────────────────
-export function parseTestUserRow(row: any): PortalTestUser {
+export function parseTestUserRow(row: any, locale: PortalLocale = 'es'): PortalTestUser {
   const p = row.properties as Record<string, any>;
   const url: string | null = p.URL?.url ?? null;
   return {
     id: row.id,
-    nombre: p.Nombre?.title?.[0]?.plain_text ?? 'Cuenta de prueba',
+    nombre: p.Nombre?.title?.[0]?.plain_text ?? portalDict(locale).testUserDefaultName,
     usuario: plain(p.Usuario),
     clave: plain(p.Clave),
     url,
@@ -154,7 +150,7 @@ export function monthlyOf(amount: number, frequency: string | null): number {
   }
 }
 
-export function parseInfraRow(row: any): PortalInfraItem {
+export function parseInfraRow(row: any, locale: PortalLocale = 'es'): PortalInfraItem {
   const p = row.properties as Record<string, any>;
   const titleProp = p.Description?.title
     ? p.Description
@@ -163,20 +159,22 @@ export function parseInfraRow(row: any): PortalInfraItem {
   const monthly = monthlyOf(amount, p.Frequency?.select?.name ?? null);
   return {
     id: row.id,
-    name: ((titleProp?.title ?? []) as any[]).map((t) => t.plain_text).join('') || 'Servicio',
+    name:
+      ((titleProp?.title ?? []) as any[]).map((t) => t.plain_text).join('') ||
+      portalDict(locale).infraServiceDefaultName,
     detail: plain(p.Notes) || null,
     monthly,
     monthlyLabel: money(Math.round(monthly * 100) / 100),
   };
 }
 
-function buildInfra(rows: any[]): PortalInfra | null {
+function buildInfra(rows: any[], locale: PortalLocale = 'es'): PortalInfra | null {
   const items = rows
     .filter((r: any) => {
       const s = r.properties?.Status?.status?.name ?? r.properties?.Status?.select?.name ?? null;
       return s !== 'Canceled';
     })
-    .map(parseInfraRow)
+    .map((r) => parseInfraRow(r, locale))
     .sort((a, b) => b.monthly - a.monthly);
   if (!items.length) return null;
   const total = items.reduce((s, i) => s + i.monthly, 0);
@@ -191,7 +189,7 @@ function buildInfra(rows: any[]): PortalInfra | null {
 const cents = (n: number) => Math.round(n * 100) / 100;
 
 /** Construye el run-rate (en el baseline) + la matriz del simulador. */
-export function buildInfraFromStack(stack: InfraStackDef): PortalInfra {
+export function buildInfraFromStack(stack: InfraStackDef, locale: PortalLocale = 'es'): PortalInfra {
   const stops = stack.stops.includes(stack.baselineUsers)
     ? stack.stops
     : [stack.baselineUsers, ...stack.stops];
@@ -200,12 +198,12 @@ export function buildInfraFromStack(stack: InfraStackDef): PortalInfra {
     .map((s) => {
       const byStop = stops.map((u) => cents(s.monthlyAt(u)));
       return {
-        name: s.name,
-        detail: s.detail || null,
-        info: s.info ?? null,
+        name: pick(s.name, locale),
+        detail: pick(s.detail, locale) || null,
+        info: s.info != null ? pick(s.info, locale) : null,
         byStop,
         labelByStop: byStop.map((m) => money(m)),
-        group: s.group ?? null,
+        group: s.group != null ? pick(s.group, locale) : null,
       };
     })
     .sort((a, b) => b.byStop[0]! - a.byStop[0]!);
@@ -235,7 +233,10 @@ export function buildInfraFromStack(stack: InfraStackDef): PortalInfra {
 }
 
 // ── catálogo ─────────────────────────────────────────────────────────────────
-export async function loadPortalDocuments(ctx: AppContext): Promise<PortalDocuments> {
+export async function loadPortalDocuments(
+  ctx: AppContext,
+  locale: PortalLocale = 'es',
+): Promise<PortalDocuments> {
   // archivo privado del repo primero (microsite rico); Wiki como respaldo
   const fileDoc = ctx.customerName ? docFilesForCustomer(ctx.customerName)[0] : undefined;
 
@@ -250,7 +251,7 @@ export async function loadPortalDocuments(ctx: AppContext): Promise<PortalDocume
           hasPdf: Boolean(fileDoc.pdf),
         })
       : findProposalRow(ctx)
-          .then((row) => (row ? parseProposalRow(row) : null))
+          .then((row) => (row ? parseProposalRow(row, locale) : null))
           .catch((e) => {
             console.error('[portal] proposal lookup failed', e);
             return null;
@@ -265,7 +266,7 @@ export async function loadPortalDocuments(ctx: AppContext): Promise<PortalDocume
       },
       [{ property: 'Nombre', direction: 'ascending' }],
     )
-      .then((rows) => rows.map(parseTestUserRow).filter((u) => u.usuario && u.clave))
+      .then((rows) => rows.map((r) => parseTestUserRow(r, locale)).filter((u) => u.usuario && u.clave))
       .catch((e) => {
         console.error('[portal] test users lookup failed', e);
         return [] as PortalTestUser[];
@@ -273,7 +274,7 @@ export async function loadPortalDocuments(ctx: AppContext): Promise<PortalDocume
     (async () => {
       // primero el modelo del repo (trae simulador); Finance queda de respaldo
       const stack = ctx.customerName ? findInfraStack(ctx.customerName) : null;
-      if (stack) return buildInfraFromStack(stack);
+      if (stack) return buildInfraFromStack(stack, locale);
       const dataSourceId = serverEnv.NOTION_DB_FINANCE;
       if (!dataSourceId) return null;
       const rows = await queryAllRaw(dataSourceId, {
@@ -282,7 +283,7 @@ export async function loadPortalDocuments(ctx: AppContext): Promise<PortalDocume
           { property: 'Type', select: { equals: 'Infrastructure' } },
         ],
       });
-      return buildInfra(rows);
+      return buildInfra(rows, locale);
     })().catch((e) => {
       console.error('[portal] infra lookup failed', e);
       return null;

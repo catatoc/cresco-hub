@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type CSSProperties } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { PortalScene } from './scene';
 import { Brand } from './brand';
 import { toggleMyTask } from '@/app/(portal)/actions';
@@ -21,10 +22,10 @@ function Av({ initials, color, size = 24 }: { initials: string; color: string; s
 }
 
 /** "Carlos, Diego, Andrés y Franco" a partir de los nombres de pila */
-function namesLine(names: string[]): string {
+function namesLine(names: string[], connector: string): string {
   const first = names.map((n) => n.split(/\s+/)[0]).filter(Boolean);
   if (first.length <= 1) return first[0] ?? '';
-  return `${first.slice(0, -1).join(', ')} y ${first[first.length - 1]}`;
+  return `${first.slice(0, -1).join(', ')}${connector}${first[first.length - 1]}`;
 }
 
 function Acta({ blocks }: { blocks: ActaBlock[] }) {
@@ -55,6 +56,7 @@ function Acta({ blocks }: { blocks: ActaBlock[] }) {
 }
 
 export function MeetingPage({ meeting }: { meeting: PortalMeeting }) {
+  const tr = useTranslations('portal');
   const [doneOverride, setDoneOverride] = useState<Record<string, boolean>>({});
   const [, startTransition] = useTransition();
   const isDone = (t: PortalTask) => doneOverride[t.id] ?? t.done;
@@ -73,7 +75,7 @@ export function MeetingPage({ meeting }: { meeting: PortalMeeting }) {
       <PortalScene />
       <div className="cp-stage cp-mp-stage">
         <div className="cp-topbar cp-r" style={{ '--d': '.04s' } as CSSProperties}>
-          <Link className="cp-mp-back" href="/portal">← Volver a tu portal</Link>
+          <Link className="cp-mp-back" href="/portal">{tr('common.backToPortal')}</Link>
           <Brand size={19} />
         </div>
 
@@ -88,7 +90,7 @@ export function MeetingPage({ meeting }: { meeting: PortalMeeting }) {
                 <span className="cp-mp-avs">
                   {meeting.attendees.slice(0, 6).map((a, i) => <Av key={i} initials={a.initials} color={a.color} />)}
                 </span>
-                <span>{namesLine(meeting.attendees.map((a) => a.name))}</span>
+                <span>{namesLine(meeting.attendees.map((a) => a.name), tr('meeting.namesConnector'))}</span>
               </div>
             )}
           </header>
@@ -98,24 +100,24 @@ export function MeetingPage({ meeting }: { meeting: PortalMeeting }) {
           ) : meeting.summary ? (
             <p className="cp-mp-lede cp-rb" style={{ '--d': '.3s' } as CSSProperties}>{meeting.summary}</p>
           ) : (
-            <p className="cp-mp-wait cp-rb" style={{ '--d': '.3s' } as CSSProperties}>El resumen llega después de la reunión.</p>
+            <p className="cp-mp-wait cp-rb" style={{ '--d': '.3s' } as CSSProperties}>{tr('common.summaryAfterMeeting')}</p>
           )}
 
           {meeting.acuerdos.length > 0 && (
             <section className="cp-mp-deals cp-rb" style={{ '--d': '.4s' } as CSSProperties}>
-              <div className="cp-mp-sect" style={{ marginTop: 0 }}>Acuerdos de esta reunión</div>
+              <div className="cp-mp-sect" style={{ marginTop: 0 }}>{tr('meeting.dealsTitle')}</div>
               {meeting.acuerdos.map((t) => {
                 const done = isDone(t);
                 return (
                   <div className={`cp-task ${done ? 'done' : ''}`} key={t.id} style={{ paddingLeft: 0, paddingRight: 0 }}>
-                    <button className="cp-ck" disabled={!t.mine} onClick={() => toggle(t)} title={t.mine ? 'Marcar / desmarcar' : 'Esta la lleva crescō'}>
+                    <button className="cp-ck" disabled={!t.mine} onClick={() => toggle(t)} title={t.mine ? tr('common.toggle') : tr('common.notYours')}>
                       {done ? '✓' : ''}
                     </button>
                     <div className="cp-tb">
                       <div className="cp-tt">{t.title}</div>
                       {t.assignee && <div className="cp-tw">{t.assignee.name}</div>}
                     </div>
-                    <span className={`cp-tpill ${done ? 'done' : 'todo'}`}>{done ? 'lista' : 'pendiente'}</span>
+                    <span className={`cp-tpill ${done ? 'done' : 'todo'}`}>{done ? tr('meeting.dealDone') : tr('meeting.dealPending')}</span>
                   </div>
                 );
               })}

@@ -1,0 +1,198 @@
+{
+  "common": {
+    "backToPortal": "← Volver a tu portal",
+    "openMeeting": "Abrir reunión →",
+    "signOut": "Salir",
+    "summaryAfterMeeting": "El resumen llega después de la reunión.",
+    "noDate": "sin fecha",
+    "toggle": "Marcar / desmarcar",
+    "notYours": "Esta la lleva crescō"
+  },
+  "taskState": {
+    "done": "lista",
+    "late": "atrasada",
+    "run": "en progreso",
+    "todo": "por venir"
+  },
+  "taskDue": {
+    "overdue": "⚠ venció {date}",
+    "doneOn": "lista · {date}",
+    "dueOn": "vence {date}"
+  },
+  "health": {
+    "track": "on track",
+    "risk": "en riesgo",
+    "off": "off track",
+    "block": "bloqueado"
+  },
+  "metadata": {
+    "home": "tu proyecto",
+    "meetings": "tus reuniones",
+    "meeting": "reunión",
+    "proposal": "tu propuesta"
+  },
+  "home": {
+    "greeting": "Hola, {name}.",
+    "subtitle": "Este es el estado de tu proyecto con <b>crescō</b>.",
+    "projectsTitle": "Tus proyectos",
+    "projectsCount": "· {count} en curso",
+    "projectsEmpty": "Todavía no hay proyectos en curso. Tu PM de crescō los activará pronto.",
+    "legend": {
+      "ready": "lista",
+      "late": "atrasada",
+      "running": "en curso",
+      "upcoming": "por venir",
+      "today": "hoy"
+    },
+    "tasksTitle": "Tus tareas con crescō",
+    "tasksCount": "· {count, plural, one {# abierta} other {# abiertas}}",
+    "tasksEmpty": "No tienes tareas pendientes con crescō. 🌱",
+    "tasksHint": "Solo tú puedes marcar estas — son tuyas.",
+    "meetingsTitle": "Tus reuniones",
+    "meetingsSummaries": "· resúmenes",
+    "seeAll": "ver todas →",
+    "meetingsEmpty": "Cuando tengamos nuestra primera reunión, aquí verás el resumen.",
+    "drawer": {
+      "briefTitle": "Tu proyecto",
+      "tasksTitle": "Tareas del proyecto",
+      "summary": "{done} de {total} listas",
+      "overdueCount": "{count, plural, one {# atrasada} other {# atrasadas}}",
+      "tasksEmpty": "Este proyecto todavía no tiene tareas.",
+      "backToBrief": "← Volver al brief",
+      "viewTasks": "Ver tareas · {done} de {total} →"
+    }
+  },
+  "capsule": {
+    "modalTitle": {
+      "pagos": "Pagos · con crescō",
+      "propuesta": "Tu propuesta · con crescō",
+      "accesos": "Usuarios de prueba · para que explores tu app",
+      "infra": "Infraestructura · costos estimados"
+    },
+    "chip": {
+      "pagos": "pagos",
+      "propuesta": "propuesta",
+      "accesos": "accesos",
+      "infra": "infraestructura",
+      "pending": "{label} pendiente",
+      "upToDate": "al día",
+      "accounts": "{count, plural, one {# cuenta} other {# cuentas}}",
+      "perMonth": "{label}/mes"
+    },
+    "copy": {
+      "copy": "copiar",
+      "done": "✓ listo"
+    },
+    "cred": {
+      "user": "usuario",
+      "pass": "clave",
+      "show": "ver",
+      "hide": "ocultar"
+    },
+    "roles": {
+      "doctor": "doctor",
+      "secretaria": "secretaria",
+      "admin": "admin",
+      "paciente": "paciente",
+      "cuenta": "cuenta"
+    },
+    "pay": {
+      "pendingSub": "pendiente · {count, plural, one {# pago} other {# pagos}}",
+      "upToDate": "Estás al día 🌱",
+      "paid": "pagado",
+      "pending": "pendiente",
+      "dueOn": "vence {date}",
+      "dateTbd": "fecha por definir"
+    },
+    "propuesta": {
+      "empty": "No encontramos la propuesta. Tu PM de crescō la publicará pronto."
+    },
+    "accesos": {
+      "note": "Cuentas del <b>entorno de prueba</b> para que explores tu aplicación — los datos son ficticios."
+    },
+    "infra": {
+      "estimatedCost": "costo estimado de tu infraestructura",
+      "perMonth": "/mes",
+      "perMonthWide": " / mes",
+      "yearlyEstimate": "estimado anual",
+      "todayUsers": "hoy · ~{users} usuarios activos",
+      "withUsers": "con ~<b>{users}</b> usuarios activos",
+      "activeUsers": "usuarios activos",
+      "today": "hoy",
+      "groupDetail": "{count} servicios web en Render · según uso",
+      "groupInfo": {
+        "servers": "Las computadoras donde vive tu aplicación — una por cada herramienta, para que ninguna afecte a las otras."
+      },
+      "whatIs": "qué es {name}",
+      "noteFlat": "<b>Estimado, no factura.</b> Los servicios están a tu nombre; la cifra real puede variar con el uso.",
+      "noteSim": "<b>Estimado, no factura.</b> Los montos son aproximados y dependerán del uso real; la proyección sigue los planes de cada proveedor (Render, Supabase, DigitalOcean, Postmark) — mover el control no contrata nada."
+    }
+  },
+  "brief": {
+    "imageAlt": "Imagen del proyecto"
+  },
+  "meetingsIndex": {
+    "title": "Tus reuniones.",
+    "subtitle": "Cada reunión con <b>crescō</b>, con su acta y sus acuerdos.",
+    "empty": "Cuando tengamos nuestra primera reunión, aquí verás el acta."
+  },
+  "meeting": {
+    "namesConnector": " y ",
+    "waiting": "El resumen llega después de la reunión.",
+    "dealsTitle": "Acuerdos de esta reunión",
+    "dealDone": "lista",
+    "dealPending": "pendiente"
+  },
+  "tour": {
+    "ariaDialog": "Tour del portal · paso {step} de {total}",
+    "skip": "saltar el tour",
+    "prev": "paso anterior",
+    "next": "siguiente",
+    "done": "entendido",
+    "help": "volver a ver el recorrido",
+    "steps": {
+      "capsula": {
+        "title": "Tus documentos, a la mano",
+        "body": "La cápsula guarda lo importante: pagos, usuarios de prueba para explorar tu app y los costos de tu infraestructura. Solo aparece lo que existe — y solo lo ves tú."
+      },
+      "board": {
+        "title": "Tus proyectos, en vivo",
+        "body": "Cada proyecto con su línea de tiempo real: lo que está listo, lo que viene y la marca de hoy. Tócalo y se abre el brief completo con sus tareas."
+      },
+      "tareas": {
+        "title": "Lo que está en tus manos",
+        "body": "Estas tareas son tuyas — solo tú puedes marcarlas. Cuando completas una, tu equipo crescō lo ve al instante."
+      },
+      "reuniones": {
+        "title": "Lo que hablamos, por escrito",
+        "body": "Después de cada reunión, aquí queda el resumen con sus acuerdos. Nada se pierde en la memoria."
+      },
+      "user": {
+        "title": "Siempre tuyo",
+        "body": "Tu sesión, tu empresa, tus datos. Si quieres repetir este recorrido, vive en el botón “?” de abajo."
+      }
+    }
+  },
+  "welcome": {
+    "skip": "saltar intro",
+    "intro": "{firstName}, {gender, select, Female {bienvenida} other {bienvenido}} a <ac>crescō</ac> y gracias por confiar en nosotros.",
+    "s1": "En <ac>crescō</ac> trabajamos para ayudar a personas y empresas a través de la tecnología.",
+    "s2": "Tu proyecto es ahora también <ac>el nuestro</ac> — estamos muy felices de acompañarte en el desarrollo tecnológico y con todo lo que esté a nuestro alcance para impulsarlo.",
+    "s3": "Esperamos que tu experiencia sea excelente y que podamos <ac>crecer juntos</ac> 🚀",
+    "doneTitle": "Este es tu portal.",
+    "doneSubtitle": "Avances, tareas y reuniones de tu proyecto — siempre al día, en un solo lugar.",
+    "entering": "Entrando…",
+    "enter": "Entrar",
+    "hint": "click, espacio o → para avanzar"
+  },
+  "error": {
+    "title": "No pudimos cargar tu portal.",
+    "body": "Estamos teniendo un problema momentáneo. Vuelve a intentar en unos segundos.",
+    "retry": "Reintentar"
+  },
+  "docViewer": {
+    "back": "← volver al portal",
+    "onlyCustomer": "solo {customer}",
+    "downloadPdf": "descargar PDF"
+  }
+}

@@ -1,10 +1,12 @@
 'use server';
 
+import { getLocale } from 'next-intl/server';
 import { requireContext } from '@/lib/auth/require-context';
 import { toggleTaskForMember } from '@/lib/portal/toggle';
 import { markPortalSignIn, markPortalOnboarding } from '@/lib/portal/welcome';
 import { loadProjectContent, type ProjectBlock } from '@/lib/portal/content';
 import { loadProposalContent } from '@/lib/portal/documents';
+import type { PortalLocale } from '@/lib/portal/i18n';
 
 // Marca/desmarca una tarea del cliente (portal web). La verificación de
 // ownership vive en toggleTaskForMember (compartida con el API móvil).
@@ -31,7 +33,8 @@ export async function getProjectBrief(projectId: string): Promise<ProjectBlock[]
 // abrir el chip en la cápsula. El gate por Customer vive en el query.
 export async function getProposal(): Promise<{ title: string; blocks: ProjectBlock[] } | null> {
   const ctx = await requireContext();
-  return loadProposalContent(ctx);
+  const locale: PortalLocale = (await getLocale()) === 'en' ? 'en' : 'es';
+  return loadProposalContent(ctx, locale);
 }
 
 // El cliente terminó (o saltó) el tour de coachmarks → marca

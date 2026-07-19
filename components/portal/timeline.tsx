@@ -2,20 +2,21 @@
 
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useLocale, useTranslations } from 'next-intl';
 import { TODAY, RUNNING_STATUSES, type TimelineGeom, type PortalTask } from '@/lib/portal/data';
 
 const CHECK = 'M-2.3 0 l1.5 1.7 l3 -3.4';
 const TODAY_MS = Date.parse(TODAY + 'T00:00:00Z');
-const fmtDue = (iso: string) =>
-  new Intl.DateTimeFormat('es', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).format(
+const fmtDue = (iso: string, locale: string) =>
+  new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).format(
     new Date(iso + 'T00:00:00Z'),
   );
 
-export function taskState(t: PortalTask): { label: string; cls: string } {
-  if (t.done) return { label: 'lista', cls: 'done' };
-  if (t.due && Date.parse(t.due + 'T00:00:00Z') < TODAY_MS) return { label: 'atrasada', cls: 'late' };
-  if (RUNNING_STATUSES.includes(t.status)) return { label: 'en progreso', cls: 'run' };
-  return { label: 'por venir', cls: 'todo' };
+export function taskState(t: PortalTask): { cls: string } {
+  if (t.done) return { cls: 'done' };
+  if (t.due && Date.parse(t.due + 'T00:00:00Z') < TODAY_MS) return { cls: 'late' };
+  if (RUNNING_STATUSES.includes(t.status)) return { cls: 'run' };
+  return { cls: 'todo' };
 }
 
 // Línea de temporalidad: recta = el tiempo del proyecto; puntos = tareas según
@@ -35,6 +36,8 @@ export function PortalTimeline({
 }) {
   const { progressX, todayX, dots, pausedFromX } = geom;
   const mossLen = Math.max(0, progressX - 10);
+  const locale = useLocale();
+  const t = useTranslations('portal');
   const [tip, setTip] = useState<{ i: number; x: number; y: number } | null>(null);
   const ht = tip != null ? tasks?.[tip.i] : null;
 
@@ -103,8 +106,8 @@ export function PortalTimeline({
             <div className="nm">{ht.title}</div>
             <div className="mt">
               {ht.assignee ? `${ht.assignee.name} · ` : ''}
-              {ht.due ? fmtDue(ht.due) : 'sin fecha'}
-              <span className={`st ${taskState(ht).cls}`}>{taskState(ht).label}</span>
+              {ht.due ? fmtDue(ht.due, locale) : t('common.noDate')}
+              <span className={`st ${taskState(ht).cls}`}>{t(`taskState.${taskState(ht).cls}`)}</span>
             </div>
           </div>,
           document.body,

@@ -5,14 +5,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { requireContext } from '@/lib/auth/require-context';
 import { findDocFile } from '@/lib/portal/doc-files';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-  title: 'crescō · tu propuesta',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('portal.metadata');
+  return { title: `crescō · ${t('proposal')}` };
+}
 
 export default async function DocViewerPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -20,19 +22,21 @@ export default async function DocViewerPage({ params }: { params: Promise<{ slug
   const doc = findDocFile(slug, ctx.customerName);
   if (!doc) notFound();
 
+  const t = await getTranslations('portal.docViewer');
+
   return (
     <div className="cp-dv">
       <div className="cp-dv-bar">
-        <Link className="cp-dv-back" href="/portal">← volver al portal</Link>
+        <Link className="cp-dv-back" href="/portal">{t('back')}</Link>
         <div className="cp-dv-title">
           <span className="cp-dv-w">{doc.title}</span>
           <span className="cp-dv-m">{doc.meta}</span>
         </div>
         <div className="cp-dv-actions">
-          <span className="cp-dv-lock"><i /><span className="cp-dv-lock-t">solo {ctx.customerName.toLowerCase()}</span></span>
+          <span className="cp-dv-lock"><i /><span className="cp-dv-lock-t">{t('onlyCustomer', { customer: ctx.customerName.toLowerCase() })}</span></span>
           {doc.pdf && (
             <a className="cp-dv-pdf" href={`/portal/docs/${doc.slug}/pdf`}>
-              descargar PDF <span className="cp-dv-circ">↓</span>
+              {t('downloadPdf')} <span className="cp-dv-circ">↓</span>
             </a>
           )}
         </div>

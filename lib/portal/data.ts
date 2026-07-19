@@ -5,6 +5,7 @@
 import { getNotion } from '@/lib/notion/client';
 import { serverEnv } from '@/lib/env';
 import type { AppContext } from '@/lib/auth/context';
+import { portalDict, dayMonthLabel, monthYearLabel, type PortalLocale } from './i18n';
 
 export type DeckHealth = 'track' | 'risk' | 'off' | 'block';
 
@@ -33,6 +34,7 @@ export interface PortalProject {
   deckHealth: DeckHealth;
   healthDetail: string; // la razón (Health Description)
   pill: string;
+  paused?: boolean; // señal estable (Status = Paused), independiente del idioma del pill
   start: string;
   end: string | null;
   startLabel: string;
@@ -61,18 +63,12 @@ export interface PortalData {
 
 export const TODAY = new Date().toISOString().slice(0, 10);
 const TODAY_MS = Date.parse(TODAY + 'T00:00:00Z');
-const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-const MES_FULL = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 const PALETTE = ['#3D5240', '#647A66', '#4A5C6B', '#9E6B23', '#7E9A80', '#8C8377', '#2A3B2D', '#5C544A'];
 
 // Notion puede traer fecha sola ("2026-05-04") o con hora ("2026-06-08T20:30:00.000+08:00");
 // nos quedamos con el día calendario tal como se ve en Notion
 const dateOnly = (iso: string) => iso.slice(0, 10);
 const ms = (iso: string) => Date.parse(dateOnly(iso) + 'T00:00:00Z');
-const dayMonth = (iso: string) => {
-  const d = new Date(dateOnly(iso) + 'T00:00:00Z');
-  return `${d.getUTCDate()} ${MES[d.getUTCMonth()]}`;
-};
 
 export function colorFor(key: string): string {
   let h = 0;
@@ -89,12 +85,13 @@ const DONE_STATUSES = new Set(['Done', 'Archived']);
 /** estados de Notion que significan "alguien está trabajando en esto ahora" */
 export const RUNNING_STATUSES = ['In Progress', 'Running', 'Testing', 'In Review', 'PR Open'];
 
-function pillFromStatus(s: string | null): string {
+function pillFromStatus(s: string | null, locale: PortalLocale): string {
+  const d = portalDict(locale);
   switch (s) {
-    case 'In Progress': return 'en curso';
-    case 'Paused': return 'en pausa';
-    case 'Starting': case 'Planning': case 'Backlog': return 'arrancando';
-    default: return (s ?? 'en curso').toLowerCase();
+    case 'In Progress': return d.pillInProgress;
+    case 'Paused': return d.pillPaused;
+    case 'Starting': case 'Planning': case 'Backlog': return d.pillStarting;
+    default: return (s ?? d.pillInProgress).toLowerCase();
   }
 }
 
@@ -141,7 +138,8 @@ export function parseTaskRow(row: any, teamById: Map<string, MemberLite>, member
   };
 }
 
-function buildProject(row: any, tasks: PortalTask[]): PortalProject {
+function buildProject(row: any, tasks: PortalTask[], locale: PortalLocale): PortalProject {
+  const d = portalDict(locale);
   const p = row.properties;
   const statusName: string | null = p.Status?.status?.name ?? null;
   const completion = typeof p.Completion?.rollup?.number === 'number' ? p.Completion.rollup.number : null;
@@ -170,23 +168,25 @@ function buildProject(row: any, tasks: PortalTask[]): PortalProject {
 
   return {
     id: row.id,
-    name: p['Project name']?.title?.[0]?.plain_text ?? '(sin nombre)',
+    name: p['Project name']?.title?.[0]?.plain_text ?? d.projectDefaultName,
     subtitle: p.Summary?.rich_text?.[0]?.plain_text ?? '',
     pct,
     deckHealth,
     healthDetail,
-    pill: pillFromStatus(statusName),
+    pill: pillFromStatus(statusName, locale),
+    paused,
     start: start ?? TODAY,
     end,
-    startLabel: start ? dayMonth(start) : '—',
-    endLabel: end ? `${dayMonth(end)} · entrega` : '— · sin fecha',
+    startLabel: start ? (dayMonthLabel(start, locale) ?? '') : d.dash,
+    endLabel: end ? `${dayMonthLabel(end, locale) ?? ''} · ${d.delivery}` : `${d.dash} · ${d.noDate}`,
     tasks,
   };
 }
 
 const HEALTH_ORDER: Record<DeckHealth, number> = { off: 0, risk: 1, block: 2, track: 3 };
 
-export async function loadPortalData(ctx: AppContext): Promise<PortalData> {
+export async function loadPortalData(ctx: AppContext, locale: PortalLocale = 'es'): Promise<PortalData> {
+  const d = portalDict(locale);
   // equipo completo (para nombres de asignados) — la base es pequeña
   const teamRows = await queryAllRaw(serverEnv.NOTION_DB_TEAM);
   const teamById = new Map<string, MemberLite>(
@@ -227,7 +227,7 @@ export async function loadPortalData(ctx: AppContext): Promise<PortalData> {
         property: 'Project',
         relation: { contains: row.id },
       });
-      return buildProject(row, taskRows.map((t: any) => parseTaskRow(t, teamById, ctx.memberId)));
+      return buildProject(row, taskRows.map((t: any) => parseTaskRow(t, teamById, ctx.memberId)), locale);
     }),
   );
   projects.sort(
@@ -277,8 +277,8 @@ export async function loadPortalData(ctx: AppContext): Promise<PortalData> {
       .map((m) => ({ name: m.name, initials: initialsOf(m.name), color: colorFor(m.name) }));
     return {
       id: r.id,
-      title: p.Name?.title?.[0]?.plain_text ?? 'Reunión',
-      dateLabel: date ? dayMonth(date) : '',
+      title: p.Name?.title?.[0]?.plain_text ?? d.meetingDefaultTitle,
+      dateLabel: date ? (dayMonthLabel(date, locale) ?? '') : '',
       summary,
       attendees,
     };
@@ -290,7 +290,7 @@ export async function loadPortalData(ctx: AppContext): Promise<PortalData> {
     memberName: ctx.memberName,
     customerName: ctx.customerName,
     customerLogo: ctx.customerLogo,
-    monthLabel: `${MES_FULL[now.getMonth()]} ${now.getFullYear()}`,
+    monthLabel: monthYearLabel(now, locale),
     projects,
     myTasks,
     meetings,
@@ -330,5 +330,6 @@ export function timelineGeom(p: PortalProject): TimelineGeom {
           : 'upcoming';
     return { x: xFor(due), state };
   });
-  return { progressX, todayX, dots, pausedFromX: p.pill === 'en pausa' ? progressX : null };
+  const paused = p.paused ?? p.pill === 'en pausa';
+  return { progressX, todayX, dots, pausedFromX: paused ? progressX : null };
 }

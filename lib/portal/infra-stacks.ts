@@ -6,15 +6,17 @@
 //
 // Para agregar un cliente: definir su stack aquí y matchearlo en STACKS.
 
+import type { Localized } from './i18n';
+
 export interface InfraServiceDef {
-  name: string;
-  detail: string;
+  name: Localized;
+  detail: Localized;
   /** costo mensual estimado en USD para `users` usuarios activos */
   monthlyAt: (users: number) => number;
   /** servicios con el mismo group se muestran como acordeón (p. ej. los servidores) */
-  group?: string;
+  group?: Localized;
   /** explicación en cristiano para el cliente — se muestra al tocar el ⓘ */
-  info?: string;
+  info?: Localized;
 }
 
 export interface InfraStackDef {
@@ -45,62 +47,92 @@ const AMEDI: InfraStackDef = {
   services: [
     {
       name: 'API',
-      detail: 'servidor NestJS — el corazón · plan Standard',
+      detail: {
+        es: 'servidor NestJS — el corazón · plan Standard',
+        en: 'NestJS server — the core · Standard plan',
+      },
       monthlyAt: tiers([[5_000, 25], [Infinity, 85]]),
-      group: 'Servidores · producción',
-      info: 'El cerebro de la plataforma: procesa las citas, las historias clínicas y los permisos. Todas las apps hablan con él.',
+      group: { es: 'Servidores · producción', en: 'Servers · production' },
+      info: {
+        es: 'El cerebro de la plataforma: procesa las citas, las historias clínicas y los permisos. Todas las apps hablan con él.',
+        en: 'The brain of the platform: it processes appointments, medical records and permissions. Every app talks to it.',
+      },
     },
     {
-      name: 'Web del paciente',
-      detail: 'app de citas (client)',
+      name: { es: 'Web del paciente', en: 'Patient web' },
+      detail: { es: 'app de citas (client)', en: 'appointments app (client)' },
       monthlyAt: tiers([[2_500, 7], [Infinity, 25]]),
-      group: 'Servidores · producción',
-      info: 'La página donde tus pacientes agendan, pagan y ven sus citas.',
+      group: { es: 'Servidores · producción', en: 'Servers · production' },
+      info: {
+        es: 'La página donde tus pacientes agendan, pagan y ven sus citas.',
+        en: 'The site where your patients book, pay and see their appointments.',
+      },
     },
     {
-      name: 'Consultorio',
-      detail: 'panel del doctor',
+      name: { es: 'Consultorio', en: 'Practice' },
+      detail: { es: 'panel del doctor', en: "doctor's panel" },
       monthlyAt: tiers([[5_000, 7], [Infinity, 25]]),
-      group: 'Servidores · producción',
-      info: 'Donde el doctor atiende: su agenda del día y la historia clínica del paciente.',
+      group: { es: 'Servidores · producción', en: 'Servers · production' },
+      info: {
+        es: 'Donde el doctor atiende: su agenda del día y la historia clínica del paciente.',
+        en: "Where the doctor works: their daily schedule and the patient's medical record.",
+      },
     },
     {
       name: 'Admin',
-      detail: 'panel de la clínica',
+      detail: { es: 'panel de la clínica', en: 'clinic panel' },
       monthlyAt: tiers([[10_000, 7], [Infinity, 25]]),
-      group: 'Servidores · producción',
-      info: 'Donde la clínica administra doctores, horarios, pagos y reportes.',
+      group: { es: 'Servidores · producción', en: 'Servers · production' },
+      info: {
+        es: 'Donde la clínica administra doctores, horarios, pagos y reportes.',
+        en: 'Where the clinic manages doctors, schedules, payments and reports.',
+      },
     },
     {
-      name: 'Supabase · base de datos + auth',
-      detail: 'plan Pro · crece con cómputo',
+      name: { es: 'Supabase · base de datos + auth', en: 'Supabase · database + auth' },
+      detail: { es: 'plan Pro · crece con cómputo', en: 'Pro plan · scales with compute' },
       monthlyAt: tiers([[5_000, 25], [Infinity, 75]]),
-      info: 'Guarda todos los datos (pacientes, citas, historias) y maneja los inicios de sesión de forma segura.',
+      info: {
+        es: 'Guarda todos los datos (pacientes, citas, historias) y maneja los inicios de sesión de forma segura.',
+        en: 'Stores all the data (patients, appointments, records) and handles logins securely.',
+      },
     },
     {
       name: 'DigitalOcean Spaces',
-      detail: 'archivos + CDN · 250 GB incluidos',
+      detail: { es: 'archivos + CDN · 250 GB incluidos', en: 'files + CDN · 250 GB included' },
       monthlyAt: tiers([[10_000, 5], [Infinity, 10]]),
-      info: 'Donde viven los archivos: estudios, imágenes y documentos de los pacientes, servidos rápido desde un CDN.',
+      info: {
+        es: 'Donde viven los archivos: estudios, imágenes y documentos de los pacientes, servidos rápido desde un CDN.',
+        en: "Where the files live: patients' studies, images and documents, served fast from a CDN.",
+      },
     },
     {
-      name: 'Postmark · correos',
-      detail: 'confirmaciones y recordatorios',
+      name: { es: 'Postmark · correos', en: 'Postmark · email' },
+      detail: { es: 'confirmaciones y recordatorios', en: 'confirmations and reminders' },
       monthlyAt: tiers([[2_500, 15], [12_000, 55], [Infinity, 115]]),
-      info: 'Envía los correos de la plataforma: confirmaciones de cita, recuperación de clave, facturas.',
+      info: {
+        es: 'Envía los correos de la plataforma: confirmaciones de cita, recuperación de clave, facturas.',
+        en: 'Sends the platform emails: appointment confirmations, password recovery, invoices.',
+      },
     },
     {
       name: 'WhatsApp Cloud API',
-      detail: 'recordatorios de cita · por uso',
+      detail: { es: 'recordatorios de cita · por uso', en: 'appointment reminders · usage-based' },
       // ~2 conversaciones utility por usuario activo al mes (~$0.02 c/u)
       monthlyAt: (u) => Math.max(2, u * 0.04),
-      info: 'Los mensajes de WhatsApp que le llegan al paciente: recordatorios y confirmaciones. Se paga por mensaje enviado.',
+      info: {
+        es: 'Los mensajes de WhatsApp que le llegan al paciente: recordatorios y confirmaciones. Se paga por mensaje enviado.',
+        en: 'The WhatsApp messages the patient receives: reminders and confirmations. Billed per message sent.',
+      },
     },
     {
-      name: 'Dominio · amedisalud.com',
-      detail: 'renovación anual',
+      name: { es: 'Dominio · amedisalud.com', en: 'Domain · amedisalud.com' },
+      detail: { es: 'renovación anual', en: 'annual renewal' },
       monthlyAt: () => 1.5,
-      info: 'La dirección de tu plataforma en internet — se renueva una vez al año.',
+      info: {
+        es: 'La dirección de tu plataforma en internet — se renueva una vez al año.',
+        en: "Your platform's address on the internet — renewed once a year.",
+      },
     },
   ],
 };
