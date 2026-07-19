@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import type { Task, TaskStatus } from '@/schemas/task';
 
@@ -18,6 +19,7 @@ function flashFor(status: TaskStatus): FlashKind {
 }
 
 export function useMoveTask(setTasks: Dispatcher) {
+  const t = useTranslations('kanban.moveTask');
   const [pending, setPending] = useState<Set<string>>(new Set());
   const [flashedColumn, setFlashedColumn] = useState<{ id: string; kind: FlashKind } | null>(null);
   const flashTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -44,7 +46,7 @@ export function useMoveTask(setTasks: Dispatcher) {
       }
     } catch {
       setTasks(original);
-      toast.error('No se pudo mover la tarea. Intenta de nuevo.');
+      toast.error(t('error'));
     } finally {
       setPending((s) => {
         const next = new Set(s);

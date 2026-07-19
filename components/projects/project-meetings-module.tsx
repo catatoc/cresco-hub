@@ -1,21 +1,25 @@
 import Link from 'next/link';
 import { Calendar } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import type { Meeting } from '@/schemas/meeting';
 
 function ts(m: Meeting): number {
   return new Date(m.date ?? m.createdTime).getTime();
 }
 
-function fmt(iso: string): string {
-  return new Date(iso).toLocaleDateString('es', { day: 'numeric', month: 'short' });
+function fmt(iso: string, locale: string): string {
+  return new Date(iso).toLocaleDateString(locale, { day: 'numeric', month: 'short' });
 }
 
 export function ProjectMeetingsModule({ meetings }: { meetings: Meeting[] }) {
+  const t = useTranslations('projects.meetings');
+  const locale = useLocale();
+
   if (meetings.length === 0) {
     return (
-      <Module title="Reuniones recientes">
+      <Module title={t('title')}>
         <p className="text-[12px] text-muted-foreground py-3">
-          Sin reuniones asociadas a este proyecto aún.
+          {t('empty')}
         </p>
       </Module>
     );
@@ -26,8 +30,8 @@ export function ProjectMeetingsModule({ meetings }: { meetings: Meeting[] }) {
 
   return (
     <Module
-      title="Reuniones recientes"
-      action={meetings.length > 3 ? <Link href="/reuniones" className="text-[11px] text-[#5e6ad2] hover:underline">Ver todas →</Link> : null}
+      title={t('title')}
+      action={meetings.length > 3 ? <Link href="/reuniones" className="text-[11px] text-[#5e6ad2] hover:underline">{t('viewAll')}</Link> : null}
     >
       <ul className="divide-y divide-[#f5f5f8]">
         {visible.map((m) => {
@@ -41,9 +45,9 @@ export function ProjectMeetingsModule({ meetings }: { meetings: Meeting[] }) {
                 <div className="text-[12.5px] font-medium truncate">{m.title}</div>
                 <div className="text-[10.5px] text-muted-foreground mt-0.5">
                   {[
-                    m.date ? fmt(m.date) : null,
+                    m.date ? fmt(m.date, locale) : null,
                     m.meetingType,
-                    actions > 0 ? `${actions} ${actions === 1 ? 'acción' : 'acciones'}` : null,
+                    actions > 0 ? t('actions', { count: actions }) : null,
                   ]
                     .filter(Boolean)
                     .join(' · ')}

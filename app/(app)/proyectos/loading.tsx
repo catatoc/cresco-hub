@@ -1,9 +1,11 @@
+import { getTranslations } from 'next-intl/server';
 import { Topbar } from '@/components/shell/topbar';
 
-export default function Loading() {
+export default async function Loading() {
+  const t = await getTranslations('projects');
   return (
     <>
-      <Topbar crumbs={[{ label: 'Proyectos' }]} />
+      <Topbar crumbs={[{ label: t('nav.projects') }]} />
       <div className="flex-1 overflow-auto">
         <div className="px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10 pb-[calc(4rem+env(safe-area-inset-bottom)+1rem)] lg:pb-12 max-w-[1100px] mx-auto w-full">
           <div className="flex items-baseline gap-2.5 mb-5">

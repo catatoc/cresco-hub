@@ -1,24 +1,27 @@
 import Link from 'next/link';
 import { FileText } from 'lucide-react';
 import { formatDistanceToNow, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useLocale, useTranslations } from 'next-intl';
+import { dateLocale } from '@/lib/i18n/date-locale';
 import type { WikiPage } from '@/schemas/wiki';
 
 export function WikiRecents({ pages }: { pages: WikiPage[] }) {
+  const t = useTranslations('home.wikiRecents');
+  const locale = useLocale();
   return (
     <div className="min-w-0">
       <div className="flex items-baseline justify-between gap-3 mb-3 min-w-0">
-        <h2 className="text-[13px] font-semibold truncate">Recientes en wiki</h2>
+        <h2 className="text-[13px] font-semibold truncate">{t('title')}</h2>
         <Link
           href="/wiki"
           className="shrink-0 text-[12px] text-muted-foreground hover:text-[#5e6ad2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
         >
-          Ver wiki →
+          {t('seeAll')}
         </Link>
       </div>
       {pages.length === 0 ? (
         <div className="border border-dashed border-border rounded-lg p-6 text-center text-sm text-muted-foreground">
-          Sin páginas aún.
+          {t('empty')}
         </div>
       ) : (
         <div className="border border-border rounded-lg bg-white overflow-hidden">
@@ -33,7 +36,7 @@ export function WikiRecents({ pages }: { pages: WikiPage[] }) {
               </div>
               <span className="text-[13px] flex-1 min-w-0 truncate">{p.title}</span>
               <span className="text-[11px] text-muted-foreground shrink-0 max-w-[80px] sm:max-w-none truncate">
-                {formatDistanceToNow(parseISO(p.lastEditedAt), { locale: es, addSuffix: false })}
+                {formatDistanceToNow(parseISO(p.lastEditedAt), { locale: dateLocale(locale), addSuffix: false })}
               </span>
             </Link>
           ))}

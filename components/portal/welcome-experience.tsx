@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { completePortalWelcome } from '@/app/(portal)/actions';
 import styles from './welcome.module.css';
 
@@ -12,6 +13,8 @@ const ORDER = ['intro', 's1', 's2', 's3', 'done'] as const;
 const DONE = ORDER.length - 1;
 
 export function WelcomeExperience({ firstName, gender = null }: { firstName: string; gender?: 'Male' | 'Female' | null }) {
+  const t = useTranslations('portal.welcome');
+  const ac = (chunks: React.ReactNode) => <span className={styles.ac}>{chunks}</span>;
   const [active, setActive] = useState<number | null>(0);
   const [leaving, setLeaving] = useState<number | null>(null);
   const busy = useRef(false);
@@ -90,7 +93,7 @@ export function WelcomeExperience({ firstName, gender = null }: { firstName: str
         className={`${styles.skip}${onSlide ? ' ' + styles.show : ''}`}
         onClick={(e) => { e.stopPropagation(); go(DONE); }}
       >
-        saltar intro
+        {t('skip')}
       </button>
 
       <div className={styles.stage}>
@@ -98,7 +101,7 @@ export function WelcomeExperience({ firstName, gender = null }: { firstName: str
         <section className={cls(0)}>
           <div className={styles.rise} style={{ ['--d' as string]: '.2s' }}>
             <div className={`${styles.line} ${styles.long}`}>
-              {firstName}, {gender === 'Female' ? 'bienvenida' : 'bienvenido'} a <span className={styles.ac}>crescō</span> y gracias por confiar en nosotros.
+              {t.rich('intro', { firstName, gender: gender ?? 'other', ac })}
             </div>
           </div>
         </section>
@@ -107,7 +110,7 @@ export function WelcomeExperience({ firstName, gender = null }: { firstName: str
         <section className={cls(1)}>
           <div className={styles.rise} style={{ ['--d' as string]: '.2s' }}>
             <div className={`${styles.line} ${styles.long}`}>
-              En <span className={styles.ac}>crescō</span> trabajamos para ayudar a personas y empresas a través de la tecnología.
+              {t.rich('s1', { ac })}
             </div>
           </div>
         </section>
@@ -116,7 +119,7 @@ export function WelcomeExperience({ firstName, gender = null }: { firstName: str
         <section className={cls(2)}>
           <div className={styles.rise} style={{ ['--d' as string]: '.2s' }}>
             <div className={`${styles.line} ${styles.long}`}>
-              Tu proyecto es ahora también <span className={styles.ac}>el nuestro</span> — estamos muy felices de acompañarte en el desarrollo tecnológico y con todo lo que esté a nuestro alcance para impulsarlo.
+              {t.rich('s2', { ac })}
             </div>
           </div>
         </section>
@@ -125,7 +128,7 @@ export function WelcomeExperience({ firstName, gender = null }: { firstName: str
         <section className={cls(3)}>
           <div className={styles.rise} style={{ ['--d' as string]: '.2s' }}>
             <div className={`${styles.line} ${styles.long}`}>
-              Esperamos que tu experiencia sea excelente y que podamos <span className={styles.ac}>crecer juntos</span> 🚀
+              {t.rich('s3', { ac })}
             </div>
           </div>
         </section>
@@ -145,10 +148,10 @@ export function WelcomeExperience({ firstName, gender = null }: { firstName: str
             <div className={styles.ctr}>🌱</div>
           </div>
           <div className={`${styles.big} ${styles.rise}`} style={{ ['--d' as string]: '.3s' }}>
-            Este es tu portal.
+            {t('doneTitle')}
           </div>
           <div className={`${styles.below} ${styles.rise}`} style={{ ['--d' as string]: '.5s' }}>
-            Avances, tareas y reuniones de tu proyecto — siempre al día, en un solo lugar.
+            {t('doneSubtitle')}
           </div>
           <button
             className={`${styles.adv} ${styles.rise}`}
@@ -156,7 +159,7 @@ export function WelcomeExperience({ firstName, gender = null }: { firstName: str
             disabled={entering}
             onClick={(e) => { e.stopPropagation(); finish(); }}
           >
-            {entering ? 'Entrando…' : 'Entrar'} <span className={styles.arr}>→</span>
+            {entering ? t('entering') : t('enter')} <span className={styles.arr}>→</span>
           </button>
         </section>
       </div>
@@ -168,7 +171,7 @@ export function WelcomeExperience({ firstName, gender = null }: { firstName: str
       </div>
 
       <div className={`${styles.hint}${name === 'intro' ? ' ' + styles.show : ''}`}>
-        click, espacio o → para avanzar
+        {t('hint')}
       </div>
     </div>
   );

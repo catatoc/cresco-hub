@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 type Props = { children: React.ReactNode };
 
 export function MobileSidebar({ children }: Props) {
+  const t = useTranslations('shell');
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -21,7 +23,7 @@ export function MobileSidebar({ children }: Props) {
         render={
           <button
             type="button"
-            aria-label="Abrir menú"
+            aria-label={t('mobileSidebar.openMenu')}
             className="lg:hidden fixed top-1.5 left-2 z-40 inline-flex items-center justify-center h-9 w-9 rounded-md text-muted-foreground hover:bg-black/[0.05] hover:text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Menu className="w-4 h-4" />

@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { format, isToday, isPast } from 'date-fns';
+import { useLocale, useTranslations } from 'next-intl';
+import { dateLocale } from '@/lib/i18n/date-locale';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
 import type { Project } from '@/schemas/project';
@@ -26,11 +28,14 @@ function PriorityIcon({ priority }: { priority: Task['priority'] }) {
 }
 
 function DueCell({ dueDate }: { dueDate: string | null }) {
+  const t = useTranslations('home.myTasks');
+  const locale = useLocale();
   if (!dueDate) return <span className="text-[11px] text-muted-foreground">—</span>;
   const d = new Date(dueDate);
-  if (isToday(d)) return <span className="text-[11px] font-medium text-[#5e6ad2]">Hoy</span>;
-  if (isPast(d)) return <span className="text-[11px] font-medium text-[#d24949]">{format(d, 'MMM d')}</span>;
-  return <span className="text-[11px] text-muted-foreground">{format(d, 'MMM d')}</span>;
+  const fmt = format(d, t('dueFormat'), { locale: dateLocale(locale) });
+  if (isToday(d)) return <span className="text-[11px] font-medium text-[#5e6ad2]">{t('today')}</span>;
+  if (isPast(d)) return <span className="text-[11px] font-medium text-[#d24949]">{fmt}</span>;
+  return <span className="text-[11px] text-muted-foreground">{fmt}</span>;
 }
 
 function TagChip({ tag }: { tag: string }) {
@@ -52,19 +57,20 @@ type Props = {
 };
 
 export function MyTasks({ tasks, membersById, projectsById }: Props) {
+  const t = useTranslations('home.myTasks');
   if (tasks.length === 0) {
     return (
       <div className="mb-6 sm:mb-8">
         <div className="flex items-baseline justify-between gap-3 mb-3 min-w-0">
           <h2 className="text-[13px] font-semibold flex items-baseline gap-2 min-w-0 truncate">
-            <span className="shrink-0">Tus tareas</span>
+            <span className="shrink-0">{t('title')}</span>
             <span className="text-[12px] font-normal text-muted-foreground truncate hidden sm:inline">
-              · Hoy y atrasadas
+              · {t('subtitle')}
             </span>
           </h2>
         </div>
         <div className="border border-dashed border-border rounded-lg p-6 text-center text-sm text-muted-foreground">
-          Sin tareas para hoy. Buen momento para respirar.
+          {t('empty')}
         </div>
       </div>
     );
@@ -74,60 +80,60 @@ export function MyTasks({ tasks, membersById, projectsById }: Props) {
     <div className="mb-6 sm:mb-8">
       <div className="flex items-baseline justify-between gap-3 mb-3 min-w-0">
         <h2 className="text-[13px] font-semibold flex items-baseline gap-2 min-w-0 truncate">
-          <span className="shrink-0">Tus tareas</span>
+          <span className="shrink-0">{t('title')}</span>
           <span className="text-[12px] font-normal text-muted-foreground truncate hidden sm:inline">
-            · Hoy y atrasadas
+            · {t('subtitle')}
           </span>
         </h2>
         <Link
           href="/tareas"
           className="shrink-0 text-[12px] text-muted-foreground hover:text-[#5e6ad2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
         >
-          Ver todas →
+          {t('seeAll')}
         </Link>
       </div>
       <div className="border border-border rounded-lg bg-white overflow-hidden">
-        {tasks.map((t, i) => {
-          const assignees = t.assigneeIds
+        {tasks.map((task, i) => {
+          const assignees = task.assigneeIds
             .map((id) => membersById.get(id))
             .filter((m): m is TeamMember => !!m);
           return (
             <div
-              key={t.id}
+              key={task.id}
               className={cn(
                 'relative flex items-center gap-2.5 px-3 sm:px-3.5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 hover:bg-[#f7f7f8] active:bg-[#f0f0f1] transition-colors',
                 i < tasks.length - 1 && 'border-b border-border',
               )}
             >
               <Link
-                href={`/tareas/${t.id}`}
+                href={`/tareas/${task.id}`}
                 className="absolute inset-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
-                aria-label={t.title}
+                aria-label={task.title}
               />
               <span
                 className={cn(
                   'relative w-3.5 h-3.5 rounded-full border-[1.5px] shrink-0',
-                  t.status === 'Done' && 'bg-[#3f9f5c] border-[#3f9f5c]',
-                  t.status === 'In Progress' && 'border-[#5e6ad2]',
-                  (t.status === 'Not Started' || t.status === 'Refining') && 'border-muted-foreground',
+                  task.status === 'Done' && 'bg-[#3f9f5c] border-[#3f9f5c]',
+                  task.status === 'In Progress' && 'border-[#5e6ad2]',
+                  (task.status === 'Not Started' || task.status === 'Refining') && 'border-muted-foreground',
                 )}
                 style={
-                  t.status === 'In Progress'
+                  task.status === 'In Progress'
                     ? { background: 'conic-gradient(#5e6ad2 0 60%, transparent 60% 100%)' }
                     : undefined
                 }
               />
               <span className="relative inline-flex">
-                <PriorityIcon priority={t.priority} />
+                <PriorityIcon priority={task.priority} />
               </span>
-              <span className="relative text-[13px] flex-1 min-w-0 truncate">{t.title}</span>
-              {t.tags[0] && (
+              <span className="relative text-[13px] flex-1 min-w-0 truncate">{task.title}</span>
+              {task.tags[0] && (
                 <span className="relative hidden sm:inline">
-                  <TagChip tag={t.tags[0]} />
+                  <TagChip tag={task.tags[0]} />
                 </span>
               )}
               <span className="relative hidden sm:inline shrink-0">
-                <DueCell dueDate={t.dueDate} />
+                <DueCell dueDate={task.dueDate} />
               </span>
               <div className="relative shrink-0 min-w-[20px]">
                 <AssigneeStack assignees={assignees} size={20} />
@@ -135,8 +141,8 @@ export function MyTasks({ tasks, membersById, projectsById }: Props) {
               <div className="relative shrink-0">
                 <OpenWithClaudeMenu
                   variant="row"
-                  task={t}
-                  project={t.projectId ? (projectsById.get(t.projectId) ?? null) : null}
+                  task={task}
+                  project={task.projectId ? (projectsById.get(task.projectId) ?? null) : null}
                   description=""
                 />
               </div>

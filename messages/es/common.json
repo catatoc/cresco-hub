@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "description": "Crecemos contigo"
+  },
+  "language": {
+    "label": "Idioma",
+    "es": "Español",
+    "en": "English",
+    "switchTo": "Switch to English"
+  },
+  "scope": {
+    "mine": "Yo",
+    "team": "Equipo",
+    "filterAria": "Filtrar {scopeKey} por alcance"
+  },
+  "claude": {
+    "copyAsPrompt": "Copiar como prompt",
+    "openInClaudeCode": "Abrir en Claude Code",
+    "copyCli": "Copiar comando CLI",
+    "promptCopied": "Prompt copiado al portapapeles",
+    "promptCopiedDesc": "Pégalo en Claude Code, ChatGPT, Cursor, o tu terminal.",
+    "promptCopyError": "No se pudo copiar el prompt",
+    "cliCopied": "Comando copiado al portapapeles",
+    "cliCopiedDesc": "Pégalo en tu terminal local. Si tienes el repo, agrega `cd <ruta> && ` delante.",
+    "cliCopyError": "No se pudo copiar el comando",
+    "consoleFallback": "Hay un fallback en la consola del navegador."
+  }
+}

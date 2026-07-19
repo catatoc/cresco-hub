@@ -7,52 +7,28 @@
 // (pixel perfect responsive); en móvil la tarjeta es hoja anclada abajo.
 // La marca de "ya lo vio" vive en Notion (Portal Onboarding Check, en Team).
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { completePortalTour } from '@/app/(portal)/actions';
 
 interface Step {
   target: string; // id del elemento real
-  title: string;
-  body: string;
+  key: string; // clave de mensaje (título/cuerpo se traducen en render)
   pad: number;
 }
 
 const STEPS: Step[] = [
-  {
-    target: 'cp-t-capsula',
-    title: 'Tus documentos, a la mano',
-    body: 'La cápsula guarda lo importante: pagos, usuarios de prueba para explorar tu app y los costos de tu infraestructura. Solo aparece lo que existe — y solo lo ves tú.',
-    pad: 10,
-  },
-  {
-    target: 'cp-t-board',
-    title: 'Tus proyectos, en vivo',
-    body: 'Cada proyecto con su línea de tiempo real: lo que está listo, lo que viene y la marca de hoy. Tócalo y se abre el brief completo con sus tareas.',
-    pad: 8,
-  },
-  {
-    target: 'cp-t-tareas',
-    title: 'Lo que está en tus manos',
-    body: 'Estas tareas son tuyas — solo tú puedes marcarlas. Cuando completas una, tu equipo crescō lo ve al instante.',
-    pad: 8,
-  },
-  {
-    target: 'cp-t-reuniones',
-    title: 'Lo que hablamos, por escrito',
-    body: 'Después de cada reunión, aquí queda el resumen con sus acuerdos. Nada se pierde en la memoria.',
-    pad: 8,
-  },
-  {
-    target: 'cp-t-user',
-    title: 'Siempre tuyo',
-    body: 'Tu sesión, tu empresa, tus datos. Si quieres repetir este recorrido, vive en el botón “?” de abajo.',
-    pad: 8,
-  },
+  { target: 'cp-t-capsula', key: 'capsula', pad: 10 },
+  { target: 'cp-t-board', key: 'board', pad: 8 },
+  { target: 'cp-t-tareas', key: 'tareas', pad: 8 },
+  { target: 'cp-t-reuniones', key: 'reuniones', pad: 8 },
+  { target: 'cp-t-user', key: 'user', pad: 8 },
 ];
 
 const ROMAN = ['i', 'ii', 'iii', 'iv', 'v'];
 const MOBILE = 560;
 
 export function PortalTour({ autoStart }: { autoStart: boolean }) {
+  const t = useTranslations('portal.tour');
   const [steps, setSteps] = useState<Step[]>([]);
   const [step, setStep] = useState(0);
   const [active, setActive] = useState(false);
@@ -201,7 +177,7 @@ export function PortalTour({ autoStart }: { autoStart: boolean }) {
   return (
     <>
       {active && s && (
-        <div role="dialog" aria-modal="true" aria-label={`Tour del portal · paso ${step + 1} de ${steps.length}`}>
+        <div role="dialog" aria-modal="true" aria-label={t('ariaDialog', { step: step + 1, total: steps.length })}>
           <div className="cp-tour-veil" ref={veilT} onClick={finish} />
           <div className="cp-tour-veil" ref={veilB} onClick={finish} />
           <div className="cp-tour-veil" ref={veilL} onClick={finish} />
@@ -212,29 +188,29 @@ export function PortalTour({ autoStart }: { autoStart: boolean }) {
               {ROMAN[step] ?? step + 1}
               <b>{step + 1} / {steps.length}</b>
             </div>
-            <h3>{s.title}</h3>
-            <p>{s.body}</p>
+            <h3>{t(`steps.${s.key}.title`)}</h3>
+            <p>{t(`steps.${s.key}.body`)}</p>
             <div className="cp-tour-foot">
-              <button className="cp-tour-skip" onClick={finish}>saltar el tour</button>
+              <button className="cp-tour-skip" onClick={finish}>{t('skip')}</button>
               <div className="cp-tour-nav">
                 <div className="cp-tour-dots">
                   {steps.map((_, i) => <span key={i} className={`cp-tour-dot ${i === step ? 'on' : ''}`} />)}
                 </div>
                 {step > 0 && (
-                  <button className="cp-tour-back" onClick={() => setStep(step - 1)} aria-label="paso anterior">←</button>
+                  <button className="cp-tour-back" onClick={() => setStep(step - 1)} aria-label={t('prev')}>←</button>
                 )}
                 <button
                   className="cp-tour-next"
                   onClick={() => (step < steps.length - 1 ? setStep(step + 1) : finish())}
                 >
-                  {step === steps.length - 1 ? <>entendido <span className="cp-tour-circ">✓</span></> : <>siguiente <span className="cp-tour-circ">→</span></>}
+                  {step === steps.length - 1 ? <>{t('done')} <span className="cp-tour-circ">✓</span></> : <>{t('next')} <span className="cp-tour-circ">→</span></>}
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
-      <button className="cp-tour-help" onClick={start} title="volver a ver el recorrido" aria-label="volver a ver el recorrido">?</button>
+      <button className="cp-tour-help" onClick={start} title={t('help')} aria-label={t('help')}>?</button>
     </>
   );
 }

@@ -6,6 +6,7 @@
 // no se muestra (degradación silenciosa, el portal nunca se cae por esto).
 import { serverEnv } from '@/lib/env';
 import { queryAllRaw } from './data';
+import { portalDict, dayMonthLabel, type PortalLocale } from './i18n';
 import type { AppContext } from '@/lib/auth/context';
 
 export interface PortalPayment {
@@ -24,12 +25,6 @@ export interface PortalPayments {
   pendingLabel: string;
 }
 
-const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-const dayMonth = (iso: string) => {
-  const d = new Date(iso.slice(0, 10) + 'T00:00:00Z');
-  return Number.isNaN(d.getTime()) ? null : `${d.getUTCDate()} ${MES[d.getUTCMonth()]}`;
-};
-
 export const money = (n: number): string =>
   new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -42,7 +37,7 @@ export const money = (n: number): string =>
 const selectName = (prop: any): string | null =>
   prop?.status?.name ?? prop?.select?.name ?? null;
 
-export function parsePaymentRow(row: any): PortalPayment {
+export function parsePaymentRow(row: any, locale: PortalLocale = 'es'): PortalPayment {
   const p = row.properties as Record<string, any>;
   // el título de Finance se llama "Description"; por si cambia, caemos al title que haya
   const titleProp = p.Description?.title
@@ -52,16 +47,21 @@ export function parsePaymentRow(row: any): PortalPayment {
   const date: string | null = p.Date?.date?.start ?? p['Due date']?.date?.start ?? null;
   return {
     id: row.id,
-    description: ((titleProp?.title ?? []) as any[]).map((t) => t.plain_text).join('') || 'Pago',
+    description:
+      ((titleProp?.title ?? []) as any[]).map((t) => t.plain_text).join('') ||
+      portalDict(locale).paymentDefaultDescription,
     notes: ((p.Notes?.rich_text ?? []) as any[]).map((t) => t.plain_text).join('').trim() || null,
     amount,
     amountLabel: money(amount),
-    dateLabel: date ? dayMonth(date) : null,
+    dateLabel: date ? dayMonthLabel(date, locale) : null,
     paid: selectName(p.Status) === 'Paid',
   };
 }
 
-export async function loadPortalPayments(ctx: AppContext): Promise<PortalPayments> {
+export async function loadPortalPayments(
+  ctx: AppContext,
+  locale: PortalLocale = 'es',
+): Promise<PortalPayments> {
   const empty: PortalPayments = { items: [], pendingTotal: 0, pendingLabel: money(0) };
   const dataSourceId = serverEnv.NOTION_DB_FINANCE;
   if (!dataSourceId) return empty;
@@ -73,7 +73,7 @@ export async function loadPortalPayments(ctx: AppContext): Promise<PortalPayment
         { property: 'Type', select: { equals: 'Payment' } },
       ],
     });
-    const items = rows.map(parsePaymentRow);
+    const items = rows.map((r) => parsePaymentRow(r, locale));
     // pendientes primero, luego pagados (recientes arriba dentro de cada grupo)
     items.sort((a, b) => Number(a.paid) - Number(b.paid));
     const pendingTotal = items.filter((i) => !i.paid).reduce((s, i) => s + i.amount, 0);

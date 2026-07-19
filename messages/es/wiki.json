@@ -1,0 +1,32 @@
+{
+  "nav": {
+    "wiki": "Wiki"
+  },
+  "topbar": {
+    "readOnly": "Solo lectura"
+  },
+  "mobileTree": {
+    "ariaLabel": "Abrir índice de wiki",
+    "label": "Índice"
+  },
+  "tree": {
+    "searchPlaceholder": "Buscar en wiki...",
+    "noResults": "Sin resultados.",
+    "uncategorized": "Sin categoría"
+  },
+  "pageProperties": {
+    "categories": "Categorías",
+    "edited": "Editado"
+  },
+  "mermaid": {
+    "clickToEnlarge": "Click para ampliar",
+    "zoomOut": "Alejar",
+    "zoomIn": "Acercar",
+    "reset": "Restablecer",
+    "close": "Cerrar"
+  },
+  "index": {
+    "emptyTitle": "Wiki vacía",
+    "emptyDescription": "Empieza creando tu primera página"
+  }
+}

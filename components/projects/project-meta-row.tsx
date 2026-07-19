@@ -1,4 +1,5 @@
 import { Calendar, User, Users } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 
 type Props = {
   startDate: string | null;
@@ -7,19 +8,21 @@ type Props = {
   teamCount: number;
 };
 
-function fmt(iso: string): string {
+function fmt(iso: string, locale: string): string {
   const [y, m, d] = iso.split('-').map(Number) as [number, number, number];
-  return new Date(y, m - 1, d).toLocaleDateString('es', { day: 'numeric', month: 'short' });
+  return new Date(y, m - 1, d).toLocaleDateString(locale, { day: 'numeric', month: 'short' });
 }
 
 export function ProjectMetaRow({ startDate, endDate, ownerName, teamCount }: Props) {
+  const t = useTranslations('projects.metaRow');
+  const locale = useLocale();
   const hasDates = startDate || endDate;
   const dateLabel = startDate && endDate
-    ? `${fmt(startDate)} – ${fmt(endDate)}`
+    ? `${fmt(startDate, locale)} – ${fmt(endDate, locale)}`
     : endDate
-      ? `Vence ${fmt(endDate)}`
+      ? t('due', { date: fmt(endDate, locale) })
       : startDate
-        ? `Inicia ${fmt(startDate)}`
+        ? t('starts', { date: fmt(startDate, locale) })
         : null;
 
   return (
@@ -35,7 +38,7 @@ export function ProjectMetaRow({ startDate, endDate, ownerName, teamCount }: Pro
           {hasDates && <span className="text-border">·</span>}
           <span className="inline-flex items-center gap-1.5">
             <User className="w-3.5 h-3.5" />
-            Owner: <span className="text-foreground font-medium">{ownerName}</span>
+            {t('owner')} <span className="text-foreground font-medium">{ownerName}</span>
           </span>
         </>
       )}
@@ -44,7 +47,7 @@ export function ProjectMetaRow({ startDate, endDate, ownerName, teamCount }: Pro
           {(hasDates || ownerName) && <span className="text-border">·</span>}
           <span className="inline-flex items-center gap-1.5">
             <Users className="w-3.5 h-3.5" />
-            {teamCount} {teamCount === 1 ? 'persona' : 'personas'}
+            {t('people', { count: teamCount })}
           </span>
         </>
       )}

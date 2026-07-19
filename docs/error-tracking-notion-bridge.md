@@ -96,6 +96,7 @@ escalan trivial; **Notion es el cuello de botella a cuidar.** Procesar solo *del
 | `External Count` | number | occurrences / volumen |
 | `External Last Seen` | date | última actividad |
 | `Last Synced Status` | text | snapshot del bit abierto/cerrado (3-way merge) |
+| `Environment` | multi-select | ambientes donde aparece el bug (production/dev/staging), derivados del host de la URL — un bug puede tener varios; `[dev]` en el título solo si es dev-only |
 
 > **Hallazgo del workspace vivo**: la Tasks DB ya traía `Source` (relación a una DB
 > **Providers** con `Category` = "Error Tracking", `Status` Active/Evaluating/Inactive) y

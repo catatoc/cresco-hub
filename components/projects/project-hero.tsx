@@ -1,4 +1,5 @@
 import { FolderKanban, ExternalLink } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import type { Project, ProjectPriority } from '@/schemas/project';
 import {
@@ -17,6 +18,7 @@ const PRIORITY_STYLES: Record<ProjectPriority, { bg: string; text: string; dot: 
 type Props = { project: Project; accentIndex: number };
 
 export function ProjectHero({ project, accentIndex }: Props) {
+  const t = useTranslations('projects.hero');
   const status = project.status ? PROJECT_STATUS_STYLES[project.status] : null;
   const priority = project.priority ? PRIORITY_STYLES[project.priority] : null;
   const accent = PROJECT_ACCENTS[accentIndex % PROJECT_ACCENTS.length];
@@ -72,7 +74,7 @@ export function ProjectHero({ project, accentIndex }: Props) {
               href={project.url}
               target="_blank"
               rel="noreferrer"
-              aria-label="Abrir en Notion"
+              aria-label={t('openInNotion')}
               className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-black/[0.04] transition-colors"
             >
               <ExternalLink className="w-3.5 h-3.5" />

@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { Topbar } from '@/components/shell/topbar';
 import { PageEnter } from '@/components/motion/page-enter';
 import { requireContext } from '@/lib/auth/require-context';
@@ -18,6 +19,7 @@ export default async function ProjectDetailPage({
   params: Promise<{ projectId: string }>;
 }) {
   const ctx = await requireContext();
+  const t = await getTranslations('projects');
   const { projectId } = await params;
 
   const [project, tasks, meetings, wiki] = await Promise.all([
@@ -39,7 +41,7 @@ export default async function ProjectDetailPage({
     <PageEnter className="flex flex-col h-full overflow-hidden">
       <Topbar
         crumbs={[
-          { label: 'Proyectos', href: '/proyectos' },
+          { label: t('nav.projects'), href: '/proyectos' },
           { label: project.name, muted: true },
         ]}
       />

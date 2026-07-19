@@ -22,10 +22,10 @@ export type SlashMenuIcon =
 
 export type SlashMenuGroup = 'basic' | 'lists' | 'advanced';
 
+// label/description visibles viven en messages/{es,en}/editTasks.json bajo
+// slashMenu.items.<id> — aquí solo quedan datos neutrales al idioma.
 export type SlashMenuItem = {
   id: string;
-  label: string;
-  description: string;
   icon: SlashMenuIcon;
   group: SlashMenuGroup;
   keywords?: string[];
@@ -109,53 +109,41 @@ const insertCallout: Insert = (state, dispatch, from) => {
 export const slashMenuItems: SlashMenuItem[] = [
   {
     id: 'heading-1',
-    label: 'Heading 1',
-    description: 'Big section heading',
     icon: 'h1',
     group: 'basic',
-    keywords: ['h1', 'titulo', 'title'],
+    keywords: ['h1', 'titulo', 'title', 'heading'],
     insert: setHeading(1),
   },
   {
     id: 'heading-2',
-    label: 'Heading 2',
-    description: 'Medium section heading',
     icon: 'h2',
     group: 'basic',
-    keywords: ['h2', 'subtitulo', 'subtitle'],
+    keywords: ['h2', 'subtitulo', 'subtitle', 'heading'],
     insert: setHeading(2),
   },
   {
     id: 'heading-3',
-    label: 'Heading 3',
-    description: 'Small section heading',
     icon: 'h3',
     group: 'basic',
-    keywords: ['h3'],
+    keywords: ['h3', 'heading'],
     insert: setHeading(3),
   },
   {
     id: 'bullet-list',
-    label: 'Bullet list',
-    description: 'Create a simple bulleted list',
     icon: 'bulletList',
     group: 'lists',
-    keywords: ['ul', 'unordered', 'lista'],
+    keywords: ['ul', 'unordered', 'lista', 'bullet'],
     insert: wrapBulletList,
   },
   {
     id: 'numbered-list',
-    label: 'Numbered list',
-    description: 'Create a list with numbering',
     icon: 'numberedList',
     group: 'lists',
-    keywords: ['ol', 'ordered', 'numero'],
+    keywords: ['ol', 'ordered', 'numero', 'numbered'],
     insert: wrapNumberedList,
   },
   {
     id: 'task-list',
-    label: 'To-do list',
-    description: 'Track tasks with checkboxes',
     icon: 'taskList',
     group: 'lists',
     keywords: ['todo', 'task', 'check', 'pendiente'],
@@ -163,44 +151,32 @@ export const slashMenuItems: SlashMenuItem[] = [
   },
   {
     id: 'quote',
-    label: 'Quote',
-    description: 'Capture a quote',
     icon: 'quote',
     group: 'advanced',
-    keywords: ['cita', 'blockquote'],
+    keywords: ['cita', 'blockquote', 'quote'],
     insert: wrapQuote,
   },
   {
     id: 'divider',
-    label: 'Divider',
-    description: 'Visually divide sections',
     icon: 'divider',
     group: 'advanced',
-    keywords: ['hr', 'linea', 'separator'],
+    keywords: ['hr', 'linea', 'separator', 'divider'],
     insert: insertDivider,
   },
   {
     id: 'code-block',
-    label: 'Code',
-    description: 'Capture a code snippet',
     icon: 'codeBlock',
     group: 'advanced',
-    keywords: ['codigo', 'pre'],
+    keywords: ['codigo', 'pre', 'code'],
     insert: setCodeBlock,
   },
   {
     id: 'callout',
-    label: 'Callout',
-    description: 'Make writing stand out',
     icon: 'callout',
     group: 'advanced',
-    keywords: ['nota', 'note', 'info'],
+    keywords: ['nota', 'note', 'info', 'callout'],
     insert: insertCallout,
   },
 ];
 
-export const slashMenuGroupLabels: Record<SlashMenuGroup, string> = {
-  basic: 'Basic blocks',
-  lists: 'Lists',
-  advanced: 'Advanced',
-};
+export const slashMenuGroups: SlashMenuGroup[] = ['basic', 'lists', 'advanced'];

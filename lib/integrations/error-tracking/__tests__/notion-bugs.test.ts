@@ -71,6 +71,7 @@ describe('listBugTasks', () => {
         externalStatus: null,
         externalCount: null,
         externalLastSeen: null,
+        environments: [],
       },
     ]);
   });
@@ -154,12 +155,19 @@ describe('createBugTask', () => {
         os: 'Mac OS X',
         handled: false,
         topFrame: 'fn @ a.ts:1',
+        environments: ['dev'],
         replayUrl: 'https://ph/replay/s1',
       },
     });
+    const call = mockNotion.pages.create.mock.calls[0]![0];
+    expect(call.properties['Task name'].title[0].text.content).toBe(
+      '[dev] bug(posthog): DOMException — AbortError: Lock was stolen',
+    );
+    expect(call.properties.Environment).toEqual({ multi_select: [{ name: 'dev' }] });
     const children = mockNotion.blocks.children.append.mock.calls[0]![0].children;
     expect(children[1].callout.icon.emoji).toBe('📍');
     const ctxText = children[1].callout.rich_text[0].text.content;
+    expect(ctxText).toContain('ambiente: dev');
     expect(ctxText).toContain('url: https://app/login');
     expect(ctxText).toContain('captura: sin manejar');
     expect(ctxText).toContain('frame: fn @ a.ts:1');

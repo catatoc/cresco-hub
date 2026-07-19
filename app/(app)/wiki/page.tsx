@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
 import { queryWikiByCustomer } from '@/lib/notion/wiki';
@@ -12,10 +13,11 @@ export default async function WikiIndexPage() {
   const pages = await queryWikiByCustomer(ctx.customerId);
 
   if (pages.length === 0) {
+    const t = await getTranslations('wiki');
     return (
       <>
-        <Topbar crumbs={[{ label: 'Wiki' }]} />
-        <EmptyState icon="📚" title="Wiki vacía" description="Empieza creando tu primera página" />
+        <Topbar crumbs={[{ label: t('nav.wiki') }]} />
+        <EmptyState icon="📚" title={t('index.emptyTitle')} description={t('index.emptyDescription')} />
       </>
     );
   }

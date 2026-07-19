@@ -3,10 +3,12 @@
 // El brief: bloques de una página de Notion (proyecto o propuesta) en
 // lenguaje crescō. Compartido entre el drawer del proyecto y la cápsula.
 import type { CSSProperties } from 'react';
+import { useTranslations } from 'next-intl';
 import { BriefMermaid } from './brief-mermaid';
 import type { ProjectBlock } from '@/lib/portal/content';
 
 export function Brief({ blocks }: { blocks: ProjectBlock[] }) {
+  const t = useTranslations('portal.brief');
   let num = 0;
   return (
     <>
@@ -34,7 +36,7 @@ export function Brief({ blocks }: { blocks: ProjectBlock[] }) {
             return (
               <figure className="cp-bimg cp-rb" style={d} key={i}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={b.url} alt={b.text || 'Imagen del proyecto'} loading="lazy" />
+                <img src={b.url} alt={b.text || t('imageAlt')} loading="lazy" />
                 {b.text && <figcaption>{b.text}</figcaption>}
               </figure>
             );

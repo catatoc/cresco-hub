@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from './intl-render';
 import { createRef } from 'react';
 import { TareaForm } from '../tarea-form';
 

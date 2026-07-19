@@ -1,0 +1,69 @@
+{
+  "greeting": {
+    "morning": "Buenos días",
+    "afternoon": "Buenas tardes",
+    "evening": "Buenas noches",
+    "dateFormat": "EEEE · d 'de' MMMM · yyyy",
+    "activeTasks": "{count, plural, one {# tarea activa} other {# tareas activas}}",
+    "meetingToday": "1 reunión hoy"
+  },
+  "page": {
+    "crumb": "Inicio",
+    "noActiveSprint": "Sin sprint activo"
+  },
+  "stats": {
+    "inProgress": "En progreso",
+    "activeTasks": "tareas activas",
+    "todo": "Por hacer",
+    "overdue": "{count, plural, one {# atrasada} other {# atrasadas}}",
+    "done": "Completadas",
+    "thisWeek": "↑ esta semana",
+    "lastMeeting": "Última reunión",
+    "noMeetings": "Sin reuniones",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "daysAgo": "Hace {count, plural, one {# día} other {# días}}",
+    "dateFormat": "d MMM"
+  },
+  "myTasks": {
+    "title": "Tus tareas",
+    "subtitle": "Hoy y atrasadas",
+    "empty": "Sin tareas para hoy. Buen momento para respirar.",
+    "seeAll": "Ver todas →",
+    "today": "Hoy",
+    "dueFormat": "d MMM"
+  },
+  "upcomingWeek": {
+    "title": "Próxima semana",
+    "empty": "Nada planificado para la próxima semana todavía.",
+    "seeAll": "Ver todas →"
+  },
+  "activeProjects": {
+    "title": "Proyectos activos",
+    "empty": "Sin proyectos activos.",
+    "seeAll": "Ver todos →",
+    "colProject": "Proyecto",
+    "colStatus": "Estado",
+    "colProgress": "Progreso",
+    "colTeam": "Equipo",
+    "openTasks": "{count, plural, one {# abierta} other {# abiertas}}",
+    "delivery": "entrega {date}"
+  },
+  "lastMeeting": {
+    "title": "Última reunión",
+    "empty": "Aún no hay reuniones registradas.",
+    "seeAll": "Ver todas →",
+    "monthDowFormat": "MMM · EEE"
+  },
+  "wikiRecents": {
+    "title": "Recientes en wiki",
+    "empty": "Sin páginas aún.",
+    "seeAll": "Ver wiki →"
+  },
+  "error": {
+    "title": "No pudimos cargar esta sección",
+    "fallback": "Ocurrió un error inesperado consultando Notion.",
+    "ref": "ref: {digest}",
+    "retry": "Reintentar"
+  }
+}

@@ -9,6 +9,7 @@
 import { getNotion } from '@/lib/notion/client';
 import { serverEnv } from '@/lib/env';
 import type { AppContext } from '@/lib/auth/context';
+import { meetingDateLabels, portalDict, type PortalLocale } from './i18n';
 import {
   queryAllRaw,
   parseTaskRow,
@@ -18,6 +19,8 @@ import {
   type PortalAssignee,
   type PortalTask,
 } from './data';
+
+export { meetingDateLabels } from './i18n';
 
 export interface ActaBlock {
   kind: 'h2' | 'h3' | 'p' | 'li' | 'oli';
@@ -37,34 +40,6 @@ export interface PortalMeetingSummary {
 export interface PortalMeeting extends PortalMeetingSummary {
   acta: ActaBlock[];
   acuerdos: PortalTask[];
-}
-
-const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-const MES_FULL = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-
-/**
- * Labels de fecha respetando el huso con el que se guardó en Notion: leemos
- * día y hora directamente del string ISO (nunca del timezone del navegador).
- */
-export function meetingDateLabels(iso: string | null): { dateLabel: string; fullDateLabel: string } {
-  if (!iso) return { dateLabel: '', fullDateLabel: '' };
-  const datePart = iso.slice(0, 10);
-  const d = new Date(datePart + 'T00:00:00Z');
-  if (Number.isNaN(d.getTime())) return { dateLabel: '', fullDateLabel: '' };
-
-  const dateLabel = `${d.getUTCDate()} ${MES[d.getUTCMonth()]}`;
-  let full = `${DIAS[d.getUTCDay()]} ${d.getUTCDate()} de ${MES_FULL[d.getUTCMonth()]}`;
-
-  const time = /T(\d{2}):(\d{2})/.exec(iso);
-  if (time) {
-    const h24 = Number(time[1]);
-    const min = time[2];
-    const ampm = h24 < 12 ? 'am' : 'pm';
-    const h12 = h24 % 12 === 0 ? 12 : h24 % 12;
-    full += ` · ${h12}:${min} ${ampm}`;
-  }
-  return { dateLabel, fullDateLabel: full };
 }
 
 const richText = (block: any, type: string): string =>
@@ -131,12 +106,16 @@ function attendeesOf(row: any, teamById: Map<string, MemberLite>): PortalAssigne
     .map((m) => ({ name: m.name, initials: initialsOf(m.name), color: colorFor(m.name) }));
 }
 
-function parseMeetingRow(row: any, teamById: Map<string, MemberLite>): PortalMeetingSummary {
+function parseMeetingRow(
+  row: any,
+  teamById: Map<string, MemberLite>,
+  locale: PortalLocale,
+): PortalMeetingSummary {
   const p = row.properties;
-  const labels = meetingDateLabels(p.Date?.date?.start ?? null);
+  const labels = meetingDateLabels(p.Date?.date?.start ?? null, locale);
   return {
     id: row.id,
-    title: p.Name?.title?.[0]?.plain_text ?? 'Reunión',
+    title: p.Name?.title?.[0]?.plain_text ?? portalDict(locale).meetingDefaultTitle,
     type: p['Meeting type']?.select?.name ?? null,
     ...labels,
     summary:
@@ -146,7 +125,10 @@ function parseMeetingRow(row: any, teamById: Map<string, MemberLite>): PortalMee
 }
 
 /** Índice: todas las reuniones del customer, más recientes primero. */
-export async function loadPortalMeetings(ctx: AppContext): Promise<PortalMeetingSummary[]> {
+export async function loadPortalMeetings(
+  ctx: AppContext,
+  locale: PortalLocale = 'es',
+): Promise<PortalMeetingSummary[]> {
   const [teamById, rows] = await Promise.all([
     teamMap(),
     queryAllRaw(
@@ -155,7 +137,7 @@ export async function loadPortalMeetings(ctx: AppContext): Promise<PortalMeeting
       [{ property: 'Date', direction: 'descending' }],
     ),
   ]);
-  return rows.map((r: any) => parseMeetingRow(r, teamById));
+  return rows.map((r: any) => parseMeetingRow(r, teamById, locale));
 }
 
 const MAX_ACUERDOS = 20;
@@ -164,7 +146,11 @@ const MAX_ACUERDOS = 20;
  * La reunión completa para la página editorial. Gate de seguridad: solo si la
  * relación Customer contiene el customer del contexto; si no, null → 404.
  */
-export async function loadPortalMeeting(ctx: AppContext, meetingId: string): Promise<PortalMeeting | null> {
+export async function loadPortalMeeting(
+  ctx: AppContext,
+  meetingId: string,
+  locale: PortalLocale = 'es',
+): Promise<PortalMeeting | null> {
   const notion = getNotion();
   let page: any;
   try {
@@ -196,7 +182,7 @@ export async function loadPortalMeeting(ctx: AppContext, meetingId: string): Pro
     .map((t: any) => parseTaskRow(t, teamById, ctx.memberId));
 
   return {
-    ...parseMeetingRow(page, teamById),
+    ...parseMeetingRow(page, teamById, locale),
     acta: parseActaBlocks(blocks),
     acuerdos,
   };

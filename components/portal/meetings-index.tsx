@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
+import { useTranslations } from 'next-intl';
 import { PortalScene } from './scene';
 import { Brand } from './brand';
 import type { PortalMeetingSummary } from '@/lib/portal/meeting';
@@ -17,18 +18,19 @@ function Av({ initials, color }: { initials: string; color: string }) {
 }
 
 export function MeetingsIndex({ meetings }: { meetings: PortalMeetingSummary[] }) {
+  const t = useTranslations('portal');
   return (
     <main className="cp-page">
       <PortalScene />
       <div className="cp-stage" style={{ maxWidth: 760 }}>
         <div className="cp-topbar cp-r" style={{ '--d': '.04s' } as CSSProperties}>
-          <Link className="cp-mp-back" href="/portal">← Volver a tu portal</Link>
+          <Link className="cp-mp-back" href="/portal">{t('common.backToPortal')}</Link>
           <Brand size={19} />
         </div>
 
         <div className="cp-greet cp-rb" style={{ '--d': '.1s' } as CSSProperties}>
-          <h1>Tus reuniones.</h1>
-          <p>Cada reunión con <b>crescō</b>, con su acta y sus acuerdos.</p>
+          <h1>{t('meetingsIndex.title')}</h1>
+          <p>{t.rich('meetingsIndex.subtitle', { b: (chunks) => <b>{chunks}</b> })}</p>
         </div>
 
         <div className="cp-glass cp-rb" style={{ '--d': '.2s' } as CSSProperties}>
@@ -44,10 +46,10 @@ export function MeetingsIndex({ meetings }: { meetings: PortalMeetingSummary[] }
               {m.attendees.length > 0 && (
                 <div className="cp-who">{m.attendees.slice(0, 6).map((a, j) => <Av key={j} initials={a.initials} color={a.color} />)}</div>
               )}
-              <span className="cp-meet-go">Abrir reunión →</span>
+              <span className="cp-meet-go">{t('common.openMeeting')}</span>
             </Link>
           ))}
-          {!meetings.length && <div className="cp-empty">Cuando tengamos nuestra primera reunión, aquí verás el acta.</div>}
+          {!meetings.length && <div className="cp-empty">{t('meetingsIndex.empty')}</div>}
         </div>
       </div>
     </main>

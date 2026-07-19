@@ -1,0 +1,20 @@
+{
+  "nav": {
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "footer": "© 2026 crescō",
+  "lastUpdated": "Last updated",
+  "privacy": {
+    "metaTitle": "Privacy Policy · crescō",
+    "metaDescription": "How crescō collects, uses, and protects your information.",
+    "title": "Privacy Policy",
+    "date": "April 29, 2026"
+  },
+  "terms": {
+    "metaTitle": "Terms of Service · crescō",
+    "metaDescription": "Terms and conditions for using crescō.",
+    "title": "Terms of Service",
+    "date": "April 29, 2026"
+  }
+}

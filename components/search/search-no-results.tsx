@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { EmptyState } from '@/components/common/empty-state';
 
 export function SearchNoResults({ term, onClose }: { term: string; onClose: () => void }) {
   const router = useRouter();
+  const t = useTranslations('search');
   const [creating, setCreating] = useState(false);
 
   async function create() {
@@ -20,11 +22,11 @@ export function SearchNoResults({ term, onClose }: { term: string; onClose: () =
       });
       if (!res.ok) throw new Error(await res.text().catch(() => 'failed'));
       const body = (await res.json()) as { id: string; url: string };
-      toast.success('Tarea creada');
+      toast.success(t('noResults.taskCreated'));
       onClose();
       router.push(body.url);
     } catch {
-      toast.error('No se pudo crear la tarea. Intenta de nuevo.');
+      toast.error(t('noResults.createError'));
     } finally {
       setCreating(false);
     }
@@ -33,15 +35,15 @@ export function SearchNoResults({ term, onClose }: { term: string; onClose: () =
   return (
     <EmptyState
       icon="🔎"
-      title="Nada por acá"
-      description="No hay coincidencias en tu workspace actual."
+      title={t('noResults.title')}
+      description={t('noResults.description')}
       action={
         <button
           onClick={create}
           disabled={creating}
           className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 rounded-lg text-sm cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {creating ? 'Creando…' : `➕ Crear "${term}" como nueva tarea`}
+          {creating ? t('noResults.creating') : t('noResults.createAction', { term })}
         </button>
       }
     />

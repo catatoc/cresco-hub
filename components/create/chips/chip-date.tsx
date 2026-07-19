@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 export function ChipDate({
   value,
@@ -9,13 +10,14 @@ export function ChipDate({
   onChange: (v: string | null) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const t = useTranslations('create.chipDate');
   if (value) {
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] bg-indigo-50 text-indigo-700">
         {value}
         <button
           type="button"
-          aria-label="Quitar fecha"
+          aria-label={t('remove')}
           onClick={() => onChange(null)}
           className="hover:bg-black/[0.06] rounded-sm w-3 h-3 inline-flex items-center justify-center"
         >
@@ -31,7 +33,7 @@ export function ChipDate({
         onClick={() => setOpen(true)}
         className="px-2 py-0.5 rounded-md text-[11px] border border-dashed text-muted-foreground hover:text-foreground"
       >
-        + Fecha
+        {t('add')}
       </button>
       {open && (
         <div
@@ -45,11 +47,11 @@ export function ChipDate({
           }}
         >
           <label className="text-[11px] block text-muted-foreground mb-1" htmlFor="chip-date-input">
-            Fecha
+            {t('label')}
           </label>
           <input
             id="chip-date-input"
-            aria-label="Fecha"
+            aria-label={t('label')}
             type="date"
             className="text-[12px] border rounded px-1.5 py-1"
             onChange={(e) => {

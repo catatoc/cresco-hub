@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@/components/create/__tests__/intl-render';
 import { ChipSprint } from '../chip-sprint';
 import { ChipTeam } from '../chip-team';
 

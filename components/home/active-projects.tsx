@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { FolderKanban } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import type { TeamMember } from '@/schemas/team-member';
 import type { HomeProject } from '@/lib/home/queries';
 import { AssigneeStack } from '@/components/kanban/card';
@@ -23,20 +24,10 @@ const STATUS_STYLES: Record<
   },
 };
 
-function formatEndDate(iso: string | null): string | null {
+function formatEndDate(iso: string | null, locale: string): string | null {
   if (!iso) return null;
   const d = new Date(iso);
-  return d.toLocaleDateString('es', { month: 'short', day: 'numeric' });
-}
-
-function buildMeta(p: HomeProject): string | null {
-  const parts: string[] = [];
-  if (p.openTaskCount > 0) {
-    parts.push(`${p.openTaskCount} abierta${p.openTaskCount === 1 ? '' : 's'}`);
-  }
-  const end = formatEndDate(p.endDate);
-  if (end) parts.push(`entrega ${end}`);
-  return parts.length > 0 ? parts.join(' · ') : null;
+  return d.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
 }
 
 type Props = {
@@ -45,14 +36,27 @@ type Props = {
 };
 
 export function ActiveProjects({ projects, membersById }: Props) {
+  const t = useTranslations('home.activeProjects');
+  const locale = useLocale();
+
+  const buildMeta = (p: HomeProject): string | null => {
+    const parts: string[] = [];
+    if (p.openTaskCount > 0) {
+      parts.push(t('openTasks', { count: p.openTaskCount }));
+    }
+    const end = formatEndDate(p.endDate, locale);
+    if (end) parts.push(t('delivery', { date: end }));
+    return parts.length > 0 ? parts.join(' · ') : null;
+  };
+
   if (projects.length === 0) {
     return (
       <div className="mb-6 sm:mb-8">
         <div className="flex items-baseline justify-between gap-3 mb-3 min-w-0">
-          <h2 className="text-[13px] font-semibold truncate">Proyectos activos</h2>
+          <h2 className="text-[13px] font-semibold truncate">{t('title')}</h2>
         </div>
         <div className="border border-dashed border-border rounded-lg p-6 text-center text-sm text-muted-foreground">
-          Sin proyectos activos.
+          {t('empty')}
         </div>
       </div>
     );
@@ -62,25 +66,25 @@ export function ActiveProjects({ projects, membersById }: Props) {
     <div className="mb-6 sm:mb-8">
       <div className="flex items-baseline justify-between gap-3 mb-3 min-w-0">
         <h2 className="text-[13px] font-semibold truncate">
-          Proyectos activos{' '}
+          {t('title')}{' '}
           <span className="text-[12px] font-normal text-muted-foreground">· {projects.length}</span>
         </h2>
         <Link
           href="/proyectos"
           className="shrink-0 text-[12px] text-muted-foreground hover:text-[#5e6ad2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
         >
-          Ver todos →
+          {t('seeAll')}
         </Link>
       </div>
 
       <div className="border border-border rounded-lg bg-white overflow-hidden">
         <div className="hidden md:grid grid-cols-[22px_minmax(0,1.6fr)_110px_minmax(0,1.2fr)_56px_70px_24px] gap-3.5 items-center px-4 py-2.5 bg-[#fbfbfc] border-b border-border text-[11px] uppercase tracking-[0.04em] text-muted-foreground font-medium">
           <span />
-          <span>Proyecto</span>
-          <span>Estado</span>
-          <span>Progreso</span>
+          <span>{t('colProject')}</span>
+          <span>{t('colStatus')}</span>
+          <span>{t('colProgress')}</span>
           <span className="text-right">%</span>
-          <span>Equipo</span>
+          <span>{t('colTeam')}</span>
           <span />
         </div>
 

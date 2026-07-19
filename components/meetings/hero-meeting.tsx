@@ -1,5 +1,6 @@
 import { format, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useLocale, useTranslations } from 'next-intl';
+import { dateLocale } from '@/lib/i18n/date-locale';
 import { ExternalLink } from 'lucide-react';
 import type { Meeting } from '@/schemas/meeting';
 import type { Task } from '@/schemas/task';
@@ -18,6 +19,8 @@ type Props = {
 };
 
 export function HeroMeeting({ meeting, blocks, actionItems, membersById }: Props) {
+  const t = useTranslations('meetings');
+  const locale = useLocale();
   const now = new Date();
   const created = parseISO(meeting.createdTime);
   const start = meeting.date ? parseISO(meeting.date) : null;
@@ -38,7 +41,7 @@ export function HeroMeeting({ meeting, blocks, actionItems, membersById }: Props
           <div className="flex items-center gap-2 mb-3 flex-wrap min-w-0">
             {live && <LiveBadge />}
             <span className="text-[12px] text-muted-foreground font-medium truncate">
-              {format(created, "EEEE · d 'de' MMMM · 'Semana' w", { locale: es })}
+              {format(created, t('hero.dateFormat'), { locale: dateLocale(locale) })}
             </span>
             {meeting.meetingType && (
               <span className="inline-flex items-center px-1.5 py-[1px] rounded text-[11px] font-medium bg-[#eeeffc] text-[#5e6ad2] shrink-0">
@@ -60,7 +63,7 @@ export function HeroMeeting({ meeting, blocks, actionItems, membersById }: Props
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2 p-3 sm:gap-x-5 sm:gap-y-2.5 sm:p-3.5 bg-white border border-border rounded-lg mb-4 text-[12px] min-w-0">
             {start && (
               <MetaItem
-                label="Hora"
+                label={t('hero.timeLabel')}
                 value={`${fmtTime(start)}${end ? ` → ${fmtTime(end)}` : ''}`}
               />
             )}
@@ -68,7 +71,7 @@ export function HeroMeeting({ meeting, blocks, actionItems, membersById }: Props
             {attendees.length > 0 && (
               <div className="flex items-center gap-2 min-w-0">
                 <span className="text-[11px] uppercase tracking-[0.03em] font-medium text-muted-foreground shrink-0">
-                  Asistentes
+                  {t('hero.attendees')}
                 </span>
                 <div className="flex -space-x-1.5 min-w-0">
                   {attendees.slice(0, 6).map((m) => (
@@ -98,7 +101,7 @@ export function HeroMeeting({ meeting, blocks, actionItems, membersById }: Props
               className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 sm:py-1.5 min-h-[40px] sm:min-h-0 rounded-md text-[13px] font-medium border border-border bg-white hover:bg-[#f7f7f8] active:bg-[#eeeffc] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring w-full sm:w-auto"
             >
               <ExternalLink className="w-3.5 h-3.5" />
-              Abrir en Notion
+              {t('hero.openInNotion')}
             </a>
           </div>
         </div>
@@ -106,7 +109,7 @@ export function HeroMeeting({ meeting, blocks, actionItems, membersById }: Props
 
       {blocks.length > 0 && (
         <section className="mb-6 sm:mb-7">
-          <SectionHead title="Agenda" count={`${blocks.length} bloques`} />
+          <SectionHead title={t('hero.agenda')} count={t('hero.blocks', { count: blocks.length })} />
           <div className="border border-border rounded-lg bg-white p-3 sm:p-4 overflow-hidden">
             <BlocksRenderer blocks={blocks} />
           </div>
@@ -116,12 +119,12 @@ export function HeroMeeting({ meeting, blocks, actionItems, membersById }: Props
       {actionItems.length > 0 && (
         <section className="mb-6 sm:mb-7">
           {(() => {
-            const open = actionItems.filter((t) => t.status !== 'Done').length;
+            const open = actionItems.filter((task) => task.status !== 'Done').length;
             const done = actionItems.length - open;
-            const label = `${open} abierta${open === 1 ? '' : 's'} · ${done} hecha${done === 1 ? '' : 's'}`;
+            const label = t('hero.tasksSummary', { open, done });
             return (
               <SectionHead
-                title="Tareas de esta reunión"
+                title={t('hero.tasksTitle')}
                 count={label}
                 countTone={open > 0 ? 'warn' : 'muted'}
               />

@@ -1,0 +1,51 @@
+{
+  "trigger": {
+    "label": "Buscar",
+    "ariaLabel": "Buscar (⌘K)"
+  },
+  "palette": {
+    "title": "Buscador",
+    "description": "Busca y navega",
+    "placeholder": "Busca tareas, reuniones, wiki… o ejecuta una acción"
+  },
+  "filters": {
+    "ariaLabel": "Filtrar por tipo",
+    "all": "Todo",
+    "tasks": "Tareas",
+    "meetings": "Reuniones",
+    "wiki": "Wiki",
+    "projects": "Proyectos",
+    "people": "Personas"
+  },
+  "groups": {
+    "tasks": "Tareas",
+    "meetings": "Reuniones",
+    "wiki": "Wiki",
+    "projects": "Proyectos",
+    "people": "Personas"
+  },
+  "itemTypes": {
+    "task": "tarea",
+    "meeting": "reunión",
+    "wiki": "wiki",
+    "project": "proyecto",
+    "person": "persona"
+  },
+  "empty": {
+    "suggestions": "✨ Sugerencias para hoy",
+    "dueToday": "{count, plural, one {# tarea vence hoy} other {# tareas vencen hoy}}",
+    "activeSprint": "Sprint actual: {name}",
+    "daysLeft": "{days}d restantes",
+    "recents": "Recientes",
+    "actions": "Acciones",
+    "newTask": "Nueva tarea"
+  },
+  "noResults": {
+    "title": "Nada por acá",
+    "description": "No hay coincidencias en tu workspace actual.",
+    "creating": "Creando…",
+    "createAction": "➕ Crear \"{term}\" como nueva tarea",
+    "taskCreated": "Tarea creada",
+    "createError": "No se pudo crear la tarea. Intenta de nuevo."
+  }
+}

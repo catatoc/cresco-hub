@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Pencil, AlertTriangle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { BlocksRenderer } from '@/components/wiki/blocks-renderer';
 import { notionBlocksToProseMirror } from '@/lib/edit-tasks/serialize-from-notion';
@@ -14,10 +15,8 @@ type Props = {
   taskId: string;
 };
 
-const BANNER_TEXT =
-  'Esta tarea contiene bloques que aún no soportamos editar (toggles, columnas, embeds, syncs). Por seguridad, Guardar está desactivado. Edita la tarea desde Notion para tocarla, o regresa al modo lectura.';
-
 export function TaskEditorContainer({ blocks, taskId }: Props) {
+  const t = useTranslations('editTasks.editor');
   const router = useRouter();
   const [mode, setMode] = useState<'read' | 'edit'>('read');
   const [dirty, setDirty] = useState(false);
@@ -66,8 +65,8 @@ export function TaskEditorContainer({ blocks, taskId }: Props) {
     if (saving) return;
     if (!editorRef.current && !isTestEnv()) return;
     if (hasUnsupported) {
-      toast.error('Este tipo de bloque no se puede guardar todavía', {
-        description: 'Edita la tarea desde Notion mientras lo soportamos.',
+      toast.error(t('unsupportedBlockError'), {
+        description: t('unsupportedBlockErrorDescription'),
       });
       return;
     }
@@ -83,39 +82,39 @@ export function TaskEditorContainer({ blocks, taskId }: Props) {
         const body = await res.json().catch(() => ({} as { error?: string; remaining?: number }));
         const stage = body.error;
         if (stage === 'delete-failed') {
-          toast.error('No se pudo guardar', {
-            description: `Notion borró parte del contenido pero no terminó. ${body.remaining ?? ''} bloques quedan. Reintenta.`,
+          toast.error(t('saveFailed'), {
+            description: t('deleteFailedDescription', { remaining: body.remaining ?? '' }),
           });
         } else if (stage === 'append-failed') {
-          toast.error('No se pudo guardar', {
-            description: 'No se pudo escribir los bloques nuevos. Reintenta.',
+          toast.error(t('saveFailed'), {
+            description: t('appendFailedDescription'),
           });
         } else if (stage === 'update-failed') {
-          toast.error('No se pudo guardar', {
-            description: 'No se pudo actualizar parte del contenido. Reintenta.',
+          toast.error(t('saveFailed'), {
+            description: t('updateFailedDescription'),
           });
         } else if (res.status === 401 || res.status === 403) {
-          toast.error('No tienes acceso para guardar');
+          toast.error(t('noAccess'));
         } else if (res.status === 404) {
-          toast.error('Esta tarea fue eliminada');
+          toast.error(t('taskDeleted'));
         } else {
-          toast.error('No se pudo guardar', { description: 'Reintenta en un momento.' });
+          toast.error(t('saveFailed'), { description: t('saveFailedRetry') });
         }
         return;
       }
-      toast.success('Cambios guardados');
+      toast.success(t('saved'));
       setDirty(false);
       setMode('read');
       router.refresh();
     } catch {
-      toast.error('Sin conexión', { description: 'Reintenta cuando recuperes la red.' });
+      toast.error(t('offline'), { description: t('offlineDescription') });
     } finally {
       setSaving(false);
     }
   }
 
   function handleCancel() {
-    if (dirty && !confirm('Tienes cambios sin guardar. ¿Descartarlos?')) return;
+    if (dirty && !confirm(t('discardConfirm'))) return;
     setDirty(false);
     setMode('read');
   }
@@ -128,16 +127,16 @@ export function TaskEditorContainer({ blocks, taskId }: Props) {
         <button
           type="button"
           onClick={() => setMode('edit')}
-          aria-label="Editar tarea"
+          aria-label={t('editTask')}
           className="hidden sm:inline-flex absolute right-0 top-0 items-center gap-1 px-2 py-1 rounded-md text-[12px] text-muted-foreground hover:text-[#5e6ad2] hover:bg-[#eeeffc] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Pencil className="w-3.5 h-3.5" aria-hidden />
-          Editar
+          {t('edit')}
         </button>
         {blocks.length > 0 ? (
           <BlocksRenderer blocks={blocks as never[]} />
         ) : (
-          <p className="text-[13px] text-muted-foreground italic">Sin descripción.</p>
+          <p className="text-[13px] text-muted-foreground italic">{t('noDescription')}</p>
         )}
       </div>
     );
@@ -155,7 +154,7 @@ export function TaskEditorContainer({ blocks, taskId }: Props) {
       {hasUnsupported && (
         <div className="my-3 flex items-start gap-2 p-3 rounded-md bg-[#faf0db] border border-[#efddb6] text-[12px] text-[#6b4f18]">
           <AlertTriangle className="w-4 h-4 mt-[1px] shrink-0" aria-hidden />
-          <p className="leading-relaxed">{BANNER_TEXT}</p>
+          <p className="leading-relaxed">{t('unsupportedBanner')}</p>
         </div>
       )}
       <TaskEditor

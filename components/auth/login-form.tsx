@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { supabaseBrowser } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -8,6 +9,7 @@ import { toast } from 'sonner';
 
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
+  const t = useTranslations('auth.login');
 
   async function onGoogle() {
     if (loading) return;
@@ -19,7 +21,7 @@ export function LoginForm() {
     });
     if (error) {
       setLoading(false);
-      toast.error('No pudimos iniciar sesión con Google.');
+      toast.error(t('oauthError'));
     }
   }
 
@@ -59,11 +61,11 @@ export function LoginForm() {
             />
           </svg>
         )}
-        {loading ? 'Conectando…' : 'Continuar con Google'}
+        {loading ? t('connecting') : t('google')}
       </Button>
 
       <p className="text-xs text-muted-foreground text-center">
-        Solo correos autorizados.
+        {t('authorizedOnly')}
       </p>
     </div>
   );

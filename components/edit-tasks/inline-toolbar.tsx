@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import type { EditorView } from 'prosemirror-view';
 import { toggleMark } from 'prosemirror-commands';
 import { Bold, Italic, Strikethrough, Code, Link as LinkIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { editTasksSchema } from '@/lib/edit-tasks/schema';
 import { cn } from '@/lib/utils';
 
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export function InlineToolbar({ view, tick, onLinkRequest }: Props) {
+  const t = useTranslations('editTasks.toolbar');
   const selectionInfo = useMemo(() => {
     if (!view) return null;
     const { from, to, empty } = view.state.selection;
@@ -55,24 +57,24 @@ export function InlineToolbar({ view, tick, onLinkRequest }: Props) {
       }}
       className="edit-tasks-popover inline-flex items-center gap-0.5 p-1 rounded-md bg-white border border-border shadow-md"
     >
-      <ToolbarButton label="Bold" onClick={() => run('bold')} active={isActive('bold')}>
+      <ToolbarButton label={t('bold')} onClick={() => run('bold')} active={isActive('bold')}>
         <Bold className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton label="Italic" onClick={() => run('italic')} active={isActive('italic')}>
+      <ToolbarButton label={t('italic')} onClick={() => run('italic')} active={isActive('italic')}>
         <Italic className="w-3.5 h-3.5" />
       </ToolbarButton>
       <ToolbarButton
-        label="Strike"
+        label={t('strikethrough')}
         onClick={() => run('strikethrough')}
         active={isActive('strikethrough')}
       >
         <Strikethrough className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton label="Code" onClick={() => run('code')} active={isActive('code')}>
+      <ToolbarButton label={t('code')} onClick={() => run('code')} active={isActive('code')}>
         <Code className="w-3.5 h-3.5" />
       </ToolbarButton>
       <span className="w-px h-4 bg-border mx-0.5" />
-      <ToolbarButton label="Link" onClick={onLinkRequest} active={false}>
+      <ToolbarButton label={t('link')} onClick={onLinkRequest} active={false}>
         <LinkIcon className="w-3.5 h-3.5" />
       </ToolbarButton>
     </div>,

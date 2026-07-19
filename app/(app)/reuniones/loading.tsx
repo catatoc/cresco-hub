@@ -1,9 +1,11 @@
+import { useTranslations } from 'next-intl';
 import { Topbar } from '@/components/shell/topbar';
 
 export default function Loading() {
+  const t = useTranslations('meetings');
   return (
     <>
-      <Topbar crumbs={[{ label: 'Reuniones' }, { label: 'Cargando…', muted: true }]} />
+      <Topbar crumbs={[{ label: t('title') }, { label: t('loading'), muted: true }]} />
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_280px] overflow-hidden">
         <div className="overflow-auto min-w-0 px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10 pb-[calc(4rem+env(safe-area-inset-bottom)+1rem)] lg:pb-12">
           <div className="rounded-xl border border-[#dfe1f2] bg-gradient-to-b from-[#fbfcff] to-white p-4 sm:p-5 lg:p-6 mb-5 sm:mb-6 lg:mb-7 space-y-3">

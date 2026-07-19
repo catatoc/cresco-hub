@@ -1,6 +1,17 @@
+import type { ReactElement } from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
+import { NextIntlClientProvider } from 'next-intl';
 import { CredentialField } from '../credential-field';
+import messages from '@/messages/es/testUsers.json';
+
+function renderCF(ui: ReactElement) {
+  return render(
+    <NextIntlClientProvider locale="es" messages={{ testUsers: messages }}>
+      {ui}
+    </NextIntlClientProvider>,
+  );
+}
 
 const writeTextMock = vi.fn().mockResolvedValue(undefined);
 
@@ -17,7 +28,7 @@ afterEach(() => {
 
 describe('CredentialField', () => {
   it('text type: renders value plain and copies on click', async () => {
-    render(<CredentialField label="Usuario" value="cliente@demo.com" type="text" />);
+    renderCF(<CredentialField field="user" value="cliente@demo.com" type="text" />);
     expect(screen.getByText('cliente@demo.com')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: /copiar usuario/i }));
@@ -26,7 +37,7 @@ describe('CredentialField', () => {
   });
 
   it('password type: masks value with 8 bullets and reveals on toggle', () => {
-    render(<CredentialField label="Clave" value="s3cret-very-long" type="password" />);
+    renderCF(<CredentialField field="password" value="s3cret-very-long" type="password" />);
 
     expect(screen.getByText('••••••••')).toBeInTheDocument();
     expect(screen.queryByText('s3cret-very-long')).not.toBeInTheDocument();
@@ -39,7 +50,7 @@ describe('CredentialField', () => {
 
   it('password type: auto-hides 30 seconds after reveal', () => {
     vi.useFakeTimers();
-    render(<CredentialField label="Clave" value="s3cret" type="password" />);
+    renderCF(<CredentialField field="password" value="s3cret" type="password" />);
 
     fireEvent.click(screen.getByRole('button', { name: /mostrar clave/i }));
     expect(screen.getByText('s3cret')).toBeInTheDocument();
@@ -53,14 +64,14 @@ describe('CredentialField', () => {
   });
 
   it('password type: copy works while masked and copies real value', () => {
-    render(<CredentialField label="Clave" value="s3cret" type="password" />);
+    renderCF(<CredentialField field="password" value="s3cret" type="password" />);
     fireEvent.click(screen.getByRole('button', { name: /copiar clave/i }));
     expect(writeTextMock).toHaveBeenCalledWith('s3cret');
   });
 
   it('url type: renders external link with rel/noopener', () => {
-    render(
-      <CredentialField label="URL" value="https://staging.app.com" type="url" />,
+    renderCF(
+      <CredentialField field="url" value="https://staging.app.com" type="url" />,
     );
     const link = screen.getByRole('link', { name: /staging\.app\.com/i });
     expect(link).toHaveAttribute('href', 'https://staging.app.com');

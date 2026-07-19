@@ -1,0 +1,27 @@
+{
+  "userCard": {
+    "options": "User options",
+    "signOut": "Sign out"
+  },
+  "memberRole": "Member · {customer}",
+  "sidebar": {
+    "home": "Home",
+    "nextWeek": "Next week",
+    "workspace": "Workspace",
+    "tasks": "Tasks",
+    "meetings": "Meetings",
+    "wiki": "Wiki",
+    "projects": "Projects",
+    "resources": "Resources",
+    "testUsers": "Test users"
+  },
+  "workspaceHeader": {
+    "switch": "Switch workspace"
+  },
+  "bottomNav": {
+    "ariaLabel": "Main navigation"
+  },
+  "mobileSidebar": {
+    "openMenu": "Open menu"
+  }
+}

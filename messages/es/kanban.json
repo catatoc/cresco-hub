@@ -1,0 +1,113 @@
+{
+  "columns": {
+    "todo": "Por hacer",
+    "inProgress": "En progreso",
+    "testing": "Testing",
+    "inReview": "En revisión",
+    "done": "Hecho",
+    "doneThisWeek": "Hecho esta semana",
+    "archived": "Archivado",
+    "showArchived": "Mostrar",
+    "hideArchived": "Ocultar"
+  },
+  "priority": {
+    "high": "Alta",
+    "medium": "Media",
+    "low": "Baja"
+  },
+  "statusPill": {
+    "refining": "Refinando",
+    "notStarted": "Por hacer",
+    "inProgress": "En progreso",
+    "testing": "Testing",
+    "inReview": "En revisión",
+    "done": "Hecho",
+    "archived": "Archivado",
+    "changeError": "No se pudo cambiar el estado."
+  },
+  "boardByPerson": {
+    "empty": "No hay tareas en este sprint.",
+    "unassigned": "Sin asignar"
+  },
+  "card": {
+    "today": "Hoy"
+  },
+  "view": {
+    "activeWeek": "Semana activa",
+    "classic": "Clásico",
+    "week": "Semana"
+  },
+  "sprintNav": {
+    "previous": "Sprint anterior",
+    "next": "Sprint siguiente"
+  },
+  "moveTask": {
+    "error": "No se pudo mover la tarea. Intenta de nuevo."
+  },
+  "truncation": {
+    "message": "Mostrando {cap} tareas. Filtra por sprint o proyecto, o cambia a <mine>Mías</mine> para ver todo."
+  },
+  "copy": {
+    "trigger": "Copiar tareas visibles",
+    "empty": "No hay tareas para copiar",
+    "loading": "Cargando contenido…",
+    "menuLabel": "Copiar {count, plural, one {# tarea visible} other {# tareas visibles}}",
+    "asJson": "Como JSON",
+    "asJsonHint": "para MCP",
+    "asMarkdown": "Como Markdown",
+    "asMarkdownHint": "para Linear",
+    "withContentLabel": "Con contenido interno",
+    "withContentJson": "Con contenido (JSON)",
+    "withContentMarkdown": "Con contenido (Markdown)",
+    "download": "Descargar .json",
+    "copiedJson": "{count, plural, one {# tarea copiada como JSON} other {# tareas copiadas como JSON}}",
+    "copiedMarkdown": "{count, plural, one {# tarea copiada como Markdown} other {# tareas copiadas como Markdown}}",
+    "downloaded": "{count, plural, one {# tarea descargada} other {# tareas descargadas}}",
+    "loadingContent": "{count, plural, one {Cargando contenido de # tarea…} other {Cargando contenido de # tareas…}}",
+    "copiedWithContent": "{count, plural, one {# tarea copiada con contenido ({format})} other {# tareas copiadas con contenido ({format})}}",
+    "copyFailed": "No se pudo copiar al portapapeles",
+    "loadContentFailed": "No se pudo cargar el contenido de algunas tareas"
+  },
+  "shortcuts": {
+    "copied": "Prompt copiado al portapapeles",
+    "copiedDescription": "Pégalo en Claude Code, ChatGPT, Cursor, o tu terminal.",
+    "copyFailed": "No se pudo copiar el prompt",
+    "copyFailedDescription": "Hay un fallback en la consola del navegador."
+  },
+  "taskDetail": {
+    "back": "Volver",
+    "backToTasks": "Volver a Tareas",
+    "tasks": "Tareas",
+    "properties": "Propiedades",
+    "status": "Estado",
+    "priority": "Prioridad",
+    "progress": "Progreso",
+    "dueDate": "Vencimiento",
+    "plannedDate": "Planeado",
+    "completedAt": "Completado",
+    "assignees": "Asignados",
+    "unassigned": "Sin asignar",
+    "tags": "Tags",
+    "project": "Proyecto",
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "yesterday": "Ayer",
+    "relativeDateFormat": "d 'de' MMM",
+    "shortDateFormat": "d MMM",
+    "escToReturn": "Esc para volver",
+    "copyPromptHint": "copiar prompt",
+    "openInNotion": "Abrir en Notion"
+  },
+  "weekStripe": {
+    "today": "Hoy",
+    "weekdayFormat": "EEE"
+  },
+  "page": {
+    "tasks": "Tareas",
+    "activeWeek": "Semana activa",
+    "noActiveSprint": "Sin sprint activo",
+    "sprintDateFormat": "d MMM",
+    "scopeMine": "Mías",
+    "scopeTeam": "Equipo completo"
+  }
+}

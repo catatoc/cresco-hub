@@ -12,6 +12,8 @@ export interface PostHogAdapterConfig {
   projectId: string;
   /** Personal API key with scopes: query:read, error_tracking:read, error_tracking:write */
   apiKey: string;
+  /** Exclude PostHog's internal/test accounts from the issue list. */
+  filterTestAccounts: boolean;
 }
 
 /** One row of the ErrorTrackingQuery response (only the fields we map). */
@@ -57,7 +59,7 @@ export class PostHogAdapter implements ProviderAdapter {
           limit: 200,
           offset: 0,
           volumeResolution: 1,
-          filterTestAccounts: true,
+          filterTestAccounts: this.config.filterTestAccounts,
         },
       }),
     })) as { results?: PostHogIssueRow[] } | null;
@@ -78,7 +80,7 @@ export class PostHogAdapter implements ProviderAdapter {
       'SELECT properties.$current_url, properties.$browser, properties.$browser_version, ' +
       'properties.$os, properties.$os_version, properties.$session_id, properties.$exception_list ' +
       "FROM events WHERE event = '$exception' AND properties.$exception_issue_id = {issueId} " +
-      'ORDER BY timestamp DESC LIMIT 1';
+      'ORDER BY timestamp DESC LIMIT 20';
 
     const res = (await this.fetchJson(`/api/projects/${this.config.projectId}/query/`, {
       method: 'POST',
@@ -90,7 +92,8 @@ export class PostHogAdapter implements ProviderAdapter {
       }),
     })) as { results?: unknown[][] } | null;
 
-    const row = res?.results?.[0];
+    const rows = res?.results ?? [];
+    const row = rows[0];
     if (!row) return null;
     const [url, browser, browserV, os, osV, sessionId, exList] = row as [
       string | null,
@@ -105,16 +108,48 @@ export class PostHogAdapter implements ProviderAdapter {
     const join = (parts: Array<string | null>) => parts.filter(Boolean).join(' ').trim() || null;
     const { handled, topFrame } = parseExceptionList(exList);
 
+    // Distinct environments across the sampled events — a bug can span dev + prod.
+    const environments = [
+      ...new Set(
+        rows
+          .map((r) => deriveEnvironment(((r as unknown[])[0] as string | null) ?? null))
+          .filter((e): e is string => e !== null),
+      ),
+    ].sort();
+
     return {
       currentUrl: url || null,
       browser: join([browser, browserV]),
       os: join([os, osV]),
       handled,
       topFrame,
+      environments,
       replayUrl: sessionId
         ? `${this.config.host}/project/${this.config.projectId}/replay/${sessionId}`
         : null,
     };
+  }
+
+  /** Distinct environments the issue currently appears in (from event URL hosts). */
+  async listEnvironments(externalId: string): Promise<string[]> {
+    const sql =
+      'SELECT DISTINCT properties.$current_url FROM events ' +
+      "WHERE event = '$exception' AND properties.$exception_issue_id = {issueId} LIMIT 200";
+    const res = (await this.fetchJson(`/api/projects/${this.config.projectId}/query/`, {
+      method: 'POST',
+      body: JSON.stringify({
+        refresh: 'blocking',
+        query: { kind: 'HogQLQuery', query: sql, values: { issueId: externalId } },
+      }),
+    })) as { results?: unknown[][] } | null;
+
+    return [
+      ...new Set(
+        (res?.results ?? [])
+          .map((r) => deriveEnvironment(((r as unknown[])[0] as string | null) ?? null))
+          .filter((e): e is string => e !== null),
+      ),
+    ].sort();
   }
 
   private normalize(row: PostHogIssueRow): NormalizedIssue {
@@ -157,6 +192,21 @@ export class PostHogAdapter implements ProviderAdapter {
     const text = await res.text();
     return text ? JSON.parse(text) : null;
   }
+}
+
+/** Infer the environment from the page host: localhost/dev/staging → non-prod, else production. */
+function deriveEnvironment(url: string | null): string | null {
+  if (!url) return null;
+  let host: string;
+  try {
+    host = new URL(url).hostname;
+  } catch {
+    return null;
+  }
+  if (host === 'localhost' || host === '127.0.0.1' || host.endsWith('.local')) return 'dev';
+  if (host.includes('staging')) return 'staging';
+  if (host.startsWith('dev.') || host.includes('.ngrok.')) return 'dev';
+  return 'production';
 }
 
 /** Extract handled-ness + the top (preferably in-app) stack frame from $exception_list. */

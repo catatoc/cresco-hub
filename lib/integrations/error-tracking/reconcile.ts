@@ -9,6 +9,9 @@ import {
   setBugInternalStatus,
   setBugSnapshot,
   appendReopenNote,
+  setEnvironments,
+  appendNewEnvNote,
+  appendResurfacedNote,
   type BugTaskTarget,
 } from '@/lib/integrations/error-tracking/notion-bugs';
 import { markErrorSourceSynced } from '@/lib/integrations/error-tracking/registry';
@@ -23,8 +26,15 @@ export interface ReconcileResult {
   closedInNotion: number;
   closedInProvider: number;
   skippedNoise: number;
+  newEnvironments: number;
+  resurfaced: number;
   errors: number;
 }
+
+/** A bug "came back" only counts as resurfacing after this many quiet days. */
+const QUIET_DAYS = 3;
+const daysBetween = (a: string, b: string) =>
+  (new Date(b).getTime() - new Date(a).getTime()) / 86_400_000;
 
 /**
  * Reconcile one error-tracking source against Notion (bidirectional, idempotent).
@@ -59,6 +69,8 @@ export async function reconcileSource(args: {
     closedInNotion: 0,
     closedInProvider: 0,
     skippedNoise: 0,
+    newEnvironments: 0,
+    resurfaced: 0,
     errors: 0,
   };
 
@@ -119,6 +131,31 @@ export async function reconcileSource(args: {
         task.externalStatus !== issue.status || task.externalCount !== issue.occurrences;
       if (mirrorChanged) {
         await limiter.run(() => updateBugMirror(task.id, issue));
+      }
+
+      // Activity-driven signals — only fire when there is genuinely new activity,
+      // so they stay rare (not a per-sweep comment storm).
+      const countIncreased = task.externalCount !== null && issue.occurrences > task.externalCount;
+      if (countIncreased) {
+        // Came back after a quiet stretch.
+        if (task.externalLastSeen) {
+          const quiet = daysBetween(task.externalLastSeen, issue.lastSeen);
+          if (quiet >= QUIET_DAYS) {
+            await limiter.run(() => appendResurfacedNote(task.id, Math.floor(quiet), issue));
+            result.resurfaced++;
+          }
+        }
+        // Surfaced in an environment it wasn't seen in before (e.g. dev → production).
+        if (adapter.listEnvironments) {
+          const current = await adapter.listEnvironments(issue.externalId);
+          const fresh = current.filter((e) => !task.environments.includes(e));
+          if (fresh.length) {
+            const merged = [...new Set([...task.environments, ...current])].sort();
+            await limiter.run(() => setEnvironments(task.id, merged));
+            await limiter.run(() => appendNewEnvNote(task.id, fresh));
+            result.newEnvironments++;
+          }
+        }
       }
 
       const decision = decideExisting({

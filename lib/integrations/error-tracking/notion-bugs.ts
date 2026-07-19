@@ -18,6 +18,8 @@ export interface BugTaskRow {
   externalStatus: string | null;
   externalCount: number | null;
   externalLastSeen: string | null;
+  /** Environments currently recorded on the task (for new-environment detection). */
+  environments: string[];
 }
 
 /** Where a new Bug task gets attached in Notion (from the registry row). */
@@ -37,6 +39,7 @@ function parseBugRow(page: { id: string; properties: Record<string, any> }): Bug
     externalStatus: p['External Status']?.select?.name ?? null,
     externalCount: typeof p['External Count']?.number === 'number' ? p['External Count'].number : null,
     externalLastSeen: p['External Last Seen']?.date?.start ?? null,
+    environments: (p.Environment?.multi_select ?? []).map((o: { name: string }) => o.name),
   };
 }
 
@@ -106,6 +109,7 @@ function summaryBlocks(issue: NormalizedIssue, context: IssueContext | null): an
 
   if (context) {
     const ctx: string[] = [];
+    if (context.environments.length) ctx.push(`ambiente: ${context.environments.join(', ')}`);
     if (context.currentUrl) ctx.push(`url: ${context.currentUrl}`);
     const env = [context.browser, context.os].filter(Boolean).join(' · ');
     if (env) ctx.push(`entorno: ${env}`);
@@ -142,7 +146,14 @@ export async function createBugTask(args: {
   const { externalKey, issue, target, internalStatus, lastSyncedStatus, context } = args;
   const notion = getNotion();
 
-  const title = `bug(${issue.provider}): ${issue.name} — ${issue.description}`.trim().slice(0, 200);
+  // [dev]/[staging] prefix only when the bug is non-prod ONLY; if it also hits prod
+  // it's a real bug → no prefix (but Environment still lists every env it touches).
+  const envs = context?.environments ?? [];
+  const devOnly = envs.length > 0 && !envs.includes('production');
+  const envTag = devOnly ? `[${envs.join('/')}] ` : '';
+  const title = `${envTag}bug(${issue.provider}): ${issue.name} — ${issue.description}`
+    .trim()
+    .slice(0, 200);
   const properties: Record<string, any> = {
     'Task name': { title: [{ text: { content: title } }] },
     Type: { select: { name: BUG_TYPE } },
@@ -158,6 +169,7 @@ export async function createBugTask(args: {
   if (target.notionProviderId) properties.Source = { relation: [{ id: target.notionProviderId }] };
   if (target.notionCustomerId) properties.Customer = { relation: [{ id: target.notionCustomerId }] };
   if (target.notionProjectId) properties.Project = { relation: [{ id: target.notionProjectId }] };
+  if (envs.length) properties.Environment = { multi_select: envs.map((name) => ({ name })) };
 
   const res = await notion.pages.create({
     parent: { data_source_id: serverEnv.NOTION_DB_TASKS },
@@ -213,6 +225,61 @@ export async function setBugSnapshot(taskId: string, snapshot: 'open' | 'closed'
     properties: {
       'Last Synced Status': { rich_text: [{ type: 'text', text: { content: snapshot } }] },
     },
+  });
+}
+
+/** Overwrite the Environment multi-select with the given set. */
+export async function setEnvironments(taskId: string, environments: string[]): Promise<void> {
+  await getNotion().pages.update({
+    page_id: taskId,
+    properties: { Environment: { multi_select: environments.map((name) => ({ name })) } },
+  });
+}
+
+/** Note that the bug surfaced in environment(s) it wasn't seen in before. */
+export async function appendNewEnvNote(taskId: string, newEnvironments: string[]): Promise<void> {
+  await getNotion().blocks.children.append({
+    block_id: taskId,
+    children: [
+      {
+        object: 'block',
+        type: 'callout',
+        callout: {
+          icon: { type: 'emoji', emoji: '🌍' },
+          rich_text: [
+            { type: 'text', text: { content: `Apareció en nuevo ambiente: ${newEnvironments.join(', ')}` } },
+          ],
+        },
+      },
+    ],
+  });
+}
+
+/** Note that the bug came back after a quiet stretch with no activity. */
+export async function appendResurfacedNote(
+  taskId: string,
+  quietDays: number,
+  issue: NormalizedIssue,
+): Promise<void> {
+  await getNotion().blocks.children.append({
+    block_id: taskId,
+    children: [
+      {
+        object: 'block',
+        type: 'callout',
+        callout: {
+          icon: { type: 'emoji', emoji: '⚡' },
+          rich_text: [
+            {
+              type: 'text',
+              text: {
+                content: `Resurgió tras ${quietDays} días sin actividad — última vez ${fmtTs(issue.lastSeen)}`,
+              },
+            },
+          ],
+        },
+      },
+    ],
   });
 }
 

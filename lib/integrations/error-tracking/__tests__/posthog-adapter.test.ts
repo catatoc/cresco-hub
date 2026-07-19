@@ -27,6 +27,7 @@ const adapter = new PostHogAdapter({
   host: 'https://us.posthog.com',
   projectId: '94699',
   apiKey: 'phx_test',
+  filterTestAccounts: true,
 });
 
 describe('PostHogAdapter.listIssues', () => {
@@ -65,6 +66,7 @@ describe('PostHogAdapter.listIssues', () => {
     expect(sent.refresh).toBe('force_blocking');
     expect(sent.query.kind).toBe('ErrorTrackingQuery');
     expect(sent.query.volumeResolution).toBe(1);
+    expect(sent.query.filterTestAccounts).toBe(true);
     expect(sent.query.dateRange.date_from).toBe('2026-06-01T00:00:00.000Z');
     expect((init.headers as Record<string, string>).Authorization).toBe('Bearer phx_test');
   });
@@ -111,7 +113,10 @@ describe('PostHogAdapter.getIssueContext', () => {
       },
     ]);
     global.fetch = mockFetch(200, {
-      results: [['https://app/login', 'Chrome', '147', 'Mac OS X', '10.15.7', 'sess-1', exList]],
+      results: [
+        ['https://app/login', 'Chrome', '147', 'Mac OS X', '10.15.7', 'sess-1', exList],
+        ['http://localhost:4000/x', 'Chrome', '147', 'Mac', '1', 'sess-2', null],
+      ],
     });
     expect(await adapter.getIssueContext('issue-1')).toEqual({
       currentUrl: 'https://app/login',
@@ -119,6 +124,7 @@ describe('PostHogAdapter.getIssueContext', () => {
       os: 'Mac OS X 10.15.7',
       handled: false,
       topFrame: 'doLogin @ app/login.ts:42',
+      environments: ['dev', 'production'],
       replayUrl: 'https://us.posthog.com/project/94699/replay/sess-1',
     });
   });

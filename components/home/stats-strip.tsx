@@ -1,5 +1,6 @@
 import { format, parseISO, differenceInCalendarDays } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useLocale, useTranslations } from 'next-intl';
+import { dateLocale } from '@/lib/i18n/date-locale';
 import type { Meeting } from '@/schemas/meeting';
 
 type Props = {
@@ -26,36 +27,38 @@ function Stat({ label, value, unit, sub, subClass }: { label: string; value: Rea
 }
 
 export function StatsStrip({ stats, lastMeeting, overdueCount = 0 }: Props) {
+  const t = useTranslations('home.stats');
+  const locale = useLocale();
   const meetingLabel = (() => {
-    if (!lastMeeting) return 'Sin reuniones';
+    if (!lastMeeting) return t('noMeetings');
     const d = parseISO(lastMeeting.createdTime);
     const today = new Date();
     const diffDays = differenceInCalendarDays(today, d);
 
-    if (diffDays === 0) return 'Hoy';
-    if (diffDays === 1) return 'Ayer';
-    if (diffDays < 7) return `Hace ${diffDays} días`;
-    return format(d, 'd MMM', { locale: es });
+    if (diffDays === 0) return t('today');
+    if (diffDays === 1) return t('yesterday');
+    if (diffDays < 7) return t('daysAgo', { count: diffDays });
+    return format(d, t('dateFormat'), { locale: dateLocale(locale) });
   })();
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-2.5 mb-6 sm:mb-8">
-      <Stat label="En progreso" value={stats.inProgress} sub="tareas activas" />
+      <Stat label={t('inProgress')} value={stats.inProgress} sub={t('activeTasks')} />
       <Stat
-        label="Por hacer"
+        label={t('todo')}
         value={stats.todo}
-        sub={overdueCount > 0 ? `${overdueCount} atrasada${overdueCount === 1 ? '' : 's'}` : undefined}
+        sub={overdueCount > 0 ? t('overdue', { count: overdueCount }) : undefined}
         subClass={overdueCount > 0 ? 'text-[#d24949]' : undefined}
       />
       <Stat
-        label="Completadas"
+        label={t('done')}
         value={stats.done}
         unit={`/${stats.total}`}
-        sub="↑ esta semana"
+        sub={t('thisWeek')}
         subClass="text-[#3f9f5c]"
       />
       <Stat
-        label="Última reunión"
+        label={t('lastMeeting')}
         value={<span className="text-[15px] sm:text-[16px]">{meetingLabel}</span>}
         sub={lastMeeting?.title ?? undefined}
       />

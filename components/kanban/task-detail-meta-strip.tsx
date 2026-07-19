@@ -1,22 +1,15 @@
 import { format, isToday, isTomorrow, isYesterday, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Calendar, CalendarClock } from 'lucide-react';
 import { AssigneeAvatar } from '@/components/kanban/card';
 import { TaskStatusPill } from '@/components/kanban/task-status-pill';
+import { dateLocale } from '@/lib/i18n/date-locale';
 import { cn } from '@/lib/utils';
-import { PRIORITY_LABEL, PriorityBars, TAG_MAP } from './task-detail-shared';
+import { PRIORITY_KEY, PriorityBars, TAG_MAP } from './task-detail-shared';
 import type { Task } from '@/schemas/task';
 import type { Project } from '@/schemas/project';
 import type { TeamMember } from '@/schemas/team-member';
-
-function formatShort(iso: string): string {
-  const d = parseISO(iso);
-  if (isToday(d)) return 'Hoy';
-  if (isTomorrow(d)) return 'Mañana';
-  if (isYesterday(d)) return 'Ayer';
-  return format(d, 'd MMM', { locale: es });
-}
 
 type Props = {
   task: Task;
@@ -25,8 +18,19 @@ type Props = {
 };
 
 export function TaskDetailMetaStrip({ task, assignees, project }: Props) {
+  const t = useTranslations('kanban.taskDetail');
+  const tPriority = useTranslations('kanban.priority');
+  const locale = useLocale();
   const progressPct =
     typeof task.progress === 'number' ? Math.round(task.progress * 100) : null;
+
+  function formatShort(iso: string): string {
+    const d = parseISO(iso);
+    if (isToday(d)) return t('today');
+    if (isTomorrow(d)) return t('tomorrow');
+    if (isYesterday(d)) return t('yesterday');
+    return format(d, t('shortDateFormat'), { locale: dateLocale(locale) });
+  }
 
   return (
     <div className="lg:hidden border-b border-border bg-[#fafafa] px-4 sm:px-6 py-2 sm:py-3 flex items-center gap-2 sm:gap-3 flex-wrap text-[11.5px] text-foreground">
@@ -35,7 +39,10 @@ export function TaskDetailMetaStrip({ task, assignees, project }: Props) {
       {task.priority && (
         <span className="inline-flex items-center gap-1.5 shrink-0">
           <PriorityBars priority={task.priority} />
-          {PRIORITY_LABEL[task.priority] ?? task.priority}
+          {(() => {
+            const key = PRIORITY_KEY[task.priority];
+            return key ? tPriority(key) : task.priority;
+          })()}
         </span>
       )}
 

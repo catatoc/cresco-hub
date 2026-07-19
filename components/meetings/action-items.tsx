@@ -1,12 +1,15 @@
 import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
 import { cn } from '@/lib/utils';
 import { format, parseISO, isSameDay, subDays } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { dateLocale } from '@/lib/i18n/date-locale';
 import { AssigneeStack } from '@/components/kanban/card';
 
 function DueCell({ dueDate }: { dueDate: string | null }) {
+  const t = useTranslations('meetings');
+  const locale = useLocale();
   if (!dueDate) return <span className="text-[11px] text-muted-foreground">—</span>;
   const d = parseISO(dueDate);
   const today = new Date();
@@ -15,10 +18,10 @@ function DueCell({ dueDate }: { dueDate: string | null }) {
   const isPast = d.getTime() < today.getTime() && !isToday;
 
   const label = isToday
-    ? 'Hoy'
+    ? t('due.today')
     : isYesterday
-      ? 'Ayer'
-      : format(d, 'MMM d', { locale: es });
+      ? t('due.yesterday')
+      : format(d, 'MMM d', { locale: dateLocale(locale) });
 
   return (
     <span

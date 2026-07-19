@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "projects": "Projects"
+  },
+  "page": {
+    "total": "{count} total",
+    "emptyMine": "You're not on any of this client's projects yet.",
+    "viewAllCustomer": "View all client projects →"
+  },
+  "scope": {
+    "mine": "Mine",
+    "team": "Team"
+  },
+  "view": {
+    "emptyCategory": "No projects in this category."
+  },
+  "tabs": {
+    "active": "Active",
+    "planning": "Planning",
+    "completed": "Completed",
+    "all": "All"
+  },
+  "newTaskButton": {
+    "label": "Task"
+  },
+  "card": {
+    "progress": "Progress",
+    "teamCount": "{count} on team"
+  },
+  "hero": {
+    "openInNotion": "Open in Notion"
+  },
+  "meetings": {
+    "title": "Recent meetings",
+    "empty": "No meetings linked to this project yet.",
+    "viewAll": "View all →",
+    "actions": "{count, plural, one {# action} other {# actions}}"
+  },
+  "metaRow": {
+    "due": "Due {date}",
+    "starts": "Starts {date}",
+    "owner": "Owner:",
+    "people": "{count, plural, one {# person} other {# people}}"
+  },
+  "stats": {
+    "progress": "Progress",
+    "tasks": "Tasks",
+    "meetings": "Meetings",
+    "overdue": "Overdue",
+    "remaining": "Remaining"
+  },
+  "tasks": {
+    "title": "Active tasks",
+    "empty": "No tasks in this project. Create the first one with the <b>+ Task</b> button.",
+    "viewAll": "View all →",
+    "due": "due {date}"
+  },
+  "team": {
+    "title": "Team",
+    "empty": "No team assigned.",
+    "owner": "Owner: {name}"
+  },
+  "wikiModule": {
+    "title": "Wiki",
+    "empty": "No documentation linked.",
+    "viewAll": "View all →"
+  }
+}

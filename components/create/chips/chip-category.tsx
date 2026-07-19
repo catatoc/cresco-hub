@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import type { WikiCategory } from '@/schemas/wiki';
 
 const OPTIONS: WikiCategory[] = [
@@ -18,6 +19,7 @@ export function ChipCategory({
   onChange: (v: WikiCategory[]) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const t = useTranslations('create.chipCategory');
   function toggle(cat: WikiCategory) {
     onChange(value.includes(cat) ? value.filter((c) => c !== cat) : [...value, cat]);
   }
@@ -32,7 +34,7 @@ export function ChipCategory({
             : 'px-2 py-0.5 rounded-md text-[11px] border border-dashed text-muted-foreground hover:text-foreground'
         }
       >
-        {value.length > 0 ? `Categoría · ${value.length}` : '+ Categoría'}
+        {value.length > 0 ? t('withCount', { count: value.length }) : t('add')}
       </button>
       {open && (
         <div

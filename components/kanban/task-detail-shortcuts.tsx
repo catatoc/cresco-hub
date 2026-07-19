@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { buildPrompt } from '@/lib/claude-code/build-prompt';
 import type { Task } from '@/schemas/task';
@@ -14,6 +15,7 @@ type Props = { task: Task; project: Project | null; description: string };
  * "Copy as prompt" shortcut.
  */
 export function TaskDetailShortcuts({ task, project, description }: Props) {
+  const t = useTranslations('kanban.shortcuts');
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -28,21 +30,21 @@ export function TaskDetailShortcuts({ task, project, description }: Props) {
         void navigator.clipboard
           .writeText(prompt)
           .then(() => {
-            toast.success('Prompt copiado al portapapeles', {
-              description: 'Pégalo en Claude Code, ChatGPT, Cursor, o tu terminal.',
+            toast.success(t('copied'), {
+              description: t('copiedDescription'),
             });
           })
           .catch(() => {
             // eslint-disable-next-line no-console
             console.info('[task-detail-shortcuts] prompt:\n', prompt);
-            toast.error('No se pudo copiar el prompt', {
-              description: 'Hay un fallback en la consola del navegador.',
+            toast.error(t('copyFailed'), {
+              description: t('copyFailedDescription'),
             });
           });
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [task, project, description]);
+  }, [task, project, description, t]);
   return null;
 }

@@ -10,6 +10,7 @@ export function createAdapter(source: ErrorSource): ProviderAdapter {
         host: source.host,
         projectId: source.externalProjectId,
         apiKey: source.apiKey,
+        filterTestAccounts: source.filterTestAccounts,
       });
     case 'sentry':
       throw new Error('adapter for provider "sentry" not implemented yet');

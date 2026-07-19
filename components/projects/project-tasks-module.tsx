@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { CheckSquare } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import type { Task, TaskStatus } from '@/schemas/task';
 import type { Project } from '@/schemas/project';
 import { cn } from '@/lib/utils';
@@ -25,16 +26,19 @@ const STATUS_PILL: Record<TaskStatus, { bg: string; text: string; dot: string }>
   Archived:      { bg: 'bg-[#fafbff]',  text: 'text-muted-foreground', dot: 'bg-[#a0a0a8]' },
 };
 
-function fmtDue(iso: string): string {
-  return `vence ${new Date(iso).toLocaleDateString('es', { day: 'numeric', month: 'short' })}`;
+function fmtDue(iso: string, locale: string, dueLabel: (date: string) => string): string {
+  return dueLabel(new Date(iso).toLocaleDateString(locale, { day: 'numeric', month: 'short' }));
 }
 
 export function ProjectTasksModule({ tasks, project }: { tasks: Task[]; project: Project }) {
+  const t = useTranslations('projects.tasks');
+  const locale = useLocale();
+
   if (tasks.length === 0) {
     return (
-      <Module title="Tareas activas">
+      <Module title={t('title')}>
         <p className="text-[12px] text-muted-foreground py-3">
-          Sin tareas en este proyecto. Crea la primera con el botón <strong>+ Tarea</strong>.
+          {t.rich('empty', { b: (chunks) => <strong>{chunks}</strong> })}
         </p>
       </Module>
     );
@@ -53,20 +57,20 @@ export function ProjectTasksModule({ tasks, project }: { tasks: Task[]; project:
 
   return (
     <Module
-      title="Tareas activas"
-      action={tasks.length > 5 ? <Link href="/tareas" className="text-[11px] text-[#5e6ad2] hover:underline">Ver todas →</Link> : null}
+      title={t('title')}
+      action={tasks.length > 5 ? <Link href="/tareas" className="text-[11px] text-[#5e6ad2] hover:underline">{t('viewAll')}</Link> : null}
     >
       <ul className="divide-y divide-[#f5f5f8]">
-        {visible.map((t) => {
-          const pill = STATUS_PILL[t.status];
-          const done = t.status === 'Done' || t.status === 'Archived';
+        {visible.map((task) => {
+          const pill = STATUS_PILL[task.status];
+          const done = task.status === 'Done' || task.status === 'Archived';
           return (
-            <li key={t.id}>
+            <li key={task.id}>
               <div className="relative flex items-center gap-2.5 py-2 px-1 -mx-1 rounded hover:bg-[#fafbff] transition-colors">
                 <Link
-                  href={`/tareas/${t.id}`}
+                  href={`/tareas/${task.id}`}
                   className="absolute inset-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset rounded"
-                  aria-label={t.title}
+                  aria-label={task.title}
                 />
                 <span
                   className={cn(
@@ -75,10 +79,10 @@ export function ProjectTasksModule({ tasks, project }: { tasks: Task[]; project:
                   )}
                 />
                 <span className={cn('relative text-[12.5px] flex-1 min-w-0 truncate', done && 'line-through text-muted-foreground')}>
-                  {t.title}
+                  {task.title}
                 </span>
-                {t.dueDate && !done && (
-                  <span className="relative text-[10px] text-muted-foreground shrink-0">{fmtDue(t.dueDate)}</span>
+                {task.dueDate && !done && (
+                  <span className="relative text-[10px] text-muted-foreground shrink-0">{fmtDue(task.dueDate, locale, (date) => t('due', { date }))}</span>
                 )}
                 <span
                   className={cn(
@@ -88,10 +92,10 @@ export function ProjectTasksModule({ tasks, project }: { tasks: Task[]; project:
                   )}
                 >
                   <span className={cn('w-1.5 h-1.5 rounded-full', pill.dot)} />
-                  {t.status}
+                  {task.status}
                 </span>
                 <div className="relative shrink-0">
-                  <OpenWithClaudeMenu variant="row" task={t} project={project} description="" />
+                  <OpenWithClaudeMenu variant="row" task={task} project={project} description="" />
                 </div>
               </div>
             </li>

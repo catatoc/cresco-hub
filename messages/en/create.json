@@ -1,0 +1,79 @@
+{
+  "modal": {
+    "discardConfirm": "Discard?",
+    "title": "{type, select, task {Create task} wiki {Create wiki} other {Create}}",
+    "description": "Quick-create modal. Tab to navigate, ⌘↵ to submit.",
+    "typeTask": "📝 Task",
+    "typeWiki": "📖 Wiki",
+    "typeNameTask": "Task",
+    "typeNameWiki": "Wiki",
+    "typeAriaActive": "Type: {name}, active",
+    "typeAriaInactive": "Type: {name}, press to switch to {name}",
+    "footer": "⌘↵ Create · ⇧⌘↵ Create another · Esc to close"
+  },
+  "trigger": {
+    "label": "Create",
+    "ariaLabel": "Create (C)"
+  },
+  "tareaForm": {
+    "inheritedSprint": "Inherited sprint",
+    "inheritedProject": "Inherited project",
+    "titlePlaceholder": "Task title…",
+    "descriptionPlaceholder": "Description (optional)",
+    "createAnother": "Create another (⇧⌘↵)",
+    "creating": "Creating…",
+    "submit": "Create ⌘↵",
+    "created": "Task created",
+    "view": "View",
+    "createError": "Couldn''t create the task",
+    "createErrorRetry": "Couldn''t create the task. Retry"
+  },
+  "wikiForm": {
+    "inheritedProject": "Inherited project",
+    "inheritedMeeting": "Inherited meeting",
+    "changeEmoji": "Change emoji",
+    "titlePlaceholder": "Page title…",
+    "createAnother": "Create another (⇧⌘↵)",
+    "createAnotherAria": "Create another",
+    "creating": "Creating…",
+    "submit": "Create and open ⌘↵",
+    "created": "Wiki created",
+    "open": "Open",
+    "createError": "Couldn''t create the wiki",
+    "createErrorRetry": "Couldn''t create the wiki. Retry"
+  },
+  "chipCategory": {
+    "add": "+ Category",
+    "withCount": "Category · {count}"
+  },
+  "chipDate": {
+    "add": "+ Date",
+    "remove": "Remove date",
+    "label": "Date"
+  },
+  "chipMeeting": {
+    "add": "+ Meeting",
+    "remove": "Remove meeting",
+    "noResults": "No results"
+  },
+  "chipPriority": {
+    "add": "+ Priority",
+    "remove": "Remove priority"
+  },
+  "chipProject": {
+    "add": "+ Project",
+    "remove": "Remove project",
+    "noResults": "No results"
+  },
+  "chipSprint": {
+    "add": "+ Sprint",
+    "remove": "Remove sprint",
+    "noResults": "No results"
+  },
+  "chipTeam": {
+    "add": "+ Assign",
+    "withCount": "Assign · {count}",
+    "searchPlaceholder": "Search member…",
+    "noResults": "No results"
+  }
+}

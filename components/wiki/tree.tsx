@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Search, FileText, ChevronDown, ChevronRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import type { WikiPage } from '@/schemas/wiki';
 
@@ -77,7 +78,9 @@ function CategoryGroup({
   pages: WikiPage[];
   defaultOpen?: boolean;
 }) {
+  const t = useTranslations('wiki.tree');
   const [open, setOpen] = useState(defaultOpen);
+  const label = category === UNCATEGORIZED ? t('uncategorized') : category;
   return (
     <div className="mb-2">
       <button
@@ -85,7 +88,7 @@ function CategoryGroup({
         className="w-full flex items-center gap-1 px-2 py-2 lg:py-1 min-h-[44px] lg:min-h-0 text-[10px] uppercase font-semibold tracking-[0.04em] text-muted-foreground hover:text-foreground active:text-foreground transition-colors cursor-pointer rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
       >
         {open ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
-        <span className="flex-1 text-left">{category}</span>
+        <span className="flex-1 text-left">{label}</span>
         <span className="text-[10px] font-medium text-muted-foreground">{pages.length}</span>
       </button>
       {open && (
@@ -100,6 +103,7 @@ function CategoryGroup({
 }
 
 export function WikiTree({ pages }: { pages: WikiPage[] }) {
+  const t = useTranslations('wiki.tree');
   const [q, setQ] = useState('');
   const filtered = useMemo(
     () =>
@@ -117,7 +121,7 @@ export function WikiTree({ pages }: { pages: WikiPage[] }) {
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Buscar en wiki..."
+          placeholder={t('searchPlaceholder')}
           className="flex-1 min-w-0 bg-transparent border-none outline-none text-[16px] lg:text-[12px] placeholder:text-muted-foreground"
         />
         <kbd className="hidden lg:inline-block text-[10px] px-1 py-0.5 rounded bg-black/[0.06] text-muted-foreground shrink-0">
@@ -129,7 +133,7 @@ export function WikiTree({ pages }: { pages: WikiPage[] }) {
       ))}
       {groups.length === 0 && (
         <div className="text-[12px] text-muted-foreground text-center p-4">
-          Sin resultados.
+          {t('noResults')}
         </div>
       )}
     </aside>

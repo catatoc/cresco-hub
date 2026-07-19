@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
 import { queryMeetingsByCustomer, getMeeting } from '@/lib/notion/meetings';
@@ -21,6 +22,7 @@ export default async function MeetingDetailPage({
   params: Promise<{ meetingId: string }>;
 }) {
   const ctx = await requireContext();
+  const t = await getTranslations('meetings');
   const { meetingId } = await params;
 
   const meeting = await getMeeting(meetingId);
@@ -44,7 +46,7 @@ export default async function MeetingDetailPage({
 
   return (
     <PageEnter className="flex flex-col h-full overflow-hidden">
-      <Topbar crumbs={[{ label: 'Reuniones' }, { label: meeting.title, muted: true }]}>
+      <Topbar crumbs={[{ label: t('title') }, { label: meeting.title, muted: true }]}>
         <MobileHistoryTrigger meetings={meetings} currentId={meeting.id} />
       </Topbar>
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_280px] overflow-hidden">

@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { ChevronDown, Check } from 'lucide-react';
 import {
   DropdownMenu,
@@ -34,6 +35,7 @@ function CustomerBadge({ customer }: { customer: CustomerSummary }) {
 
 export function WorkspaceHeader({ current, customers }: Props) {
   const router = useRouter();
+  const t = useTranslations('shell');
   const [pendingId, setPendingId] = useState<string | null>(null);
 
   if (customers.length <= 1) {
@@ -65,7 +67,7 @@ export function WorkspaceHeader({ current, customers }: Props) {
       <DropdownMenu>
         <DropdownMenuTrigger
           className="w-full h-full flex items-center gap-2 px-2 rounded-md hover:bg-muted/60 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label="Cambiar workspace"
+          aria-label={t('workspaceHeader.switch')}
           disabled={pendingId !== null}
         >
           <CustomerBadge customer={current} />

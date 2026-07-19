@@ -42,18 +42,18 @@ describe('InlineToolbar', () => {
   it('renders 5 buttons when there is a non-empty selection', () => {
     const view = buildView('Hello', [1, 6]) as never;
     render(<InlineToolbar view={view} tick={1} onLinkRequest={onLinkRequest} />);
-    expect(screen.getByRole('button', { name: /bold/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /italic/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /strike/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /^code$/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /link/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /negrita/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /cursiva/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /tachado/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^código$/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /enlace/i })).toBeInTheDocument();
   });
 
   it('clicking the link button calls onLinkRequest', async () => {
     const user = userEvent.setup();
     const view = buildView('Hello', [1, 6]) as never;
     render(<InlineToolbar view={view} tick={1} onLinkRequest={onLinkRequest} />);
-    await user.click(screen.getByRole('button', { name: /link/i }));
+    await user.click(screen.getByRole('button', { name: /enlace/i }));
     expect(onLinkRequest).toHaveBeenCalledTimes(1);
   });
 });

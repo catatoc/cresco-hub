@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 
 type Props = {
@@ -18,6 +19,7 @@ type Props = {
  *   - "next" (chevron right) = newer sprint (previous index)
  */
 export function SprintNav({ currentSprintId, allSprintIds }: Props) {
+  const t = useTranslations('kanban.sprintNav');
   const searchParams = useSearchParams();
   const idx = currentSprintId ? allSprintIds.indexOf(currentSprintId) : -1;
   const hasPrev = idx !== -1 && idx < allSprintIds.length - 1;
@@ -43,7 +45,7 @@ export function SprintNav({ currentSprintId, allSprintIds }: Props) {
       {prevId ? (
         <Link
           href={buildHref(prevId)}
-          aria-label="Sprint anterior"
+          aria-label={t('previous')}
           className={cn(btnBase, btnEnabled)}
         >
           <ChevronLeft className="w-3 h-3" />
@@ -51,7 +53,7 @@ export function SprintNav({ currentSprintId, allSprintIds }: Props) {
       ) : (
         <button
           disabled
-          aria-label="Sprint anterior"
+          aria-label={t('previous')}
           className={cn(btnBase, btnDisabled)}
         >
           <ChevronLeft className="w-3 h-3" />
@@ -60,7 +62,7 @@ export function SprintNav({ currentSprintId, allSprintIds }: Props) {
       {nextId ? (
         <Link
           href={buildHref(nextId)}
-          aria-label="Sprint siguiente"
+          aria-label={t('next')}
           className={cn(btnBase, btnEnabled)}
         >
           <ChevronRight className="w-3 h-3" />
@@ -68,7 +70,7 @@ export function SprintNav({ currentSprintId, allSprintIds }: Props) {
       ) : (
         <button
           disabled
-          aria-label="Sprint siguiente"
+          aria-label={t('next')}
           className={cn(btnBase, btnDisabled)}
         >
           <ChevronRight className="w-3 h-3" />

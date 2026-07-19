@@ -1,5 +1,6 @@
 import { formatDistanceToNow, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useLocale, useTranslations } from 'next-intl';
+import { dateLocale } from '@/lib/i18n/date-locale';
 import { cn } from '@/lib/utils';
 import type { WikiPage } from '@/schemas/wiki';
 
@@ -14,6 +15,8 @@ const CATEGORY_COLOR: Record<string, string> = {
 type Props = { page: WikiPage };
 
 export function PageProperties({ page }: Props) {
+  const t = useTranslations('wiki.pageProperties');
+  const locale = useLocale();
   if (page.categories.length === 0 && !page.lastEditedAt) return null;
 
   return (
@@ -21,7 +24,7 @@ export function PageProperties({ page }: Props) {
       {page.categories.length > 0 && (
         <>
           <div className="text-muted-foreground font-medium flex items-center gap-1.5">
-            🏷 Categorías
+            🏷 {t('categories')}
           </div>
           <div className="flex flex-wrap gap-1.5">
             {page.categories.map((c: string) => (
@@ -42,10 +45,10 @@ export function PageProperties({ page }: Props) {
       {page.lastEditedAt && (
         <>
           <div className="text-muted-foreground font-medium flex items-center gap-1.5">
-            🕓 Editado
+            🕓 {t('edited')}
           </div>
           <div>
-            hace {formatDistanceToNow(parseISO(page.lastEditedAt), { locale: es })}
+            {formatDistanceToNow(parseISO(page.lastEditedAt), { locale: dateLocale(locale), addSuffix: true })}
           </div>
         </>
       )}

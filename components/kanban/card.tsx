@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
 import type { Project } from '@/schemas/project';
@@ -133,6 +134,8 @@ type Props = {
 };
 
 export function TaskCard({ task, assignees = [], project = null, showDayChip, isOverlay }: Props) {
+  const t = useTranslations('kanban.card');
+  const locale = useLocale();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: task.id, disabled: isOverlay });
 
@@ -145,8 +148,8 @@ export function TaskCard({ task, assignees = [], project = null, showDayChip, is
     const today = new Date();
     const isToday = d.toDateString() === today.toDateString();
     const label = isToday
-      ? 'Hoy'
-      : d.toLocaleDateString('es', { weekday: 'short' }).replace('.', '');
+      ? t('today')
+      : d.toLocaleDateString(locale, { weekday: 'short' }).replace('.', '');
     return { label, today: isToday };
   })();
 
@@ -217,7 +220,7 @@ export function TaskCard({ task, assignees = [], project = null, showDayChip, is
           </span>
         ) : task.dueDate ? (
           <span className="ml-auto">
-            {new Date(task.dueDate).toLocaleDateString('es', { day: '2-digit', month: 'short' })}
+            {new Date(task.dueDate).toLocaleDateString(locale, { day: '2-digit', month: 'short' })}
           </span>
         ) : (
           <span className="ml-auto" />

@@ -1,0 +1,84 @@
+{
+  "toolbar": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "strikethrough": "Strikethrough",
+    "code": "Code",
+    "link": "Link"
+  },
+  "slashMenu": {
+    "noResults": "No results",
+    "groups": {
+      "basic": "Basic blocks",
+      "lists": "Lists",
+      "advanced": "Advanced"
+    },
+    "items": {
+      "heading-1": {
+        "label": "Heading 1",
+        "description": "Big section heading"
+      },
+      "heading-2": {
+        "label": "Heading 2",
+        "description": "Medium section heading"
+      },
+      "heading-3": {
+        "label": "Heading 3",
+        "description": "Small section heading"
+      },
+      "bullet-list": {
+        "label": "Bullet list",
+        "description": "Create a simple bulleted list"
+      },
+      "numbered-list": {
+        "label": "Numbered list",
+        "description": "Create a list with numbering"
+      },
+      "task-list": {
+        "label": "To-do list",
+        "description": "Track tasks with checkboxes"
+      },
+      "quote": {
+        "label": "Quote",
+        "description": "Capture a quote"
+      },
+      "divider": {
+        "label": "Divider",
+        "description": "Visually divide sections"
+      },
+      "code-block": {
+        "label": "Code",
+        "description": "Capture a code snippet"
+      },
+      "callout": {
+        "label": "Callout",
+        "description": "Make writing stand out"
+      }
+    }
+  },
+  "saveBar": {
+    "editing": "Editing",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…"
+  },
+  "editor": {
+    "editTask": "Edit task",
+    "edit": "Edit",
+    "noDescription": "No description.",
+    "unsupportedBanner": "This task contains blocks we can't edit yet (toggles, columns, embeds, syncs). For safety, Save is disabled. Edit the task from Notion to change it, or go back to read mode.",
+    "discardConfirm": "You have unsaved changes. Discard them?",
+    "unsupportedBlockError": "This block type can't be saved yet",
+    "unsupportedBlockErrorDescription": "Edit the task from Notion while we add support.",
+    "saveFailed": "Could not save",
+    "deleteFailedDescription": "Notion deleted part of the content but didn't finish. {remaining} blocks remain. Try again.",
+    "appendFailedDescription": "Could not write the new blocks. Try again.",
+    "updateFailedDescription": "Could not update part of the content. Try again.",
+    "noAccess": "You don't have access to save",
+    "taskDeleted": "This task was deleted",
+    "saveFailedRetry": "Try again in a moment.",
+    "saved": "Changes saved",
+    "offline": "No connection",
+    "offlineDescription": "Try again when your network is back."
+  }
+}

@@ -1,10 +1,12 @@
+import { useTranslations } from 'next-intl';
 import { Topbar } from '@/components/shell/topbar';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Loading() {
+  const t = useTranslations('home.page');
   return (
     <>
-      <Topbar crumbs={[{ label: 'Home' }]} />
+      <Topbar crumbs={[{ label: t('crumb') }]} />
       <div className="flex-1 overflow-auto">
         <div className="px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10 max-w-[980px] mx-auto w-full">
           <div className="mb-6 sm:mb-8 space-y-1.5">

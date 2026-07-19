@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { format, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { getLocale, getTranslations } from 'next-intl/server';
+import { dateLocale } from '@/lib/i18n/date-locale';
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
 import { resolveScope, SCOPE_COOKIE } from '@/lib/scope/resolve';
@@ -17,10 +18,16 @@ export const dynamic = 'force-dynamic';
 
 type SearchParams = Promise<{ scope?: string }>;
 
-function fmtRange(start: string | null, end: string | null): string | null {
+function fmtRange(
+  start: string | null,
+  end: string | null,
+  locale: string,
+  pattern: string,
+): string | null {
   if (!start && !end) return null;
-  const s = start ? format(parseISO(start), 'd MMM', { locale: es }) : '—';
-  const e = end ? format(parseISO(end), 'd MMM', { locale: es }) : '—';
+  const dfLocale = dateLocale(locale);
+  const s = start ? format(parseISO(start), pattern, { locale: dfLocale }) : '—';
+  const e = end ? format(parseISO(end), pattern, { locale: dfLocale }) : '—';
   return `${s} → ${e}`;
 }
 
@@ -30,6 +37,8 @@ export default async function ProximaSemanaPage({
   searchParams: SearchParams;
 }) {
   const ctx = await requireContext();
+  const t = await getTranslations('upcoming');
+  const locale = await getLocale();
   const sp = await searchParams;
   const cookieStore = await cookies();
   const scope = resolveScope(
@@ -43,10 +52,10 @@ export default async function ProximaSemanaPage({
   if (!sprint) {
     return (
       <PageEnter className="flex flex-col h-full overflow-hidden">
-        <Topbar crumbs={[{ label: 'Próxima semana' }]} />
+        <Topbar crumbs={[{ label: t('page.crumb') }]} />
         <div className="flex-1 grid place-items-center px-6">
           <p className="text-sm text-muted-foreground text-center">
-            No hay una próxima semana planificada todavía.
+            {t('page.empty')}
           </p>
         </div>
       </PageEnter>
@@ -67,18 +76,18 @@ export default async function ProximaSemanaPage({
   const members = await getTeamMembers(memberIds);
   const membersById = new Map(members.map((m) => [m.id, m]));
 
-  const dates = fmtRange(sprint.startDate, sprint.endDate);
+  const dates = fmtRange(sprint.startDate, sprint.endDate, locale, t('page.dateFormat'));
 
   return (
     <PageEnter className="flex flex-col h-full overflow-hidden">
-      <Topbar crumbs={[{ label: 'Próxima semana' }, { label: sprint.name, muted: true }]}>
+      <Topbar crumbs={[{ label: t('page.crumb') }, { label: sprint.name, muted: true }]}>
         <ScopePill
           scopeKey="proxima-semana"
           scope={scope}
           myCount={myTasks.length}
           teamCount={active.length}
           redirectPath="/proxima-semana"
-          labels={{ mine: 'Mías', team: 'Equipo completo' }}
+          labels={{ mine: t('scope.mine'), team: t('scope.team') }}
         />
       </Topbar>
 
@@ -88,7 +97,7 @@ export default async function ProximaSemanaPage({
             <h1 className="text-[18px] font-semibold">{sprint.name}</h1>
             {dates && (
               <p className="text-[13px] text-muted-foreground mt-0.5">
-                {dates} · {visibleTasks.length} tareas
+                {dates} · {t('page.tasksCount', { count: visibleTasks.length })}
               </p>
             )}
           </div>
@@ -99,7 +108,7 @@ export default async function ProximaSemanaPage({
             </div>
           )}
 
-          <h2 className="text-[13px] font-semibold mb-3">Detalle</h2>
+          <h2 className="text-[13px] font-semibold mb-3">{t('page.detail')}</h2>
           <UpcomingTaskList
             tasks={visibleTasks}
             membersById={membersById}

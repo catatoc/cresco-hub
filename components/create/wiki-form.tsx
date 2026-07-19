@@ -3,6 +3,7 @@
 import { useEffect, useState, type Ref } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 import { useCreateContext } from './create-provider';
 import { useCreateContext as useInheritedContext } from '@/hooks/use-create-context';
 import { ChipProject } from './chips/chip-project';
@@ -28,15 +29,16 @@ export function WikiForm({
   const router = useRouter();
   const { close } = useCreateContext();
   const inherited = useInheritedContext();
+  const t = useTranslations('create.wikiForm');
 
   const [emoji, setEmoji] = useState('📄');
   const [emojiOpen, setEmojiOpen] = useState(false);
   const [categories, setCategories] = useState<WikiCategory[]>([]);
   const [project, setProject] = useState<ChipValue | null>(
-    inherited.projectId ? { id: inherited.projectId, label: 'Proyecto heredado' } : null,
+    inherited.projectId ? { id: inherited.projectId, label: t('inheritedProject') } : null,
   );
   const [meeting, setMeeting] = useState<ChipValue | null>(
-    inherited.meetingId ? { id: inherited.meetingId, label: 'Reunión heredada' } : null,
+    inherited.meetingId ? { id: inherited.meetingId, label: t('inheritedMeeting') } : null,
   );
   const [submitting, setSubmitting] = useState(false);
   const [createAnother, setCreateAnother] = useState(false);
@@ -63,14 +65,14 @@ export function WikiForm({
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        toast.error(body.error ?? 'No pude crear la wiki');
+        toast.error(body.error ?? t('createError'));
         setSubmitting(false);
         return;
       }
       const created = await res.json();
       if (opts.another) {
-        toast.success('Wiki creada', {
-          action: { label: 'Abrir', onClick: () => router.push(`/wiki/${created.id}`) },
+        toast.success(t('created'), {
+          action: { label: t('open'), onClick: () => router.push(`/wiki/${created.id}`) },
         });
         onTitleChange('');
         setCategories([]);
@@ -83,7 +85,7 @@ export function WikiForm({
         router.push(`/wiki/${created.id}`);
       }
     } catch {
-      toast.error('No pude crear la wiki. Reintentar');
+      toast.error(t('createErrorRetry'));
       setSubmitting(false);
     }
   }
@@ -108,7 +110,7 @@ export function WikiForm({
             type="button"
             onClick={() => setEmojiOpen((o) => !o)}
             className="text-lg w-8 h-8 inline-flex items-center justify-center rounded bg-amber-50 hover:bg-amber-100"
-            aria-label="Cambiar emoji"
+            aria-label={t('changeEmoji')}
           >
             {emoji}
           </button>
@@ -130,7 +132,7 @@ export function WikiForm({
         <input
           ref={titleRef}
           autoFocus
-          placeholder="Título de la página…"
+          placeholder={t('titlePlaceholder')}
           value={title}
           onChange={(e) => onTitleChange(e.target.value)}
           className="flex-1 text-base outline-none bg-transparent placeholder:text-muted-foreground"
@@ -147,9 +149,9 @@ export function WikiForm({
             type="checkbox"
             checked={createAnother}
             onChange={(e) => setCreateAnother(e.target.checked)}
-            aria-label="Crear otra"
+            aria-label={t('createAnotherAria')}
           />
-          <span aria-hidden="true">Crear otra (⇧⌘↵)</span>
+          <span aria-hidden="true">{t('createAnother')}</span>
         </label>
         <div className="flex items-center gap-2">
           {tooLong && (
@@ -161,7 +163,7 @@ export function WikiForm({
             onClick={() => submit({ another: createAnother })}
             className="text-[12px] px-3 py-1 rounded-md bg-foreground text-background disabled:opacity-50"
           >
-            {submitting ? 'Creando…' : 'Crear y abrir ⌘↵'}
+            {submitting ? t('creating') : t('submit')}
           </button>
         </div>
       </div>

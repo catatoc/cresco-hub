@@ -2,18 +2,23 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LogOut, MoreHorizontal } from 'lucide-react';
+import { Languages, LogOut, MoreHorizontal } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
+import { useLanguageSwitch } from '@/components/common/language-toggle';
 
 type Props = { name: string; role: string };
 
 export function UserCard({ name, role }: Props) {
   const router = useRouter();
+  const t = useTranslations('shell.userCard');
+  const tLang = useTranslations('common.language');
+  const { otherLocale, switchTo } = useLanguageSwitch();
   const [pending, setPending] = useState(false);
   const initials = name
     .split(' ')
@@ -46,15 +51,22 @@ export function UserCard({ name, role }: Props) {
       <DropdownMenu>
         <DropdownMenuTrigger
           className="w-9 h-9 -m-2 grid place-items-center rounded hover:bg-muted/60 outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0"
-          aria-label="Opciones de usuario"
+          aria-label={t('options')}
           disabled={pending}
         >
           <MoreHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="min-w-[160px]">
+          <DropdownMenuItem
+            onClick={() => switchTo(otherLocale)}
+            className="flex items-center gap-2 text-[13px]"
+          >
+            <Languages className="w-3.5 h-3.5" />
+            <span>{tLang('switchTo')}</span>
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={signOut} className="flex items-center gap-2 text-[13px]">
             <LogOut className="w-3.5 h-3.5" />
-            <span>Cerrar sesión</span>
+            <span>{t('signOut')}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

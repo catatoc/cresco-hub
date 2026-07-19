@@ -1,0 +1,69 @@
+{
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening",
+    "dateFormat": "EEEE · MMMM d · yyyy",
+    "activeTasks": "{count, plural, one {# active task} other {# active tasks}}",
+    "meetingToday": "1 meeting today"
+  },
+  "page": {
+    "crumb": "Home",
+    "noActiveSprint": "No active sprint"
+  },
+  "stats": {
+    "inProgress": "In progress",
+    "activeTasks": "active tasks",
+    "todo": "To do",
+    "overdue": "{count, plural, one {# overdue} other {# overdue}}",
+    "done": "Completed",
+    "thisWeek": "↑ this week",
+    "lastMeeting": "Last meeting",
+    "noMeetings": "No meetings",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "daysAgo": "{count, plural, one {# day ago} other {# days ago}}",
+    "dateFormat": "MMM d"
+  },
+  "myTasks": {
+    "title": "Your tasks",
+    "subtitle": "Today and overdue",
+    "empty": "No tasks for today. A good time to breathe.",
+    "seeAll": "See all →",
+    "today": "Today",
+    "dueFormat": "MMM d"
+  },
+  "upcomingWeek": {
+    "title": "Next week",
+    "empty": "Nothing planned for next week yet.",
+    "seeAll": "See all →"
+  },
+  "activeProjects": {
+    "title": "Active projects",
+    "empty": "No active projects.",
+    "seeAll": "See all →",
+    "colProject": "Project",
+    "colStatus": "Status",
+    "colProgress": "Progress",
+    "colTeam": "Team",
+    "openTasks": "{count, plural, one {# open} other {# open}}",
+    "delivery": "due {date}"
+  },
+  "lastMeeting": {
+    "title": "Last meeting",
+    "empty": "No meetings recorded yet.",
+    "seeAll": "See all →",
+    "monthDowFormat": "MMM · EEE"
+  },
+  "wikiRecents": {
+    "title": "Recent in wiki",
+    "empty": "No pages yet.",
+    "seeAll": "See wiki →"
+  },
+  "error": {
+    "title": "We couldn''t load this section",
+    "fallback": "An unexpected error occurred while querying Notion.",
+    "ref": "ref: {digest}",
+    "retry": "Retry"
+  }
+}

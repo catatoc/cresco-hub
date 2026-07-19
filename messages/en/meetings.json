@@ -1,0 +1,39 @@
+{
+  "title": "Meetings",
+  "loading": "Loading…",
+  "noMeetings": "No meetings",
+  "liveBadge": "Live",
+  "hero": {
+    "dateFormat": "EEEE · MMMM d · 'Week' w",
+    "attendees": "Attendees",
+    "timeLabel": "Time",
+    "openInNotion": "Open in Notion",
+    "agenda": "Agenda",
+    "blocks": "{count, plural, one {# block} other {# blocks}}",
+    "tasksTitle": "Tasks from this meeting",
+    "tasksSummary": "{open, plural, one {# open} other {# open}} · {done, plural, one {# done} other {# done}}"
+  },
+  "due": {
+    "today": "Today",
+    "yesterday": "Yesterday"
+  },
+  "history": {
+    "title": "History",
+    "weekShort": "Wk {week}",
+    "empty": "No meetings yet."
+  },
+  "banner": {
+    "label": "Last meeting",
+    "viewPrevious": "View previous ",
+    "ariaLabel": "View previous meeting: {title}, {day}",
+    "dateFormat": "EEEE MMMM d"
+  },
+  "empty": {
+    "mineTitle": "You have no meetings yet.",
+    "mineAction": "See all for this client →",
+    "teamDescription": "No meetings recorded for this client yet."
+  },
+  "historyTrigger": {
+    "open": "Open history"
+  }
+}

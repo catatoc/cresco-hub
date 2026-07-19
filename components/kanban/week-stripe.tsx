@@ -1,6 +1,7 @@
 import type { Task } from '@/schemas/task';
 import { addDays, format, isSameDay, startOfWeek } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useLocale, useTranslations } from 'next-intl';
+import { dateLocale } from '@/lib/i18n/date-locale';
 import { cn } from '@/lib/utils';
 
 /**
@@ -8,6 +9,8 @@ import { cn } from '@/lib/utils';
  * sprint anchoring is handled at the page level via the sprint selector.
  */
 export function WeekStripe({ tasks }: { tasks: Task[] }) {
+  const t = useTranslations('kanban.weekStripe');
+  const locale = useLocale();
   const today = new Date();
   const start = startOfWeek(today, { weekStartsOn: 1 });
 
@@ -37,8 +40,8 @@ export function WeekStripe({ tasks }: { tasks: Task[] }) {
                   isToday && 'text-[#5e6ad2]',
                 )}
               >
-                {format(d, 'EEE', { locale: es })}
-                {isToday && <span className="hidden sm:inline"> · Hoy</span>}
+                {format(d, t('weekdayFormat'), { locale: dateLocale(locale) })}
+                {isToday && <span className="hidden sm:inline"> · {t('today')}</span>}
               </span>
               <span
                 className={cn(

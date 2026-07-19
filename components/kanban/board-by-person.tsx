@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import type { Task } from '@/schemas/task';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Project } from '@/schemas/project';
@@ -29,6 +30,7 @@ const STATUS_DOT: Record<string, string> = {
 };
 
 export function BoardByPerson({ tasks, setTasks, members, membersById, projectsById, view }: Props) {
+  const t = useTranslations('kanban.boardByPerson');
   const groups = groupTasksByPerson(tasks, members);
 
   return (
@@ -46,7 +48,7 @@ export function BoardByPerson({ tasks, setTasks, members, membersById, projectsB
         ))}
         {groups.length === 0 && (
           <div className="border border-dashed border-border rounded-lg p-6 text-center text-sm text-muted-foreground">
-            No hay tareas en este sprint.
+            {t('empty')}
           </div>
         )}
       </div>
@@ -67,6 +69,7 @@ function PersonSection({
   projectsById?: Map<string, Project>;
   view: 'classic' | 'week';
 }) {
+  const t = useTranslations('kanban.boardByPerson');
   const [open, setOpen] = useState(true);
 
   const counts = {
@@ -125,7 +128,7 @@ function PersonSection({
         )}
         <span className="flex flex-col leading-tight min-w-0 flex-1">
           <span className="text-[13px] font-semibold truncate">
-            {group.member?.name ?? 'Sin asignar'}
+            {group.member?.name ?? t('unassigned')}
           </span>
           {group.member && (group.member.area || group.member.role) && (
             <span className="text-[11px] text-muted-foreground truncate">

@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import type { AppContext } from '@/lib/auth/context';
 import { WorkspaceHeader } from './workspace-header';
 import { UserCard } from './user-card';
@@ -15,6 +16,7 @@ type SidebarProps = {
 };
 
 export function Sidebar({ context, className, groupId = 'sidebar-nav' }: SidebarProps) {
+  const t = useTranslations('shell');
   return (
     <aside
       className={cn(
@@ -30,40 +32,40 @@ export function Sidebar({ context, className, groupId = 'sidebar-nav' }: Sidebar
       <LayoutGroup id={groupId}>
         <div className="pb-3">
           <NavItem href="/" icon={<Home className="w-3.5 h-3.5" />} exact>
-            Home
+            {t('sidebar.home')}
           </NavItem>
           <NavItem href="/proxima-semana" icon={<CalendarClock className="w-3.5 h-3.5" />}>
-            Próxima semana
+            {t('sidebar.nextWeek')}
           </NavItem>
         </div>
 
         <div className="pb-3">
           <div className="text-[11px] uppercase text-muted-foreground font-medium tracking-[0.03em] px-2 pt-1.5 pb-1">
-            Workspace
+            {t('sidebar.workspace')}
           </div>
           <NavItem href="/tareas" icon={<CheckSquare className="w-3.5 h-3.5" />}>
-            Tareas
+            {t('sidebar.tasks')}
           </NavItem>
           <NavItem href="/reuniones" icon={<Calendar className="w-3.5 h-3.5" />}>
-            Reuniones
+            {t('sidebar.meetings')}
           </NavItem>
           <NavItem href="/wiki" icon={<BookOpen className="w-3.5 h-3.5" />}>
-            Wiki
+            {t('sidebar.wiki')}
           </NavItem>
           <NavItem href="/proyectos" icon={<FolderKanban className="w-3.5 h-3.5" />}>
-            Proyectos
+            {t('sidebar.projects')}
           </NavItem>
         </div>
 
         <div className="pb-3">
           <div className="text-[11px] uppercase text-muted-foreground font-medium tracking-[0.03em] px-2 pt-1.5 pb-1">
-            Recursos
+            {t('sidebar.resources')}
           </div>
           <NavItem
             href="/usuarios-de-prueba"
             icon={<Key className="w-3.5 h-3.5" />}
           >
-            Usuarios de prueba
+            {t('sidebar.testUsers')}
           </NavItem>
         </div>
       </LayoutGroup>
@@ -73,7 +75,10 @@ export function Sidebar({ context, className, groupId = 'sidebar-nav' }: Sidebar
         <SearchTrigger />
         <CreateTrigger />
       </div>
-      <UserCard name={context.memberName} role={`Miembro · ${context.customerName}`} />
+      <UserCard
+        name={context.memberName}
+        role={t('memberRole', { customer: context.customerName })}
+      />
     </aside>
   );
 }

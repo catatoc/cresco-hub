@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import type { Project } from '@/schemas/project';
 import { Tabs } from './tabs';
 import { ProjectCard } from './project-card';
@@ -16,6 +17,7 @@ function isActive(p: Project) {
 }
 
 export function ProjectsView({ projects }: { projects: Project[] }) {
+  const t = useTranslations('projects.view');
   const [tab, setTab] = useState<Tab>('active');
 
   const counts = useMemo<Record<Tab, number>>(() => ({
@@ -39,7 +41,7 @@ export function ProjectsView({ projects }: { projects: Project[] }) {
       <Tabs current={tab} counts={counts} onChange={setTab} />
       {visible.length === 0 ? (
         <div className="border border-dashed border-border rounded-xl p-6 sm:p-10 text-center text-sm text-muted-foreground">
-          No hay proyectos en esta categoría.
+          {t('emptyCategory')}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3 lg:gap-4">

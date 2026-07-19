@@ -5,6 +5,7 @@
 // y la UI obedece: con un documento es un botón tranquilo, con cuatro es un
 // dock, con cero no se renderiza. Un "lente" de luz sigue al hover.
 import { useRef, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { Brief, BriefSkeleton } from './brief';
 import { getProposal } from '@/app/(portal)/actions';
 import type { PortalPayments } from '@/lib/portal/payments';
@@ -20,13 +21,6 @@ interface Chip {
   alert: boolean; // punto vino pulsando (algo pendiente) vs musgo (al día)
 }
 
-const MODAL_TITLE: Record<DocKey, string> = {
-  pagos: 'Pagos · con crescō',
-  propuesta: 'Tu propuesta · con crescō',
-  accesos: 'Usuarios de prueba · para que explores tu app',
-  infra: 'Infraestructura · costos estimados',
-};
-
 // rol inferido del nombre de la cuenta — solo decide el color del badge
 const ROLES = ['doctor', 'secretaria', 'admin', 'paciente'] as const;
 type Rol = (typeof ROLES)[number] | 'cuenta';
@@ -36,6 +30,7 @@ function rolOf(u: PortalTestUser): Rol {
 }
 
 function CopyBtn({ value }: { value: string }) {
+  const t = useTranslations('portal.capsule.copy');
   const [ok, setOk] = useState(false);
   return (
     <button
@@ -46,31 +41,32 @@ function CopyBtn({ value }: { value: string }) {
         setTimeout(() => setOk(false), 1400);
       }}
     >
-      {ok ? '✓ listo' : 'copiar'}
+      {ok ? t('done') : t('copy')}
     </button>
   );
 }
 
 function CredCard({ u }: { u: PortalTestUser }) {
+  const t = useTranslations('portal.capsule');
   const [show, setShow] = useState(false);
   const rol = rolOf(u);
   const env = u.host?.includes('dev') ? 'dev' : 'app';
   return (
     <div className="cp-cred">
       <div className="cp-cred-top">
-        <span className={`cp-rol ${rol}`}><i />{rol}</span>
+        <span className={`cp-rol ${rol}`}><i />{t(`roles.${rol}`)}</span>
         <span className="cp-env">{env}</span>
       </div>
       <div className="cp-cred-name">{u.nombre}</div>
       <div className="cp-kv">
-        <span className="cp-kv-k">usuario</span>
+        <span className="cp-kv-k">{t('cred.user')}</span>
         <span className="cp-kv-v">{u.usuario}</span>
         <CopyBtn value={u.usuario} />
       </div>
       <div className="cp-kv">
-        <span className="cp-kv-k">clave</span>
+        <span className="cp-kv-k">{t('cred.pass')}</span>
         <span className="cp-kv-v">{show ? u.clave : '•'.repeat(Math.min(u.clave.length, 12))}</span>
-        <button className="cp-kv-btn" onClick={() => setShow((v) => !v)}>{show ? 'ocultar' : 'ver'}</button>
+        <button className="cp-kv-btn" onClick={() => setShow((v) => !v)}>{show ? t('cred.hide') : t('cred.show')}</button>
         <CopyBtn value={u.clave} />
       </div>
       {u.url && (
@@ -83,6 +79,8 @@ function CredCard({ u }: { u: PortalTestUser }) {
 }
 
 export function DocumentsCapsule({ payments, documents }: { payments: PortalPayments; documents: PortalDocuments }) {
+  const t = useTranslations('portal.capsule');
+  const locale = useLocale();
   const [open, setOpen] = useState<DocKey | null>(null);
   const [closing, setClosing] = useState(false);
   // propuesta lazy: undefined = sin pedir · null = no hay · objeto = lista
@@ -98,25 +96,25 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
   if (payments.items.length) {
     chips.push({
       key: 'pagos',
-      label: 'pagos',
-      state: pendingN ? `${payments.pendingLabel} pendiente` : 'al día',
+      label: t('chip.pagos'),
+      state: pendingN ? t('chip.pending', { label: payments.pendingLabel }) : t('chip.upToDate'),
       alert: pendingN > 0,
     });
   }
   if (documents.proposal) {
     chips.push({
       key: 'propuesta',
-      label: 'propuesta',
+      label: t('chip.propuesta'),
       state: documents.proposal.kind === 'file' ? documents.proposal.chipState : documents.proposal.dateLabel,
       alert: false,
     });
   }
   if (documents.testUsers.length) {
     const n = documents.testUsers.length;
-    chips.push({ key: 'accesos', label: 'accesos', state: `${n} cuenta${n !== 1 ? 's' : ''}`, alert: false });
+    chips.push({ key: 'accesos', label: t('chip.accesos'), state: t('chip.accounts', { count: n }), alert: false });
   }
   if (documents.infra) {
-    chips.push({ key: 'infra', label: 'infraestructura', state: `${documents.infra.monthlyLabel}/mes`, alert: false });
+    chips.push({ key: 'infra', label: t('chip.infra'), state: t('chip.perMonth', { label: documents.infra.monthlyLabel }), alert: false });
   }
   if (!chips.length) return null;
 
@@ -172,7 +170,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
           <div className="cp-tm-wrap" onClick={close}>
             <div className={`cp-tm ${open !== 'pagos' ? 'cp-tmw' : ''} ${closing ? 'closing' : ''}`} onClick={(e) => e.stopPropagation()}>
               <div className="cp-tmh">
-                <span className="cp-tmp">{MODAL_TITLE[open]}</span>
+                <span className="cp-tmp">{t(`modalTitle.${open}`)}</span>
                 <button className="cp-x" onClick={close}>×</button>
               </div>
 
@@ -182,21 +180,21 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                     {payments.pendingTotal > 0 ? (
                       <>
                         <span className="cp-pay-big">{payments.pendingLabel}</span>
-                        <span className="cp-pay-sub">pendiente · {payments.items.length} pago{payments.items.length !== 1 ? 's' : ''}</span>
+                        <span className="cp-pay-sub">{t('pay.pendingSub', { count: payments.items.length })}</span>
                       </>
                     ) : (
-                      <span className="cp-pay-ok">Estás al día 🌱</span>
+                      <span className="cp-pay-ok">{t('pay.upToDate')}</span>
                     )}
                   </div>
                   {payments.items.map((p) => (
                     <div className="cp-pcard" key={p.id}>
                       <div className="cp-pcard-top">
                         <span className="cp-pcard-tt">{p.description}</span>
-                        <span className={`cp-tpill ${p.paid ? 'done' : 'pend'}`}>{p.paid ? 'pagado' : 'pendiente'}</span>
+                        <span className={`cp-tpill ${p.paid ? 'done' : 'pend'}`}>{p.paid ? t('pay.paid') : t('pay.pending')}</span>
                       </div>
                       {p.notes && <div className="cp-pcard-notes">{p.notes}</div>}
                       <div className="cp-pcard-foot">
-                        <span className="cp-pcard-meta">{p.paid ? p.dateLabel ?? '' : p.dateLabel ? `vence ${p.dateLabel}` : 'fecha por definir'}</span>
+                        <span className="cp-pcard-meta">{p.paid ? p.dateLabel ?? '' : p.dateLabel ? t('pay.dueOn', { date: p.dateLabel }) : t('pay.dateTbd')}</span>
                         <span className="cp-pcard-amt">{p.amountLabel}</span>
                       </div>
                     </div>
@@ -209,7 +207,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                   {proposal === undefined ? (
                     <BriefSkeleton />
                   ) : proposal === null ? (
-                    <div className="cp-empty">No encontramos la propuesta. Tu PM de crescō la publicará pronto.</div>
+                    <div className="cp-empty">{t('propuesta.empty')}</div>
                   ) : (
                     <Brief blocks={proposal.blocks} />
                   )}
@@ -219,7 +217,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
               {open === 'accesos' && (
                 <div className="cp-tmb">
                   <div className="cp-doc-note">
-                    Cuentas del <b>entorno de prueba</b> para que explores tu aplicación — los datos son ficticios.
+                    {t.rich('accesos.note', { b: (chunks) => <b>{chunks}</b> })}
                   </div>
                   <div className="cp-cred-grid">
                     {documents.testUsers.map((u) => <CredCard key={u.id} u={u} />)}
@@ -235,10 +233,10 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                     <div className="cp-tmb">
                       <div className="cp-infra-hero">
                         <div>
-                          <span className="cp-infra-big">{infra.monthlyLabel}<small> / mes</small></span>
-                          <div className="cp-infra-sub">costo estimado de tu infraestructura</div>
+                          <span className="cp-infra-big">{infra.monthlyLabel}<small>{t('infra.perMonthWide')}</small></span>
+                          <div className="cp-infra-sub">{t('infra.estimatedCost')}</div>
                         </div>
-                        <div className="cp-infra-yr"><b>{infra.yearlyLabel}</b>estimado anual</div>
+                        <div className="cp-infra-yr"><b>{infra.yearlyLabel}</b>{t('infra.yearlyEstimate')}</div>
                       </div>
                       {infra.items.map((s) => (
                         <div className="cp-svc" key={s.id}>
@@ -247,18 +245,18 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                             {s.detail && <div className="cp-svc-d">{s.detail}</div>}
                           </div>
                           <div className="cp-svc-bar"><i style={{ width: `${Math.max(6, Math.round((s.monthly / maxMonthly) * 100))}%` }} /></div>
-                          <div className="cp-svc-amt">{s.monthlyLabel}<small>/mes</small></div>
+                          <div className="cp-svc-amt">{s.monthlyLabel}<small>{t('infra.perMonth')}</small></div>
                         </div>
                       ))}
                       <div className="cp-doc-note" style={{ marginTop: 14 }}>
-                        <b>Estimado, no factura.</b> Los servicios están a tu nombre; la cifra real puede variar con el uso.
+                        {t.rich('infra.noteFlat', { b: (chunks) => <b>{chunks}</b> })}
                       </div>
                     </div>
                   );
                 }
                 // simulador: "¿y si llegamos a X usuarios?"
                 const users = sim.stops[stop]!;
-                const fmtUsers = users.toLocaleString('es-VE');
+                const fmtUsers = users.toLocaleString(locale === 'es' ? 'es-VE' : 'en-US');
                 const fmtMoney = (n: number) =>
                   new Intl.NumberFormat('en-US', {
                     style: 'currency',
@@ -269,8 +267,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                 // filas: servicios sueltos + grupos (acordeón) con su total sumado
                 type SimItem = (typeof sim.items)[number];
                 const GROUP_INFO: Record<string, string> = {
-                  'Servidores · producción':
-                    'Las computadoras donde vive tu aplicación — una por cada herramienta, para que ninguna afecte a las otras.',
+                  'Servidores · producción': t('infra.groupInfo.servers'),
                 };
                 const rows: { name: string; detail: string | null; info: string | null; byStop: number[]; children?: SimItem[] }[] = [];
                 const byGroup = new Map<string, SimItem[]>();
@@ -282,7 +279,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                 for (const [g, children] of byGroup) {
                   rows.push({
                     name: g,
-                    detail: `${children.length} servicios web en Render · según uso`,
+                    detail: t('infra.groupDetail', { count: children.length }),
                     info: GROUP_INFO[g] ?? null,
                     byStop: sim.stops.map((_, i) => children.reduce((sum, c) => sum + c.byStop[i]!, 0)),
                     children,
@@ -297,7 +294,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                       className={`cp-svc-i ${infoOpen[id] ? 'on' : ''}`}
                       role="button"
                       tabIndex={0}
-                      aria-label={`qué es ${id}`}
+                      aria-label={t('infra.whatIs', { name: id })}
                       onClick={(e) => { e.stopPropagation(); setInfoOpen((m) => ({ ...m, [id]: !m[id] })); }}
                       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); setInfoOpen((m) => ({ ...m, [id]: !m[id] })); } }}
                     >i</span>
@@ -306,12 +303,12 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                   <div className="cp-tmb">
                     <div className="cp-infra-hero">
                       <div>
-                        <span className="cp-infra-big">{sim.totalLabelByStop[stop]}<small> / mes</small></span>
+                        <span className="cp-infra-big">{sim.totalLabelByStop[stop]}<small>{t('infra.perMonthWide')}</small></span>
                         <div className="cp-infra-sub">
-                          {stop === 0 ? <>hoy · ~{fmtUsers} usuarios activos</> : <>con ~<b>{fmtUsers}</b> usuarios activos</>}
+                          {stop === 0 ? t('infra.todayUsers', { users: fmtUsers }) : t.rich('infra.withUsers', { users: fmtUsers, b: (chunks) => <b>{chunks}</b> })}
                         </div>
                       </div>
-                      <div className="cp-infra-yr"><b>{sim.yearlyLabelByStop[stop]}</b>estimado anual</div>
+                      <div className="cp-infra-yr"><b>{sim.yearlyLabelByStop[stop]}</b>{t('infra.yearlyEstimate')}</div>
                     </div>
                     <div className="cp-sim">
                       <input
@@ -322,12 +319,12 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                         step={1}
                         value={stop}
                         onChange={(e) => setStop(Number(e.target.value))}
-                        aria-label="usuarios activos"
+                        aria-label={t('infra.activeUsers')}
                       />
                       <div className="cp-sim-stops">
                         {sim.stops.map((u, i) => (
                           <button key={u} className={`cp-sim-stop ${i === stop ? 'on' : ''}`} onClick={() => setStop(i)}>
-                            {i === 0 ? 'hoy' : u >= 1000 ? `${u / 1000}k` : u}
+                            {i === 0 ? t('infra.today') : u >= 1000 ? `${u / 1000}k` : u}
                           </button>
                         ))}
                       </div>
@@ -342,7 +339,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                                 {r.detail && <div className="cp-svc-d">{r.detail}</div>}
                               </div>
                               <div className="cp-svc-bar"><i style={{ width: bar(r.byStop[stop]!) }} /></div>
-                              <div className="cp-svc-amt">{fmtMoney(r.byStop[stop]!)}<small>/mes</small></div>
+                              <div className="cp-svc-amt">{fmtMoney(r.byStop[stop]!)}<small>{t('infra.perMonth')}</small></div>
                             </div>
                             {infoOpen[r.name] && r.info && <div className="cp-svc-info">{r.info}</div>}
                           </div>
@@ -361,7 +358,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                               {r.detail && <div className="cp-svc-d">{r.detail}</div>}
                             </div>
                             <div className="cp-svc-bar"><i style={{ width: bar(r.byStop[stop]!) }} /></div>
-                            <div className="cp-svc-amt">{fmtMoney(r.byStop[stop]!)}<small>/mes</small></div>
+                            <div className="cp-svc-amt">{fmtMoney(r.byStop[stop]!)}<small>{t('infra.perMonth')}</small></div>
                           </button>
                           {infoOpen[r.name] && r.info && <div className="cp-svc-info">{r.info}</div>}
                           {isOpen && r.children.map((c) => (
@@ -372,7 +369,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                                   {c.detail && <div className="cp-svc-d">{c.detail}</div>}
                                 </div>
                                 <div className="cp-svc-bar"><i style={{ width: bar(c.byStop[stop]!) }} /></div>
-                                <div className="cp-svc-amt">{c.labelByStop[stop]}<small>/mes</small></div>
+                                <div className="cp-svc-amt">{c.labelByStop[stop]}<small>{t('infra.perMonth')}</small></div>
                               </div>
                               {infoOpen[c.name] && c.info && <div className="cp-svc-info sub">{c.info}</div>}
                             </div>
@@ -381,9 +378,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
                       );
                     })}
                     <div className="cp-doc-note" style={{ marginTop: 14 }}>
-                      <b>Estimado, no factura.</b> Los montos son aproximados y dependerán del uso real;
-                      la proyección sigue los planes de cada proveedor (Render, Supabase, DigitalOcean,
-                      Postmark) — mover el control no contrata nada.
+                      {t.rich('infra.noteSim', { b: (chunks) => <b>{chunks}</b> })}
                     </div>
                   </div>
                 );

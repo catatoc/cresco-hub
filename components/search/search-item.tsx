@@ -1,5 +1,6 @@
 'use client';
 
+import { useLocale, useTranslations } from 'next-intl';
 import { CommandItem, CommandShortcut } from '@/components/ui/command';
 import { highlightMatch } from '@/lib/search/highlight';
 import type { SearchItem as SearchItemType } from '@/lib/search/types';
@@ -35,16 +36,18 @@ export function SearchItemRow({
   showShortcut?: boolean;
   staggerIndex?: number;
 }) {
+  const t = useTranslations('search');
+  const locale = useLocale();
   const icon = item.meta.emoji || TYPE_ICON[item.type];
   const metaParts: string[] = [];
   if (item.meta.projectName) metaParts.push(item.meta.projectName);
-  if (item.meta.date) metaParts.push(new Date(item.meta.date).toLocaleDateString('es'));
+  if (item.meta.date) metaParts.push(new Date(item.meta.date).toLocaleDateString(locale));
 
   return (
     <CommandItem
       value={`${item.type}::${item.id}::${item.title}`}
       onSelect={() => onSelect({})}
-      aria-label={`${item.title}, ${item.type}${metaParts.length ? ', ' + metaParts.join(', ') : ''}`}
+      aria-label={`${item.title}, ${t(`itemTypes.${item.type}`)}${metaParts.length ? ', ' + metaParts.join(', ') : ''}`}
       className="animate-in fade-in slide-in-from-bottom-1 fill-mode-both duration-(--duration-base)"
       data-stagger-item=""
       style={{ animationDelay: `${staggerIndex * 40}ms` }}
