@@ -1,15 +1,16 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import type { SearchFilter, SearchGroup } from '@/lib/search/types';
 
-const PILLS: Array<{ value: SearchFilter; label: string }> = [
-  { value: 'all', label: 'Todo' },
-  { value: 'tasks', label: 'Tareas' },
-  { value: 'meetings', label: 'Reuniones' },
-  { value: 'wiki', label: 'Wiki' },
-  { value: 'projects', label: 'Proyectos' },
-  { value: 'people', label: 'Personas' },
+const PILLS: Array<{ value: SearchFilter; labelKey: string }> = [
+  { value: 'all', labelKey: 'filters.all' },
+  { value: 'tasks', labelKey: 'filters.tasks' },
+  { value: 'meetings', labelKey: 'filters.meetings' },
+  { value: 'wiki', labelKey: 'filters.wiki' },
+  { value: 'projects', labelKey: 'filters.projects' },
+  { value: 'people', labelKey: 'filters.people' },
 ];
 
 export function SearchFilterPills({
@@ -21,6 +22,7 @@ export function SearchFilterPills({
   onChange: (next: SearchFilter) => void;
   groups: SearchGroup[];
 }) {
+  const t = useTranslations('search');
   const countFor = (v: SearchFilter) => {
     if (v === 'all') return groups.reduce((acc, g) => acc + g.count, 0);
     return groups.find((g) => g.type === v)?.count ?? 0;
@@ -38,7 +40,7 @@ export function SearchFilterPills({
   return (
     <div
       role="tablist"
-      aria-label="Filtrar por tipo"
+      aria-label={t('filters.ariaLabel')}
       className="flex gap-1.5 px-3 py-2 border-b border-border/50 bg-muted/30 overflow-x-auto"
     >
       {PILLS.map((p, idx) => {
@@ -58,7 +60,7 @@ export function SearchFilterPills({
                 : 'bg-white text-muted-foreground border-border hover:bg-muted',
             )}
           >
-            {p.label}
+            {t(p.labelKey)}
             {count > 0 && <span className="ml-1 opacity-60 text-[10px]">{count}</span>}
           </button>
         );

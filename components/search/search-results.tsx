@@ -1,16 +1,9 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { CommandGroup } from '@/components/ui/command';
 import { SearchItemRow } from './search-item';
 import type { SearchGroup, SearchItem } from '@/lib/search/types';
-
-const GROUP_LABEL: Record<SearchGroup['type'], string> = {
-  tasks: 'Tareas',
-  meetings: 'Reuniones',
-  wiki: 'Wiki',
-  projects: 'Proyectos',
-  people: 'Personas',
-};
 
 export function SearchResults({
   groups,
@@ -21,11 +14,12 @@ export function SearchResults({
   term: string;
   onSelect: (item: SearchItem, opts: { metaKey?: boolean }) => void;
 }) {
+  const t = useTranslations('search');
   let staggerIndex = 0;
   return (
     <>
       {groups.map((g) => (
-        <CommandGroup key={g.type} heading={`${GROUP_LABEL[g.type]} · ${g.count}`}>
+        <CommandGroup key={g.type} heading={`${t(`groups.${g.type}`)} · ${g.count}`}>
           {g.items.map((it, i) => {
             const sIdx = staggerIndex++;
             return (

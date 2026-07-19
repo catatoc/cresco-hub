@@ -1,0 +1,51 @@
+{
+  "trigger": {
+    "label": "Search",
+    "ariaLabel": "Search (⌘K)"
+  },
+  "palette": {
+    "title": "Search",
+    "description": "Search and navigate",
+    "placeholder": "Search tasks, meetings, wiki… or run an action"
+  },
+  "filters": {
+    "ariaLabel": "Filter by type",
+    "all": "All",
+    "tasks": "Tasks",
+    "meetings": "Meetings",
+    "wiki": "Wiki",
+    "projects": "Projects",
+    "people": "People"
+  },
+  "groups": {
+    "tasks": "Tasks",
+    "meetings": "Meetings",
+    "wiki": "Wiki",
+    "projects": "Projects",
+    "people": "People"
+  },
+  "itemTypes": {
+    "task": "task",
+    "meeting": "meeting",
+    "wiki": "wiki",
+    "project": "project",
+    "person": "person"
+  },
+  "empty": {
+    "suggestions": "✨ Suggestions for today",
+    "dueToday": "{count, plural, one {# task due today} other {# tasks due today}}",
+    "activeSprint": "Current sprint: {name}",
+    "daysLeft": "{days}d left",
+    "recents": "Recent",
+    "actions": "Actions",
+    "newTask": "New task"
+  },
+  "noResults": {
+    "title": "Nothing here",
+    "description": "No matches in your current workspace.",
+    "creating": "Creating…",
+    "createAction": "➕ Create \"{term}\" as a new task",
+    "taskCreated": "Task created",
+    "createError": "Couldn't create the task. Try again."
+  }
+}

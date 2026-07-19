@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import {
   Command,
   CommandDialog,
@@ -28,6 +29,7 @@ export function SearchPalette({
   customerId: string;
 }) {
   const router = useRouter();
+  const t = useTranslations('search');
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<SearchFilter>('all');
   const { recents, push } = useSearchRecents(customerId);
@@ -80,12 +82,17 @@ export function SearchPalette({
   }
 
   return (
-    <CommandDialog open={open} onOpenChange={onOpenChange} title="Buscador" description="Busca y navega">
+    <CommandDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t('palette.title')}
+      description={t('palette.description')}
+    >
       <Command shouldFilter={false}>
         <CommandInput
           value={query}
           onValueChange={setQuery}
-          placeholder="Busca tareas, reuniones, wiki… o ejecuta una acción"
+          placeholder={t('palette.placeholder')}
         />
 
         {hasTerm && (

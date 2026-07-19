@@ -1,31 +1,34 @@
 import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useLocale, useTranslations } from 'next-intl';
+import { dateLocale } from '@/lib/i18n/date-locale';
 import type { Meeting } from '@/schemas/meeting';
 
 type Props = { lastMeeting: Meeting | null };
 
 export function LastMeetingBanner({ lastMeeting }: Props) {
+  const t = useTranslations('meetings');
+  const locale = useLocale();
   if (!lastMeeting) return null;
   const d = parseISO(lastMeeting.createdTime);
-  const dayRaw = format(d, "EEEE d 'de' MMMM", { locale: es });
+  const dayRaw = format(d, t('banner.dateFormat'), { locale: dateLocale(locale) });
   const day = dayRaw.charAt(0).toUpperCase() + dayRaw.slice(1);
 
   return (
     <Link
       href={`/reuniones/${lastMeeting.id}`}
-      aria-label={`Ver reunión anterior: ${lastMeeting.title}, ${day}`}
+      aria-label={t('banner.ariaLabel', { title: lastMeeting.title, day })}
       className="flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-3.5 py-2.5 sm:py-2 mb-5 rounded-md border border-[#dfe1f2] bg-[#f6f7fc] text-[#3a3f6b] hover:bg-[#eeeffc] active:bg-[#e5e7fa] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring min-w-0"
     >
       <span className="text-[11.5px] leading-tight min-w-0 flex-1 truncate">
-        <strong className="font-semibold">Última reunión</strong>
+        <strong className="font-semibold">{t('banner.label')}</strong>
         <span className="mx-1.5 opacity-60 hidden sm:inline">·</span>
         <span className="hidden sm:inline">{day}</span>
         <span className="mx-1.5 opacity-60">·</span>
         <span className="opacity-80">{lastMeeting.title}</span>
       </span>
       <span className="text-[11px] font-semibold text-[#5e6ad2] shrink-0" aria-hidden="true">
-        <span className="hidden sm:inline">Ver anterior </span>→
+        <span className="hidden sm:inline">{t('banner.viewPrevious')}</span>→
       </span>
     </Link>
   );

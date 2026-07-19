@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { CommandGroup } from '@/components/ui/command';
 import { SearchItemRow } from './search-item';
 import { useSearchSuggestions } from '@/hooks/use-search-suggestions';
@@ -19,6 +20,7 @@ export function SearchEmptyState({
   onClose: () => void;
 }) {
   const router = useRouter();
+  const t = useTranslations('search');
   const { data: sug } = useSearchSuggestions(customerId, true);
 
   const recentAsItems: SearchItem[] = recents.map((r) => ({
@@ -33,7 +35,7 @@ export function SearchEmptyState({
   return (
     <>
       {(sug?.todayMeeting || sug?.dueToday || sug?.activeSprint) && (
-        <CommandGroup heading="✨ Sugerencias para hoy">
+        <CommandGroup heading={t('empty.suggestions')}>
           {sug?.todayMeeting && (
             <SearchItemRow
               term=""
@@ -57,7 +59,7 @@ export function SearchEmptyState({
               item={{
                 id: 'due-today',
                 type: 'task',
-                title: `${sug.dueToday.count} tareas vencen hoy`,
+                title: t('empty.dueToday', { count: sug.dueToday.count }),
                 url: '/tareas',
                 meta: {},
                 score: 0,
@@ -74,7 +76,7 @@ export function SearchEmptyState({
               item={{
                 id: 'active-sprint',
                 type: 'project',
-                title: `Sprint actual: ${sug.activeSprint.name}${sug.activeSprint.daysLeft != null ? ` (${sug.activeSprint.daysLeft}d restantes)` : ''}`,
+                title: `${t('empty.activeSprint', { name: sug.activeSprint.name })}${sug.activeSprint.daysLeft != null ? ` (${t('empty.daysLeft', { days: sug.activeSprint.daysLeft })})` : ''}`,
                 url: '/tareas',
                 meta: {},
                 score: 0,
@@ -89,7 +91,7 @@ export function SearchEmptyState({
       )}
 
       {recentAsItems.length > 0 && (
-        <CommandGroup heading="Recientes">
+        <CommandGroup heading={t('empty.recents')}>
           {recentAsItems.map((it, i) => (
             <SearchItemRow
               key={it.id}
@@ -102,13 +104,13 @@ export function SearchEmptyState({
         </CommandGroup>
       )}
 
-      <CommandGroup heading="Acciones">
+      <CommandGroup heading={t('empty.actions')}>
         <SearchItemRow
           term=""
           item={{
             id: 'action-new-task',
             type: 'task',
-            title: 'Nueva tarea',
+            title: t('empty.newTask'),
             url: '/tareas',
             meta: { emoji: '➕' },
             score: 0,

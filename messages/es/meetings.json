@@ -1,0 +1,39 @@
+{
+  "title": "Reuniones",
+  "loading": "Cargando…",
+  "noMeetings": "Sin reuniones",
+  "liveBadge": "En vivo",
+  "hero": {
+    "dateFormat": "EEEE · d 'de' MMMM · 'Semana' w",
+    "attendees": "Asistentes",
+    "timeLabel": "Hora",
+    "openInNotion": "Abrir en Notion",
+    "agenda": "Agenda",
+    "blocks": "{count, plural, one {# bloque} other {# bloques}}",
+    "tasksTitle": "Tareas de esta reunión",
+    "tasksSummary": "{open, plural, one {# abierta} other {# abiertas}} · {done, plural, one {# hecha} other {# hechas}}"
+  },
+  "due": {
+    "today": "Hoy",
+    "yesterday": "Ayer"
+  },
+  "history": {
+    "title": "Historial",
+    "weekShort": "Sem {week}",
+    "empty": "Sin reuniones aún."
+  },
+  "banner": {
+    "label": "Última reunión",
+    "viewPrevious": "Ver anterior ",
+    "ariaLabel": "Ver reunión anterior: {title}, {day}",
+    "dateFormat": "EEEE d 'de' MMMM"
+  },
+  "empty": {
+    "mineTitle": "No tienes reuniones todavía.",
+    "mineAction": "Ver todas las del cliente →",
+    "teamDescription": "Aún no hay reuniones registradas para este cliente."
+  },
+  "historyTrigger": {
+    "open": "Abrir historial"
+  }
+}

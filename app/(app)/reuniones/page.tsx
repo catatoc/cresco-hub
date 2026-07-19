@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { getTranslations } from 'next-intl/server';
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
 import { resolveScope, SCOPE_COOKIE } from '@/lib/scope/resolve';
@@ -30,6 +31,7 @@ export default async function ReunionesPage({
   searchParams: SearchParams;
 }) {
   const ctx = await requireContext();
+  const t = await getTranslations('meetings');
   const sp = await searchParams;
   const cookieStore = await cookies();
   const scope = resolveScope(
@@ -75,8 +77,8 @@ export default async function ReunionesPage({
     <PageEnter className="flex flex-col h-full overflow-hidden">
       <Topbar
         crumbs={[
-          { label: 'Reuniones' },
-          { label: current?.title ?? 'Sin reuniones', muted: true },
+          { label: t('title') },
+          { label: current?.title ?? t('noMeetings'), muted: true },
         ]}
       >
         <ScopePill
