@@ -10,6 +10,7 @@ export type ProjectStatusStyle = {
 export const PROJECT_STATUS_STYLES: Record<ProjectStatus, ProjectStatusStyle> = {
   Backlog:       { bg: 'bg-white border border-border', text: 'text-muted-foreground', dot: 'bg-[#a0a0a8]', progress: 'bg-[#a0a0a8]' },
   Planning:      { bg: 'bg-[#eeeffc]',                  text: 'text-[#5e6ad2]',         dot: 'bg-[#5e6ad2]', progress: 'bg-[#5e6ad2]' },
+  Starting:      { bg: 'bg-[#fdf0f7]',                  text: 'text-[#c05299]',         dot: 'bg-[#c05299]', progress: 'bg-[#c05299]' },
   'In Progress': { bg: 'bg-[#eff6ff]',                  text: 'text-[#3a5fcc]',         dot: 'bg-[#3a5fcc]', progress: 'bg-[#3a5fcc]' },
   Paused:        { bg: 'bg-[#faf0db]',                  text: 'text-[#c78a2c]',         dot: 'bg-[#c78a2c]', progress: 'bg-[#c78a2c]' },
   Done:          { bg: 'bg-[#e8f5ec]',                  text: 'text-[#3f9f5c]',         dot: 'bg-[#3f9f5c]', progress: 'bg-[#3f9f5c]' },
