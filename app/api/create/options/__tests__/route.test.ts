@@ -13,7 +13,7 @@ vi.mock('@/lib/notion/sprints', () => ({
 }));
 vi.mock('@/lib/notion/projects', () => ({
   queryProjectsByCustomer: vi.fn(async (): Promise<Project[]> => [
-    { id: 'p1', name: 'Mogos', icon: '🚀', summary: null, repoUrl: null, status: null, priority: null, completion: null, ownerIds: [], customerId: 'c1', teamIds: [], startDate: null, endDate: null, url: 'https://notion.so/p1' },
+    { id: 'p1', name: 'Mogos', icon: '🚀', summary: null, repoUrl: null, designUrl: null, status: null, priority: null, completion: null, ownerIds: [], customerId: 'c1', teamIds: [], startDate: null, endDate: null, url: 'https://notion.so/p1' },
   ]),
 }));
 vi.mock('@/lib/notion/team', () => ({

@@ -13,7 +13,7 @@ type Tab = 'active' | 'planning' | 'completed' | 'all';
 //   planning  = Planning + Backlog
 //   completed = Done + Canceled
 function isActive(p: Project) {
-  return p.status === 'In Progress' || p.status === 'Paused';
+  return p.status === 'In Progress' || p.status === 'Starting' || p.status === 'Paused';
 }
 
 export function ProjectsView({ projects }: { projects: Project[] }) {

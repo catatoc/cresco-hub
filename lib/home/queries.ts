@@ -22,8 +22,9 @@ export type HomeProject = Project & {
 
 const ACTIVE_STATUS_ORDER: Partial<Record<ProjectStatus, number>> = {
   'In Progress': 0,
-  Planning: 1,
-  Paused: 2,
+  Starting: 1,
+  Planning: 2,
+  Paused: 3,
 };
 
 function isActiveStatus(s: ProjectStatus | null): s is ProjectStatus {

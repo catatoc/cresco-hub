@@ -64,5 +64,9 @@
     "title": "Wiki",
     "empty": "Sin documentación asociada.",
     "viewAll": "Ver todo →"
+  },
+  "designModule": {
+    "title": "Diseño",
+    "open": "Abrir el diseño del proyecto"
   }
 }
