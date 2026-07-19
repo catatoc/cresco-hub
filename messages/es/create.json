@@ -1,0 +1,79 @@
+{
+  "modal": {
+    "discardConfirm": "¿Descartar?",
+    "title": "{type, select, task {Crear tarea} wiki {Crear wiki} other {Crear}}",
+    "description": "Modal de creación rápida. Tab para navegar, ⌘↵ para enviar.",
+    "typeTask": "📝 Tarea",
+    "typeWiki": "📖 Wiki",
+    "typeNameTask": "Tarea",
+    "typeNameWiki": "Wiki",
+    "typeAriaActive": "Tipo: {name}, activo",
+    "typeAriaInactive": "Tipo: {name}, presiona para cambiar a {name}",
+    "footer": "⌘↵ Crear · ⇧⌘↵ Crear otra · Esc cerrar"
+  },
+  "trigger": {
+    "label": "Crear",
+    "ariaLabel": "Crear (C)"
+  },
+  "tareaForm": {
+    "inheritedSprint": "Sprint heredado",
+    "inheritedProject": "Proyecto heredado",
+    "titlePlaceholder": "Título de la tarea…",
+    "descriptionPlaceholder": "Descripción (opcional)",
+    "createAnother": "Crear otra (⇧⌘↵)",
+    "creating": "Creando…",
+    "submit": "Crear ⌘↵",
+    "created": "Tarea creada",
+    "view": "Ver",
+    "createError": "No pude crear la tarea",
+    "createErrorRetry": "No pude crear la tarea. Reintentar"
+  },
+  "wikiForm": {
+    "inheritedProject": "Proyecto heredado",
+    "inheritedMeeting": "Reunión heredada",
+    "changeEmoji": "Cambiar emoji",
+    "titlePlaceholder": "Título de la página…",
+    "createAnother": "Crear otra (⇧⌘↵)",
+    "createAnotherAria": "Crear otra",
+    "creating": "Creando…",
+    "submit": "Crear y abrir ⌘↵",
+    "created": "Wiki creada",
+    "open": "Abrir",
+    "createError": "No pude crear la wiki",
+    "createErrorRetry": "No pude crear la wiki. Reintentar"
+  },
+  "chipCategory": {
+    "add": "+ Categoría",
+    "withCount": "Categoría · {count}"
+  },
+  "chipDate": {
+    "add": "+ Fecha",
+    "remove": "Quitar fecha",
+    "label": "Fecha"
+  },
+  "chipMeeting": {
+    "add": "+ Reunión",
+    "remove": "Quitar reunión",
+    "noResults": "Sin resultados"
+  },
+  "chipPriority": {
+    "add": "+ Prioridad",
+    "remove": "Quitar prioridad"
+  },
+  "chipProject": {
+    "add": "+ Proyecto",
+    "remove": "Quitar proyecto",
+    "noResults": "Sin resultados"
+  },
+  "chipSprint": {
+    "add": "+ Sprint",
+    "remove": "Quitar sprint",
+    "noResults": "Sin resultados"
+  },
+  "chipTeam": {
+    "add": "+ Asignar",
+    "withCount": "Asignar · {count}",
+    "searchPlaceholder": "Buscar miembro…",
+    "noResults": "Sin resultados"
+  }
+}

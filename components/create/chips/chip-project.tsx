@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useChipOptions, type ChipOption } from './use-chip-options';
 
 export type ChipValue = { id: string; label: string };
@@ -12,6 +13,7 @@ export function ChipProject({
   onChange: (v: ChipValue | null) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const t = useTranslations('create.chipProject');
   const { data, loading } = useChipOptions('project', undefined, open);
 
   if (value) {
@@ -20,7 +22,7 @@ export function ChipProject({
         📂 {value.label}
         <button
           type="button"
-          aria-label="Quitar proyecto"
+          aria-label={t('remove')}
           onClick={() => onChange(null)}
           className="hover:bg-black/[0.06] rounded-sm w-3 h-3 inline-flex items-center justify-center"
         >
@@ -36,7 +38,7 @@ export function ChipProject({
         onClick={() => setOpen((o) => !o)}
         className="px-2 py-0.5 rounded-md text-[11px] border border-dashed text-muted-foreground hover:text-foreground"
       >
-        + Proyecto
+        {t('add')}
       </button>
       {open && (
         <div
@@ -67,7 +69,7 @@ export function ChipProject({
             ))
           ) : (
             <div className="px-2 py-1 text-[12px] text-muted-foreground">
-              Sin resultados
+              {t('noResults')}
             </div>
           )}
         </div>

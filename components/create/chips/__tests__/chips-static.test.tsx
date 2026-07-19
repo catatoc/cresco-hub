@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@/components/create/__tests__/intl-render';
 import { ChipPriority } from '../chip-priority';
 import { ChipDate } from '../chip-date';
 import { ChipCategory } from '../chip-category';

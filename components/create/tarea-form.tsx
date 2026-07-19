@@ -3,6 +3,7 @@
 import { useEffect, useState, type Ref } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 import { useCreateContext } from './create-provider';
 import { useCreateContext as useInheritedContext } from '@/hooks/use-create-context';
 import { ChipSprint } from './chips/chip-sprint';
@@ -36,10 +37,11 @@ export function TareaForm({
   const router = useRouter();
   const { close } = useCreateContext();
   const inherited = useInheritedContext();
+  const t = useTranslations('create.tareaForm');
 
   const [sprint, setSprint] = useState<ChipValue | null>(() => {
     if (inherited.sprintId) {
-      return { id: inherited.sprintId, label: 'Sprint heredado' };
+      return { id: inherited.sprintId, label: t('inheritedSprint') };
     }
     if (currentSprint) {
       return { id: currentSprint.id, label: currentSprint.name };
@@ -47,7 +49,7 @@ export function TareaForm({
     return null;
   });
   const [project, setProject] = useState<ChipValue | null>(
-    inherited.projectId ? { id: inherited.projectId, label: 'Proyecto heredado' } : null,
+    inherited.projectId ? { id: inherited.projectId, label: t('inheritedProject') } : null,
   );
   const [assignees, setAssignees] = useState<TeamValue[]>(() =>
     currentMember ? [{ id: currentMember.id, label: currentMember.name }] : [],
@@ -81,14 +83,14 @@ export function TareaForm({
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        toast.error(body.error ?? 'No pude crear la tarea');
+        toast.error(body.error ?? t('createError'));
         setSubmitting(false);
         return;
       }
       const created = await res.json();
-      toast.success('Tarea creada', {
+      toast.success(t('created'), {
         action: {
-          label: 'Ver',
+          label: t('view'),
           onClick: () => router.push(`/tareas/${created.id}`),
         },
       });
@@ -110,7 +112,7 @@ export function TareaForm({
         close();
       }
     } catch (e) {
-      toast.error('No pude crear la tarea. Reintentar');
+      toast.error(t('createErrorRetry'));
       setSubmitting(false);
     }
   }
@@ -133,13 +135,13 @@ export function TareaForm({
       <input
         ref={titleRef}
         autoFocus
-        placeholder="Título de la tarea…"
+        placeholder={t('titlePlaceholder')}
         value={title}
         onChange={(e) => onTitleChange(e.target.value)}
         className="w-full text-base outline-none bg-transparent placeholder:text-muted-foreground"
       />
       <textarea
-        placeholder="Descripción (opcional)"
+        placeholder={t('descriptionPlaceholder')}
         value={description}
         onChange={(e) => onDescriptionChange(e.target.value)}
         rows={2}
@@ -159,7 +161,7 @@ export function TareaForm({
             checked={createAnother}
             onChange={(e) => setCreateAnother(e.target.checked)}
           />
-          Crear otra (⇧⌘↵)
+          {t('createAnother')}
         </label>
         <div className="flex items-center gap-2">
           {tooLong && (
@@ -171,7 +173,7 @@ export function TareaForm({
             onClick={() => submit({ another: createAnother })}
             className="text-[12px] px-3 py-1 rounded-md bg-foreground text-background disabled:opacity-50"
           >
-            {submitting ? 'Creando…' : 'Crear ⌘↵'}
+            {submitting ? t('creating') : t('submit')}
           </button>
         </div>
       </div>

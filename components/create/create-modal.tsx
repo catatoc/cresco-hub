@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   Dialog,
   DialogContent,
@@ -25,6 +26,7 @@ export function CreateModal({
   currentSprint?: CreateSprintDefault | null;
 }) {
   const { isOpen, type, setType, close } = useCreateContext();
+  const t = useTranslations('create.modal');
 
   // Title/description shared across type switches (preserved per spec).
   const [title, setTitle] = useState('');
@@ -42,7 +44,7 @@ export function CreateModal({
   function handleOpenChange(open: boolean) {
     if (open) return;
     if (title.trim().length === 0) close();
-    else if (window.confirm('¿Descartar?')) close();
+    else if (window.confirm(t('discardConfirm'))) close();
   }
 
   const isTask = type === 'task';
@@ -50,22 +52,28 @@ export function CreateModal({
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[560px] p-0 gap-0">
-        <DialogTitle className="sr-only">Crear {isTask ? 'tarea' : 'wiki'}</DialogTitle>
-        <DialogDescription className="sr-only">
-          Quick‑create modal. Tab to navigate, ⌘↵ to submit.
-        </DialogDescription>
+        <DialogTitle className="sr-only">{t('title', { type })}</DialogTitle>
+        <DialogDescription className="sr-only">{t('description')}</DialogDescription>
 
         <div className="px-4 pt-3 pb-2 flex items-center gap-1.5 border-b">
           <TypePill
             active={isTask}
-            label="📝 Tarea"
-            ariaLabel={`Tipo: Tarea${isTask ? ', activo' : ', presiona para cambiar a Tarea'}`}
+            label={t('typeTask')}
+            ariaLabel={
+              isTask
+                ? t('typeAriaActive', { name: t('typeNameTask') })
+                : t('typeAriaInactive', { name: t('typeNameTask') })
+            }
             onClick={() => setType('task')}
           />
           <TypePill
             active={!isTask}
-            label="📖 Wiki"
-            ariaLabel={`Tipo: Wiki${!isTask ? ', activo' : ', presiona para cambiar a Wiki'}`}
+            label={t('typeWiki')}
+            ariaLabel={
+              !isTask
+                ? t('typeAriaActive', { name: t('typeNameWiki') })
+                : t('typeAriaInactive', { name: t('typeNameWiki') })
+            }
             onClick={() => setType('wiki')}
           />
         </div>
@@ -93,7 +101,7 @@ export function CreateModal({
         </div>
 
         <div className="px-4 py-2.5 border-t bg-muted/40 flex items-center justify-between text-[11px] text-muted-foreground">
-          <span>⌘↵ Crear · ⇧⌘↵ Crear otra · Esc cerrar</span>
+          <span>{t('footer')}</span>
         </div>
       </DialogContent>
     </Dialog>

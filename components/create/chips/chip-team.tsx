@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { useChipOptions, type ChipOption } from './use-chip-options';
 
 export type ChipValue = { id: string; label: string };
@@ -14,6 +15,7 @@ export function ChipTeam({
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
   const [debouncedQ, setDebouncedQ] = useState('');
+  const t = useTranslations('create.chipTeam');
 
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQ(q), 200);
@@ -43,7 +45,7 @@ export function ChipTeam({
             : 'px-2 py-0.5 rounded-md text-[11px] border border-dashed text-muted-foreground hover:text-foreground'
         }
       >
-        {value.length > 0 ? `Asignar · ${value.length}` : '+ Asignar'}
+        {value.length > 0 ? t('withCount', { count: value.length }) : t('add')}
       </button>
       {open && (
         <div
@@ -58,7 +60,7 @@ export function ChipTeam({
         >
           <input
             autoFocus
-            placeholder="Buscar miembro…"
+            placeholder={t('searchPlaceholder')}
             value={q}
             onChange={(e) => setQ(e.target.value)}
             className="w-full text-[12px] px-2 py-1 outline-none border-b mb-1"
@@ -86,7 +88,7 @@ export function ChipTeam({
             })
           ) : debouncedQ ? (
             <div className="px-2 py-1 text-[12px] text-muted-foreground">
-              Sin resultados
+              {t('noResults')}
             </div>
           ) : null}
         </div>

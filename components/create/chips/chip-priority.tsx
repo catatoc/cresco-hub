@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import type { TaskPriority } from '@/schemas/task';
 
 const OPTIONS: TaskPriority[] = ['Low', 'Medium', 'High'];
@@ -12,13 +13,14 @@ export function ChipPriority({
   onChange: (v: TaskPriority | null) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const t = useTranslations('create.chipPriority');
   if (value) {
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] bg-indigo-50 text-indigo-700">
         {value}
         <button
           type="button"
-          aria-label="Quitar prioridad"
+          aria-label={t('remove')}
           onClick={() => onChange(null)}
           className="hover:bg-black/[0.06] rounded-sm w-3 h-3 inline-flex items-center justify-center"
         >
@@ -34,7 +36,7 @@ export function ChipPriority({
         onClick={() => setOpen((o) => !o)}
         className="px-2 py-0.5 rounded-md text-[11px] border border-dashed text-muted-foreground hover:text-foreground"
       >
-        + Prioridad
+        {t('add')}
       </button>
       {open && (
         <div
