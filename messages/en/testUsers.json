@@ -1,0 +1,24 @@
+{
+  "page": {
+    "breadcrumb": "Test users",
+    "title": "Test users",
+    "subtitle": "Shared credentials for QA and staging environments."
+  },
+  "empty": {
+    "title": "No test users",
+    "description": "There are no credentials assigned to {memberName} for {customerName} yet. Add them from Notion.",
+    "openInNotion": "Open in Notion ↗"
+  },
+  "credential": {
+    "user": "Username",
+    "password": "Password",
+    "url": "URL",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "openUrl": "Open URL",
+    "copy": "Copy {field}",
+    "copied": "Copied",
+    "passwordCopied": "Password copied",
+    "copyError": "Couldn't copy"
+  }
+}

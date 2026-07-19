@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { supabaseBrowser } from '@/lib/supabase/client';
+import { LanguageToggle } from '@/components/common/language-toggle';
 import styles from '@/app/(auth)/login/login.module.css';
 
 // La escena del onboarding, 1:1: amanecer, la luz que escala la cima,
@@ -13,6 +15,7 @@ export function LoginExperience() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
+  const t = useTranslations('auth.login');
 
   useEffect(() => {
     const scene = sceneRef.current;
@@ -63,12 +66,13 @@ export function LoginExperience() {
     });
     if (error) {
       setLoading(false);
-      toast.error('No pudimos iniciar sesión con Google.');
+      toast.error(t('oauthError'));
     }
   }
 
   return (
     <div className={styles.scene} ref={sceneRef}>
+      <LanguageToggle className="absolute top-[max(1rem,env(safe-area-inset-top))] right-4 z-20" />
       <div className={styles.horizon} />
       <div className={styles.sun} />
       <div className={styles.mist} />
@@ -151,7 +155,7 @@ export function LoginExperience() {
       <div className={styles.grain} />
 
       <div className={styles.ui}>
-        <div className={styles.eye}>Crecemos contigo</div>
+        <div className={styles.eye}>{t('eyebrow')}</div>
         <div className={styles.big}>crescō<span className={styles.d}>.</span></div>
         <button
           className={`${styles.enter} ${loading ? styles.enterLoading : ''}`}
@@ -159,15 +163,15 @@ export function LoginExperience() {
           type="button"
         >
           <span className={styles.spin} />
-          <span className={styles.lbl}>{loading ? 'Entrando…' : 'Entra a tu proyecto'}</span>
+          <span className={styles.lbl}>{loading ? t('entering') : t('enter')}</span>
           <span className={styles.arr}>→</span>
         </button>
       </div>
 
       <div className={styles.legal}>
-        <Link href="/privacy">Privacidad</Link>
+        <Link href="/privacy">{t('privacy')}</Link>
         <i aria-hidden />
-        <Link href="/terms">Términos</Link>
+        <Link href="/terms">{t('terms')}</Link>
       </div>
     </div>
   );

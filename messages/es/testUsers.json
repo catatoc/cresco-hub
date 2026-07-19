@@ -1,0 +1,24 @@
+{
+  "page": {
+    "breadcrumb": "Usuarios de prueba",
+    "title": "Usuarios de prueba",
+    "subtitle": "Credenciales compartidas para entornos de QA y staging."
+  },
+  "empty": {
+    "title": "Sin usuarios de prueba",
+    "description": "Aún no hay credenciales asignadas a {memberName} para {customerName}. Agrégalas desde Notion.",
+    "openInNotion": "Abrir en Notion ↗"
+  },
+  "credential": {
+    "user": "Usuario",
+    "password": "Clave",
+    "url": "URL",
+    "showPassword": "Mostrar clave",
+    "hidePassword": "Ocultar clave",
+    "openUrl": "Abrir URL",
+    "copy": "Copiar {field}",
+    "copied": "Copiado",
+    "passwordCopied": "Clave copiada",
+    "copyError": "No se pudo copiar"
+  }
+}

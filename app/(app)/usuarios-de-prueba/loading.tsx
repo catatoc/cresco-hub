@@ -1,9 +1,11 @@
+import { useTranslations } from 'next-intl';
 import { Topbar } from '@/components/shell/topbar';
 
 export default function Loading() {
+  const t = useTranslations('testUsers.page');
   return (
     <>
-      <Topbar crumbs={[{ label: 'Usuarios de prueba' }]} />
+      <Topbar crumbs={[{ label: t('breadcrumb') }]} />
       <div className="flex-1 overflow-auto">
         <div className="px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10 pb-[calc(4rem+env(safe-area-inset-bottom)+1rem)] lg:pb-12 max-w-[900px] mx-auto w-full">
           <div className="mb-5 space-y-1.5">

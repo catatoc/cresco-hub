@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import type { TestUser } from '@/schemas/test-user';
 import { EmptyState } from '@/components/common/empty-state';
 import { TestUserCard } from './test-user-card';
@@ -12,12 +13,14 @@ type Props = {
 };
 
 export function TestUserGrid({ users, memberName, customerName }: Props) {
+  const t = useTranslations('testUsers.empty');
+
   if (users.length === 0) {
     return (
       <EmptyState
         icon="🔑"
-        title="Sin usuarios de prueba"
-        description={`Aún no hay credenciales asignadas a ${memberName} para ${customerName}. Agrégalas desde Notion.`}
+        title={t('title')}
+        description={t('description', { memberName, customerName })}
         action={
           <a
             href={NOTION_DB_URL}
@@ -25,7 +28,7 @@ export function TestUserGrid({ users, memberName, customerName }: Props) {
             rel="noopener noreferrer"
             className="text-[13px] text-[#2563eb] hover:underline"
           >
-            Abrir en Notion ↗
+            {t('openInNotion')}
           </a>
         }
       />

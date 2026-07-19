@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Eye, EyeOff, Copy, ExternalLink } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -9,14 +10,16 @@ const MASK = '••••••••';
 const AUTO_HIDE_MS = 30_000;
 
 type Props = {
-  label: 'Usuario' | 'Clave' | 'URL';
+  field: 'user' | 'password' | 'url';
   value: string;
   type: 'text' | 'password' | 'url';
 };
 
-export function CredentialField({ label, value, type }: Props) {
+export function CredentialField({ field, value, type }: Props) {
+  const t = useTranslations('testUsers.credential');
   const [revealed, setRevealed] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const label = t(field);
 
   useEffect(() => {
     if (!revealed) return;
@@ -29,9 +32,9 @@ export function CredentialField({ label, value, type }: Props) {
   const onCopy = async () => {
     try {
       await navigator.clipboard.writeText(value);
-      toast.success(label === 'Clave' ? 'Clave copiada' : 'Copiado');
+      toast.success(field === 'password' ? t('passwordCopied') : t('copied'));
     } catch {
-      toast.error('No se pudo copiar');
+      toast.error(t('copyError'));
     }
   };
 
@@ -67,7 +70,7 @@ export function CredentialField({ label, value, type }: Props) {
           <button
             type="button"
             onClick={() => setRevealed((v) => !v)}
-            aria-label={revealed ? 'Ocultar clave' : 'Mostrar clave'}
+            aria-label={revealed ? t('hidePassword') : t('showPassword')}
             className="w-6 h-6 inline-flex items-center justify-center rounded hover:bg-black/[0.06] hover:text-foreground"
           >
             {revealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
@@ -78,7 +81,7 @@ export function CredentialField({ label, value, type }: Props) {
             href={value}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Abrir URL"
+            aria-label={t('openUrl')}
             className="w-6 h-6 inline-flex items-center justify-center rounded hover:bg-black/[0.06] hover:text-foreground"
           >
             <ExternalLink className="w-3.5 h-3.5" />
@@ -87,7 +90,7 @@ export function CredentialField({ label, value, type }: Props) {
         <button
           type="button"
           onClick={onCopy}
-          aria-label={`Copiar ${label.toLowerCase()}`}
+          aria-label={t('copy', { field: label })}
           className="w-6 h-6 inline-flex items-center justify-center rounded hover:bg-black/[0.06] hover:text-foreground"
         >
           <Copy className="w-3.5 h-3.5" />

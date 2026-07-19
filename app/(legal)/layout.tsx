@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 // Páginas legales con la superficie crescō: arena, tinta y moss.
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
+  const t = useTranslations('legal');
   return (
     <div className="min-h-screen min-h-[100dvh] bg-[linear-gradient(180deg,#E7E1D4_0%,#ECE6DA_38%,#F1ECE2_66%,#F7F3EC_100%)] text-[#1A1612] pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
       <header className="border-b-[0.5pt] border-[#D4CCBC]/70">
@@ -12,10 +14,10 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
           </Link>
           <nav className="flex items-center gap-5 text-xs text-[#8C8377]">
             <Link href="/privacy" className="hover:text-[#2A3B2D] transition-colors">
-              Privacidad
+              {t('nav.privacy')}
             </Link>
             <Link href="/terms" className="hover:text-[#2A3B2D] transition-colors">
-              Términos
+              {t('nav.terms')}
             </Link>
           </nav>
         </div>
@@ -28,7 +30,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
       </main>
 
       <footer className="border-t-[0.5pt] border-[#D4CCBC]/70 mt-4">
-        <div className="max-w-3xl mx-auto px-6 py-6 text-xs text-[#8C8377]">© 2026 crescō</div>
+        <div className="max-w-3xl mx-auto px-6 py-6 text-xs text-[#8C8377]">{t('footer')}</div>
       </footer>
     </div>
   );

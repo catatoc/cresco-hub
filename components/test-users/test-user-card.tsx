@@ -18,10 +18,10 @@ export function TestUserCard({ user }: Props) {
       </header>
       <div className="space-y-2">
         {user.usuario && (
-          <CredentialField label="Usuario" value={user.usuario} type="text" />
+          <CredentialField field="user" value={user.usuario} type="text" />
         )}
-        <CredentialField label="Clave" value={user.clave} type="password" />
-        {user.url && <CredentialField label="URL" value={user.url} type="url" />}
+        <CredentialField field="password" value={user.clave} type="password" />
+        {user.url && <CredentialField field="url" value={user.url} type="url" />}
       </div>
     </article>
   );
