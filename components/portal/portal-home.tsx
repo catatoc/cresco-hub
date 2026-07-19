@@ -10,7 +10,7 @@ import { Brief, BriefSkeleton } from './brief';
 import { DocumentsCapsule } from './capsule';
 import { PortalTour } from './tour';
 import { PortalTimeline, taskState } from './timeline';
-import { toggleMyTask, getProjectBrief } from '@/app/(portal)/actions';
+import { toggleMyTask, getProjectBrief, getTaskBody } from '@/app/(portal)/actions';
 import { timelineGeom, TODAY, type PortalData, type PortalProject, type PortalTask } from '@/lib/portal/data';
 import type { PortalPayments } from '@/lib/portal/payments';
 import type { PortalDocuments } from '@/lib/portal/documents';
@@ -41,6 +41,8 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
   // así que un brief viejo se refresca en silencio al reabrir el proyecto
   const [briefs, setBriefs] = useState<Record<string, { blocks: ProjectBlock[]; at: number }>>({});
   const [taskOpen, setTaskOpen] = useState<{ task: PortalTask; projectName: string | null } | null>(null);
+  // cuerpo de la tarea (specs de su página en Notion), cacheado como los briefs
+  const [taskBodies, setTaskBodies] = useState<Record<string, { blocks: ProjectBlock[]; at: number }>>({});
   const [drawerClosing, setDrawerClosing] = useState(false);
   const [modalClosing, setModalClosing] = useState(false);
   const [doneOverride, setDoneOverride] = useState<Record<string, boolean>>({});
@@ -85,6 +87,16 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
       void getProjectBrief(p.id)
         .then((blocks) => cacheBrief(p.id, blocks))
         .catch(() => { if (!cached) cacheBrief(p.id, []); });
+    }
+  }
+
+  function openTask(task: PortalTask, projectName: string | null) {
+    setTaskOpen({ task, projectName });
+    const cached = taskBodies[task.id];
+    if (!cached || Date.now() - cached.at > BRIEF_STALE_MS) {
+      void getTaskBody(task.id)
+        .then((blocks) => setTaskBodies((m) => ({ ...m, [task.id]: { blocks, at: Date.now() } })))
+        .catch(() => { if (!cached) setTaskBodies((m) => ({ ...m, [task.id]: { blocks: [], at: Date.now() } })); });
     }
   }
 
@@ -173,7 +185,7 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
                   </div>
                 </div>
                 <div className="cp-tlw">
-                  <PortalTimeline geom={geom} tasks={p.tasks} drawDelay={0.4 + i * 0.08} onTaskClick={(t) => setTaskOpen({ task: t, projectName: p.name })} />
+                  <PortalTimeline geom={geom} tasks={p.tasks} drawDelay={0.4 + i * 0.08} onTaskClick={(t) => openTask(t, p.name)} />
                   <div className="cp-tlm"><span>{p.startLabel}</span><span>{p.endLabel}</span></div>
                 </div>
                 <span className={`cp-pill ${p.paused ? 'pause' : ''}`}>{p.pill}</span>
@@ -209,11 +221,11 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
                     className="cp-tb cp-tb-open"
                     role="button"
                     tabIndex={0}
-                    onClick={() => setTaskOpen({ task: t, projectName: t.projectName ?? null })}
+                    onClick={() => openTask(t, t.projectName ?? null)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        setTaskOpen({ task: t, projectName: t.projectName ?? null });
+                        openTask(t, t.projectName ?? null);
                       }
                     }}
                   >
@@ -320,6 +332,7 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
         const done = isDone(t);
         const late = overdue(t, done);
         const cls = done ? 'done' : late ? 'late' : taskState(t).cls;
+        const body = taskBodies[t.id]?.blocks;
         return (
           <>
             <div className={`cp-scrim ${modalClosing ? 'closing' : ''}`} style={{ zIndex: 70 }} onClick={closeTask} />
@@ -332,6 +345,11 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
                   <span className={late ? 'late' : ''}>{late ? '⚠ ' : ''}{t.due ? fmtFull(t.due, locale) : tr('common.noDate')}</span>
                   <span className={`cp-tpill ${cls}`}>{tr(`taskState.${cls}`)}</span>
                 </div>
+                {body === undefined ? (
+                  <div className="cp-tmb"><BriefSkeleton /></div>
+                ) : body.length > 0 ? (
+                  <div className="cp-tmb"><Brief blocks={body} /></div>
+                ) : null}
               </div>
             </div>
           </>

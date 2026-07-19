@@ -118,14 +118,14 @@ export function parseProjectBlocks(blocks: any[]): ProjectBlock[] {
 }
 
 /**
- * El brief del proyecto. Gate de seguridad: solo si la relación Customer
- * contiene el customer del contexto; si no, null → 404.
+ * Contenido de una página (proyecto o tarea) con gate de seguridad: solo si
+ * la relación Customer de la página contiene el customer del contexto.
  */
-export async function loadProjectContent(ctx: AppContext, projectId: string): Promise<ProjectBlock[] | null> {
+async function loadCustomerPageContent(ctx: AppContext, pageId: string): Promise<ProjectBlock[] | null> {
   const notion = getNotion();
   let page: any;
   try {
-    page = await notion.pages.retrieve({ page_id: projectId });
+    page = await notion.pages.retrieve({ page_id: pageId });
   } catch {
     return null;
   }
@@ -138,7 +138,7 @@ export async function loadProjectContent(ctx: AppContext, projectId: string): Pr
   let cursor: string | undefined;
   do {
     const res: any = await notion.blocks.children.list({
-      block_id: projectId,
+      block_id: pageId,
       page_size: 100,
       ...(cursor ? { start_cursor: cursor } : {}),
     });
@@ -147,4 +147,14 @@ export async function loadProjectContent(ctx: AppContext, projectId: string): Pr
   } while (cursor);
 
   return parseProjectBlocks(blocks);
+}
+
+/** El brief del proyecto; null si el proyecto no es del customer → 404. */
+export async function loadProjectContent(ctx: AppContext, projectId: string): Promise<ProjectBlock[] | null> {
+  return loadCustomerPageContent(ctx, projectId);
+}
+
+/** El cuerpo de una tarea (los specs de su página en Notion), mismo gate. */
+export async function loadTaskContent(ctx: AppContext, taskId: string): Promise<ProjectBlock[] | null> {
+  return loadCustomerPageContent(ctx, taskId);
 }
