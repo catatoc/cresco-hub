@@ -40,7 +40,7 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
   // cache con timestamp: las urls de imagen firmadas por Notion expiran (~1h),
   // así que un brief viejo se refresca en silencio al reabrir el proyecto
   const [briefs, setBriefs] = useState<Record<string, { blocks: ProjectBlock[]; at: number }>>({});
-  const [taskOpen, setTaskOpen] = useState<{ task: PortalTask; project: PortalProject } | null>(null);
+  const [taskOpen, setTaskOpen] = useState<{ task: PortalTask; projectName: string | null } | null>(null);
   const [drawerClosing, setDrawerClosing] = useState(false);
   const [modalClosing, setModalClosing] = useState(false);
   const [doneOverride, setDoneOverride] = useState<Record<string, boolean>>({});
@@ -155,6 +155,17 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
                   <div className="cp-info">
                     <div className="cp-rn">{p.name}</div>
                     {p.subtitle && <div className="cp-rc">{p.subtitle}</div>}
+                    {p.designUrl && (
+                      <a
+                        className="cp-design"
+                        href={p.designUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {tr('home.design')} ↗
+                      </a>
+                    )}
                   </div>
                   <div className={`cp-health ${p.deckHealth}`}>
                     <span className="cp-hrow"><span className="cp-hd" />{tr(`health.${p.deckHealth}`)}</span>
@@ -162,7 +173,7 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
                   </div>
                 </div>
                 <div className="cp-tlw">
-                  <PortalTimeline geom={geom} tasks={p.tasks} drawDelay={0.4 + i * 0.08} onTaskClick={(t) => setTaskOpen({ task: t, project: p })} />
+                  <PortalTimeline geom={geom} tasks={p.tasks} drawDelay={0.4 + i * 0.08} onTaskClick={(t) => setTaskOpen({ task: t, projectName: p.name })} />
                   <div className="cp-tlm"><span>{p.startLabel}</span><span>{p.endLabel}</span></div>
                 </div>
                 <span className={`cp-pill ${p.paused ? 'pause' : ''}`}>{p.pill}</span>
@@ -194,7 +205,18 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
               return (
                 <div className={`cp-task ${done ? 'done' : ''}`} key={t.id}>
                   <button className="cp-ck" onClick={() => toggle(t)} title={tr('common.toggle')}>{done ? '✓' : ''}</button>
-                  <div className="cp-tb">
+                  <div
+                    className="cp-tb cp-tb-open"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setTaskOpen({ task: t, projectName: t.projectName ?? null })}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setTaskOpen({ task: t, projectName: t.projectName ?? null });
+                      }
+                    }}
+                  >
                     <div className="cp-tt">{t.title}</div>
                     <div className="cp-tw">
                       {late ? <span className="late">{tr('taskDue.overdue', { date: t.due ? fmtDue(t.due, locale) : '' })}</span> : t.due ? (done ? tr('taskDue.doneOn', { date: fmtDue(t.due, locale) }) : tr('taskDue.dueOn', { date: fmtDue(t.due, locale) })) : tr('common.noDate')}
@@ -303,7 +325,7 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
             <div className={`cp-scrim ${modalClosing ? 'closing' : ''}`} style={{ zIndex: 70 }} onClick={closeTask} />
             <div className="cp-tm-wrap" onClick={closeTask}>
               <div className={`cp-tm ${modalClosing ? 'closing' : ''}`} onClick={(e) => e.stopPropagation()}>
-                <div className="cp-tmh"><span className="cp-tmp">{taskOpen.project.name}</span><button className="cp-x" onClick={closeTask}>×</button></div>
+                <div className="cp-tmh"><span className="cp-tmp">{taskOpen.projectName ?? ''}</span><button className="cp-x" onClick={closeTask}>×</button></div>
                 <div className="cp-tmt">{t.title}</div>
                 <div className="cp-tmm">
                   {t.assignee && <span><Av initials={t.assignee.initials} color={t.assignee.color} size={20} />{t.assignee.name}</span>}

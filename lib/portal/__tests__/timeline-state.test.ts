@@ -23,6 +23,7 @@ const project = (tasks: PortalTask[]): PortalProject => ({
   id: 'p',
   name: 'Proyecto',
   subtitle: '',
+  designUrl: null,
   pct: 50,
   deckHealth: 'track',
   healthDetail: '',

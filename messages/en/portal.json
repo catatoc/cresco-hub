@@ -60,7 +60,8 @@
       "tasksEmpty": "This project has no tasks yet.",
       "backToBrief": "← Back to the brief",
       "viewTasks": "View tasks · {done} of {total} →"
-    }
+    },
+    "design": "design"
   },
   "capsule": {
     "modalTitle": {

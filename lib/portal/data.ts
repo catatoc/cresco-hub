@@ -24,6 +24,7 @@ export interface PortalTask {
   assignee: PortalAssignee | null;
   mine: boolean; // asignada al miembro logueado → puede marcarla
   projectName?: string;
+  projectId?: string;
 }
 
 export interface PortalProject {
@@ -39,6 +40,7 @@ export interface PortalProject {
   end: string | null;
   startLabel: string;
   endLabel: string;
+  designUrl: string | null; // Project Design (Notion) → enlace al design system
   tasks: PortalTask[];
 }
 
@@ -179,6 +181,7 @@ function buildProject(row: any, tasks: PortalTask[], locale: PortalLocale): Port
     end,
     startLabel: start ? (dayMonthLabel(start, locale) ?? '') : d.dash,
     endLabel: end ? `${dayMonthLabel(end, locale) ?? ''} · ${d.delivery}` : `${d.dash} · ${d.noDate}`,
+    designUrl: p['Project Design']?.url ?? null,
     tasks,
   };
 }
@@ -241,6 +244,7 @@ export async function loadPortalData(ctx: AppContext, locale: PortalLocale = 'es
     const task = parseTaskRow(t, teamById, ctx.memberId);
     const projId = t.properties.Project?.relation?.[0]?.id ?? null;
     task.projectName = projId ? projNameById.get(projId) || undefined : undefined;
+    task.projectId = projId ?? undefined;
     return task;
   });
   const open = allMine
