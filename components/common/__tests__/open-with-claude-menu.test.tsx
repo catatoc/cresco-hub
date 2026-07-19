@@ -29,7 +29,7 @@ const task: Task = {
 };
 
 const project: Project = {
-  id: 'p', name: 'P', icon: null, summary: null, repoUrl: 'https://github.com/me/p',
+  id: 'p', name: 'P', icon: null, summary: null, repoUrl: 'https://github.com/me/p', designUrl: null,
   status: null, priority: null, completion: null, ownerIds: [],
   customerId: 'c', teamIds: [], startDate: null, endDate: null,
   url: 'https://notion.so/p',

@@ -29,6 +29,7 @@ const project: Project = {
   icon: null,
   summary: null,
   repoUrl: null,
+  designUrl: null,
   status: 'In Progress',
   priority: null,
   completion: null,

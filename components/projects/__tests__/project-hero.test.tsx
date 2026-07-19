@@ -13,6 +13,7 @@ const mkProject = (over: Partial<Project> = {}): Project => ({
   icon: '🏥',
   summary: 'Lanzar la v2 de la plataforma con onboarding renovado.',
   repoUrl: null,
+  designUrl: null,
   status: 'In Progress',
   priority: 'High',
   completion: 0.62,

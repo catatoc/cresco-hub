@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const projectStatusSchema = z.enum([
   'Backlog',
   'Planning',
+  'Starting',
   'In Progress',
   'Paused',
   'Done',
@@ -19,6 +20,7 @@ export const projectSchema = z.object({
   icon: z.string().nullable(),
   summary: z.string().nullable(),
   repoUrl: z.string().url().nullable(),
+  designUrl: z.string().url().nullable(),
   status: projectStatusSchema.nullable(),
   priority: projectPrioritySchema.nullable(),
   completion: z.number().nullable(), // 0..1 rollup

@@ -26,7 +26,7 @@ const baseProject: Project = {
   name: 'Notion Hub',
   icon: null,
   summary: null,
-  repoUrl: 'https://github.com/me/notion-hub',
+  repoUrl: 'https://github.com/me/notion-hub', designUrl: null,
   status: 'In Progress',
   priority: null,
   completion: null,

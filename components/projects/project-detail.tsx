@@ -10,6 +10,7 @@ import { ProjectTasksModule } from './project-tasks-module';
 import { ProjectMeetingsModule } from './project-meetings-module';
 import { ProjectTeamModule } from './project-team-module';
 import { ProjectWikiModule } from './project-wiki-module';
+import { ProjectDesignModule } from './project-design-module';
 
 type Props = {
   project: Project;
@@ -54,6 +55,7 @@ export function ProjectDetail({
           <ProjectMeetingsModule meetings={meetings} />
         </div>
         <div className="flex flex-col gap-3 lg:gap-4 min-w-0">
+          <ProjectDesignModule designUrl={project.designUrl} />
           <ProjectTeamModule members={members} ownerName={ownerName} />
           <ProjectWikiModule pages={wiki} />
         </div>
