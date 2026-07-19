@@ -1,6 +1,8 @@
 'use client';
 
+import { useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task } from '@/schemas/task';
@@ -136,6 +138,8 @@ type Props = {
 export function TaskCard({ task, assignees = [], project = null, showDayChip, isOverlay }: Props) {
   const t = useTranslations('kanban.card');
   const locale = useLocale();
+  const router = useRouter();
+  const pointerDownAt = useRef<{ x: number; y: number } | null>(null);
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: task.id, disabled: isOverlay });
 
@@ -163,6 +167,18 @@ export function TaskCard({ task, assignees = [], project = null, showDayChip, is
       style={style}
       {...(!isOverlay ? attributes : {})}
       {...(!isOverlay ? listeners : {})}
+      onPointerDownCapture={(e) => {
+        pointerDownAt.current = { x: e.clientX, y: e.clientY };
+      }}
+      onClick={(e) => {
+        if (isOverlay || isDragging) return;
+        // El click que el navegador dispara al soltar un drag no debe navegar.
+        const down = pointerDownAt.current;
+        if (down && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 5) return;
+        // Los interactivos internos (título, menú de Claude) manejan su propio click.
+        if ((e.target as HTMLElement).closest('a,button,[role="menuitem"]')) return;
+        router.push(`/tareas/${task.id}`);
+      }}
       className={cn(
         'group relative bg-white border border-border rounded-md p-2.5 min-w-0 cursor-grab active:cursor-grabbing transition-[transform,box-shadow,border-color] duration-(--duration-base) ease-(--ease-linear) hover:-translate-y-px hover:shadow-md hover:border-[#c9cbe8] active:bg-[#fafafa] active:border-[#c9cbe8] touch-manipulation',
         isDone && 'opacity-75',
