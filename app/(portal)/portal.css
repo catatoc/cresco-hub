@@ -98,6 +98,10 @@
 .cp-rn { font-weight: 500; font-size: 16.5px; letter-spacing: -.025em; line-height: 1.3;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-bottom: 1px; }
 .cp-rc { font-size: 11px; color: var(--cp-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cp-design { display: inline-block; margin-top: 5px; font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--cp-moss); text-decoration: none; border-bottom: 1px solid var(--cp-moss-soft);
+  transition: border-color .2s var(--cp-ease), color .2s var(--cp-ease); }
+.cp-design:hover { color: var(--cp-moss-deep); border-bottom-color: var(--cp-moss); }
 .cp-tlw { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; }
 .cp-tlw svg { display: block; max-width: 100%; height: auto; }
 .cp-tlm { display: flex; justify-content: space-between; width: 100%; max-width: 300px; font-size: 9.5px; color: var(--cp-muted); }
@@ -129,6 +133,9 @@
 .cp-ck:hover { border-color: var(--cp-moss-lt); }
 .cp-task.done .cp-ck { background: var(--cp-moss); border-color: var(--cp-moss); }
 .cp-task .cp-tb { flex: 1; min-width: 0; }
+.cp-task .cp-tb-open { cursor: pointer; }
+.cp-task .cp-tb-open:hover .cp-tt { text-decoration: underline; text-decoration-color: var(--cp-line); text-underline-offset: 3px; }
+.cp-task .cp-tb-open:focus-visible { outline: 2px solid var(--cp-moss-lt); outline-offset: 2px; border-radius: 4px; }
 .cp-task .cp-tt { font-weight: 500; font-size: 13.5px; letter-spacing: -.015em; line-height: 1.3; }
 .cp-task.done .cp-tt { color: var(--cp-muted); text-decoration: line-through; }
 .cp-task .cp-tw { font-size: 11px; color: var(--cp-muted); margin-top: 3px; }
