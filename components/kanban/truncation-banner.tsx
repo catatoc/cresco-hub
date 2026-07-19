@@ -1,8 +1,10 @@
 import { AlertTriangle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type Props = { cap: number };
 
 export function TruncationBanner({ cap }: Props) {
+  const t = useTranslations('kanban.truncation');
   return (
     <div
       role="alert"
@@ -10,8 +12,10 @@ export function TruncationBanner({ cap }: Props) {
     >
       <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
       <span className="leading-relaxed">
-        Mostrando {cap} tareas. Filtra por sprint o proyecto, o cambia a{' '}
-        <span className="font-medium">Mías</span> para ver todo.
+        {t.rich('message', {
+          cap,
+          mine: (chunks) => <span className="font-medium">{chunks}</span>,
+        })}
       </span>
     </div>
   );

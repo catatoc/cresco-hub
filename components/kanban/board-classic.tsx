@@ -14,6 +14,7 @@ import {
   type DragEndEvent,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { useTranslations } from 'next-intl';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task, TaskStatus } from '@/schemas/task';
 import type { Project } from '@/schemas/project';
@@ -28,7 +29,7 @@ import { cn } from '@/lib/utils';
  */
 type BoardColumn = {
   id: string;
-  title: string;
+  titleKey: string;
   statuses: TaskStatus[];
   dropStatus: TaskStatus;
   dotClass: string;
@@ -38,14 +39,14 @@ type BoardColumn = {
 const COLUMNS: BoardColumn[] = [
   {
     id: 'todo',
-    title: 'Por hacer',
+    titleKey: 'todo',
     statuses: ['Refining', 'Not Started'],
     dropStatus: 'Not Started',
     dotClass: 'border-[#57575c] text-[#57575c]',
   },
   {
     id: 'in-progress',
-    title: 'En progreso',
+    titleKey: 'inProgress',
     statuses: ['In Progress'],
     dropStatus: 'In Progress',
     dotClass: 'border-[#5e6ad2] text-[#5e6ad2]',
@@ -53,7 +54,7 @@ const COLUMNS: BoardColumn[] = [
   },
   {
     id: 'testing',
-    title: 'Testing',
+    titleKey: 'testing',
     statuses: ['Testing'],
     dropStatus: 'Testing',
     dotClass: 'border-[#b58a1f] text-[#b58a1f]',
@@ -61,7 +62,7 @@ const COLUMNS: BoardColumn[] = [
   },
   {
     id: 'in-review',
-    title: 'En revisión',
+    titleKey: 'inReview',
     statuses: ['In Review'],
     dropStatus: 'In Review',
     dotClass: 'border-[#c78a2c] text-[#c78a2c]',
@@ -69,7 +70,7 @@ const COLUMNS: BoardColumn[] = [
   },
   {
     id: 'done',
-    title: 'Hecho',
+    titleKey: 'done',
     statuses: ['Done'],
     dropStatus: 'Done',
     dotClass: 'border-[#3f9f5c] text-[#3f9f5c]',
@@ -77,7 +78,7 @@ const COLUMNS: BoardColumn[] = [
   },
   {
     id: 'archived',
-    title: 'Archivado',
+    titleKey: 'archived',
     statuses: ['Archived'],
     dropStatus: 'Archived',
     dotClass: 'border-[#8a8a91] text-[#8a8a91]',
@@ -99,6 +100,7 @@ type Props = {
 };
 
 export function BoardClassic({ tasks, setTasks, membersById, projectsById, embedded }: Props) {
+  const t = useTranslations('kanban.columns');
   const [activeId, setActiveId] = useState<string | null>(null);
   const [archivedOpen, setArchivedOpen] = useState(false);
 
@@ -176,8 +178,8 @@ export function BoardClassic({ tasks, setTasks, membersById, projectsById, embed
             >
               <Column
                 id={col.id}
-                title={col.title}
-                tasks={tasks.filter((t) => col.statuses.includes(t.status))}
+                title={t(col.titleKey)}
+                tasks={tasks.filter((task) => col.statuses.includes(task.status))}
                 dotClass={col.dotClass}
                 dotFilled={col.dotFilled}
                 membersById={membersById}
@@ -198,12 +200,12 @@ export function BoardClassic({ tasks, setTasks, membersById, projectsById, embed
               <span
                 className={`w-2.5 h-2.5 rounded-full border-[1.5px] shrink-0 ${archivedColumn.dotClass} bg-current`}
               />
-              <span className="text-[12px] font-semibold truncate">{archivedColumn.title}</span>
+              <span className="text-[12px] font-semibold truncate">{t(archivedColumn.titleKey)}</span>
               <span className="text-[12px] text-muted-foreground font-medium shrink-0">
                 {archivedTasks.length}
               </span>
               <span className="ml-auto text-[11px] text-muted-foreground shrink-0">
-                {archivedOpen ? 'Ocultar' : 'Mostrar'}
+                {archivedOpen ? t('hideArchived') : t('showArchived')}
               </span>
             </button>
             {archivedOpen && (

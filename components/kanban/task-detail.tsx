@@ -1,4 +1,5 @@
 import { ExternalLink } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { TaskEditorContainer } from '@/components/edit-tasks/task-editor-container';
 import { PageEnter } from '@/components/motion/page-enter';
 import { TaskDetailHeader } from './task-detail-header';
@@ -23,6 +24,7 @@ type Props = {
 };
 
 export function TaskDetail({ task, blocks, project, sprint, assignees }: Props) {
+  const t = useTranslations('kanban.taskDetail');
   const crumbs = [
     ...(project ? [{ label: project.name, href: `/proyectos?project=${project.id}` }] : []),
     ...(sprint ? [{ label: sprint.name }] : []),
@@ -69,7 +71,7 @@ export function TaskDetail({ task, blocks, project, sprint, assignees }: Props) 
       {/* Footer */}
       <div className="px-4 sm:px-6 py-2 sm:py-2.5 border-t border-border bg-[#fafafa] flex items-center justify-between gap-3 flex-wrap shrink-0">
         <span className="hidden sm:inline text-[11px] text-muted-foreground">
-          Esc para volver · <kbd className="font-mono text-[10px] bg-[#eef0f2] rounded px-1 py-[1px]">⌘⌥P</kbd> copiar prompt
+          {t('escToReturn')} · <kbd className="font-mono text-[10px] bg-[#eef0f2] rounded px-1 py-[1px]">⌘⌥P</kbd> {t('copyPromptHint')}
         </span>
         <div className="flex items-center gap-2 ml-auto">
           <a
@@ -78,7 +80,7 @@ export function TaskDetail({ task, blocks, project, sprint, assignees }: Props) 
             rel="noreferrer"
             className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'min-h-[40px] sm:min-h-0')}
           >
-            Abrir en Notion <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
+            {t('openInNotion')} <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
           </a>
           <OpenWithClaudeMenu
             task={task}

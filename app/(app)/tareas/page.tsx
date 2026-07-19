@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { format, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { getLocale, getTranslations } from 'next-intl/server';
+import { dateLocale } from '@/lib/i18n/date-locale';
 import { Topbar } from '@/components/shell/topbar';
 import { requireContext } from '@/lib/auth/require-context';
 import { resolveScope, SCOPE_COOKIE } from '@/lib/scope/resolve';
@@ -16,10 +17,15 @@ export const dynamic = 'force-dynamic';
 
 type SearchParams = Promise<{ sprint?: string; scope?: string }>;
 
-function formatSprintDates(start: string | null, end: string | null): string | null {
+function formatSprintDates(
+  start: string | null,
+  end: string | null,
+  locale: string,
+  fmt: string,
+): string | null {
   if (!start && !end) return null;
-  const s = start ? format(parseISO(start), 'd MMM', { locale: es }) : '—';
-  const e = end ? format(parseISO(end), 'd MMM', { locale: es }) : '—';
+  const s = start ? format(parseISO(start), fmt, { locale: dateLocale(locale) }) : '—';
+  const e = end ? format(parseISO(end), fmt, { locale: dateLocale(locale) }) : '—';
   return `${s} → ${e}`;
 }
 
@@ -29,6 +35,8 @@ export default async function TareasPage({
   searchParams: SearchParams;
 }) {
   const ctx = await requireContext();
+  const t = await getTranslations('kanban.page');
+  const locale = await getLocale();
   const sp = await searchParams;
   const cookieStore = await cookies();
   const scope = resolveScope('tareas', sp.scope, cookieStore.get(SCOPE_COOKIE.tareas)?.value);
@@ -52,13 +60,15 @@ export default async function TareasPage({
   const memberIds = Array.from(new Set(allTasks.flatMap((t) => t.assigneeIds)));
   const members = await getTeamMembers(memberIds);
 
-  const sprintLabel = sprint?.name ?? 'Sin sprint activo';
-  const sprintDates = sprint ? formatSprintDates(sprint.startDate, sprint.endDate) : null;
+  const sprintLabel = sprint?.name ?? t('noActiveSprint');
+  const sprintDates = sprint
+    ? formatSprintDates(sprint.startDate, sprint.endDate, locale, t('sprintDateFormat'))
+    : null;
   const crumbLabel = sprintDates ? `${sprintLabel} · ${sprintDates}` : sprintLabel;
 
   return (
     <PageEnter className="flex flex-col h-full overflow-hidden">
-      <Topbar crumbs={[{ label: 'Tareas' }, { label: crumbLabel, muted: true }]}>
+      <Topbar crumbs={[{ label: t('tasks') }, { label: crumbLabel, muted: true }]}>
         <ScopePill
           scopeKey="tareas"
           scope={scope}
@@ -66,7 +76,7 @@ export default async function TareasPage({
           teamCount={allTasks.length}
           redirectPath="/tareas"
           extraParams={sprint?.id ? { sprint: sprint.id } : {}}
-          labels={{ mine: 'Mías', team: 'Equipo completo' }}
+          labels={{ mine: t('scopeMine'), team: t('scopeTeam') }}
         />
       </Topbar>
       <KanbanView

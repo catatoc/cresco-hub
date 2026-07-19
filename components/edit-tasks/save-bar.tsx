@@ -1,6 +1,7 @@
 'use client';
 
 import { Pencil } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 
 type Props = {
@@ -16,13 +17,14 @@ type Props = {
 };
 
 export function SaveBar({ dirty, saving, canSave, onSave, onCancel }: Props) {
+  const t = useTranslations('editTasks.saveBar');
   const guardarDisabled = !dirty || !canSave || saving;
 
   return (
     <div className="flex items-center gap-2 px-1 py-2">
       <span className="inline-flex items-center gap-1.5 text-[11.5px] font-medium text-[#5e6ad2]">
         <Pencil className="w-3 h-3" aria-hidden />
-        Editando
+        {t('editing')}
       </span>
       <div className="ml-auto flex items-center gap-2">
         <button
@@ -37,7 +39,7 @@ export function SaveBar({ dirty, saving, canSave, onSave, onCancel }: Props) {
             'disabled:opacity-60 disabled:pointer-events-none',
           )}
         >
-          Cancelar
+          {t('cancel')}
         </button>
         <button
           type="button"
@@ -51,7 +53,7 @@ export function SaveBar({ dirty, saving, canSave, onSave, onCancel }: Props) {
             'disabled:opacity-60 disabled:pointer-events-none',
           )}
         >
-          {saving ? 'Guardando…' : 'Guardar'}
+          {saving ? t('saving') : t('save')}
         </button>
       </div>
     </div>

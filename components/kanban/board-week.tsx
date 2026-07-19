@@ -14,6 +14,7 @@ import {
   type DragEndEvent,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { useTranslations } from 'next-intl';
 import type { TeamMember } from '@/schemas/team-member';
 import type { Task, TaskStatus } from '@/schemas/task';
 import type { Project } from '@/schemas/project';
@@ -25,7 +26,7 @@ import { cn } from '@/lib/utils';
 
 type WeekColumn = {
   id: string;
-  title: string;
+  titleKey: string;
   statuses: TaskStatus[];
   dropStatus: TaskStatus;
   dotClass: string;
@@ -35,14 +36,14 @@ type WeekColumn = {
 const COLUMNS: WeekColumn[] = [
   {
     id: 'todo',
-    title: 'Por hacer',
+    titleKey: 'todo',
     statuses: ['Refining', 'Not Started'],
     dropStatus: 'Not Started',
     dotClass: 'border-[#57575c] text-[#57575c]',
   },
   {
     id: 'in-progress',
-    title: 'En progreso',
+    titleKey: 'inProgress',
     statuses: ['In Progress'],
     dropStatus: 'In Progress',
     dotClass: 'border-[#5e6ad2] text-[#5e6ad2]',
@@ -50,7 +51,7 @@ const COLUMNS: WeekColumn[] = [
   },
   {
     id: 'done',
-    title: 'Hecho esta semana',
+    titleKey: 'doneThisWeek',
     statuses: ['Done'],
     dropStatus: 'Done',
     dotClass: 'border-[#3f9f5c] text-[#3f9f5c]',
@@ -71,6 +72,7 @@ type Props = {
 };
 
 export function BoardWeek({ tasks, setTasks, membersById, projectsById, embedded }: Props) {
+  const t = useTranslations('kanban.columns');
   const [activeId, setActiveId] = useState<string | null>(null);
   const { move } = useMoveTask(setTasks);
   // Week view: ignore Refining-only (triage), In Review, and Archived.
@@ -127,8 +129,8 @@ export function BoardWeek({ tasks, setTasks, membersById, projectsById, embedded
             >
               <Column
                 id={col.id}
-                title={col.title}
-                tasks={weekTasks.filter((t) => col.statuses.includes(t.status))}
+                title={t(col.titleKey)}
+                tasks={weekTasks.filter((task) => col.statuses.includes(task.status))}
                 dotClass={col.dotClass}
                 dotFilled={col.dotFilled}
                 showDayChip

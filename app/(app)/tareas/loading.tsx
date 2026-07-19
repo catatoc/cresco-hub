@@ -1,9 +1,11 @@
+import { useTranslations } from 'next-intl';
 import { Topbar } from '@/components/shell/topbar';
 
 export default function Loading() {
+  const t = useTranslations('kanban.page');
   return (
     <>
-      <Topbar crumbs={[{ label: 'Tareas' }, { label: 'Semana activa', muted: true }]} />
+      <Topbar crumbs={[{ label: t('tasks') }, { label: t('activeWeek'), muted: true }]} />
       <div className="flex-1 flex flex-col overflow-hidden px-3 sm:px-4 lg:px-5 pt-3 sm:pt-4 lg:pt-5">
         <div className="flex flex-wrap items-center gap-x-2.5 gap-y-2 mb-3 sm:mb-4">
           <div className="hidden sm:block h-4 w-28 bg-[#f7f7f8] rounded animate-pulse" />

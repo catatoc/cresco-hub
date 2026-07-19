@@ -1,0 +1,113 @@
+{
+  "columns": {
+    "todo": "To do",
+    "inProgress": "In progress",
+    "testing": "Testing",
+    "inReview": "In review",
+    "done": "Done",
+    "doneThisWeek": "Done this week",
+    "archived": "Archived",
+    "showArchived": "Show",
+    "hideArchived": "Hide"
+  },
+  "priority": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "statusPill": {
+    "refining": "Refining",
+    "notStarted": "To do",
+    "inProgress": "In progress",
+    "testing": "Testing",
+    "inReview": "In review",
+    "done": "Done",
+    "archived": "Archived",
+    "changeError": "Could not change the status."
+  },
+  "boardByPerson": {
+    "empty": "No tasks in this sprint.",
+    "unassigned": "Unassigned"
+  },
+  "card": {
+    "today": "Today"
+  },
+  "view": {
+    "activeWeek": "Active week",
+    "classic": "Classic",
+    "week": "Week"
+  },
+  "sprintNav": {
+    "previous": "Previous sprint",
+    "next": "Next sprint"
+  },
+  "moveTask": {
+    "error": "Could not move the task. Try again."
+  },
+  "truncation": {
+    "message": "Showing {cap} tasks. Filter by sprint or project, or switch to <mine>Mine</mine> to see everything."
+  },
+  "copy": {
+    "trigger": "Copy visible tasks",
+    "empty": "No tasks to copy",
+    "loading": "Loading content…",
+    "menuLabel": "Copy {count, plural, one {# visible task} other {# visible tasks}}",
+    "asJson": "As JSON",
+    "asJsonHint": "for MCP",
+    "asMarkdown": "As Markdown",
+    "asMarkdownHint": "for Linear",
+    "withContentLabel": "With inner content",
+    "withContentJson": "With content (JSON)",
+    "withContentMarkdown": "With content (Markdown)",
+    "download": "Download .json",
+    "copiedJson": "{count, plural, one {# task copied as JSON} other {# tasks copied as JSON}}",
+    "copiedMarkdown": "{count, plural, one {# task copied as Markdown} other {# tasks copied as Markdown}}",
+    "downloaded": "{count, plural, one {# task downloaded} other {# tasks downloaded}}",
+    "loadingContent": "{count, plural, one {Loading content of # task…} other {Loading content of # tasks…}}",
+    "copiedWithContent": "{count, plural, one {# task copied with content ({format})} other {# tasks copied with content ({format})}}",
+    "copyFailed": "Could not copy to clipboard",
+    "loadContentFailed": "Could not load the content of some tasks"
+  },
+  "shortcuts": {
+    "copied": "Prompt copied to clipboard",
+    "copiedDescription": "Paste it into Claude Code, ChatGPT, Cursor, or your terminal.",
+    "copyFailed": "Could not copy the prompt",
+    "copyFailedDescription": "There is a fallback in the browser console."
+  },
+  "taskDetail": {
+    "back": "Back",
+    "backToTasks": "Back to Tasks",
+    "tasks": "Tasks",
+    "properties": "Properties",
+    "status": "Status",
+    "priority": "Priority",
+    "progress": "Progress",
+    "dueDate": "Due",
+    "plannedDate": "Planned",
+    "completedAt": "Completed",
+    "assignees": "Assignees",
+    "unassigned": "Unassigned",
+    "tags": "Tags",
+    "project": "Project",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "yesterday": "Yesterday",
+    "relativeDateFormat": "MMM d",
+    "shortDateFormat": "MMM d",
+    "escToReturn": "Esc to go back",
+    "copyPromptHint": "copy prompt",
+    "openInNotion": "Open in Notion"
+  },
+  "weekStripe": {
+    "today": "Today",
+    "weekdayFormat": "EEE"
+  },
+  "page": {
+    "tasks": "Tasks",
+    "activeWeek": "Active week",
+    "noActiveSprint": "No active sprint",
+    "sprintDateFormat": "MMM d",
+    "scopeMine": "Mine",
+    "scopeTeam": "Full team"
+  }
+}

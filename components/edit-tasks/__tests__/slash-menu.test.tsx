@@ -37,34 +37,24 @@ vi.mock('@/lib/edit-tasks/slash-menu-items', () => ({
   slashMenuItems: [
     {
       id: 'heading-1',
-      label: 'Heading 1',
-      description: 'Big section heading',
       icon: 'h1',
       group: 'basic',
       insert: inserts['heading-1'],
     },
     {
       id: 'heading-2',
-      label: 'Heading 2',
-      description: 'Medium section heading',
       icon: 'h2',
       group: 'basic',
       insert: vi.fn(),
     },
     {
       id: 'bullet-list',
-      label: 'Bullet list',
-      description: 'Create a simple bulleted list',
       icon: 'bulletList',
       group: 'lists',
       insert: inserts['bullet-list'],
     },
   ],
-  slashMenuGroupLabels: {
-    basic: 'Basic blocks',
-    lists: 'Lists',
-    advanced: 'Advanced',
-  },
+  slashMenuGroups: ['basic', 'lists', 'advanced'],
 }));
 
 beforeEach(() => {
@@ -76,16 +66,16 @@ describe('SlashMenu', () => {
   it('renders all items when active and query is empty', () => {
     const view = makeView() as never;
     render(<SlashMenu view={view} tick={1} />);
-    expect(screen.getByText('Heading 1')).toBeInTheDocument();
-    expect(screen.getByText('Heading 2')).toBeInTheDocument();
-    expect(screen.getByText('Bullet list')).toBeInTheDocument();
+    expect(screen.getByText('Encabezado 1')).toBeInTheDocument();
+    expect(screen.getByText('Encabezado 2')).toBeInTheDocument();
+    expect(screen.getByText('Lista con viñetas')).toBeInTheDocument();
   });
 
   it('clicking an item invokes its insert callback', async () => {
     const user = userEvent.setup();
     const view = makeView() as never;
     render(<SlashMenu view={view} tick={1} />);
-    await user.click(screen.getByText('Heading 1'));
+    await user.click(screen.getByText('Encabezado 1'));
     expect(inserts['heading-1']).toHaveBeenCalledTimes(1);
   });
 });

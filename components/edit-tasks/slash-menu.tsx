@@ -15,12 +15,14 @@ import {
   Lightbulb,
 } from 'lucide-react';
 import type { EditorView } from 'prosemirror-view';
+import { useTranslations } from 'next-intl';
 import { getSlashMenuState } from '@/lib/edit-tasks/slash-menu-plugin';
 import {
   slashMenuItems,
-  slashMenuGroupLabels,
+  slashMenuGroups,
   type SlashMenuIcon,
   type SlashMenuItem,
+  type SlashMenuGroup,
 } from '@/lib/edit-tasks/slash-menu-items';
 import { cn } from '@/lib/utils';
 
@@ -51,15 +53,14 @@ const MENU_WIDTH = 280;
 const MENU_MAX_HEIGHT = 320;
 const VIEWPORT_PADDING = 8;
 
-function matchesQuery(item: SlashMenuItem, q: string): boolean {
+function matchesQuery(item: SlashMenuItem, q: string, label: string, description: string): boolean {
   if (!q) return true;
-  const haystack = [item.label, item.description, ...(item.keywords ?? [])]
-    .join(' ')
-    .toLowerCase();
+  const haystack = [label, description, ...(item.keywords ?? [])].join(' ').toLowerCase();
   return haystack.includes(q);
 }
 
 export function SlashMenu({ view, tick }: Props) {
+  const t = useTranslations('editTasks.slashMenu');
   const [highlighted, setHighlighted] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -74,14 +75,15 @@ export function SlashMenu({ view, tick }: Props) {
     if (!slashState.active) return slashMenuItems;
     const q = slashState.query.toLowerCase().trim();
     if (!q) return slashMenuItems;
-    return slashMenuItems.filter((i) => matchesQuery(i, q));
-  }, [slashState]);
+    return slashMenuItems.filter((i) =>
+      matchesQuery(i, q, t(`items.${i.id}.label`), t(`items.${i.id}.description`)),
+    );
+  }, [slashState, t]);
 
   // Group filtered items in stable order (basic → lists → advanced).
   const grouped = useMemo(() => {
-    const groups: { group: keyof typeof slashMenuGroupLabels; items: SlashMenuItem[] }[] = [];
-    const order: (keyof typeof slashMenuGroupLabels)[] = ['basic', 'lists', 'advanced'];
-    for (const g of order) {
+    const groups: { group: SlashMenuGroup; items: SlashMenuItem[] }[] = [];
+    for (const g of slashMenuGroups) {
       const items = filtered.filter((i) => i.group === g);
       if (items.length > 0) groups.push({ group: g, items });
     }
@@ -202,13 +204,13 @@ export function SlashMenu({ view, tick }: Props) {
     >
       {flat.length === 0 && (
         <div className="px-3 py-6 text-center text-[12px] text-muted-foreground">
-          Sin resultados
+          {t('noResults')}
         </div>
       )}
       {grouped.map(({ group, items }) => (
         <div key={group} className="py-0.5">
           <div className="px-2 pt-2 pb-1 text-[10.5px] font-medium uppercase tracking-[0.04em] text-muted-foreground">
-            {slashMenuGroupLabels[group]}
+            {t(`groups.${group}`)}
           </div>
           {items.map((item) => {
             runningIndex++;
@@ -250,10 +252,10 @@ export function SlashMenu({ view, tick }: Props) {
                       isActive ? 'text-[#5e6ad2]' : 'text-foreground',
                     )}
                   >
-                    {item.label}
+                    {t(`items.${item.id}.label`)}
                   </span>
                   <span className="block text-[11.5px] text-muted-foreground leading-tight mt-0.5 truncate">
-                    {item.description}
+                    {t(`items.${item.id}.description`)}
                   </span>
                 </span>
               </button>

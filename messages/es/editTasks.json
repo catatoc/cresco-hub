@@ -1,0 +1,84 @@
+{
+  "toolbar": {
+    "bold": "Negrita",
+    "italic": "Cursiva",
+    "strikethrough": "Tachado",
+    "code": "Código",
+    "link": "Enlace"
+  },
+  "slashMenu": {
+    "noResults": "Sin resultados",
+    "groups": {
+      "basic": "Bloques básicos",
+      "lists": "Listas",
+      "advanced": "Avanzado"
+    },
+    "items": {
+      "heading-1": {
+        "label": "Encabezado 1",
+        "description": "Encabezado de sección grande"
+      },
+      "heading-2": {
+        "label": "Encabezado 2",
+        "description": "Encabezado de sección mediano"
+      },
+      "heading-3": {
+        "label": "Encabezado 3",
+        "description": "Encabezado de sección pequeño"
+      },
+      "bullet-list": {
+        "label": "Lista con viñetas",
+        "description": "Crea una lista simple con viñetas"
+      },
+      "numbered-list": {
+        "label": "Lista numerada",
+        "description": "Crea una lista con numeración"
+      },
+      "task-list": {
+        "label": "Lista de tareas",
+        "description": "Sigue tareas con casillas"
+      },
+      "quote": {
+        "label": "Cita",
+        "description": "Captura una cita"
+      },
+      "divider": {
+        "label": "Divisor",
+        "description": "Divide secciones visualmente"
+      },
+      "code-block": {
+        "label": "Código",
+        "description": "Captura un fragmento de código"
+      },
+      "callout": {
+        "label": "Nota destacada",
+        "description": "Haz que el texto resalte"
+      }
+    }
+  },
+  "saveBar": {
+    "editing": "Editando",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando…"
+  },
+  "editor": {
+    "editTask": "Editar tarea",
+    "edit": "Editar",
+    "noDescription": "Sin descripción.",
+    "unsupportedBanner": "Esta tarea contiene bloques que aún no soportamos editar (toggles, columnas, embeds, syncs). Por seguridad, Guardar está desactivado. Edita la tarea desde Notion para tocarla, o regresa al modo lectura.",
+    "discardConfirm": "Tienes cambios sin guardar. ¿Descartarlos?",
+    "unsupportedBlockError": "Este tipo de bloque no se puede guardar todavía",
+    "unsupportedBlockErrorDescription": "Edita la tarea desde Notion mientras lo soportamos.",
+    "saveFailed": "No se pudo guardar",
+    "deleteFailedDescription": "Notion borró parte del contenido pero no terminó. {remaining} bloques quedan. Reintenta.",
+    "appendFailedDescription": "No se pudo escribir los bloques nuevos. Reintenta.",
+    "updateFailedDescription": "No se pudo actualizar parte del contenido. Reintenta.",
+    "noAccess": "No tienes acceso para guardar",
+    "taskDeleted": "Esta tarea fue eliminada",
+    "saveFailedRetry": "Reintenta en un momento.",
+    "saved": "Cambios guardados",
+    "offline": "Sin conexión",
+    "offlineDescription": "Reintenta cuando recuperes la red."
+  }
+}

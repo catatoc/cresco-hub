@@ -6,10 +6,11 @@ export const PRIORITY_COLOR: Record<string, string> = {
   Low: '#8a8a91',
 };
 
-export const PRIORITY_LABEL: Record<string, string> = {
-  High: 'Alta',
-  Medium: 'Media',
-  Low: 'Baja',
+/** Maps a Notion priority value to its message key under `kanban.priority`. */
+export const PRIORITY_KEY: Record<string, string> = {
+  High: 'high',
+  Medium: 'medium',
+  Low: 'low',
 };
 
 export const TAG_MAP: Record<string, string> = {

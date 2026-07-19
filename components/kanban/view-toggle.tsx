@@ -1,10 +1,12 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 
 type Props = { view: 'classic' | 'week'; onChange: (v: 'classic' | 'week') => void };
 
 export function ViewToggle({ view, onChange }: Props) {
+  const t = useTranslations('kanban.view');
   return (
     <div className="flex bg-[#f7f7f8] border border-border rounded-md p-0.5">
       {(['classic', 'week'] as const).map((v) => (
@@ -16,7 +18,7 @@ export function ViewToggle({ view, onChange }: Props) {
             view === v && 'bg-white text-foreground shadow-sm',
           )}
         >
-          {v === 'classic' ? 'Clásico' : 'Semana'}
+          {v === 'classic' ? t('classic') : t('week')}
         </button>
       ))}
     </div>

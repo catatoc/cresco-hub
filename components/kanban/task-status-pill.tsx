@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { ChevronDown, Check } from 'lucide-react';
 import {
@@ -14,14 +15,14 @@ import { cn } from '@/lib/utils';
 import type { TaskStatus } from '@/schemas/task';
 import { DoneCelebration } from '@/components/motion/done-celebration';
 
-const STATUS_STYLE: Record<TaskStatus, { pill: string; dot: string; label: string }> = {
-  Refining:     { pill: 'bg-[#f7f7f8] text-muted-foreground',  dot: 'bg-[#b0b0b6]', label: 'Refinando' },
-  'Not Started':{ pill: 'bg-[#f7f7f8] text-[#57575c]',         dot: 'bg-[#57575c]', label: 'Por hacer' },
-  'In Progress':{ pill: 'bg-[#eeeffc] text-[#5e6ad2]',         dot: 'bg-[#5e6ad2]', label: 'En progreso' },
-  Testing:      { pill: 'bg-[#fef9e7] text-[#b58a1f]',         dot: 'bg-[#b58a1f]', label: 'Testing' },
-  'In Review':  { pill: 'bg-[#faf0db] text-[#c78a2c]',         dot: 'bg-[#c78a2c]', label: 'En revisión' },
-  Done:         { pill: 'bg-[#e8f5ec] text-[#3f9f5c]',         dot: 'bg-[#3f9f5c]', label: 'Hecho' },
-  Archived:     { pill: 'bg-[#f7f7f8] text-muted-foreground',  dot: 'bg-[#8a8a91]', label: 'Archivado' },
+const STATUS_STYLE: Record<TaskStatus, { pill: string; dot: string; labelKey: string }> = {
+  Refining:     { pill: 'bg-[#f7f7f8] text-muted-foreground',  dot: 'bg-[#b0b0b6]', labelKey: 'refining' },
+  'Not Started':{ pill: 'bg-[#f7f7f8] text-[#57575c]',         dot: 'bg-[#57575c]', labelKey: 'notStarted' },
+  'In Progress':{ pill: 'bg-[#eeeffc] text-[#5e6ad2]',         dot: 'bg-[#5e6ad2]', labelKey: 'inProgress' },
+  Testing:      { pill: 'bg-[#fef9e7] text-[#b58a1f]',         dot: 'bg-[#b58a1f]', labelKey: 'testing' },
+  'In Review':  { pill: 'bg-[#faf0db] text-[#c78a2c]',         dot: 'bg-[#c78a2c]', labelKey: 'inReview' },
+  Done:         { pill: 'bg-[#e8f5ec] text-[#3f9f5c]',         dot: 'bg-[#3f9f5c]', labelKey: 'done' },
+  Archived:     { pill: 'bg-[#f7f7f8] text-muted-foreground',  dot: 'bg-[#8a8a91]', labelKey: 'archived' },
 };
 
 const ORDER: TaskStatus[] = [
@@ -40,6 +41,7 @@ type Props = {
 };
 
 export function TaskStatusPill({ taskId, status }: Props) {
+  const t = useTranslations('kanban.statusPill');
   const router = useRouter();
   const [current, setCurrent] = useState<TaskStatus>(status);
   const [pending, startTransition] = useTransition();
@@ -73,7 +75,7 @@ export function TaskStatusPill({ taskId, status }: Props) {
         startTransition(() => router.refresh());
       } catch {
         setCurrent(previous);
-        toast.error('No se pudo cambiar el estado.');
+        toast.error(t('changeError'));
       }
     })();
   }
@@ -89,7 +91,7 @@ export function TaskStatusPill({ taskId, status }: Props) {
         data-celebrating={celebrating}
       >
         <span className={cn('w-1.5 h-1.5 rounded-full', style.dot)} />
-        {style.label}
+        {t(style.labelKey)}
         <ChevronDown className="w-3 h-3 opacity-60" />
         <DoneCelebration show={celebrating} />
       </DropdownMenuTrigger>
@@ -103,7 +105,7 @@ export function TaskStatusPill({ taskId, status }: Props) {
               className="flex items-center gap-2 text-[12px]"
             >
               <span className={cn('w-1.5 h-1.5 rounded-full', st.dot)} />
-              <span className="flex-1">{st.label}</span>
+              <span className="flex-1">{t(st.labelKey)}</span>
               {s === current && <Check className="w-3.5 h-3.5 opacity-70" />}
             </DropdownMenuItem>
           );

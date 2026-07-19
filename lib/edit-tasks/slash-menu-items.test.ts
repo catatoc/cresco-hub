@@ -25,22 +25,22 @@ function applyInsert(itemId: string, slashAndQuery: string): EditorState {
 }
 
 describe('slashMenuItems', () => {
-  it('exposes 10 items with stable ids and labels', () => {
+  it('exposes 10 items with stable ids', () => {
     expect(slashMenuItems).toHaveLength(10);
     const ids = slashMenuItems.map((i) => i.id);
     expect(new Set(ids).size).toBe(10);
-    expect(slashMenuItems.map((i) => i.label)).toEqual(
+    expect(ids).toEqual(
       expect.arrayContaining([
-        'Heading 1',
-        'Heading 2',
-        'Heading 3',
-        'Bullet list',
-        'Numbered list',
-        'To-do list',
-        'Quote',
-        'Divider',
-        'Code',
-        'Callout',
+        'heading-1',
+        'heading-2',
+        'heading-3',
+        'bullet-list',
+        'numbered-list',
+        'task-list',
+        'quote',
+        'divider',
+        'code-block',
+        'callout',
       ]),
     );
   });
