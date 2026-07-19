@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 
 type Tab = 'active' | 'planning' | 'completed' | 'all';
@@ -10,18 +11,14 @@ type Props = {
   onChange: (t: Tab) => void;
 };
 
-const LABELS: Record<Tab, string> = {
-  active: 'Activos',
-  planning: 'En planeación',
-  completed: 'Completados',
-  all: 'Todos',
-};
+const TAB_KEYS: Tab[] = ['active', 'planning', 'completed', 'all'];
 
 export function Tabs({ current, counts, onChange }: Props) {
+  const t = useTranslations('projects.tabs');
   return (
     <div className="-mx-4 sm:-mx-0 px-4 sm:px-0 mb-5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <div className="flex gap-1 p-1 bg-[#f7f7f8] rounded-lg w-fit border border-border">
-        {(Object.keys(LABELS) as Tab[]).map((k) => (
+        {TAB_KEYS.map((k) => (
           <button
             key={k}
             onClick={() => onChange(k)}
@@ -30,7 +27,7 @@ export function Tabs({ current, counts, onChange }: Props) {
               current === k && 'bg-white text-foreground shadow-sm',
             )}
           >
-            {LABELS[k]}
+            {t(k)}
             <span
               className={cn(
                 'bg-black/[0.05] px-1.5 rounded-full text-[10px] font-semibold',

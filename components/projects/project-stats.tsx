@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 
 type Props = {
@@ -21,6 +22,7 @@ export function ProjectStats({
   meetingsCount,
   endDate,
 }: Props) {
+  const t = useTranslations('projects.stats');
   const days = endDate ? daysRemaining(endDate) : null;
   const visible: Array<'avance' | 'tasks' | 'meetings' | 'days'> = [];
   if (completion !== null) visible.push('avance');
@@ -52,7 +54,7 @@ export function ProjectStats({
             {Math.round(completion * 100)}%
           </div>
           <div className="text-[10px] uppercase tracking-[0.05em] text-muted-foreground mt-1">
-            Avance
+            {t('progress')}
           </div>
           <div className="h-1 mt-2 bg-[#e8e8ee] rounded-full overflow-hidden">
             <div
@@ -68,7 +70,7 @@ export function ProjectStats({
           {tasksDone} / {tasksTotal}
         </div>
         <div className="text-[10px] uppercase tracking-[0.05em] text-muted-foreground mt-1">
-          Tareas
+          {t('tasks')}
         </div>
       </div>
 
@@ -77,7 +79,7 @@ export function ProjectStats({
           {meetingsCount}
         </div>
         <div className="text-[10px] uppercase tracking-[0.05em] text-muted-foreground mt-1">
-          Reuniones
+          {t('meetings')}
         </div>
       </div>
 
@@ -92,7 +94,7 @@ export function ProjectStats({
             {days < 0 ? `${Math.abs(days)}d` : `${days}d`}
           </div>
           <div className="text-[10px] uppercase tracking-[0.05em] mt-1 opacity-90">
-            {days < 0 ? 'Vencido' : 'Restantes'}
+            {days < 0 ? t('overdue') : t('remaining')}
           </div>
         </div>
       )}

@@ -4,10 +4,12 @@ import { useEffect, useId, useRef, useState } from 'react';
 import mermaid from 'mermaid';
 import { useTheme } from 'next-themes';
 import { X, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 let initialized = false;
 
 export function Mermaid({ chart }: { chart: string }) {
+  const t = useTranslations('wiki.mermaid');
   const { resolvedTheme } = useTheme();
   const modalContainerRef = useRef<HTMLDivElement>(null);
   const rawId = useId();
@@ -133,7 +135,7 @@ export function Mermaid({ chart }: { chart: string }) {
           }
         }}
         className="my-4 flex items-center justify-center overflow-x-auto max-w-full cursor-zoom-in rounded-md hover:bg-[#f7f7f8] active:bg-[#f0f0f2] transition-colors p-2 min-h-[140px] sm:min-h-[200px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:max-w-full [&_svg]:h-auto"
-        title="Click para ampliar"
+        title={t('clickToEnlarge')}
       >
         {svg ? (
           <div className="w-full" dangerouslySetInnerHTML={{ __html: svg }} />
@@ -155,7 +157,7 @@ export function Mermaid({ chart }: { chart: string }) {
                 type="button"
                 onClick={() => setScale((s) => Math.max(s / 1.2, 0.2))}
                 className="p-2 rounded hover:bg-white/10"
-                aria-label="Zoom out"
+                aria-label={t('zoomOut')}
               >
                 <ZoomOut className="w-4 h-4" />
               </button>
@@ -166,7 +168,7 @@ export function Mermaid({ chart }: { chart: string }) {
                 type="button"
                 onClick={() => setScale((s) => Math.min(s * 1.2, 8))}
                 className="p-2 rounded hover:bg-white/10"
-                aria-label="Zoom in"
+                aria-label={t('zoomIn')}
               >
                 <ZoomIn className="w-4 h-4" />
               </button>
@@ -177,7 +179,7 @@ export function Mermaid({ chart }: { chart: string }) {
                   setOffset({ x: 0, y: 0 });
                 }}
                 className="p-2 rounded hover:bg-white/10"
-                aria-label="Reset"
+                aria-label={t('reset')}
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
@@ -186,7 +188,7 @@ export function Mermaid({ chart }: { chart: string }) {
               type="button"
               onClick={() => setOpen(false)}
               className="p-2 rounded hover:bg-white/10"
-              aria-label="Cerrar"
+              aria-label={t('close')}
             >
               <X className="w-5 h-5" />
             </button>

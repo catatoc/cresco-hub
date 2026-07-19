@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "projects": "Proyectos"
+  },
+  "page": {
+    "total": "{count} en total",
+    "emptyMine": "No estás en proyectos del cliente todavía.",
+    "viewAllCustomer": "Ver todos los del cliente →"
+  },
+  "scope": {
+    "mine": "Mis",
+    "team": "Equipo"
+  },
+  "view": {
+    "emptyCategory": "No hay proyectos en esta categoría."
+  },
+  "tabs": {
+    "active": "Activos",
+    "planning": "En planeación",
+    "completed": "Completados",
+    "all": "Todos"
+  },
+  "newTaskButton": {
+    "label": "Tarea"
+  },
+  "card": {
+    "progress": "Avance",
+    "teamCount": "{count} en equipo"
+  },
+  "hero": {
+    "openInNotion": "Abrir en Notion"
+  },
+  "meetings": {
+    "title": "Reuniones recientes",
+    "empty": "Sin reuniones asociadas a este proyecto aún.",
+    "viewAll": "Ver todas →",
+    "actions": "{count, plural, one {# acción} other {# acciones}}"
+  },
+  "metaRow": {
+    "due": "Vence {date}",
+    "starts": "Inicia {date}",
+    "owner": "Owner:",
+    "people": "{count, plural, one {# persona} other {# personas}}"
+  },
+  "stats": {
+    "progress": "Avance",
+    "tasks": "Tareas",
+    "meetings": "Reuniones",
+    "overdue": "Vencido",
+    "remaining": "Restantes"
+  },
+  "tasks": {
+    "title": "Tareas activas",
+    "empty": "Sin tareas en este proyecto. Crea la primera con el botón <b>+ Tarea</b>.",
+    "viewAll": "Ver todas →",
+    "due": "vence {date}"
+  },
+  "team": {
+    "title": "Equipo",
+    "empty": "Sin equipo asignado.",
+    "owner": "Owner: {name}"
+  },
+  "wikiModule": {
+    "title": "Wiki",
+    "empty": "Sin documentación asociada.",
+    "viewAll": "Ver todo →"
+  }
+}

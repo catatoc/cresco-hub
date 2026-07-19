@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import { BookOpen } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import type { WikiPage } from '@/schemas/wiki';
 
 export function ProjectWikiModule({ pages }: { pages: WikiPage[] }) {
+  const t = useTranslations('projects.wikiModule');
   if (pages.length === 0) {
     return (
-      <Module>
-        <p className="text-[12px] text-muted-foreground py-3">Sin documentación asociada.</p>
+      <Module title={t('title')}>
+        <p className="text-[12px] text-muted-foreground py-3">{t('empty')}</p>
       </Module>
     );
   }
@@ -16,8 +18,9 @@ export function ProjectWikiModule({ pages }: { pages: WikiPage[] }) {
 
   return (
     <Module
+      title={t('title')}
       action={pages.length > 3 ? (
-        <Link href="/wiki" className="text-[11px] text-[#5e6ad2] hover:underline">Ver todo →</Link>
+        <Link href="/wiki" className="text-[11px] text-[#5e6ad2] hover:underline">{t('viewAll')}</Link>
       ) : null}
     >
       <ul className="divide-y divide-[#f5f5f8]">
@@ -46,13 +49,13 @@ export function ProjectWikiModule({ pages }: { pages: WikiPage[] }) {
   );
 }
 
-function Module({ action, children }: { action?: React.ReactNode; children: React.ReactNode }) {
+function Module({ title, action, children }: { title: string; action?: React.ReactNode; children: React.ReactNode }) {
   return (
     <section className="bg-white border border-border rounded-xl px-4 py-3.5">
       <header className="flex items-center justify-between mb-2">
         <h2 className="text-[12px] font-semibold flex items-center gap-2">
           <BookOpen className="w-3.5 h-3.5 text-muted-foreground" />
-          Wiki
+          {title}
         </h2>
         {action}
       </header>

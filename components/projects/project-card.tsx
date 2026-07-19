@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
 import type { Project } from '@/schemas/project';
 import { cn } from '@/lib/utils';
 import {
@@ -11,6 +12,8 @@ import { Calendar, Users, FolderKanban } from 'lucide-react';
 type Props = { project: Project; accentIndex: number };
 
 export function ProjectCard({ project, accentIndex }: Props) {
+  const t = useTranslations('projects.card');
+  const locale = useLocale();
   const s = project.status ? PROJECT_STATUS_STYLES[project.status] : null;
   const accent = PROJECT_ACCENTS[accentIndex % PROJECT_ACCENTS.length];
   const iconBg = PROJECT_ICON_BG[accentIndex % PROJECT_ICON_BG.length];
@@ -56,7 +59,7 @@ export function ProjectCard({ project, accentIndex }: Props) {
 
       {completionPct !== null && (
         <div className="flex items-center gap-2.5 mb-3 min-w-0">
-          <span className="text-[12px] sm:text-[11px] text-muted-foreground whitespace-nowrap">Avance</span>
+          <span className="text-[12px] sm:text-[11px] text-muted-foreground whitespace-nowrap">{t('progress')}</span>
           <div className="flex-1 h-1 bg-[#f7f7f8] rounded overflow-hidden min-w-0">
             <div
               className={cn('h-full rounded', s?.progress ?? 'bg-[#5e6ad2]')}
@@ -72,12 +75,12 @@ export function ProjectCard({ project, accentIndex }: Props) {
       <div className="flex items-center justify-between gap-2 pt-3 border-t border-dashed border-border text-[12px] sm:text-[11px] text-muted-foreground min-w-0">
         <span className="inline-flex items-center gap-1.5 shrink-0">
           <Users className="w-3 h-3 shrink-0" />
-          {project.teamIds.length} en equipo
+          {t('teamCount', { count: project.teamIds.length })}
         </span>
         {project.endDate && (
           <span className="inline-flex items-center gap-1.5 shrink-0">
             <Calendar className="w-3 h-3 shrink-0" />
-            {new Date(project.endDate).toLocaleDateString('es', { month: 'short', year: '2-digit' })}
+            {new Date(project.endDate).toLocaleDateString(locale, { month: 'short', year: '2-digit' })}
           </span>
         )}
       </div>

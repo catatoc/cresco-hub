@@ -1,9 +1,11 @@
+import { getTranslations } from 'next-intl/server';
 import { Topbar } from '@/components/shell/topbar';
 
-export default function Loading() {
+export default async function Loading() {
+  const t = await getTranslations('wiki');
   return (
     <div className="contents [view-transition-name:main-content]">
-      <Topbar crumbs={[{ label: 'Wiki' }]} />
+      <Topbar crumbs={[{ label: t('nav.wiki') }]} />
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-[260px_1fr] overflow-hidden">
         <aside className="hidden lg:block border-r border-border bg-[#f7f7f8] p-2 space-y-1.5">
           <div className="h-7 bg-white border border-border rounded-md animate-pulse" />

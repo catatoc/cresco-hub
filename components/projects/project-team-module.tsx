@@ -1,4 +1,5 @@
 import { Users } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import type { TeamMember } from '@/schemas/team-member';
 
 function initials(name: string): string {
@@ -16,10 +17,11 @@ function bgFor(id: string): string {
 type Props = { members: TeamMember[]; ownerName: string | null };
 
 export function ProjectTeamModule({ members, ownerName }: Props) {
+  const t = useTranslations('projects.team');
   if (members.length === 0 && !ownerName) {
     return (
-      <Module>
-        <p className="text-[12px] text-muted-foreground py-3">Sin equipo asignado.</p>
+      <Module title={t('title')}>
+        <p className="text-[12px] text-muted-foreground py-3">{t('empty')}</p>
       </Module>
     );
   }
@@ -28,7 +30,7 @@ export function ProjectTeamModule({ members, ownerName }: Props) {
   const overflow = members.length - visible.length;
 
   return (
-    <Module>
+    <Module title={t('title')}>
       <div className="flex flex-wrap gap-1.5">
         {visible.map((m) => (
           <span
@@ -53,19 +55,19 @@ export function ProjectTeamModule({ members, ownerName }: Props) {
       </div>
       {ownerName && (
         <p className="text-[10.5px] text-muted-foreground mt-2">
-          {`Owner: ${ownerName}`}
+          {t('owner', { name: ownerName })}
         </p>
       )}
     </Module>
   );
 }
 
-function Module({ children }: { children: React.ReactNode }) {
+function Module({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="bg-white border border-border rounded-xl px-4 py-3.5">
       <h2 className="text-[12px] font-semibold flex items-center gap-2 mb-2">
         <Users className="w-3.5 h-3.5 text-muted-foreground" />
-        Equipo
+        {title}
       </h2>
       {children}
     </section>
