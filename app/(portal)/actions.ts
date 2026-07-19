@@ -4,7 +4,7 @@ import { getLocale } from 'next-intl/server';
 import { requireContext } from '@/lib/auth/require-context';
 import { toggleTaskForMember } from '@/lib/portal/toggle';
 import { markPortalSignIn, markPortalOnboarding } from '@/lib/portal/welcome';
-import { loadProjectContent, type ProjectBlock } from '@/lib/portal/content';
+import { loadProjectContent, loadTaskContent, type ProjectBlock } from '@/lib/portal/content';
 import { loadProposalContent } from '@/lib/portal/documents';
 import type { PortalLocale } from '@/lib/portal/i18n';
 
@@ -27,6 +27,13 @@ export async function completePortalWelcome(): Promise<{ ok: boolean }> {
 export async function getProjectBrief(projectId: string): Promise<ProjectBlock[]> {
   const ctx = await requireContext();
   return (await loadProjectContent(ctx, projectId)) ?? [];
+}
+
+// El cuerpo de la tarea (los specs de su página en Notion) — se carga lazy
+// al abrir el modal. El gate por Customer vive en loadTaskContent.
+export async function getTaskBody(taskId: string): Promise<ProjectBlock[]> {
+  const ctx = await requireContext();
+  return (await loadTaskContent(ctx, taskId)) ?? [];
 }
 
 // La propuesta del cliente (Wiki con categoría Proposal) — se carga lazy al
