@@ -61,7 +61,7 @@ describe('POST /api/webhooks/release-published', () => {
     expect(await res.json()).toEqual({ ok: true, release_id: 'rel-123' });
 
     expect(fetchMock).toHaveBeenCalledOnce();
-    const [calledUrl, init] = fetchMock.mock.calls[0];
+    const [calledUrl, init] = fetchMock.mock.calls[0]!;
     expect(calledUrl).toBe('https://routine.example/trigger');
     const headers = init?.headers as Record<string, string>;
     expect(headers.authorization).toBe('Bearer routine-token-1234567890');

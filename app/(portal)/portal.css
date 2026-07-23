@@ -37,6 +37,7 @@
 .cp-stage { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto;
   padding: clamp(28px, 5vh, 52px) clamp(16px, 4vw, 40px) 90px; }
 .cp-topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 26px; margin-bottom: 30px; }
+.cp-topright { display: flex; align-items: center; gap: 10px; }
 /* ── marca · lockup del manual (identidad 06) ──
    wordmark tipográfico Inter 500 + punto "." moss en baseline (pulsa: pantalla viva);
    co-branding "crescō × cliente": × gris a 2/3, logo calibrado por x-height (.96em)
@@ -342,7 +343,10 @@
 
 /* móvil chico: tarjeta de usuario compacta */
 @media (max-width: 560px) {
-  .cp-brand { font-size: 20px; }
+  .cp-brand { font-size: 20px; flex-shrink: 0; }
+  /* la fila envuelve en vez de encoger la marca (el logo quedaba debajo del toggle) */
+  .cp-topbar { flex-wrap: wrap; row-gap: 10px; }
+  .cp-topright { margin-left: auto; }
   .cp-ucard { padding: 6px 12px 6px 6px; gap: 8px; }
   .cp-ucard .cp-ucu { display: none; }
   .cp-ucard .cp-unm { max-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -350,6 +354,7 @@
   .cp-health { align-items: flex-start; text-align: left; }
   .cp-health .cp-why { max-width: none; }
   .cp-stage { padding-left: 12px; padding-right: 12px; }
+  .cp-page { overflow-x: clip; }
 }
 
 @media (prefers-reduced-motion: reduce) {
