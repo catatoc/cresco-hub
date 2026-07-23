@@ -766,7 +766,8 @@
     .page:last-of-type { page-break-after: auto; }
     .phase-nav { margin-top: 6mm; }
     .page:last-child { page-break-after: auto; }
-    .phase-page { display: flex !important; }
+    .phase-page { display: none !important; }
+    .onepager { page-break-after: auto; zoom: 0.78; }
     body.view-phase .onepager { display: flex !important; }
     .tl-row.clickable { cursor: default; padding: 0; margin: 0; background: transparent !important; }
     .phase-back, .phase-nav, .screen-only { display: none !important; }
@@ -802,7 +803,7 @@
 
   <div class="stats">
     <div class="stat"><span class="l">Diseño</span><span class="v">3 ago <em>2026</em></span></div>
-    <div class="stat"><span class="l">Primera entrega</span><span class="v">15 oct <em>2026</em></span></div>
+    <div class="stat"><span class="l">Primera entrega</span><span class="v">31 oct <em>2026</em></span></div>
     <div class="stat"><span class="l">Entrega completa</span><span class="v">28 feb <em>2027</em></span></div>
     <div class="stat"><span class="l">Inversión</span><span class="v">USD <em>24.000</em></span></div>
   </div>
@@ -837,16 +838,16 @@
         <div class="tl-bar-track">
           <div class="tl-bar dim" style="left:0%;width:14.28%">ago</div>
         </div>
-        <span class="tl-amt"><span class="pct">5 módulos · 31 ago</span>USD 3.400</span>
+        <span class="tl-amt"><span class="pct">5 módulos</span>31 ago</span>
       </a>
 
       <a class="tl-row clickable" href="#f1">
         <span class="tl-name"><span class="code">f1</span>Contratistas y valuaciones<span class="live-pill">primero</span></span>
         <div class="tl-bar-track">
-          <div class="tl-bar dim" style="left:14.28%;width:21.43%">sep</div>
-          <div class="tl-bar" style="left:35.71%;width:64.29%">disponible para pruebas · 15 oct</div>
+          <div class="tl-bar dim" style="left:14.28%;width:28.57%">sep–oct</div>
+          <div class="tl-bar" style="left:42.85%;width:57.15%">disponible para pruebas · 31 oct</div>
         </div>
-        <span class="tl-amt cross"><span class="pct">8 módulos · 15 oct</span>USD 4.800</span>
+        <span class="tl-amt cross"><span class="pct">8 módulos</span>31 oct</span>
       </a>
 
       <a class="tl-row clickable" href="#f2">
@@ -855,7 +856,7 @@
           <div class="tl-bar dim" style="left:28.57%;width:35.71%">oct–dic</div>
           <div class="tl-bar" style="left:64.28%;width:35.72%">disponible para pruebas</div>
         </div>
-        <span class="tl-amt"><span class="pct">13 módulos · 15 dic</span>USD 6.600</span>
+        <span class="tl-amt"><span class="pct">13 módulos</span>15 dic</span>
       </a>
 
       <a class="tl-row clickable" href="#f3">
@@ -864,7 +865,7 @@
           <div class="tl-bar dim" style="left:57.14%;width:28.57%">dic–ene</div>
           <div class="tl-bar" style="left:85.71%;width:14.29%">en pruebas</div>
         </div>
-        <span class="tl-amt"><span class="pct">10 módulos · 31 ene</span>USD 5.600</span>
+        <span class="tl-amt"><span class="pct">10 módulos</span>31 ene</span>
       </a>
 
       <a class="tl-row clickable" href="#f4">
@@ -872,7 +873,7 @@
         <div class="tl-bar-track">
           <div class="tl-bar dim" style="left:71.43%;width:28.57%">ene–feb</div>
         </div>
-        <span class="tl-amt"><span class="pct">7 módulos · 28 feb</span>USD 3.600</span>
+        <span class="tl-amt"><span class="pct">7 módulos</span>28 feb</span>
       </a>
 
     </div>
@@ -900,7 +901,6 @@
       <div class="inversion-grid">
         <div class="inversion-price">
           <div class="price-amount"><span class="price-currency">USD</span>24.000<span class="price-rate"> total</span></div>
-          <div class="price-meta">Contrato de obra · tres ingenieros dedicados · anticipo del 20% · siete valuaciones mensuales · retención del 10% · más el ingeniero residente por USD 850 al mes desde agosto</div>
         </div>
         <div class="inversion-team">
           <div class="inversion-label">El alcance, completo</div>
@@ -914,19 +914,7 @@
         </div>
       </div>
       <p class="inversion-note">
-        <em>El código, la nube y la base de datos se abren a nombre de Remodela tu Mundo desde el primer día, con Diego como dueño de las cuentas. Cada fase se libera contra firma de su acta y puede terminarse ahí sin penalidad, conservando lo entregado.</em>
-      </p>
-    </div>
-  </div>
-
-  <div class="footer">
-    <div class="left">
-      <span class="screen-only">Toca cualquier fase del cronograma para ver sus módulos · <a class="doc-link" href="#equipo">el equipo</a> · <a class="doc-link" href="#condiciones">las condiciones</a></span>
-      <span class="print-only">Las páginas siguientes detallan cada fase con sus módulos, el equipo asignado y las condiciones del contrato.</span>
-    </div>
-    <div>
-      <div class="cta-label">Próximo paso</div>
-      <div class="cta-text">La aceptación se formaliza con la firma del contrato de obra y el anticipo de movilización. Cerrando antes del <strong>31 de julio</strong>, el diseño arranca el <strong>lunes 3 de agosto</strong>.<br>Vigencia de esta propuesta: 14 de agosto de 2026.</div>
+</p>
     </div>
   </div>
 
@@ -949,7 +937,7 @@
     <div class="phase-title-row">
       <span class="phase-code-mark">f0</span>
       <h1 class="phase-title">Diseño y fundaciones</h1>
-      <span class="phase-status">agosto · USD 3.400</span>
+      <span class="phase-status">agosto</span>
     </div>
     <p class="phase-subtitle">Un mes entero antes de programar. Las pantallas se dibujan con el equipo de Remodela, y el modelo de datos se decide con la operación real a la vista. Es la fase que hace que seis meses de desarrollo sean creíbles.</p>
   </div>
@@ -1006,14 +994,14 @@
     <div class="phase-title-row">
       <span class="phase-code-mark">f1</span>
       <h1 class="phase-title">Contratistas y valuaciones</h1>
-      <span class="phase-status">sep – 15 oct · USD 4.800</span>
+      <span class="phase-status">sep – oct</span>
     </div>
     <p class="phase-subtitle">La fase que ataca el dolor mayor y por eso va de primera. El martes cada líder de equipo entra desde su propio Android, ve solo sus partidas y sube las fotos con fecha y ubicación. El jueves la valuación llega armada y se aprueba de un toque. La administradora deja de abrir el Excel.</p>
   </div>
 
   <div class="phase-mini-timeline">
-    <span class="phase-mini-label cur">sep – 15 oct</span>
-    <div class="phase-mini-bar"><div class="phase-mini-fill" style="left:14.28%;width:21.43%;"></div></div>
+    <span class="phase-mini-label cur">sep – oct</span>
+    <div class="phase-mini-bar"><div class="phase-mini-fill" style="left:14.28%;width:28.57%;"></div></div>
     <span class="phase-mini-label">28 feb</span>
   </div>
 
@@ -1040,7 +1028,7 @@
 
   <div class="phase-section">
     <div class="phase-section-lbl">El acta</div>
-    <div class="phase-section-body"><strong>15 de octubre.</strong> La valuación de la semana armada por el sistema y aprobada de un toque, disponible para pruebas del equipo. Cuatro meses y medio antes de que el proyecto termine.</div>
+    <div class="phase-section-body"><strong>31 de octubre.</strong> La valuación de la semana armada por el sistema y aprobada de un toque, disponible para pruebas del equipo. Cuatro meses antes de que el proyecto termine.</div>
   </div>
 
   <div class="phase-nav">
@@ -1066,7 +1054,7 @@
     <div class="phase-title-row">
       <span class="phase-code-mark">f2</span>
       <h1 class="phase-title">Obras y presupuestos</h1>
-      <span class="phase-status">oct – 15 dic · USD 6.600</span>
+      <span class="phase-status">oct – 15 dic</span>
     </div>
     <p class="phase-subtitle">El corazón comercial. La base de materiales con memoria de precios entra junto con los presupuestos, no después, para que ninguna arquitecta tenga que escribir dos veces el mismo tubo. Aquí viven los márgenes, las órdenes de cambio, las procuras y el taller.</p>
   </div>
@@ -1126,7 +1114,7 @@
     <div class="phase-title-row">
       <span class="phase-code-mark">f3</span>
       <h1 class="phase-title">Administración y finanzas</h1>
-      <span class="phase-status">dic – 31 ene · USD 5.600</span>
+      <span class="phase-status">dic – 31 ene</span>
     </div>
     <p class="phase-subtitle">Cuentas, cajas, conciliación y nómina. Y la pieza que cambia cómo se dirige la empresa: el costo real contra el presupuestado, en vivo, para saber si una obra está dejando utilidad en la semana seis, no al cerrarla.</p>
   </div>
@@ -1188,7 +1176,7 @@
     <div class="phase-title-row">
       <span class="phase-code-mark">f4</span>
       <h1 class="phase-title">Dirección y control</h1>
-      <span class="phase-status">ene – 28 feb · USD 3.600</span>
+      <span class="phase-status">ene – 28 feb</span>
     </div>
     <p class="phase-subtitle">La fase que le devuelve a Diego la posibilidad de desconectarse. Todas las obras en una pantalla, el asistente respondiendo con los datos de la casa, los clientes recibiendo su avance por WhatsApp sin que nadie lo arme a mano, y el traspaso documentado.</p>
   </div>
@@ -1337,7 +1325,7 @@
         <tbody>
           <tr><th>Diseño</th><td>Agosto 2026</td><td class="pick">Agosto 2026</td><td>Agosto 2026</td></tr>
           <tr><th>Desarrollo</th><td>9 meses</td><td class="pick">6 meses</td><td>5 meses</td></tr>
-          <tr><th>Primera entrega</th><td>Noviembre 2026</td><td class="pick">15 de octubre 2026</td><td>Octubre 2026</td></tr>
+          <tr><th>Primera entrega</th><td>Noviembre 2026</td><td class="pick">31 de octubre 2026</td><td>Octubre 2026</td></tr>
           <tr><th>Entrega completa</th><td>Mayo 2027</td><td class="pick">28 de febrero 2027</td><td>Enero 2027</td></tr>
           <tr><th>Contrato de obra</th><td>USD 21.700</td><td class="pick">USD 24.000</td><td>USD 26.900</td></tr>
           <tr><th>Anticipo de movilización</th><td>USD 4.340</td><td class="pick">USD 4.800</td><td>USD 5.380</td></tr>
