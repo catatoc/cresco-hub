@@ -122,7 +122,7 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
         <div className="cp-topbar cp-r" style={{ '--d': '.04s' } as CSSProperties}>
           <Brand logo={data.customerLogo} name={data.customerName} />
           <div className="cp-topright">
-            <LanguageToggle />
+            <LanguageToggle className="cp-lang-toggle" />
             <div className="cp-ucard" id="cp-t-user">
               <Av initials={data.memberName.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase()} color="#4A5C6B" />
               <div>

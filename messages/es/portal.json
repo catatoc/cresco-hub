@@ -192,8 +192,8 @@
     "retry": "Reintentar"
   },
   "docViewer": {
-    "back": "← volver al portal",
-    "onlyCustomer": "solo {customer}",
-    "downloadPdf": "descargar PDF"
+    "back": "← volver",
+    "onlyCustomer": "{customer}",
+    "downloadPdf": "descargar"
   }
 }
