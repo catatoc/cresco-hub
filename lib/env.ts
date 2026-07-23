@@ -18,6 +18,13 @@ const serverEnvSchema = z.object({
   // Bearer secret for the error-sync cron route (Fase 5). Optional so a missing
   // value never breaks app boot — the route just rejects all calls when unset.
   CRON_SECRET: z.string().min(16).optional(),
+  // Release Notes · editor pipeline. The shared secret Notion's automation sends to
+  // /api/webhooks/release-published, plus the Claude Code "editor" routine's API URL + token
+  // we forward the release to. All optional so a missing value never breaks app boot — the
+  // webhook rejects (or 503s) until they're set.
+  RELEASE_WEBHOOK_SECRET: z.string().min(16).optional(),
+  CLAUDE_EDITOR_ROUTINE_URL: z.string().url().optional(),
+  CLAUDE_EDITOR_ROUTINE_TOKEN: z.string().min(16).optional(),
   NEXT_PUBLIC_APP_URL: z.string().url(),
 });
 
