@@ -178,6 +178,15 @@ describe('doc-files (documentos privados)', () => {
     expect(docFilesForCustomer('distribuidora lara')).toEqual([]);
   });
 
+  it('remodela tu mundo encuentra su propuesta y no la de kenco', async () => {
+    const { findDocFile } = await import('../doc-files');
+    expect(findDocFile('remodela-propuesta', 'Remodela tu Mundo')?.title).toBe(
+      'Propuesta · plataforma de gestión',
+    );
+    expect(findDocFile('remodela-propuesta', 'Kenco')).toBeNull();
+    expect(findDocFile('kenco-propuesta', 'Remodela tu Mundo')).toBeNull();
+  });
+
   it('docFilePath rechaza escapes fuera de private-docs', async () => {
     const { docFilePath } = await import('../doc-files');
     expect(docFilePath('kenco/propuesta.pdf')).toContain('private-docs');

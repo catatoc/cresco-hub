@@ -29,6 +29,15 @@ const DOC_FILES: PortalDocFile[] = [
     pdf: 'kenco/propuesta.pdf',
     match: (n) => norm(n).includes('kenco'),
   },
+  {
+    slug: 'remodela-propuesta',
+    title: 'Propuesta · plataforma de gestión',
+    meta: 'remodela tu mundo × crescō · v1.0 · julio 2026',
+    chipState: 'v1.0 · 5 fases',
+    html: 'remodela/propuesta.html',
+    pdf: 'remodela/propuesta.pdf',
+    match: (n) => norm(n).includes('remodela tu mundo'),
+  },
 ];
 
 /** El documento del slug, solo si pertenece al cliente — null en cualquier otro caso. */
