@@ -114,13 +114,6 @@ export function WelcomeExperience({ firstName, gender = null }: { firstName: str
         <span>cresc&#333;<span className={styles.d}>.</span></span>
       </div>
 
-      <button
-        className={`${styles.skip}${onSlide ? ' ' + styles.show : ''}`}
-        onClick={(e) => { e.stopPropagation(); go(DONE); }}
-      >
-        {t('skip')}
-      </button>
-
       <div className={styles.stage}>
         {/* intro · gracias por la confianza */}
         <section className={cls(0)}>
