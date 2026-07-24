@@ -155,7 +155,7 @@ export function DocumentsCapsule({ payments, documents }: { payments: PortalPaym
         <div className="cp-capsule" ref={capRef} onMouseLeave={() => setLens(null)}>
           {lens && <span className="cp-lens" style={{ left: lens.left, width: lens.width }} />}
           {chips.map((c) => (
-            <button key={c.key} className="cp-chip" onClick={() => openDoc(c.key)} onMouseEnter={moveLens}>
+            <button key={c.key} className={c.key === 'propuesta' ? 'cp-chip cp-chip-featured' : 'cp-chip'} onClick={() => openDoc(c.key)} onMouseEnter={moveLens}>
               <span className={c.alert ? 'cp-chip-dot alert' : 'cp-chip-dot'} />
               {c.label}
               {c.state && <span className="cp-chip-st">{c.state}</span>}
