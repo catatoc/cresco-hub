@@ -3,7 +3,6 @@
 import { useEffect, useState, useTransition, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import { LanguageToggle } from '@/components/common/language-toggle';
 import { PortalScene } from './scene';
 import { Brand } from './brand';
 import { Brief, BriefSkeleton } from './brief';
@@ -122,7 +121,6 @@ export function PortalHome({ data, payments, documents, showTour }: { data: Port
         <div className="cp-topbar cp-r" style={{ '--d': '.04s' } as CSSProperties}>
           <Brand logo={data.customerLogo} name={data.customerName} />
           <div className="cp-topright">
-            <LanguageToggle className="cp-lang-toggle" />
             <div className="cp-ucard" id="cp-t-user">
               <Av initials={data.memberName.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase()} color="#4A5C6B" />
               <div>

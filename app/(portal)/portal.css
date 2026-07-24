@@ -348,8 +348,6 @@
   /* la fila envuelve en vez de encoger la marca (el logo quedaba debajo del toggle) */
   .cp-topbar { flex-wrap: wrap; row-gap: 10px; }
   .cp-topright { margin-left: auto; }
-  /* en teléfono el idioma se cambia desde el navegador; el toggle estorba en la línea */
-  .cp-lang-toggle { display: none; }
   .cp-ucard { padding: 6px 12px 6px 6px; gap: 8px; }
   .cp-ucard .cp-ucu { display: none; }
   .cp-ucard .cp-unm { max-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
