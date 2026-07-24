@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { requireContext } from '@/lib/auth/require-context';
-import { cachedPortalMeetings } from '@/lib/portal/cache';
+import { loadPortalMeetings } from '@/lib/portal/meeting';
 import type { PortalLocale } from '@/lib/portal/i18n';
 import { MeetingsIndex } from '@/components/portal/meetings-index';
 
@@ -15,6 +15,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function MeetingsPage() {
   const ctx = await requireContext();
   const locale: PortalLocale = (await getLocale()) === 'en' ? 'en' : 'es';
-  const meetings = await cachedPortalMeetings(ctx, locale);
+  const meetings = await loadPortalMeetings(ctx, locale);
   return <MeetingsIndex meetings={meetings} />;
 }

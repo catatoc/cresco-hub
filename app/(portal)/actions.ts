@@ -1,9 +1,7 @@
 'use server';
 
-import { revalidateTag } from 'next/cache';
 import { getLocale } from 'next-intl/server';
-import { requireContext, contextTag } from '@/lib/auth/require-context';
-import { portalTag } from '@/lib/portal/cache';
+import { requireContext } from '@/lib/auth/require-context';
 import { toggleTaskForMember } from '@/lib/portal/toggle';
 import { markPortalSignIn, markPortalOnboarding } from '@/lib/portal/welcome';
 import { loadProjectContent, loadTaskContent, type ProjectBlock } from '@/lib/portal/content';
@@ -14,18 +12,14 @@ import type { PortalLocale } from '@/lib/portal/i18n';
 // ownership vive en toggleTaskForMember (compartida con el API móvil).
 export async function toggleMyTask(taskId: string, done: boolean): Promise<{ ok: boolean }> {
   const ctx = await requireContext();
-  const res = await toggleTaskForMember(ctx, taskId, done);
-  revalidateTag(portalTag(ctx.customerId), 'max');
-  return res;
+  return toggleTaskForMember(ctx, taskId, done);
 }
 
 // El cliente terminó (o saltó) las diapositivas de bienvenida → marca
 // "Portal Sign In" en su página de Team para no volver a mostrarlas.
 export async function completePortalWelcome(): Promise<{ ok: boolean }> {
   const ctx = await requireContext();
-  const res = await markPortalSignIn(ctx);
-  revalidateTag(contextTag(ctx.email), 'max');
-  return res;
+  return markPortalSignIn(ctx);
 }
 
 // El brief del proyecto (contenido de la página en Notion) — se carga lazy
@@ -54,7 +48,5 @@ export async function getProposal(): Promise<{ title: string; blocks: ProjectBlo
 // "Portal Onboarding Check" en su página de Team.
 export async function completePortalTour(): Promise<{ ok: boolean }> {
   const ctx = await requireContext();
-  const res = await markPortalOnboarding(ctx);
-  revalidateTag(contextTag(ctx.email), 'max');
-  return res;
+  return markPortalOnboarding(ctx);
 }

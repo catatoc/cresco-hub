@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { requireContext } from '@/lib/auth/require-context';
-import { cachedPortalMeeting } from '@/lib/portal/cache';
+import { loadPortalMeeting } from '@/lib/portal/meeting';
 import type { PortalLocale } from '@/lib/portal/i18n';
 import { MeetingPage } from '@/components/portal/meeting-page';
 
@@ -17,7 +17,7 @@ export default async function MeetingDetailPage({ params }: { params: Promise<{ 
   const { id } = await params;
   const ctx = await requireContext();
   const locale: PortalLocale = (await getLocale()) === 'en' ? 'en' : 'es';
-  const meeting = await cachedPortalMeeting(ctx, id, locale);
+  const meeting = await loadPortalMeeting(ctx, id, locale);
   if (!meeting) notFound();
   return <MeetingPage meeting={meeting} />;
 }
