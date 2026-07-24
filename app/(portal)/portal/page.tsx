@@ -2,9 +2,11 @@ import type { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { requireContext } from '@/lib/auth/require-context';
 import type { PortalLocale } from '@/lib/portal/i18n';
-import { loadPortalData } from '@/lib/portal/data';
-import { loadPortalPayments } from '@/lib/portal/payments';
-import { loadPortalDocuments } from '@/lib/portal/documents';
+import {
+  cachedPortalData,
+  cachedPortalPayments,
+  cachedPortalDocuments,
+} from '@/lib/portal/cache';
 import { PortalHome } from '@/components/portal/portal-home';
 import { WelcomeExperience } from '@/components/portal/welcome-experience';
 
@@ -26,9 +28,9 @@ export default async function PortalPage() {
 
   const locale: PortalLocale = (await getLocale()) === 'en' ? 'en' : 'es';
   const [data, payments, documents] = await Promise.all([
-    loadPortalData(ctx, locale),
-    loadPortalPayments(ctx, locale),
-    loadPortalDocuments(ctx, locale),
+    cachedPortalData(ctx, locale),
+    cachedPortalPayments(ctx, locale),
+    cachedPortalDocuments(ctx, locale),
   ]);
   return <PortalHome data={data} payments={payments} documents={documents} showTour={!ctx.portalOnboarding} />;
 }

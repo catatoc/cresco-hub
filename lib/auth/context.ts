@@ -34,16 +34,32 @@ export type AppContext = {
   portalOnboarding: boolean;
 };
 
-export async function resolveContext(email: string | null): Promise<AppContext | null> {
-  if (!email) return null;
+export type ContextData = {
+  member: Awaited<ReturnType<typeof findMemberByEmail>>;
+  customers: Awaited<ReturnType<typeof getCustomers>>;
+};
 
+/**
+ * La parte Notion de la resolución (miembro + customers), sin APIs dinámicas —
+ * cacheable por email (require-context la envuelve en unstable_cache).
+ */
+export async function lookupContextData(email: string): Promise<ContextData | null> {
   const member = await findMemberByEmail(email);
-  if (!member) return null;
-
-  if (member.customerIds.length === 0) return null;
-
+  if (!member || member.customerIds.length === 0) return null;
   const customers = await getCustomers(member.customerIds);
   if (customers.length === 0) return null;
+  return { member, customers };
+}
+
+export async function resolveContext(
+  email: string | null,
+  data?: ContextData | null,
+): Promise<AppContext | null> {
+  if (!email) return null;
+
+  const looked = data === undefined ? await lookupContextData(email) : data;
+  if (!looked?.member) return null;
+  const { member, customers } = looked;
 
   const cookieStore = await cookies();
   const selectedId = cookieStore.get(SELECTED_CUSTOMER_COOKIE)?.value;

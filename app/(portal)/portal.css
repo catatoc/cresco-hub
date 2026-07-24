@@ -373,11 +373,12 @@
 .cp-err-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--cp-clay); animation: cp-pulse 2.2s ease-in-out infinite; }
 .cp-err-card h2 { font-size: 21px; font-weight: 500; letter-spacing: -.03em; margin: 14px 0 0; }
 .cp-err-card p { font-size: 13.5px; font-weight: 300; color: var(--cp-ink-soft); margin: 8px 0 0; line-height: 1.55; }
-.cp-err-card button { margin-top: 22px; font: inherit; font-size: 14px; font-weight: 500; letter-spacing: -.01em;
+.cp-err-card button, .cp-err-card .cp-err-retry { margin-top: 22px; font: inherit; font-size: 14px; font-weight: 500; letter-spacing: -.01em;
   color: var(--cp-paper); background: var(--cp-ink); border: none; border-radius: 100px; padding: 12px 30px; cursor: pointer;
+  display: inline-block; text-decoration: none;
   transition: transform .2s var(--cp-ease), opacity .2s var(--cp-ease); }
-.cp-err-card button:hover { opacity: .92; }
-.cp-err-card button:active { transform: scale(.98); }
+.cp-err-card button:hover, .cp-err-card .cp-err-retry:hover { opacity: .92; }
+.cp-err-card button:active, .cp-err-card .cp-err-retry:active { transform: scale(.98); }
 
 /* ── la cápsula · documentos del cliente (pagos · propuesta · accesos · infra)
    Un solo objeto de vidrio que escala con el contenido: con un documento es
