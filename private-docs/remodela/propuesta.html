@@ -1,1457 +1,2393 @@
 <!doctype html>
 <html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light">
-<meta name="theme-color" content="#EFEAE0">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#EFEAE0" />
 
-<title>crescō · propuesta Remodela tu Mundo · plataforma de gestión</title>
-<meta name="description" content="Propuesta Remodela tu Mundo × crescō · diseño en agosto, seis meses de desarrollo, en vivo en febrero de 2027 · resumen ejecutivo en una página">
-<meta name="author" content="Carlos Carrasquero">
-<meta name="robots" content="noindex, nofollow">
+    <title>crescō · propuesta Remodela tu Mundo · plataforma de gestión</title>
+    <meta
+      name="description"
+      content="Propuesta Remodela tu Mundo × crescō · diseño en agosto, seis meses de desarrollo, en vivo 100% con todas las capacitaciones, en febrero de 2027 · resumen ejecutivo en una página"
+    />
+    <meta name="author" content="Carlos Carrasquero" />
+    <meta name="robots" content="noindex, nofollow" />
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,450;0,500;0,600;1,400;1,500&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,450;0,500;0,600;1,400;1,500&display=swap"
+    />
 
-<style>
-  :root {
-    --bg: #EFEAE0;
-    --paper: #F7F3EA;
-    --ink: #1A1612;
-    --ink-soft: #5C544A;
-    --accent: #3D5240;
-    --accent-soft: #DAE2D9;
-    --accent-deep: #2A3B2D;
-    --line: #D4CCBC;
-    --line-soft: #E2DBCC;
-    --muted: #8C8377;
-    --sans: 'Inter', system-ui, sans-serif;
-    --mono: 'Inter', system-ui, sans-serif;
-  }
+    <style>
+      :root {
+        --bg: #efeae0;
+        --paper: #f7f3ea;
+        --ink: #1a1612;
+        --ink-soft: #5c544a;
+        --accent: #3d5240;
+        --accent-soft: #dae2d9;
+        --accent-deep: #2a3b2d;
+        --line: #d4ccbc;
+        --line-soft: #e2dbcc;
+        --muted: #8c8377;
+        --sans: 'Inter', system-ui, sans-serif;
+        --mono: 'Inter', system-ui, sans-serif;
+      }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-  html, body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-feature-settings: "ss01", "cv11";
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+      html,
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-feature-settings: 'ss01', 'cv11';
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
 
-  body {
-    display: flex;
-    justify-content: center;
-    padding: 24px 0;
-  }
+      body {
+        display: flex;
+        justify-content: center;
+        padding: 24px 0;
+      }
 
-  /* ═════ página A4 única ═════ */
-  .page {
-    width: 210mm;
-    min-height: 297mm;
-    padding: 10mm 16mm 9mm;
-    background: var(--bg);
-    border: 0.5pt solid var(--line);
-    box-shadow: 0 1px 3px rgba(26,22,18,0.06);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 10mm;
-    overflow: hidden;
-  }
+      /* ═════ página A4 única ═════ */
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        padding: 10mm 16mm 9mm;
+        background: var(--bg);
+        border: 0.5pt solid var(--line);
+        box-shadow: 0 1px 3px rgba(26, 22, 18, 0.06);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 10mm;
+        overflow: hidden;
+      }
 
-  /* ═════ marca ═════ */
-  .top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-  }
-  .lockup {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .rtm-mark {
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .rtm-logo {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    display: block;
-  }
-  .rtm-mark em { font-style: normal; color: var(--accent); }
-  .lockup .x {
-    font-size: 15px;
-    color: var(--muted);
-    text-transform: lowercase;
-  }
-  .cresco-mark {
-    font-size: 26px;
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    color: var(--ink);
-    line-height: 1;
-  }
-  .cresco-mark em { font-style: normal; color: var(--accent); }
-  .top-meta {
-    font-size: 11px;
-    font-style: italic;
-    color: var(--muted);
-    text-align: right;
-    line-height: 1.45;
-    letter-spacing: -0.005em;
-  }
-  .top-meta b {
-    font-style: normal;
-    font-weight: 500;
-    color: var(--ink);
-  }
-  .top-meta .pulse {
-    display: inline-block;
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--accent);
-    margin-right: 5px;
-    vertical-align: middle;
-  }
+      /* ═════ marca ═════ */
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      .lockup {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .rtm-mark {
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .rtm-logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: block;
+      }
+      .rtm-mark em {
+        font-style: normal;
+        color: var(--accent);
+      }
+      .lockup .x {
+        font-size: 15px;
+        color: var(--muted);
+        text-transform: lowercase;
+      }
+      .cresco-mark {
+        font-size: 26px;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        color: var(--ink);
+        line-height: 1;
+      }
+      .cresco-mark em {
+        font-style: normal;
+        color: var(--accent);
+      }
+      .top-meta {
+        font-size: 11px;
+        font-style: italic;
+        color: var(--muted);
+        text-align: right;
+        line-height: 1.45;
+        letter-spacing: -0.005em;
+      }
+      .top-meta b {
+        font-style: normal;
+        font-weight: 500;
+        color: var(--ink);
+      }
+      .top-meta .pulse {
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--accent);
+        margin-right: 5px;
+        vertical-align: middle;
+      }
 
-  /* ═════ hero ═════ */
-  .hero { display: flex; flex-direction: column; gap: 8px; }
-  .eyebrow {
-    font-size: 12px;
-    font-style: italic;
-    color: var(--accent);
-    letter-spacing: -0.005em;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-  .eyebrow::before {
-    content: "";
-    width: 16px;
-    height: 0.5pt;
-    background: var(--accent);
-  }
-  .hero-title {
-    font-size: 34px;
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-    color: var(--ink);
-    max-width: 24ch;
-  }
-  .hero-title em { font-style: italic; font-weight: 400; }
-  .hero-title .ac { color: var(--accent); }
-  .hero-sub {
-    font-size: 13.5px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-    max-width: 74ch;
-    letter-spacing: -0.005em;
-  }
-  .hero-sub b { font-weight: 500; color: var(--ink); }
+      /* ═════ hero ═════ */
+      .hero {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-style: italic;
+        color: var(--accent);
+        letter-spacing: -0.005em;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .eyebrow::before {
+        content: '';
+        width: 16px;
+        height: 0.5pt;
+        background: var(--accent);
+      }
+      .hero-title {
+        font-size: 34px;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+        color: var(--ink);
+        max-width: 24ch;
+      }
+      .hero-title em {
+        font-style: italic;
+        font-weight: 400;
+      }
+      .hero-title .ac {
+        color: var(--accent);
+      }
+      .hero-sub {
+        font-size: 13.5px;
+        color: var(--ink-soft);
+        line-height: 1.5;
+        max-width: 74ch;
+        letter-spacing: -0.005em;
+      }
+      .hero-sub b {
+        font-weight: 500;
+        color: var(--ink);
+      }
 
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    border-top: 0.5pt solid var(--line);
-    border-bottom: 0.5pt solid var(--line);
-    padding: 5mm 0;
-  }
-  .stat { display: flex; flex-direction: column; gap: 3px; }
-  .stat .l { font-size: 11px; font-style: italic; color: var(--muted); letter-spacing: -0.005em; }
-  .stat .v { font-size: 17px; font-weight: 500; color: var(--ink); letter-spacing: -0.02em; }
-  .stat .v em { font-style: italic; color: var(--accent); font-weight: 400; }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        border-top: 0.5pt solid var(--line);
+        border-bottom: 0.5pt solid var(--line);
+        padding: 5mm 0;
+      }
+      .stat {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .stat .l {
+        font-size: 11px;
+        font-style: italic;
+        color: var(--muted);
+        letter-spacing: -0.005em;
+      }
+      .stat .v {
+        font-size: 17px;
+        font-weight: 500;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+      }
+      .stat .v em {
+        font-style: italic;
+        color: var(--accent);
+        font-weight: 400;
+      }
 
-  /* ═════ secciones del one-pager ═════ */
-  .sec-head {
-    font-size: 17px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 3px;
-  }
-  .sec-head::before {
-    content: "";
-    width: 5px; height: 5px;
-    background: var(--accent);
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .sec-hint {
-    font-size: 12.5px;
-    font-style: italic;
-    color: var(--muted);
-    letter-spacing: -0.005em;
-    margin-bottom: 5mm;
-    max-width: 88ch;
-  }
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; }
-  .col { display: flex; flex-direction: column; }
-  .col h3 {
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: -0.015em;
-    line-height: 1.25;
-    margin-bottom: 6px;
-    color: var(--ink);
-  }
-  ul.bullets { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-  ul.bullets li {
-    font-size: 13px;
-    color: var(--ink-soft);
-    line-height: 1.45;
-    padding-left: 14px;
-    position: relative;
-    letter-spacing: -0.005em;
-  }
-  ul.bullets li::before {
-    content: "—";
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-  }
-  ul.bullets li strong { font-weight: 500; color: var(--ink); }
-  ul.bullets li em { font-style: italic; color: var(--muted); }
+      /* ═════ secciones del one-pager ═════ */
+      .sec-head {
+        font-size: 17px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 3px;
+      }
+      .sec-head::before {
+        content: '';
+        width: 5px;
+        height: 5px;
+        background: var(--accent);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .sec-hint {
+        font-size: 12.5px;
+        font-style: italic;
+        color: var(--muted);
+        letter-spacing: -0.005em;
+        margin-bottom: 5mm;
+        max-width: 88ch;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10mm;
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+      }
+      .col h3 {
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: -0.015em;
+        line-height: 1.25;
+        margin-bottom: 6px;
+        color: var(--ink);
+      }
+      ul.bullets {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      ul.bullets li {
+        font-size: 13px;
+        color: var(--ink-soft);
+        line-height: 1.45;
+        padding-left: 14px;
+        position: relative;
+        letter-spacing: -0.005em;
+      }
+      ul.bullets li::before {
+        content: '—';
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+      }
+      ul.bullets li strong {
+        font-weight: 500;
+        color: var(--ink);
+      }
+      ul.bullets li em {
+        font-style: italic;
+        color: var(--muted);
+      }
 
-  /* ═════ sección mayor ═════ */
-  .major-section { display: flex; flex-direction: column; }
-  .major-eyebrow {
-    font-size: 12px;
-    font-style: italic;
-    color: var(--accent);
-    letter-spacing: -0.005em;
-    margin-bottom: 4px;
-  }
-  .major-title {
-    font-size: 26px;
-    font-weight: 500;
-    letter-spacing: -0.025em;
-    line-height: 1.1;
-    color: var(--ink);
-    margin-bottom: 6mm;
-  }
+      /* ═════ sección mayor ═════ */
+      .major-section {
+        display: flex;
+        flex-direction: column;
+      }
+      .major-eyebrow {
+        font-size: 12px;
+        font-style: italic;
+        color: var(--accent);
+        letter-spacing: -0.005em;
+        margin-bottom: 4px;
+      }
+      .major-title {
+        font-size: 26px;
+        font-weight: 500;
+        letter-spacing: -0.025em;
+        line-height: 1.1;
+        color: var(--ink);
+        margin-bottom: 6mm;
+      }
 
-  /* ═════ GANTT · 5 fases + sistema actual ═════ */
-  .timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    position: relative;
-    --tl-track-left: 191px;
-    --tl-track-right: 98px;
-  }
-  .timeline::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: var(--tl-track-left);
-    right: var(--tl-track-right);
-    pointer-events: none;
-    z-index: 2;
-    background-image:
-      linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
-      linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
-      linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
-      linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
-      linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
-      linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%);
-    background-size: 1px 3px;
-    background-position: 14.285% 0, 28.571% 0, 42.857% 0, 57.142% 0, 71.428% 0, 85.714% 0;
-    background-repeat: repeat-y;
-  }
-  .tl-row {
-    display: grid;
-    grid-template-columns: 173px 1fr 80px;
-    gap: 12px;
-    align-items: center;
-  }
-  .tl-row.clickable {
-    cursor: pointer;
-    padding: 3px 6px;
-    margin: -3px -6px;
-    border-radius: 3px;
-    transition: background 120ms ease;
-    text-decoration: none;
-    color: inherit;
-  }
-  .tl-row.clickable:hover { background: rgba(61, 82, 64, 0.06); }
-  .tl-row.clickable:hover .tl-name { color: var(--accent); }
-  .tl-row.clickable:hover .tl-bar { filter: brightness(1.08); }
-  .tl-row.clickable:focus-visible {
-    outline: 1px solid var(--accent);
-    outline-offset: 2px;
-  }
-  .tl-name {
-    font-family: var(--sans);
-    font-size: 10.5px;
-    font-weight: 500;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .tl-name .code {
-    font-family: var(--mono);
-    font-size: 8.5px;
-    color: var(--accent);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .tl-name .live-pill {
-    font-family: var(--mono);
-    font-size: 6.5px;
-    background: var(--accent);
-    color: var(--bg);
-    padding: 1px 5px;
-    border-radius: 99px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-  }
-  .tl-name .live-pill::before {
-    content: "";
-    width: 4px; height: 4px;
-    background: var(--accent-soft);
-    border-radius: 50%;
-  }
-  .tl-bar-track {
-    height: 20px;
-    background: var(--paper);
-    border-radius: 2px;
-    border: 0.5pt solid var(--line);
-    position: relative;
-    overflow: hidden;
-  }
-  .tl-bar {
-    position: absolute;
-    top: 0; bottom: 0;
-    background: var(--accent);
-    border-radius: 1px;
-    display: flex;
-    align-items: center;
-    padding: 0 5px;
-    color: var(--bg);
-    font-family: var(--sans);
-    font-size: 9.5px;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  .tl-bar.dim {
-    background: transparent;
-    border: 0.5pt dashed var(--accent);
-    color: var(--accent);
-  }
-  .tl-bar.rest {
-    background: var(--line-soft);
-    border: 0.5pt solid var(--line);
-    color: var(--muted);
-  }
-  .tl-amt {
-    font-family: var(--sans);
-    font-size: 11px;
-    color: var(--ink);
-    letter-spacing: -0.005em;
-    text-align: right;
-    font-weight: 500;
-  }
-  .tl-amt .pct {
-    font-family: var(--sans);
-    font-style: italic;
-    font-size: 9.5px;
-    color: var(--muted);
-    display: block;
-    letter-spacing: -0.005em;
-    margin-bottom: 1px;
-    font-weight: 400;
-  }
-  .tl-amt.cross { color: var(--accent); }
+      /* ═════ GANTT · 5 fases + sistema actual ═════ */
+      .timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        position: relative;
+        --tl-track-left: 191px;
+        --tl-track-right: 98px;
+      }
+      .timeline::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: var(--tl-track-left);
+        right: var(--tl-track-right);
+        pointer-events: none;
+        z-index: 2;
+        background-image:
+          linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
+          linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
+          linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
+          linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
+          linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%),
+          linear-gradient(to bottom, var(--line-soft) 50%, transparent 50%);
+        background-size: 1px 3px;
+        background-position:
+          14.285% 0,
+          28.571% 0,
+          42.857% 0,
+          57.142% 0,
+          71.428% 0,
+          85.714% 0;
+        background-repeat: repeat-y;
+      }
+      .tl-row {
+        display: grid;
+        grid-template-columns: 173px 1fr 80px;
+        gap: 12px;
+        align-items: center;
+      }
+      .tl-row.clickable {
+        cursor: pointer;
+        padding: 3px 6px;
+        margin: -3px -6px;
+        border-radius: 3px;
+        transition: background 120ms ease;
+        text-decoration: none;
+        color: inherit;
+      }
+      .tl-row.clickable:hover {
+        background: rgba(61, 82, 64, 0.06);
+      }
+      .tl-row.clickable:hover .tl-name {
+        color: var(--accent);
+      }
+      .tl-row.clickable:hover .tl-bar {
+        filter: brightness(1.08);
+      }
+      .tl-row.clickable:focus-visible {
+        outline: 1px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .tl-name {
+        font-family: var(--sans);
+        font-size: 10.5px;
+        font-weight: 500;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .tl-name .code {
+        font-family: var(--mono);
+        font-size: 8.5px;
+        color: var(--accent);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .tl-name .live-pill {
+        font-family: var(--mono);
+        font-size: 6.5px;
+        background: var(--accent);
+        color: var(--bg);
+        padding: 1px 5px;
+        border-radius: 99px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .tl-name .live-pill::before {
+        content: '';
+        width: 4px;
+        height: 4px;
+        background: var(--accent-soft);
+        border-radius: 50%;
+      }
+      .tl-bar-track {
+        height: 20px;
+        background: var(--paper);
+        border-radius: 2px;
+        border: 0.5pt solid var(--line);
+        position: relative;
+        overflow: hidden;
+      }
+      .tl-bar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background: var(--accent);
+        border-radius: 1px;
+        display: flex;
+        align-items: center;
+        padding: 0 5px;
+        color: var(--bg);
+        font-family: var(--sans);
+        font-size: 9.5px;
+        font-weight: 500;
+        letter-spacing: -0.005em;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .tl-bar.dim {
+        background: transparent;
+        border: 0.5pt dashed var(--accent);
+        color: var(--accent);
+      }
+      .tl-bar.rest {
+        background: var(--line-soft);
+        border: 0.5pt solid var(--line);
+        color: var(--muted);
+      }
+      .tl-amt {
+        font-family: var(--sans);
+        font-size: 11px;
+        color: var(--ink);
+        letter-spacing: -0.005em;
+        text-align: right;
+        font-weight: 500;
+      }
+      .tl-amt .pct {
+        font-family: var(--sans);
+        font-style: italic;
+        font-size: 9.5px;
+        color: var(--muted);
+        display: block;
+        letter-spacing: -0.005em;
+        margin-bottom: 1px;
+        font-weight: 400;
+      }
+      .tl-amt.cross {
+        color: var(--accent);
+      }
 
-  .tl-axis {
-    display: grid;
-    grid-template-columns: 173px 1fr 80px;
-    gap: 12px;
-    align-items: center;
-    margin-top: 4px;
-  }
-  .tl-axis .ticks {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    font-family: var(--sans);
-    font-style: italic;
-    font-size: 9px;
-    color: var(--ink-soft);
-    letter-spacing: 0.04em;
-  }
-  .tl-axis .ticks span { text-align: center; }
-  .tl-axis .ticks span.q { color: var(--ink); font-weight: 500; }
+      .tl-axis {
+        display: grid;
+        grid-template-columns: 173px 1fr 80px;
+        gap: 12px;
+        align-items: center;
+        margin-top: 4px;
+      }
+      .tl-axis .ticks {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        font-family: var(--sans);
+        font-style: italic;
+        font-size: 9px;
+        color: var(--ink-soft);
+        letter-spacing: 0.04em;
+      }
+      .tl-axis .ticks span {
+        text-align: center;
+      }
+      .tl-axis .ticks span.q {
+        color: var(--ink);
+        font-weight: 500;
+      }
 
-  /* leyenda del gantt · footnote */
-  .tl-legend {
-    margin-top: 3mm;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 4px 14px;
-    font-family: var(--sans);
-    font-size: 9.5px;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-  .tl-legend-title { font-style: italic; color: var(--muted); letter-spacing: -0.005em; flex-shrink: 0; }
-  .tl-legend-items { list-style: none; padding: 0; margin: 0; display: contents; }
-  .tl-legend-items li { display: inline-flex; align-items: center; gap: 5px; }
-  .tl-legend-items strong { color: var(--ink-soft); font-weight: 500; }
-  .tl-legend-swatch {
-    display: inline-block;
-    width: 14px; height: 6px;
-    background: transparent;
-    border-radius: 1px;
-    flex-shrink: 0;
-  }
-  .tl-legend-swatch.swatch-solid { background: var(--accent); }
-  .tl-legend-swatch.swatch-dim { background: transparent; border: 0.5pt dashed var(--accent); }
-  .tl-legend-pill {
-    display: inline-block;
-    background: var(--accent);
-    color: var(--bg);
-    font-family: var(--mono);
-    font-size: 6.5px;
-    padding: 1px 5px;
-    border-radius: 99px;
-    letter-spacing: 0.04em;
-    flex-shrink: 0;
-  }
+      /* leyenda del gantt · footnote */
+      .tl-legend {
+        margin-top: 3mm;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px 14px;
+        font-family: var(--sans);
+        font-size: 9.5px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .tl-legend-title {
+        font-style: italic;
+        color: var(--muted);
+        letter-spacing: -0.005em;
+        flex-shrink: 0;
+      }
+      .tl-legend-items {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: contents;
+      }
+      .tl-legend-items li {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .tl-legend-items strong {
+        color: var(--ink-soft);
+        font-weight: 500;
+      }
+      .tl-legend-swatch {
+        display: inline-block;
+        width: 14px;
+        height: 6px;
+        background: transparent;
+        border-radius: 1px;
+        flex-shrink: 0;
+      }
+      .tl-legend-swatch.swatch-solid {
+        background: var(--accent);
+      }
+      .tl-legend-swatch.swatch-dim {
+        background: transparent;
+        border: 0.5pt dashed var(--accent);
+      }
+      .tl-legend-pill {
+        display: inline-block;
+        background: var(--accent);
+        color: var(--bg);
+        font-family: var(--mono);
+        font-size: 6.5px;
+        padding: 1px 5px;
+        border-radius: 99px;
+        letter-spacing: 0.04em;
+        flex-shrink: 0;
+      }
 
-  /* ═════ inversión ═════ */
-  .inversion-block {
-    margin-top: 8mm;
-    padding-top: 7mm;
-    border-top: 0.5pt solid var(--line);
-  }
-  .inversion-eyebrow {
-    font-family: var(--sans);
-    font-style: italic;
-    font-size: 13px;
-    color: var(--accent);
-    letter-spacing: -0.005em;
-    margin-bottom: 6px;
-  }
-  .inversion-grid {
-    display: grid;
-    grid-template-columns: 88mm 1fr;
-    gap: 12mm;
-    align-items: start;
-  }
-  .inversion-price { display: flex; flex-direction: column; gap: 6px; }
-  .price-amount {
-    font-family: var(--sans);
-    font-weight: 500;
-    font-size: 52px;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    color: var(--ink);
-    display: flex;
-    align-items: baseline;
-  }
-  .price-currency {
-    font-style: italic;
-    font-size: 20px;
-    color: var(--ink-soft);
-    font-weight: 400;
-    margin-right: 8px;
-  }
-  .price-rate {
-    font-style: italic;
-    font-size: 18px;
-    color: var(--ink-soft);
-    font-weight: 400;
-    margin-left: 2px;
-  }
-  .price-meta {
-    font-family: var(--sans);
-    font-size: 13px;
-    color: var(--ink-soft);
-    letter-spacing: -0.005em;
-    margin-top: 4px;
-  }
-  .inversion-team { display: flex; flex-direction: column; }
-  .inversion-label {
-    font-family: var(--sans);
-    font-style: italic;
-    font-size: 13px;
-    color: var(--accent);
-    letter-spacing: -0.005em;
-    margin-bottom: 8px;
-  }
-  .inversion-team ul {
-    list-style: none;
-    padding: 0; margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    font-family: var(--sans);
-    font-size: 13px;
-    color: var(--ink-soft);
-    line-height: 1.45;
-  }
-  .inversion-team li { padding-left: 14px; position: relative; }
-  .inversion-team li::before { content: "—"; position: absolute; left: 0; color: var(--accent); }
-  .inversion-note {
-    margin-top: 7mm;
-    padding-top: 5mm;
-    border-top: 0.5pt solid var(--line-soft);
-    font-family: var(--sans);
-    font-style: italic;
-    font-size: 12.5px;
-    color: var(--ink-soft);
-    line-height: 1.55;
-    max-width: 85ch;
-  }
+      /* ═════ inversión ═════ */
+      .inversion-block {
+        margin-top: 8mm;
+        padding-top: 7mm;
+        border-top: 0.5pt solid var(--line);
+      }
+      .inversion-eyebrow {
+        font-family: var(--sans);
+        font-style: italic;
+        font-size: 13px;
+        color: var(--accent);
+        letter-spacing: -0.005em;
+        margin-bottom: 6px;
+      }
+      .inversion-grid {
+        display: grid;
+        grid-template-columns: 88mm 1fr;
+        gap: 12mm;
+        align-items: start;
+      }
+      .inversion-price {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .price-amount {
+        font-family: var(--sans);
+        font-weight: 500;
+        font-size: 52px;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        color: var(--ink);
+        display: flex;
+        align-items: baseline;
+      }
+      .price-currency {
+        font-style: italic;
+        font-size: 20px;
+        color: var(--ink-soft);
+        font-weight: 400;
+        margin-right: 8px;
+      }
+      .price-rate {
+        font-style: italic;
+        font-size: 18px;
+        color: var(--ink-soft);
+        font-weight: 400;
+        margin-left: 2px;
+      }
+      .price-meta {
+        font-family: var(--sans);
+        font-size: 13px;
+        color: var(--ink-soft);
+        letter-spacing: -0.005em;
+        margin-top: 4px;
+      }
+      .inversion-team {
+        display: flex;
+        flex-direction: column;
+      }
+      .inversion-label {
+        font-family: var(--sans);
+        font-style: italic;
+        font-size: 13px;
+        color: var(--accent);
+        letter-spacing: -0.005em;
+        margin-bottom: 8px;
+      }
+      .inversion-team ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        font-family: var(--sans);
+        font-size: 13px;
+        color: var(--ink-soft);
+        line-height: 1.45;
+      }
+      .inversion-team li {
+        padding-left: 14px;
+        position: relative;
+      }
+      .inversion-team li::before {
+        content: '—';
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+      }
+      .inversion-note {
+        margin-top: 7mm;
+        padding-top: 5mm;
+        border-top: 0.5pt solid var(--line-soft);
+        font-family: var(--sans);
+        font-style: italic;
+        font-size: 12.5px;
+        color: var(--ink-soft);
+        line-height: 1.55;
+        max-width: 85ch;
+      }
 
-  /* ═════ pie ═════ */
-  .footer {
-    margin-top: auto;
-    padding-top: 6mm;
-    border-top: 0.5pt solid var(--line);
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 16px;
-  }
-  .footer .left { font-size: 11px; font-style: italic; color: var(--muted); line-height: 1.5; max-width: 52ch; }
-  .cta-label { font-size: 12px; font-style: italic; color: var(--accent); margin-bottom: 3px; }
-  .cta-text { font-size: 13px; color: var(--ink-soft); letter-spacing: -0.005em; text-align: right; line-height: 1.45; }
-  .cta-text strong { font-weight: 500; color: var(--ink); }
+      /* ═════ pie ═════ */
+      .footer {
+        margin-top: auto;
+        padding-top: 6mm;
+        border-top: 0.5pt solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+      }
+      .footer .left {
+        font-size: 11px;
+        font-style: italic;
+        color: var(--muted);
+        line-height: 1.5;
+        max-width: 52ch;
+      }
+      .cta-label {
+        font-size: 12px;
+        font-style: italic;
+        color: var(--accent);
+        margin-bottom: 3px;
+      }
+      .cta-text {
+        font-size: 13px;
+        color: var(--ink-soft);
+        letter-spacing: -0.005em;
+        text-align: right;
+        line-height: 1.45;
+      }
+      .cta-text strong {
+        font-weight: 500;
+        color: var(--ink);
+      }
 
-  /* ═════ sistema de páginas de fase ═════ */
-  .onepager,
-  .phase-page {
-    opacity: 1;
-    transition: opacity 180ms ease;
-  }
-  body.routing .onepager,
-  body.routing .phase-page { opacity: 0; }
-  .phase-page { display: none; }
-  body.view-phase .onepager { display: none; }
+      /* ═════ sistema de páginas de fase ═════ */
+      .onepager,
+      .phase-page {
+        opacity: 1;
+        transition: opacity 180ms ease;
+      }
+      body.routing .onepager,
+      body.routing .phase-page {
+        opacity: 0;
+      }
+      .phase-page {
+        display: none;
+      }
+      body.view-phase .onepager {
+        display: none;
+      }
 
-  .print-only { display: none; }
-  .doc-link { color: var(--accent); text-decoration: none; }
-  .doc-link:hover { text-decoration: underline; }
+      .print-only {
+        display: none;
+      }
+      .doc-link {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .doc-link:hover {
+        text-decoration: underline;
+      }
 
-  .phase-back {
-    font-size: 12px;
-    font-style: italic;
-    color: var(--muted);
-    text-decoration: none;
-    letter-spacing: -0.005em;
-  }
-  .phase-back:hover { color: var(--accent); }
+      .phase-back {
+        font-size: 12px;
+        font-style: italic;
+        color: var(--muted);
+        text-decoration: none;
+        letter-spacing: -0.005em;
+      }
+      .phase-back:hover {
+        color: var(--accent);
+      }
 
-  .phase-breadcrumb {
-    font-size: 12px;
-    font-style: italic;
-    color: var(--muted);
-    letter-spacing: -0.005em;
-  }
-  .phase-breadcrumb .sep { margin: 0 6px; color: var(--line); }
-  .phase-breadcrumb .current { color: var(--accent); }
+      .phase-breadcrumb {
+        font-size: 12px;
+        font-style: italic;
+        color: var(--muted);
+        letter-spacing: -0.005em;
+      }
+      .phase-breadcrumb .sep {
+        margin: 0 6px;
+        color: var(--line);
+      }
+      .phase-breadcrumb .current {
+        color: var(--accent);
+      }
 
-  .phase-hero { display: flex; flex-direction: column; gap: 8px; }
-  .phase-title-row { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-  .phase-code-mark {
-    font-size: 32px;
-    font-weight: 500;
-    color: var(--accent);
-    letter-spacing: -0.03em;
-    line-height: 1;
-  }
-  .phase-title {
-    font-size: 32px;
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    color: var(--ink);
-  }
-  .phase-status {
-    font-family: var(--mono);
-    font-size: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--bg);
-    background: var(--accent);
-    padding: 2px 7px;
-    border-radius: 99px;
-    font-weight: 500;
-  }
-  .phase-subtitle {
-    font-size: 14px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-    max-width: 78ch;
-    letter-spacing: -0.005em;
-  }
+      .phase-hero {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .phase-title-row {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .phase-code-mark {
+        font-size: 32px;
+        font-weight: 500;
+        color: var(--accent);
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .phase-title {
+        font-size: 32px;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        color: var(--ink);
+      }
+      .phase-status {
+        font-family: var(--mono);
+        font-size: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--bg);
+        background: var(--accent);
+        padding: 2px 7px;
+        border-radius: 99px;
+        font-weight: 500;
+      }
+      .phase-subtitle {
+        font-size: 14px;
+        color: var(--ink-soft);
+        line-height: 1.5;
+        max-width: 78ch;
+        letter-spacing: -0.005em;
+      }
 
-  .phase-mini-timeline {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 5mm 0;
-    border-top: 0.5pt solid var(--line);
-    border-bottom: 0.5pt solid var(--line);
-  }
-  .phase-mini-bar {
-    flex: 1;
-    height: 10px;
-    background: var(--paper);
-    border: 0.5pt solid var(--line);
-    border-radius: 1px;
-    position: relative;
-    overflow: hidden;
-  }
-  .phase-mini-fill {
-    position: absolute;
-    top: 0; bottom: 0;
-    background: var(--accent);
-    border-radius: 1px;
-  }
-  .phase-mini-fill.dim { background: transparent; border: 0.5pt dashed var(--accent); }
-  .phase-mini-label {
-    font-family: var(--sans);
-    font-style: italic;
-    font-size: 11px;
-    color: var(--ink-soft);
-    letter-spacing: -0.005em;
-  }
-  .phase-mini-label.cur { color: var(--accent); font-weight: 500; }
+      .phase-mini-timeline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 5mm 0;
+        border-top: 0.5pt solid var(--line);
+        border-bottom: 0.5pt solid var(--line);
+      }
+      .phase-mini-bar {
+        flex: 1;
+        height: 10px;
+        background: var(--paper);
+        border: 0.5pt solid var(--line);
+        border-radius: 1px;
+        position: relative;
+        overflow: hidden;
+      }
+      .phase-mini-fill {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background: var(--accent);
+        border-radius: 1px;
+      }
+      .phase-mini-fill.dim {
+        background: transparent;
+        border: 0.5pt dashed var(--accent);
+      }
+      .phase-mini-label {
+        font-family: var(--sans);
+        font-style: italic;
+        font-size: 11px;
+        color: var(--ink-soft);
+        letter-spacing: -0.005em;
+      }
+      .phase-mini-label.cur {
+        color: var(--accent);
+        font-weight: 500;
+      }
 
-  .phase-section {
-    display: grid;
-    grid-template-columns: 128px 1fr;
-    gap: 12px;
-    padding: 4mm 0;
-    border-bottom: 0.5pt solid var(--line-soft);
-  }
-  .phase-section-lbl {
-    font-size: 13px;
-    font-style: italic;
-    color: var(--accent);
-    letter-spacing: -0.005em;
-    line-height: 1.4;
-  }
-  .phase-section-body {
-    font-size: 13px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-    letter-spacing: -0.005em;
-    max-width: 82ch;
-  }
-  .phase-section-body strong { font-weight: 500; color: var(--ink); }
-  .phase-section-body em { font-style: italic; }
-  .phase-section-body ul { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
-  .phase-section-body li { padding-left: 14px; position: relative; }
-  .phase-section-body li::before { content: "—"; position: absolute; left: 0; color: var(--accent); }
+      .phase-section {
+        display: grid;
+        grid-template-columns: 128px 1fr;
+        gap: 12px;
+        padding: 4mm 0;
+        border-bottom: 0.5pt solid var(--line-soft);
+      }
+      .phase-section-lbl {
+        font-size: 13px;
+        font-style: italic;
+        color: var(--accent);
+        letter-spacing: -0.005em;
+        line-height: 1.4;
+      }
+      .phase-section-body {
+        font-size: 13px;
+        color: var(--ink-soft);
+        line-height: 1.5;
+        letter-spacing: -0.005em;
+        max-width: 82ch;
+      }
+      .phase-section-body strong {
+        font-weight: 500;
+        color: var(--ink);
+      }
+      .phase-section-body em {
+        font-style: italic;
+      }
+      .phase-section-body ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-top: 4px;
+      }
+      .phase-section-body li {
+        padding-left: 14px;
+        position: relative;
+      }
+      .phase-section-body li::before {
+        content: '—';
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+      }
 
-  /* módulos · lista numerada de partidas */
-  .mod-list { display: flex; flex-direction: column; }
-  .mod-item {
-    display: grid;
-    grid-template-columns: 38px minmax(150px, 190px) 1fr;
-    gap: 12px;
-    padding: 6px 0;
-    border-bottom: 0.5pt solid var(--line-soft);
-    align-items: baseline;
-  }
-  .mod-item:last-child { border-bottom: 0; }
-  .mod-item .c {
-    font-family: var(--mono);
-    font-size: 9px;
-    color: var(--accent);
-    letter-spacing: 0.06em;
-    font-weight: 500;
-  }
-  .mod-item .n { font-size: 12.5px; font-weight: 500; color: var(--ink); letter-spacing: -0.01em; line-height: 1.35; }
-  .mod-item .d { font-size: 12px; color: var(--ink-soft); line-height: 1.45; letter-spacing: -0.005em; }
+      /* módulos · lista numerada de partidas */
+      .mod-list {
+        display: flex;
+        flex-direction: column;
+      }
+      .mod-item {
+        display: grid;
+        grid-template-columns: 38px minmax(150px, 190px) 1fr;
+        gap: 12px;
+        padding: 6px 0;
+        border-bottom: 0.5pt solid var(--line-soft);
+        align-items: baseline;
+      }
+      .mod-item:last-child {
+        border-bottom: 0;
+      }
+      .mod-item .c {
+        font-family: var(--mono);
+        font-size: 9px;
+        color: var(--accent);
+        letter-spacing: 0.06em;
+        font-weight: 500;
+      }
+      .mod-item .n {
+        font-size: 12.5px;
+        font-weight: 500;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+        line-height: 1.35;
+      }
+      .mod-item .d {
+        font-size: 12px;
+        color: var(--ink-soft);
+        line-height: 1.45;
+        letter-spacing: -0.005em;
+      }
 
-  /* equipo */
-  .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm 10mm; }
-  .team-item { display: flex; flex-direction: column; gap: 3px; padding-bottom: 3mm; border-bottom: 0.5pt solid var(--line-soft); }
-  .team-item .r { font-size: 13px; font-weight: 500; color: var(--ink); letter-spacing: -0.012em; }
-  .team-item .w { font-size: 9px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); }
-  .team-item .b { font-size: 12px; color: var(--ink-soft); line-height: 1.45; letter-spacing: -0.005em; }
+      /* equipo */
+      .team-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4mm 10mm;
+      }
+      .team-item {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        padding-bottom: 3mm;
+        border-bottom: 0.5pt solid var(--line-soft);
+      }
+      .team-item .r {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--ink);
+        letter-spacing: -0.012em;
+      }
+      .team-item .w {
+        font-size: 9px;
+        font-family: var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--accent);
+      }
+      .team-item .b {
+        font-size: 12px;
+        color: var(--ink-soft);
+        line-height: 1.45;
+        letter-spacing: -0.005em;
+      }
 
-  /* condiciones · tabla de opciones */
-  .opts { width: 100%; border-collapse: collapse; margin-top: 3mm; }
-  .opts th, .opts td {
-    text-align: left;
-    padding: 7px 10px;
-    font-size: 12px;
-    border-bottom: 0.5pt solid var(--line-soft);
-    letter-spacing: -0.005em;
-  }
-  .opts thead th {
-    font-size: 11px;
-    font-style: italic;
-    color: var(--muted);
-    font-weight: 400;
-    border-bottom: 0.5pt solid var(--line);
-  }
-  .opts tbody th { font-weight: 400; color: var(--ink-soft); font-style: italic; width: 30%; }
-  .opts td { color: var(--ink); font-weight: 400; }
-  .opts .pick { background: var(--accent-soft); color: var(--accent-deep); }
-  .opts thead .pick { background: var(--accent); color: var(--bg); font-style: normal; font-weight: 500; }
-  .opts tr.hi td, .opts tr.hi th { font-weight: 500; color: var(--ink); }
+      /* condiciones · tabla de opciones */
+      .opts {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 3mm;
+      }
+      .opts th,
+      .opts td {
+        text-align: left;
+        padding: 7px 10px;
+        font-size: 12px;
+        border-bottom: 0.5pt solid var(--line-soft);
+        letter-spacing: -0.005em;
+      }
+      .opts thead th {
+        font-size: 11px;
+        font-style: italic;
+        color: var(--muted);
+        font-weight: 400;
+        border-bottom: 0.5pt solid var(--line);
+      }
+      .opts tbody th {
+        font-weight: 400;
+        color: var(--ink-soft);
+        font-style: italic;
+        width: 30%;
+      }
+      .opts td {
+        color: var(--ink);
+        font-weight: 400;
+      }
+      .opts .pick {
+        background: var(--accent-soft);
+        color: var(--accent-deep);
+      }
+      .opts thead .pick {
+        background: var(--accent);
+        color: var(--bg);
+        font-style: normal;
+        font-weight: 500;
+      }
+      .opts tr.hi td,
+      .opts tr.hi th {
+        font-weight: 500;
+        color: var(--ink);
+      }
 
-  .phase-nav {
-    margin-top: auto;
-    padding-top: 5mm;
-    border-top: 0.5pt solid var(--line);
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    font-size: 12px;
-    font-style: italic;
-  }
-  .phase-nav a { color: var(--muted); text-decoration: none; letter-spacing: -0.005em; }
-  .phase-nav a:hover { color: var(--accent); }
-  .phase-nav .nxt { text-align: right; }
+      .phase-nav {
+        margin-top: auto;
+        padding-top: 5mm;
+        border-top: 0.5pt solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        font-size: 12px;
+        font-style: italic;
+      }
+      .phase-nav a {
+        color: var(--muted);
+        text-decoration: none;
+        letter-spacing: -0.005em;
+      }
+      .phase-nav a:hover {
+        color: var(--accent);
+      }
+      .phase-nav .nxt {
+        text-align: right;
+      }
 
-  @media (max-width: 900px) {
-    body { padding: 0; }
-    .page { width: 100%; min-height: 100vh; border: none; box-shadow: none; overflow: visible; padding: 8mm 6mm; gap: 8mm; }
-    .timeline { --tl-track-left: 118px; --tl-track-right: 74px; }
-    .tl-row, .tl-axis { grid-template-columns: 100px 1fr 60px; gap: 8px; }
-    .cols, .team-grid { grid-template-columns: 1fr; gap: 6mm; }
-    .stats { grid-template-columns: repeat(2, 1fr); gap: 5mm 10px; }
-    .inversion-grid { grid-template-columns: 1fr; gap: 6mm; }
-    .hero-title { font-size: 27px; }
-    .price-amount { font-size: 40px; }
-    .mod-item { grid-template-columns: 34px 1fr; }
-    .mod-item .d { grid-column: 2; }
-    .phase-section { grid-template-columns: 1fr; gap: 4px; }
-    .opts { display: block; overflow-x: auto; }
-  }
-  @media (max-width: 420px) {
-    .timeline { --tl-track-left: 100px; --tl-track-right: 62px; }
-    .tl-row, .tl-axis { grid-template-columns: 86px 1fr 50px; gap: 6px; }
-    .tl-axis .ticks span:not(.q) { display: none; }
-    .tl-axis .ticks { grid-template-columns: repeat(4, 1fr); }
-    .hero-title { font-size: 23px; }
-    .price-amount { font-size: 34px; }
-  }
+      @media (max-width: 900px) {
+        body {
+          padding: 0;
+        }
+        .page {
+          width: 100%;
+          min-height: 100vh;
+          border: none;
+          box-shadow: none;
+          overflow: visible;
+          padding: 8mm 6mm;
+          gap: 8mm;
+        }
+        .timeline {
+          --tl-track-left: 118px;
+          --tl-track-right: 74px;
+        }
+        .tl-row,
+        .tl-axis {
+          grid-template-columns: 100px 1fr 60px;
+          gap: 8px;
+        }
+        .cols,
+        .team-grid {
+          grid-template-columns: 1fr;
+          gap: 6mm;
+        }
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 5mm 10px;
+        }
+        .inversion-grid {
+          grid-template-columns: 1fr;
+          gap: 6mm;
+        }
+        .hero-title {
+          font-size: 27px;
+        }
+        .price-amount {
+          font-size: 40px;
+        }
+        .mod-item {
+          grid-template-columns: 34px 1fr;
+        }
+        .mod-item .d {
+          grid-column: 2;
+        }
+        .phase-section {
+          grid-template-columns: 1fr;
+          gap: 4px;
+        }
+        .opts {
+          display: block;
+          overflow-x: auto;
+        }
+      }
+      @media (max-width: 420px) {
+        .timeline {
+          --tl-track-left: 100px;
+          --tl-track-right: 62px;
+        }
+        .tl-row,
+        .tl-axis {
+          grid-template-columns: 86px 1fr 50px;
+          gap: 6px;
+        }
+        .tl-axis .ticks span:not(.q) {
+          display: none;
+        }
+        .tl-axis .ticks {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .hero-title {
+          font-size: 23px;
+        }
+        .price-amount {
+          font-size: 34px;
+        }
+      }
 
-  @media print {
-    body { display: block; padding: 0; background: white; }
-    .page {
-      box-shadow: none;
-      border: none;
-      page-break-after: always;
-      min-height: 0;
-      padding: 12mm 16mm;
-    }
-    .page:last-of-type { page-break-after: auto; }
-    .phase-nav { margin-top: 6mm; }
-    .page:last-child { page-break-after: auto; }
-    .phase-page { display: none !important; }
-    .onepager { page-break-after: auto; zoom: 0.78; }
-    body.view-phase .onepager { display: flex !important; }
-    .tl-row.clickable { cursor: default; padding: 0; margin: 0; background: transparent !important; }
-    .phase-back, .phase-nav, .screen-only { display: none !important; }
-    .print-only { display: inline; }
-    @page { size: A4; margin: 0; }
-  }
-</style>
-</head>
-<body>
-
-<!-- ══════════════════════════ ONE-PAGER ══════════════════════════ -->
-<section class="page onepager">
-
-  <div class="top">
-    <span class="lockup">
-      <span class="rtm-mark"><img class="rtm-logo" src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png" alt="Remodela tu Mundo"></span>
-      <span class="x">×</span>
-      <span class="cresco-mark">crescō<em>.</em></span>
-    </span>
-    <div class="top-meta">
-      <span class="pulse"></span><b>Propuesta · Ref. CRE-RTM-001</b><br>
-      Preparada para Diego Alesi · Remodela tu Mundo · v1.0 · julio 2026
-    </div>
-  </div>
-
-  <div class="hero">
-    <div class="eyebrow">Plataforma de gestión · llave en mano</div>
-    <h1 class="hero-title">Toda la operación en <span class="ac">una sola plataforma</span>, <em>desde cualquier lugar</em></h1>
-    <p class="hero-sub">
-      Presupuestos, obras, materiales, compras, taller, contratistas, proveedores, clientes y finanzas en una sola plataforma en la nube, con inteligencia artificial en el corazón del sistema. <b>Cada fase se libera contra firma de su acta: si una no cierra, la siguiente no arranca.</b> Todo lo entregado queda en la nube de Remodela, a su nombre, desde el primer día.
-    </p>
-  </div>
-
-  <div class="stats">
-    <div class="stat"><span class="l">Diseño</span><span class="v">3 ago <em>2026</em></span></div>
-    <div class="stat"><span class="l">Primera entrega</span><span class="v">31 oct <em>2026</em></span></div>
-    <div class="stat"><span class="l">Entrega completa</span><span class="v">28 feb <em>2027</em></span></div>
-    <div class="stat"><span class="l">Inversión</span><span class="v">USD <em>24.000</em></span></div>
-  </div>
-
-  <div>
-    <div class="sec-head">Lo que cuesta seguir igual</div>
-    <div class="sec-hint">Ninguno de estos números aparece en una factura — por eso hoy se pagan sin verse. Son estimaciones de la reunión del 21 de julio y se revisan juntos antes de firmar.</div>
-    <div class="cols">
-      <div class="col">
-        <ul class="bullets">
-          <li><strong>480 horas al año</strong> · <em>administración</em> · diez horas por semana transcribiendo a mano el control de contratistas. Doce semanas completas de una persona, copiando de un sistema a una hoja de cálculo.</li>
-          <li><strong>144 horas al año</strong> · <em>los jueves</em> · tres horas cada semana discutiendo qué se terminó y qué no. Dieciocho días laborales del dueño, en una conversación que una foto con fecha resuelve en un minuto.</li>
-        </ul>
+      @media print {
+        body {
+          display: block;
+          padding: 0;
+          background: white;
+        }
+        .page {
+          box-shadow: none;
+          border: none;
+          page-break-after: always;
+          min-height: 0;
+          padding: 12mm 16mm;
+        }
+        .page:last-of-type {
+          page-break-after: auto;
+        }
+        .phase-nav {
+          margin-top: 6mm;
+        }
+        .page:last-child {
+          page-break-after: auto;
+        }
+        .phase-page {
+          display: none !important;
+        }
+        .onepager {
+          page-break-after: auto;
+          zoom: 0.78;
+        }
+        body.view-phase .onepager {
+          display: flex !important;
+        }
+        .tl-row.clickable {
+          cursor: default;
+          padding: 0;
+          margin: 0;
+          background: transparent !important;
+        }
+        .phase-back,
+        .phase-nav,
+        .screen-only {
+          display: none !important;
+        }
+        .print-only {
+          display: inline;
+        }
+        @page {
+          size: A4;
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ══════════════════════════ ONE-PAGER ══════════════════════════ -->
+    <section class="page onepager">
+      <div class="top">
+        <span class="lockup">
+          <span class="rtm-mark"
+            ><img
+              class="rtm-logo"
+              src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png"
+              alt="Remodela tu Mundo"
+          /></span>
+          <span class="x">×</span>
+          <span class="cresco-mark">crescō<em>.</em></span>
+        </span>
+        <div class="top-meta">
+          <span class="pulse"></span><b>Propuesta · Ref. CRE-RTM-001</b><br />
+          Preparada para Diego Alesi · Remodela tu Mundo · v1.0 · julio 2026
+        </div>
       </div>
-      <div class="col">
-        <ul class="bullets">
-          <li><strong>USD 15.000 al año</strong> · <em>margen</em> · si el costo real se desvía tres puntos del estimado, es dinero que aparece al cerrar la obra, cuando ya no se puede corregir nada.</li>
-          <li><strong>Sin red</strong> · <em>continuidad</em> · el sistema corre en una máquina de la oficina, sin respaldo automático y sin autor disponible. Si esa máquina falla mañana, se pierden los presupuestos, las cuentas por cobrar y la caja.</li>
-        </ul>
+
+      <div class="hero">
+        <div class="eyebrow">Plataforma de gestión · llave en mano</div>
+        <h1 class="hero-title">
+          Toda la operación en <span class="ac">una sola plataforma</span>,
+          <em>desde cualquier lugar y dispositivo</em>
+        </h1>
+        <p class="hero-sub">
+          Presupuestos, obras, materiales, compras, taller, contratistas,
+          proveedores, clientes y finanzas en una sola plataforma en la nube,
+          con inteligencia artificial en el corazón del sistema.
+        </p>
       </div>
-    </div>
-  </div>
 
-  <div class="major-section">
-    <div class="major-eyebrow">Cómo se entrega</div>
-    <h2 class="major-title">Cronograma · cinco fases, 42 funcionalidades</h2>
-
-    <div class="timeline">
-
-      <a class="tl-row clickable" href="#f0">
-        <span class="tl-name"><span class="code">f0</span>Diseño y fundaciones</span>
-        <div class="tl-bar-track">
-          <div class="tl-bar dim" style="left:0%;width:14.28%">ago</div>
+      <div class="stats">
+        <div class="stat">
+          <span class="l">Diseño</span
+          ><span class="v">3 ago <em>2026</em></span>
         </div>
-        <span class="tl-amt"><span class="pct">4 funcionalidades</span>31 ago</span>
-      </a>
-
-      <a class="tl-row clickable" href="#f1">
-        <span class="tl-name"><span class="code">f1</span>Contratistas y valuaciones<span class="live-pill">primero</span></span>
-        <div class="tl-bar-track">
-          <div class="tl-bar dim" style="left:14.28%;width:28.57%">sep–oct</div>
-          <div class="tl-bar" style="left:42.85%;width:57.15%">disponible para pruebas · 31 oct</div>
+        <div class="stat">
+          <span class="l">Primera entrega</span
+          ><span class="v">31 oct <em>2026</em></span>
         </div>
-        <span class="tl-amt cross"><span class="pct">8 funcionalidades</span>31 oct</span>
-      </a>
-
-      <a class="tl-row clickable" href="#f2">
-        <span class="tl-name"><span class="code">f2</span>Obras y presupuestos</span>
-        <div class="tl-bar-track">
-          <div class="tl-bar dim" style="left:28.57%;width:35.71%">oct–dic</div>
-          <div class="tl-bar" style="left:64.28%;width:35.72%">disponible para pruebas</div>
+        <div class="stat">
+          <span class="l">Entrega completa</span
+          ><span class="v">28 feb <em>2027</em></span>
         </div>
-        <span class="tl-amt"><span class="pct">13 funcionalidades</span>15 dic</span>
-      </a>
-
-      <a class="tl-row clickable" href="#f3">
-        <span class="tl-name"><span class="code">f3</span>Administración y finanzas</span>
-        <div class="tl-bar-track">
-          <div class="tl-bar dim" style="left:57.14%;width:28.57%">dic–ene</div>
-          <div class="tl-bar" style="left:85.71%;width:14.29%">en pruebas</div>
+        <!--
+        <div class="stat">
+          <span class="l">Inversión total</span
+          ><span class="v">USD <em>24.000</em></span>
         </div>
-        <span class="tl-amt"><span class="pct">10 funcionalidades</span>31 ene</span>
-      </a>
-
-      <a class="tl-row clickable" href="#f4">
-        <span class="tl-name"><span class="code">f4</span>Dirección y control</span>
-        <div class="tl-bar-track">
-          <div class="tl-bar dim" style="left:71.43%;width:28.57%">ene–feb</div>
-        </div>
-        <span class="tl-amt"><span class="pct">7 funcionalidades</span>28 feb</span>
-      </a>
-
-    </div>
-
-    <div class="tl-axis">
-      <span></span>
-      <div class="ticks">
-        <span class="q">ago</span><span>sep</span><span class="q">oct</span><span>nov</span><span class="q">dic</span><span>ene</span><span class="q">feb</span>
+        -->
       </div>
-      <span></span>
-    </div>
 
-    <div class="tl-legend">
-      <span class="tl-legend-title">Cómo leer el cronograma</span>
-      <ul class="tl-legend-items">
-        <li><span class="tl-legend-swatch"></span><strong>ago–feb</strong> · siete meses</li>
-        <li><span class="tl-legend-swatch swatch-dim"></span><strong>Barra punteada</strong> · en construcción, visible en el ambiente de pruebas</li>
-        <li><span class="tl-legend-swatch swatch-solid"></span><strong>Barra sólida</strong> · disponible para pruebas del equipo</li>
-        <li><span class="tl-legend-pill">primero</span><strong>Pill verde</strong> · la fase que ataca el dolor mayor</li>
-      </ul>
-    </div>
-
-    <div class="inversion-block">
-      <div class="inversion-eyebrow">Inversión</div>
-      <div class="inversion-grid">
-        <div class="inversion-price">
-          <div class="price-amount"><span class="price-currency">USD</span>24.000<span class="price-rate"> total</span></div>
+      <div>
+        <div class="sec-head">
+          Pains actuales (después de lo hablado el 21 de julio)
         </div>
-        <div class="inversion-team">
-          <div class="inversion-label">El alcance, completo</div>
+        <div class="cols">
+          <div class="col">
+            <ul class="bullets">
+              <li>
+                <strong>Aprox 480 horas al año</strong> ·
+                <em>administración</em> · Se estiman diez horas por semana,
+                transcribiendo a mano el control de contratistas. Esto son doce
+                semanas completas de una persona, haciendo trabajo que no agrega
+                valor.
+              </li>
+              <li>
+                <strong>144 horas al año</strong> Se estiman apróximadamente
+                tres horas cada semana discutiendo qué se terminó y qué no. Esto
+                son 18 días laborales de una persona que tiene que tener cabeza
+                fresca para tomar decisiones.
+              </li>
+            </ul>
+          </div>
+          <div class="col">
+            <ul class="bullets">
+              <!--
+              <li>
+                <strong>USD 15.000 al año</strong> · <em>margen</em> · si el
+                costo real se desvía tres puntos del estimado, es dinero que
+                aparece al cerrar la obra, cuando ya no se puede corregir nada.
+              </li>
+              -->
+              <li>
+                <strong>Sin red</strong> · <em>continuidad</em> · Como el
+                sistema corre en una máquina de la oficina, sin copia de
+                seguridad y con un único responsable, se pierden mejoras,
+                soporte, garantía y actualización a mejoras tecnológicas que en
+                este momento son vitales para un negocio.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="major-section">
+        <div class="major-eyebrow">¿Cómo entregamos?</div>
+        <h2 class="major-title">
+          Cronograma · cinco fases. Aquí presentamos algunas de las
+          funcionalidades que pensamos podemos incluir en cada fase:
+        </h2>
+
+        <div class="timeline">
+          <a class="tl-row clickable" href="#f0">
+            <span class="tl-name"
+              ><span class="code">f0</span>Diseño y fundaciones</span
+            >
+            <div class="tl-bar-track">
+              <div class="tl-bar dim" style="left: 0%; width: 14.28%">ago</div>
+            </div>
+            <span class="tl-amt"
+              ><span class="pct">4 funcionalidades</span>31 ago</span
+            >
+          </a>
+
+          <a class="tl-row clickable" href="#f1">
+            <span class="tl-name"
+              ><span class="code">f1</span>Contratistas y valuaciones<span
+                class="live-pill"
+                >primero</span
+              ></span
+            >
+            <div class="tl-bar-track">
+              <div class="tl-bar dim" style="left: 14.28%; width: 28.57%">
+                sep–oct
+              </div>
+              <div class="tl-bar" style="left: 42.85%; width: 57.15%">
+                disponible para pruebas · 31 oct
+              </div>
+            </div>
+            <span class="tl-amt cross"
+              ><span class="pct">8 funcionalidades</span>31 oct</span
+            >
+          </a>
+
+          <a class="tl-row clickable" href="#f2">
+            <span class="tl-name"
+              ><span class="code">f2</span>Obras y presupuestos</span
+            >
+            <div class="tl-bar-track">
+              <div class="tl-bar dim" style="left: 28.57%; width: 35.71%">
+                oct–dic
+              </div>
+              <div class="tl-bar" style="left: 64.28%; width: 35.72%">
+                disponible para pruebas
+              </div>
+            </div>
+            <span class="tl-amt"
+              ><span class="pct">13 funcionalidades</span>15 dic</span
+            >
+          </a>
+
+          <a class="tl-row clickable" href="#f3">
+            <span class="tl-name"
+              ><span class="code">f3</span>Administración y finanzas</span
+            >
+            <div class="tl-bar-track">
+              <div class="tl-bar dim" style="left: 57.14%; width: 28.57%">
+                dic–ene
+              </div>
+              <div class="tl-bar" style="left: 85.71%; width: 14.29%">
+                en pruebas
+              </div>
+            </div>
+            <span class="tl-amt"
+              ><span class="pct">10 funcionalidades</span>31 ene</span
+            >
+          </a>
+
+          <a class="tl-row clickable" href="#f4">
+            <span class="tl-name"
+              ><span class="code">f4</span>Dirección y control</span
+            >
+            <div class="tl-bar-track">
+              <div class="tl-bar dim" style="left: 71.43%; width: 28.57%">
+                ene–feb
+              </div>
+            </div>
+            <span class="tl-amt"
+              ><span class="pct">7 funcionalidades</span>28 feb</span
+            >
+          </a>
+        </div>
+
+        <div class="tl-axis">
+          <span></span>
+          <div class="ticks">
+            <span class="q">ago</span><span>sep</span><span class="q">oct</span
+            ><span>nov</span><span class="q">dic</span><span>ene</span
+            ><span class="q">feb</span>
+          </div>
+          <span></span>
+        </div>
+
+        <div class="tl-legend">
+          <span class="tl-legend-title">Cómo leer el cronograma</span>
+          <ul class="tl-legend-items">
+            <li>
+              <span class="tl-legend-swatch"></span><strong>ago–feb</strong> ·
+              siete meses
+            </li>
+            <li>
+              <span class="tl-legend-swatch swatch-dim"></span
+              ><strong>Barra punteada</strong> · en construcción, visible en el
+              ambiente de pruebas
+            </li>
+            <li>
+              <span class="tl-legend-swatch swatch-solid"></span
+              ><strong>Barra sólida</strong> · disponible para pruebas del
+              equipo
+            </li>
+            <li>
+              <span class="tl-legend-pill">primero</span
+              ><strong>Pill verde</strong> · la fase que ataca el dolor mayor
+            </li>
+          </ul>
+        </div>
+
+        <div class="inversion-block">
+          <div class="inversion-eyebrow">Inversión</div>
+          <div class="inversion-grid">
+            <div class="inversion-price">
+              <div class="price-amount">
+                <span class="price-currency">USD</span>24.000<span
+                  class="price-rate"
+                >
+                  total</span
+                >
+              </div>
+            </div>
+            <div class="inversion-team">
+              <div class="inversion-label">El alcance, completo</div>
+              <ul>
+                <li>Obras, presupuestos, órdenes de cambio y moneda dual</li>
+                <li>Materiales con memoria de precios, compras y taller</li>
+                <li>
+                  Portal de contratistas con expediente de avance y orden de
+                  pago
+                </li>
+                <li>
+                  Financiero, conciliación asistida y costo real contra
+                  presupuestado
+                </li>
+                <li>
+                  Tablero de aeropuerto, asistente de IA y comunicaciones al
+                  cliente
+                </li>
+              </ul>
+            </div>
+          </div>
+          <p class="inversion-note"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ FASE 0 ══════════════════════════ -->
+    <section class="page phase-page" id="f0">
+      <div class="top">
+        <span class="lockup">
+          <span class="rtm-mark"
+            ><img
+              class="rtm-logo"
+              src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png"
+              alt="Remodela tu Mundo"
+          /></span>
+          <span class="x">×</span>
+          <span class="cresco-mark">crescō<em>.</em></span>
+        </span>
+        <a class="phase-back" href="#">← Volver a la propuesta</a>
+      </div>
+
+      <div class="phase-breadcrumb">
+        Cronograma<span class="sep">·</span
+        ><span class="current">Fase 0 · Diseño y fundaciones</span>
+      </div>
+
+      <div class="phase-hero">
+        <div class="phase-title-row">
+          <span class="phase-code-mark">f0</span>
+          <h1 class="phase-title">Diseño y fundaciones</h1>
+          <span class="phase-status">agosto</span>
+        </div>
+        <p class="phase-subtitle">
+          En esta fase, nos sentamos contigo y tu equipo a escucharlos y diseñar
+          juntos una propuesta completa que satisfaga al 100% las necesidades
+          específicas de la empresa. Es la base para que podamos programar algo
+          que realmente sea útil.
+        </p>
+      </div>
+
+      <div class="phase-mini-timeline">
+        <span class="phase-mini-label cur">3 ago</span>
+        <div class="phase-mini-bar">
+          <div
+            class="phase-mini-fill dim"
+            style="left: 0%; width: 14.28%"
+          ></div>
+        </div>
+        <span class="phase-mini-label">28 feb</span>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">Las funcionalidades</div>
+        <div class="phase-section-body">
+          <div class="mod-list">
+            <div class="mod-item">
+              <span class="c">0.01</span
+              ><span class="n">Diseño de pantallas con el equipo</span
+              ><span class="d"
+                >Sesiones con administración, arquitectos e ingeniería para
+                diseñar cada pantalla antes de programarla. Escuchándolos y
+                mostrándoles, vamos llegando a algo que sirva para todos.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">0.02</span><span class="n">Modelo de datos</span
+              ><span class="d"
+                >Es la base de datos: Cómo se relacionan obras, fases, partidas,
+                líderes, contratistas, materiales, proveedores y cuentas. Esto
+                nos da garantía de que podamos lograr todo: correos, mensajes
+                automáticos, que la AI entienda, etc.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">0.03</span
+              ><span class="n">Infraestructura y cuentas</span
+              ><span class="d"
+                >Se configura todo lo importante relacionado a nube, base de
+                datos y dominios. Son las "columnas" del proyecto.</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">¿Por qué va primero?</div>
+        <div class="phase-section-body">
+          Porque son las bases de todo lo que viene después.
+        </div>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">El acta</div>
+        <div class="phase-section-body">
+          <strong>31 de agosto.</strong> El equipo de Remodela aprueba todo
+          antes de que arranquemos. Después, podemos ir corrigiendo sobre la
+          marcha si vemos que algo ha cambiado.
+        </div>
+      </div>
+
+      <div class="phase-nav">
+        <a href="#">← Propuesta</a>
+        <a class="nxt" href="#f1">Fase 1 · Contratistas y valuaciones →</a>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ FASE 1 ══════════════════════════ -->
+    <section class="page phase-page" id="f1">
+      <div class="top">
+        <span class="lockup">
+          <span class="rtm-mark"
+            ><img
+              class="rtm-logo"
+              src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png"
+              alt="Remodela tu Mundo"
+          /></span>
+          <span class="x">×</span>
+          <span class="cresco-mark">crescō<em>.</em></span>
+        </span>
+        <a class="phase-back" href="#">← Volver a la propuesta</a>
+      </div>
+
+      <div class="phase-breadcrumb">
+        Cronograma<span class="sep">·</span
+        ><span class="current">Fase 1 · Contratistas y valuaciones</span>
+      </div>
+
+      <div class="phase-hero">
+        <div class="phase-title-row">
+          <span class="phase-code-mark">f1</span>
+          <h1 class="phase-title">Contratistas y valuaciones</h1>
+          <span class="phase-status">sep – oct</span>
+        </div>
+        <p class="phase-subtitle">
+          Atacamos uno de los puntos más duros: hacer que la trazabilidad de las
+          obras sea fácil, en tiempo real y sencilla para todos sin necesidad de
+          extra seguimiento.
+        </p>
+      </div>
+
+      <div class="phase-mini-timeline">
+        <span class="phase-mini-label cur">sep – oct</span>
+        <div class="phase-mini-bar">
+          <div
+            class="phase-mini-fill"
+            style="left: 14.28%; width: 28.57%"
+          ></div>
+        </div>
+        <span class="phase-mini-label">28 feb</span>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">Las funcionalidades</div>
+        <div class="phase-section-body">
+          <div class="mod-list">
+            <div class="mod-item">
+              <span class="c">1.01</span
+              ><span class="n">Usuarios, roles y permisos</span
+              ><span class="d"
+                >Gerencia, administración, ingenieros, arquitectas, diseñadoras,
+                líderes de equipo, contratistas y proveedores. Cada quien ve lo
+                suyo y nada más.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">1.02</span
+              ><span class="n">Matriz de visibilidad</span
+              ><span class="d"
+                >¿Quién ve qué? Esto es lo que se define en esta parte.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">1.03</span
+              ><span class="n">Obras por fases y partidas</span
+              ><span class="d"
+                >Pasamos el Excel a un sistema centralizado pero más moderno
+                aprovechando las herramientas de hoy: dirección, cliente, fecha,
+                fases que entran una detrás de otra y partidas dentro de cada
+                fase.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">1.04</span
+              ><span class="n">Líderes y cuadrillas</span
+              ><span class="d"
+                >Se realizará una funcionalidad para que el equipo de gerencia
+                pueda gestionar todo el tema de líderes y cuadrillas.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">1.05</span
+              ><span class="n">Portal del contratista</span
+              ><span class="d"
+                >Se trabajará en una solución (sea en whatsapp o en algo en
+                Android) para que los contratistas también puedan hacer su
+                trabajo de una manera fácil y ordenada.
+              </span>
+            </div>
+            <div class="mod-item">
+              <span class="c">1.06</span
+              ><span class="n">Expediente de avance</span
+              ><span class="d"
+                >Bitácora visual de lo que se ha realizado y lo que falta por
+                realizar. Esto es fundamental para la trazabilidad y la
+                transparencia de la obra.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">1.07</span
+              ><span class="n">Valuación semanal y orden de pago</span
+              ><span class="d"
+                >El sistema arma la valuación del jueves, la revisa y la
+                presenta ordenada. La aprobación es humana, de un toque, y ahí
+                se genera la orden de pago.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">1.08</span
+              ><span class="n">Recordatorios de día de pago</span
+              ><span class="d"
+                >Avisos automáticos a cada contratista en WhatsApp o App
+                interna: cuándo cargar, qué falta y cuál es el día de cobro. Se
+                evita el cuello de botella de la conversación con el contratista
+                e intermediarios.</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">El acta</div>
+        <div class="phase-section-body">
+          <strong>31 de octubre.</strong> En esta fecha ya se tiene un ambiente
+          de desarrollo que puede ser probado por el equipo de Remodela tu
+          Mundo.
+        </div>
+      </div>
+
+      <div class="phase-nav">
+        <a href="#f0">← Fase 0 · Diseño</a>
+        <a class="nxt" href="#f2">Fase 2 · Obras y presupuestos →</a>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ FASE 2 ══════════════════════════ -->
+    <section class="page phase-page" id="f2">
+      <div class="top">
+        <span class="lockup">
+          <span class="rtm-mark"
+            ><img
+              class="rtm-logo"
+              src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png"
+              alt="Remodela tu Mundo"
+          /></span>
+          <span class="x">×</span>
+          <span class="cresco-mark">crescō<em>.</em></span>
+        </span>
+        <a class="phase-back" href="#">← Volver a la propuesta</a>
+      </div>
+
+      <div class="phase-breadcrumb">
+        Cronograma<span class="sep">·</span
+        ><span class="current">Fase 2 · Obras y presupuestos</span>
+      </div>
+
+      <div class="phase-hero">
+        <div class="phase-title-row">
+          <span class="phase-code-mark">f2</span>
+          <h1 class="phase-title">Obras y presupuestos</h1>
+          <span class="phase-status">oct – 15 dic</span>
+        </div>
+        <p class="phase-subtitle">
+          Aquí la clave es estandarización y experiencia. Todo va a tener un
+          formato sencillo que no vive en la cabeza de cada empleado y donde
+          pueden trabajar arquitectos, ingenieros, diseñadores, etc. Cada quien
+          aporta lo que tiene que aportar y alimenta un todo.
+        </p>
+      </div>
+
+      <div class="phase-mini-timeline">
+        <span class="phase-mini-label">3 ago</span>
+        <div class="phase-mini-bar">
+          <div
+            class="phase-mini-fill"
+            style="left: 28.57%; width: 35.71%"
+          ></div>
+        </div>
+        <span class="phase-mini-label cur">15 dic</span>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">Las funcionalidades</div>
+        <div class="phase-section-body">
+          <div class="mod-list">
+            <div class="mod-item">
+              <span class="c">2.01</span
+              ><span class="n">Catálogo de materiales</span
+              ><span class="d"
+                >Base de datos inteligente con memoria del último precio pagado
+                por cada material, proveedores, etc. Se construye sola a medida
+                que se trabaja.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">2.02</span
+              ><span class="n">Proveedores y comparación</span
+              ><span class="d"
+                >Quién vendió qué, a cuánto y cuándo. Cuando tres proveedores
+                compiten por el mismo material, se ve en una línea. Ya aquí
+                tenemos la data ordenada para poder tomar decisiones.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">2.03</span
+              ><span class="n">Estimación de costos</span
+              ><span class="d"
+                >La plantilla de materiales, cantidades, precios y mano de obra
+                que operaciones ya usa, nos permite tener una calculadora
+                automática.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">2.04</span
+              ><span class="n">Márgenes por tipo de venta</span
+              ><span class="d"
+                >La obra completa a 1,6 y el producto fabricado a 2,
+                configurables. El sistema calcula venta y utilidad al
+                vuelo.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">2.05</span
+              ><span class="n">Presupuesto, aprobado, entregado</span
+              ><span class="d"
+                >El ciclo de la empresa, con las variables que se usan
+                actualmente y un "candado" de aprobación para que nadie pueda
+                modificarlo sin autorización con un formato imprimible para el
+                cliente.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">2.06</span
+              ><span class="n">Moneda dual y política de tasas</span
+              ><span class="d"
+                >Precio en dólares y en bolívares automático en tiempo
+                real.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">2.08</span
+              ><span class="n">Repositorio documental por obra</span
+              ><span class="d"
+                >Planos, diseños en 3D, contratos, permisos y fotos, colgados de
+                cada obra. Hoy eso vive regado entre teléfonos y correos.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">2.09</span><span class="n">Órdenes de compra</span
+              ><span class="d"
+                >Procuras con numeración automática y el flujo de aprobación
+                actual: se carga, llega el aviso, y Gerencia (diego) aprueba,
+                modifica o elimina. El soporte se numera solo.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">2.10</span
+              ><span class="n">Taller: órdenes de trabajo</span
+              ><span class="d"
+                >Carpintería y cristalería con sus propias órdenes, sus fechas y
+                su carga de trabajo frente a las obras que corren afuera.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">2.11</span
+              ><span class="n">Costeo de producto fabricado</span
+              ><span class="d"
+                >Cuánto costó de verdad un centro de entretenimiento, con el
+                material consumido del inventario y la mano de obra del taller.
+                Es la única forma de saber si el 2 que se cobra es real.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">2.12</span
+              ><span class="n">Agenda de pagos y comisiones</span
+              ><span class="d"
+                >A quién se le paga hoy y a quién mañana, ordenado por fecha y
+                por obra. Y las comisiones de venta calculadas solas.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">2.13</span><span class="n">Buscador global</span
+              ><span class="d"
+                >Se escribe el nombre de un cliente y aparecen sus obras, su
+                estado y sus pagos.</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">Demo</div>
+        <div class="phase-section-body">
+          <strong>15 de diciembre.</strong> Para mediados de diciembre se espera
+          tener un demo más robusto de lo que se ha programado hasta el momento.
+        </div>
+      </div>
+
+      <div class="phase-nav">
+        <a href="#f1">← Fase 1 · Contratistas y valuaciones</a>
+        <a class="nxt" href="#f3">Fase 3 · Administración y finanzas →</a>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ FASE 3 ══════════════════════════ -->
+    <section class="page phase-page" id="f3">
+      <div class="top">
+        <span class="lockup">
+          <span class="rtm-mark"
+            ><img
+              class="rtm-logo"
+              src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png"
+              alt="Remodela tu Mundo"
+          /></span>
+          <span class="x">×</span>
+          <span class="cresco-mark">crescō<em>.</em></span>
+        </span>
+        <a class="phase-back" href="#">← Volver a la propuesta</a>
+      </div>
+
+      <div class="phase-breadcrumb">
+        Cronograma<span class="sep">·</span
+        ><span class="current">Fase 3 · Administración y finanzas</span>
+      </div>
+
+      <div class="phase-hero">
+        <div class="phase-title-row">
+          <span class="phase-code-mark">f3</span>
+          <h1 class="phase-title">Administración y finanzas</h1>
+          <span class="phase-status">dic – 31 ene</span>
+        </div>
+        <p class="phase-subtitle">
+          Esta fase se encarga de suministrar un soporte contable y financiero
+          para la empresa en tiempo real, que resalte lo que requiere atención,
+          que haga fácil que se lleve en el día a día y que permita tomar
+          decisiones informadas.
+        </p>
+      </div>
+
+      <div class="phase-mini-timeline">
+        <span class="phase-mini-label">3 ago</span>
+        <div class="phase-mini-bar">
+          <div
+            class="phase-mini-fill"
+            style="left: 57.14%; width: 28.57%"
+          ></div>
+        </div>
+        <span class="phase-mini-label cur">31 ene</span>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">Las funcionalidades</div>
+        <div class="phase-section-body">
+          <div class="mod-list">
+            <div class="mod-item">
+              <span class="c">3.01</span
+              ><span class="n">Cuentas por cobrar y abonos</span
+              ><span class="d"
+                >Los abonos del cliente registrados una sola vez, con el recibo
+                generado y enviado desde el sistema. Con recordatorios de pago
+                automáticos, aprovechando las notificaciones de WhatsApp o App
+                interna.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">3.02</span><span class="n">Cuentas por pagar</span
+              ><span class="d"
+                >Proveedores y contratistas en una sola vista, con lo que se
+                debe, lo abonado y la fecha comprometida.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">3.04</span><span class="n">Reporte de Zelle</span
+              ><span class="d"
+                >Los pagos por Zelle agrupados solos, sin que nadie los
+                transcriba.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">3.05</span
+              ><span class="n">Conciliación asistida</span
+              ><span class="d"
+                >Se carga el estado de cuenta y el sistema propone los cruces;
+                la administradora confirma.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">3.06</span
+              ><span class="n">Costo real contra presupuestado</span
+              ><span class="d"
+                >Por obra y por partida, en vivo. La utilidad deja de ser una
+                sorpresa del cierre.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">3.09</span><span class="n">Nómina</span
+              ><span class="d">Toda la nómina, en un mismo lugar.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">Lo que no hace</div>
+        <div class="phase-section-body">
+          El sistema, en una primera versión,
+          <strong>no emite facturas fiscales</strong>. Se puede trabajar para
+          ello en futuras versiones dependiendo de lo que diga el SENIAT.
+        </div>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">Capacitación</div>
+        <div class="phase-section-body">
+          <strong>31 de enero.</strong> Ya para esta fecha se debe haber
+          empezado la capacitación en las distintas partes del sistema.
+        </div>
+      </div>
+
+      <div class="phase-nav">
+        <a href="#f2">← Fase 2 · Obras y presupuestos</a>
+        <a class="nxt" href="#f4">Fase 4 · Dirección y control →</a>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ FASE 4 ══════════════════════════ -->
+    <section class="page phase-page" id="f4">
+      <div class="top">
+        <span class="lockup">
+          <span class="rtm-mark"
+            ><img
+              class="rtm-logo"
+              src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png"
+              alt="Remodela tu Mundo"
+          /></span>
+          <span class="x">×</span>
+          <span class="cresco-mark">crescō<em>.</em></span>
+        </span>
+        <a class="phase-back" href="#">← Volver a la propuesta</a>
+      </div>
+
+      <div class="phase-breadcrumb">
+        Cronograma<span class="sep">·</span
+        ><span class="current">Fase 4 · Dirección y control</span>
+      </div>
+
+      <div class="phase-hero">
+        <div class="phase-title-row">
+          <span class="phase-code-mark">f4</span>
+          <h1 class="phase-title">Dirección y control</h1>
+          <span class="phase-status">ene – 28 feb</span>
+        </div>
+        <p class="phase-subtitle">
+          Aquí, gerencia toma la visibilidad de todo: Todas las obras en una
+          pantalla al estilo aeropuerto con un diagnóstico en una sola vista.
+        </p>
+      </div>
+
+      <div class="phase-mini-timeline">
+        <span class="phase-mini-label">3 ago</span>
+        <div class="phase-mini-bar">
+          <div
+            class="phase-mini-fill"
+            style="left: 71.43%; width: 28.57%"
+          ></div>
+        </div>
+        <span class="phase-mini-label cur">28 feb</span>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">Las funcionalidades</div>
+        <div class="phase-section-body">
+          <div class="mod-list">
+            <div class="mod-item">
+              <span class="c">4.01</span
+              ><span class="n">Tablero de aeropuerto</span
+              ><span class="d"
+                >Todas las obras de una pasada: fase, avance, salud financiera y
+                qué necesita atención hoy. El nombre lo puso Diego en la
+                reunión.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">4.02</span><span class="n">Avance y alertas</span
+              ><span class="d"
+                >Cronograma visual por obra y avisos cuando una partida se
+                atrasa, un presupuesto se desvía o una cuenta se vence.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">4.03</span><span class="n">Conexión a MCP</span
+              ><span class="d"
+                >Conectado a toda la base de datos: obras, compras, cuentas,
+                contratistas y caja. Se le pregunta en lenguaje normal y
+                responde con los números de la empresa. Se conecta a los
+                permisos de la plataforma para garantizar que solo los usuarios
+                autorizados puedan acceder a la información.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">4.04</span
+              ><span class="n">Comunicaciones al cliente</span
+              ><span class="d"
+                >Correo y WhatsApp desde la plataforma, con reportes de avance y
+                fotos reales de obra, revisadas antes de salir.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">4.05</span
+              ><span class="n">Portal de proveedores</span
+              ><span class="d"
+                >Cargan su factura y su soporte directo a cuentas por pagar, sin
+                que nadie los transcriba.</span
+              >
+            </div>
+            <div class="mod-item">
+              <span class="c">4.06</span
+              ><span class="n">Seguridad y auditoría</span
+              ><span class="d"
+                >Revisión de accesos y de la información financiera, respaldos
+                verificados, monitoreo y pruebas con datos reales.</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">Última capacitación y cierre</div>
+        <div class="phase-section-body">
+          <strong>28 de febrero.</strong> La entrega completa de la plataforma,
+          con la documentación y el traspaso firmados por Remodela.
+        </div>
+      </div>
+
+      <div class="phase-nav">
+        <a href="#f3">← Fase 3 · Administración y finanzas</a>
+        <a class="nxt" href="#equipo">El equipo →</a>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ EQUIPO ══════════════════════════ -->
+    <section class="page phase-page" id="equipo">
+      <div class="top">
+        <span class="lockup">
+          <span class="rtm-mark"
+            ><img
+              class="rtm-logo"
+              src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png"
+              alt="Remodela tu Mundo"
+          /></span>
+          <span class="x">×</span>
+          <span class="cresco-mark">crescō<em>.</em></span>
+        </span>
+        <a class="phase-back" href="#">← Volver a la propuesta</a>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ CONDICIONES ══════════════════════════ -->
+    <section class="page phase-page" id="condiciones">
+      <div class="top">
+        <span class="lockup">
+          <span class="rtm-mark"
+            ><img
+              class="rtm-logo"
+              src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png"
+              alt="Remodela tu Mundo"
+          /></span>
+          <span class="x">×</span>
+          <span class="cresco-mark">crescō<em>.</em></span>
+        </span>
+        <a class="phase-back" href="#">← Volver a la propuesta</a>
+      </div>
+
+      <div class="phase-breadcrumb">
+        Propuesta<span class="sep">·</span
+        ><span class="current">Las condiciones</span>
+      </div>
+
+      <div class="phase-hero">
+        <div class="phase-title-row">
+          <h1 class="phase-title">Las condiciones</h1>
+          <span class="phase-status">contrato de obra</span>
+        </div>
+        <p class="phase-subtitle">
+          Se contrata como Remodela contrata una obra: anticipo de movilización,
+          valuaciones mensuales contra partidas ejecutadas y aceptadas, y
+          retención. Lo que no esté en el cómputo se cotiza como partida nueva,
+          se firma antes de ejecutar y se valúa igual.
+        </p>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">Las tres opciones</div>
+        <div class="phase-section-body">
+          El alcance es el mismo completo en las tres, y el precio es por el
+          sistema completo: las fases ordenan la entrega, no dividen el precio.
+          Lo que se decide es en cuántos meses se tiene.
+          <table class="opts">
+            <thead>
+              <tr>
+                <th></th>
+                <th>A · Dos ingenieros</th>
+                <th class="pick">B · Tres ingenieros</th>
+                <th>C · Cuatro ingenieros</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Diseño</th>
+                <td>Agosto 2026</td>
+                <td class="pick">Agosto 2026</td>
+                <td>Agosto 2026</td>
+              </tr>
+              <tr>
+                <th>Desarrollo</th>
+                <td>9 meses</td>
+                <td class="pick">6 meses</td>
+                <td>5 meses</td>
+              </tr>
+              <tr>
+                <th>Primera entrega</th>
+                <td>Noviembre 2026</td>
+                <td class="pick">31 de octubre 2026</td>
+                <td>Octubre 2026</td>
+              </tr>
+              <tr>
+                <th>Entrega completa</th>
+                <td>Mayo 2027</td>
+                <td class="pick">28 de febrero 2027</td>
+                <td>Enero 2027</td>
+              </tr>
+              <tr>
+                <th>Contrato de obra</th>
+                <td>USD 21.700</td>
+                <td class="pick">USD 24.000</td>
+                <td>USD 26.900</td>
+              </tr>
+              <tr>
+                <th>Anticipo de movilización</th>
+                <td>USD 4.340</td>
+                <td class="pick">USD 4.800</td>
+                <td>USD 5.380</td>
+              </tr>
+              <tr>
+                <th>Valuaciones</th>
+                <td>10 de USD 1.736</td>
+                <td class="pick">7 de USD 2.743</td>
+                <td>6 de USD 3.587</td>
+              </tr>
+              <tr>
+                <th>Retención del 10%</th>
+                <td>USD 1.736</td>
+                <td class="pick">USD 1.920</td>
+                <td>USD 2.152</td>
+              </tr>
+              <tr>
+                <th>Ingeniero residente</th>
+                <td>USD 650 al mes</td>
+                <td class="pick">USD 850 al mes</td>
+                <td>USD 1.100 al mes</td>
+              </tr>
+              <tr class="hi">
+                <th>Desembolso mensual</th>
+                <td>USD 2.212</td>
+                <td class="pick">USD 3.319</td>
+                <td>USD 4.328</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="phase-section">
+        <div class="phase-section-lbl">Forma de pago</div>
+        <div class="phase-section-body">
           <ul>
-            <li>Obras, presupuestos, órdenes de cambio y moneda dual</li>
-            <li>Materiales con memoria de precios, compras y taller</li>
-            <li>Portal de contratistas con expediente de avance y orden de pago</li>
-            <li>Financiero, conciliación asistida y costo real contra presupuestado</li>
-            <li>Tablero de aeropuerto, asistente de IA y comunicaciones al cliente</li>
+            <li>
+              <strong>Anticipo de movilización del 20%</strong> a la firma,
+              amortizable contra cada valuación.
+            </li>
+            <li>
+              <strong>Valuaciones mensuales</strong> contra partidas ejecutadas
+              y aceptadas. Cada fase trae sus criterios de aceptación escritos
+              <em>antes</em> de empezarla, en el idioma de la operación y no en
+              el técnico.
+            </li>
+            <li>
+              <strong>Retención del 10%</strong> descontada de cada valuación y
+              liberada treinta días después del acta final. Es el fondo de
+              garantía de Remodela y no hay que pedirlo.
+            </li>
+            <li>
+              <strong
+                >El desembolso mensual dura lo que dura el desarrollo.</strong
+              >
+              En la opción B son siete meses; a partir de marzo de 2027 solo
+              queda el ingeniero residente.
+            </li>
           </ul>
         </div>
       </div>
-      <p class="inversion-note">
-</p>
-    </div>
-  </div>
 
-</section>
-
-<!-- ══════════════════════════ FASE 0 ══════════════════════════ -->
-<section class="page phase-page" id="f0">
-  <div class="top">
-    <span class="lockup">
-      <span class="rtm-mark"><img class="rtm-logo" src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png" alt="Remodela tu Mundo"></span>
-      <span class="x">×</span>
-      <span class="cresco-mark">crescō<em>.</em></span>
-    </span>
-    <a class="phase-back" href="#">← Volver a la propuesta</a>
-  </div>
-
-  <div class="phase-breadcrumb">Cronograma<span class="sep">·</span><span class="current">Fase 0 · Diseño y fundaciones</span></div>
-
-  <div class="phase-hero">
-    <div class="phase-title-row">
-      <span class="phase-code-mark">f0</span>
-      <h1 class="phase-title">Diseño y fundaciones</h1>
-      <span class="phase-status">agosto</span>
-    </div>
-    <p class="phase-subtitle">Un mes entero antes de programar. Las pantallas se dibujan con el equipo de Remodela, y el modelo de datos se decide con la operación real a la vista. Es la fase que hace que seis meses de desarrollo sean creíbles.</p>
-  </div>
-
-  <div class="phase-mini-timeline">
-    <span class="phase-mini-label cur">3 ago</span>
-    <div class="phase-mini-bar"><div class="phase-mini-fill dim" style="left:0%;width:14.28%;"></div></div>
-    <span class="phase-mini-label">28 feb</span>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">Las funcionalidades</div>
-    <div class="phase-section-body">
-      <div class="mod-list">
-        <div class="mod-item"><span class="c">0.01</span><span class="n">Diseño de pantallas con el equipo</span><span class="d">Sesiones con la administradora, las arquitectas y los ingenieros para dibujar cada pantalla antes de programarla. Ellos ayudan a construirla, así que después la defienden.</span></div>
-        <div class="mod-item"><span class="c">0.02</span><span class="n">Modelo de datos</span><span class="d">Cómo se relacionan obras, fases, partidas, líderes, contratistas, materiales, proveedores y cuentas. Equivocarse aquí se paga en el mes cinco.</span></div>
-        <div class="mod-item"><span class="c">0.03</span><span class="n">Infraestructura y cuentas</span><span class="d">Nube, base de datos y dominio abiertos a nombre de Remodela tu Mundo, con el correo de Diego como dueño. crescō entra como colaborador.</span></div>
-        <div class="mod-item"><span class="c">0.04</span><span class="n">Extracción y diagnóstico</span><span class="d">Volcado completo de la base actual y un informe escrito: qué se puede migrar, qué no, cuánto cuesta y en qué fecha. Nada se cotiza a ciegas.</span></div>
+      <div class="phase-section">
+        <div class="phase-section-lbl">Propiedad y continuidad</div>
+        <div class="phase-section-body">
+          <ul>
+            <li>
+              <strong>Todo a nombre de Remodela tu Mundo</strong> desde el día
+              uno: repositorio del código, nube, base de datos y dominio, con el
+              correo de Diego como dueño. crescō entra como colaborador.
+            </li>
+            <li>
+              <strong>Respaldo exportable cada semana</strong> en el Drive de
+              Remodela, en formato abierto. La administradora lo guarda y no
+              depende de crescō para tenerlo.
+            </li>
+            <li>
+              <strong>Continuidad escrita:</strong> documentación viva y video
+              de traspaso técnico al cierre de cada fase. Si crescō no puede
+              continuar, en cinco días hábiles Remodela tiene todo lo necesario
+              para que cualquier desarrollador siga adelante.
+            </li>
+            <li>
+              <strong>Salida limpia al final de cada fase</strong>, sin
+              penalidad. Lo entregado queda funcionando y en la nube de
+              Remodela.
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="phase-section">
-    <div class="phase-section-lbl">¿Por qué va primero?</div>
-    <div class="phase-section-body">Porque programar sobre pantallas ya aprobadas es lo que permite comprimir el desarrollo a seis meses, y porque equivocarse en el modelo de datos se paga caro en el mes cinco. La fase 0 compra certeza antes de escribir una línea de código.</div>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">El acta</div>
-    <div class="phase-section-body"><strong>31 de agosto.</strong> El equipo de Remodela aprueba las pantallas antes de que se escriba una línea de código.</div>
-  </div>
-
-  <div class="phase-nav">
-    <a href="#">← Propuesta</a>
-    <a class="nxt" href="#f1">Fase 1 · Contratistas y valuaciones →</a>
-  </div>
-</section>
-
-<!-- ══════════════════════════ FASE 1 ══════════════════════════ -->
-<section class="page phase-page" id="f1">
-  <div class="top">
-    <span class="lockup">
-      <span class="rtm-mark"><img class="rtm-logo" src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png" alt="Remodela tu Mundo"></span>
-      <span class="x">×</span>
-      <span class="cresco-mark">crescō<em>.</em></span>
-    </span>
-    <a class="phase-back" href="#">← Volver a la propuesta</a>
-  </div>
-
-  <div class="phase-breadcrumb">Cronograma<span class="sep">·</span><span class="current">Fase 1 · Contratistas y valuaciones</span></div>
-
-  <div class="phase-hero">
-    <div class="phase-title-row">
-      <span class="phase-code-mark">f1</span>
-      <h1 class="phase-title">Contratistas y valuaciones</h1>
-      <span class="phase-status">sep – oct</span>
-    </div>
-    <p class="phase-subtitle">La fase que ataca el dolor mayor y por eso va de primera. El martes cada líder de equipo entra desde su propio Android, ve solo sus partidas y sube las fotos con fecha y ubicación. El jueves la valuación llega armada y se aprueba de un toque. La administradora deja de abrir el Excel.</p>
-  </div>
-
-  <div class="phase-mini-timeline">
-    <span class="phase-mini-label cur">sep – oct</span>
-    <div class="phase-mini-bar"><div class="phase-mini-fill" style="left:14.28%;width:28.57%;"></div></div>
-    <span class="phase-mini-label">28 feb</span>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">Las funcionalidades</div>
-    <div class="phase-section-body">
-      <div class="mod-list">
-        <div class="mod-item"><span class="c">1.01</span><span class="n">Usuarios, roles y permisos</span><span class="d">Diego, la administradora, ingenieros, arquitectas, diseñadoras, líderes de equipo, contratistas y proveedores. Cada quien ve lo suyo y nada más.</span></div>
-        <div class="mod-item"><span class="c">1.02</span><span class="n">Matriz de visibilidad</span><span class="d">Quién puede ver el costo y quién solo el precio de venta. Se define con Diego y se firma, porque el margen depende de eso.</span></div>
-        <div class="mod-item"><span class="c">1.03</span><span class="n">Obras por fases y partidas</span><span class="d">La obra como se maneja hoy: dirección, cliente, fecha, fases que entran una detrás de otra y partidas dentro de cada fase.</span></div>
-        <div class="mod-item"><span class="c">1.04</span><span class="n">Líderes y cuadrillas</span><span class="d">La jerarquía real de la empresa: Diego habla con los líderes y cada líder responde por su gente. Las partidas se asignan al equipo, no a treinta personas sueltas.</span></div>
-        <div class="mod-item"><span class="c">1.05</span><span class="n">Portal del contratista</span><span class="d">Entra desde su propio Android con usuario y clave y ve solo sus partidas abiertas. Sin comprar equipos nuevos, sin pantallas partidas, sin teléfonos extraviados entre obra y obra.</span></div>
-        <div class="mod-item"><span class="c">1.06</span><span class="n">Expediente de avance</span><span class="d">Fotos y video tomados con la cámara del sistema, con fecha y ubicación, comparados contra la evidencia de la semana anterior y contra lo presupuestado. Queda guardado por obra para siempre.</span></div>
-        <div class="mod-item"><span class="c">1.07</span><span class="n">Valuación semanal y orden de pago</span><span class="d">El sistema arma la valuación del jueves, la revisa y la presenta ordenada. La aprobación es humana, de un toque, y ahí se genera la orden de pago.</span></div>
-        <div class="mod-item"><span class="c">1.08</span><span class="n">Recordatorios de día de pago</span><span class="d">Avisos automáticos a cada contratista: cuándo cargar, qué falta y cuál es el día de cobro. Esa conversación deja de pasar por Diego.</span></div>
+      <div class="phase-section">
+        <div class="phase-section-lbl">El acompañamiento</div>
+        <div class="phase-section-body">
+          El <strong>ingeniero residente arranca en agosto</strong>, no cuando
+          termina el proyecto. Incluye la reunión fija semanal, canal directo
+          con respuesta en cuatro horas hábiles y en dos los jueves,
+          capacitación de la gente nueva que entra en cada obra, gestión del
+          plan, y hasta USD 250 al mes de nube, correo, WhatsApp y consumo del
+          asistente. Lo que exceda esos USD 250 se factura al costo, con la
+          factura del proveedor a la vista. Es el mismo número después de
+          febrero: no es un rango que luego se negocia.
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="phase-section">
-    <div class="phase-section-lbl">Lo que no hace</div>
-    <div class="phase-section-body"><strong>La inteligencia artificial no aprueba pagos.</strong> Arma el expediente, verifica que la evidencia corresponda a la partida y esté completa, y precarga la valuación. Quien libera el dinero sigue siendo una persona. Prometer aprobación automática de pagos sería vender algo que no se puede sostener el día que se equivoca.</div>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">El acta</div>
-    <div class="phase-section-body"><strong>31 de octubre.</strong> La valuación de la semana armada por el sistema y aprobada de un toque, disponible para pruebas del equipo. Cuatro meses antes de que el proyecto termine.</div>
-  </div>
-
-  <div class="phase-nav">
-    <a href="#f0">← Fase 0 · Diseño</a>
-    <a class="nxt" href="#f2">Fase 2 · Obras y presupuestos →</a>
-  </div>
-</section>
-
-<!-- ══════════════════════════ FASE 2 ══════════════════════════ -->
-<section class="page phase-page" id="f2">
-  <div class="top">
-    <span class="lockup">
-      <span class="rtm-mark"><img class="rtm-logo" src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png" alt="Remodela tu Mundo"></span>
-      <span class="x">×</span>
-      <span class="cresco-mark">crescō<em>.</em></span>
-    </span>
-    <a class="phase-back" href="#">← Volver a la propuesta</a>
-  </div>
-
-  <div class="phase-breadcrumb">Cronograma<span class="sep">·</span><span class="current">Fase 2 · Obras y presupuestos</span></div>
-
-  <div class="phase-hero">
-    <div class="phase-title-row">
-      <span class="phase-code-mark">f2</span>
-      <h1 class="phase-title">Obras y presupuestos</h1>
-      <span class="phase-status">oct – 15 dic</span>
-    </div>
-    <p class="phase-subtitle">El corazón comercial. La base de materiales con memoria de precios entra junto con los presupuestos, no después, para que ninguna arquitecta tenga que escribir dos veces el mismo tubo. Aquí viven los márgenes, las órdenes de cambio, las procuras y el taller.</p>
-  </div>
-
-  <div class="phase-mini-timeline">
-    <span class="phase-mini-label">3 ago</span>
-    <div class="phase-mini-bar"><div class="phase-mini-fill" style="left:28.57%;width:35.71%;"></div></div>
-    <span class="phase-mini-label cur">15 dic</span>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">Las funcionalidades</div>
-    <div class="phase-section-body">
-      <div class="mod-list">
-        <div class="mod-item"><span class="c">2.01</span><span class="n">Catálogo de materiales</span><span class="d">La base de datos que hoy no existe, con memoria del último precio pagado por cada material. Se construye sola a medida que se trabaja.</span></div>
-        <div class="mod-item"><span class="c">2.02</span><span class="n">Proveedores y comparación</span><span class="d">Quién vendió qué, a cuánto y cuándo. Cuando tres proveedores compiten por el mismo material, se ve en una línea.</span></div>
-        <div class="mod-item"><span class="c">2.03</span><span class="n">Estimación de costos</span><span class="d">La plantilla de materiales, cantidades, precios y mano de obra que operaciones ya usa, ahora sin escribir nada dos veces.</span></div>
-        <div class="mod-item"><span class="c">2.04</span><span class="n">Márgenes por tipo de venta</span><span class="d">La obra completa a 1,6 y el producto fabricado a 2, configurables. El sistema calcula venta y utilidad al vuelo.</span></div>
-        <div class="mod-item"><span class="c">2.05</span><span class="n">Presupuesto, aprobado, entregado</span><span class="d">El ciclo de siempre, con los correlativos que ya se usan, el candado de aprobación y el formato imprimible para el cliente.</span></div>
-        <div class="mod-item"><span class="c">2.06</span><span class="n">Moneda dual y política de tasas</span><span class="d">Precio en dólares y en bolívares. Se define cuál tasa se automatiza, cuál se carga a mano y con cuál se congela cada documento: un presupuesto aprobado hace tres meses, un abono parcial, una cuenta por pagar vieja.</span></div>
-        <div class="mod-item"><span class="c">2.07</span><span class="n">Órdenes de cambio y adicionales</span><span class="d">Cuando el cliente decide a mitad de obra que quiere el mesón de granito, el adicional se cotiza, se aprueba y se suma al presupuesto sin romper el original ni volver al Excel.</span></div>
-        <div class="mod-item"><span class="c">2.08</span><span class="n">Repositorio documental por obra</span><span class="d">Planos, diseños en 3D, contratos, permisos y fotos, colgados de cada obra. Hoy eso vive regado entre teléfonos y correos.</span></div>
-        <div class="mod-item"><span class="c">2.09</span><span class="n">Órdenes de compra</span><span class="d">Procuras con numeración automática y el flujo de aprobación actual: se carga, llega el aviso, y Diego aprueba, modifica o elimina. El soporte se numera solo.</span></div>
-        <div class="mod-item"><span class="c">2.10</span><span class="n">Taller: órdenes de trabajo</span><span class="d">Carpintería y cristalería con sus propias órdenes, sus fechas y su carga de trabajo frente a las obras que corren afuera.</span></div>
-        <div class="mod-item"><span class="c">2.11</span><span class="n">Costeo de producto fabricado</span><span class="d">Cuánto costó de verdad un centro de entretenimiento, con el material consumido del inventario y la mano de obra del taller. Es la única forma de saber si el 2 que se cobra es real.</span></div>
-        <div class="mod-item"><span class="c">2.12</span><span class="n">Agenda de pagos y comisiones</span><span class="d">A quién se le paga hoy y a quién mañana, ordenado por fecha y por obra. Y las comisiones de venta calculadas solas.</span></div>
-        <div class="mod-item"><span class="c">2.13</span><span class="n">Buscador global y asistente inicial</span><span class="d">Se escribe el nombre de un cliente y aparecen sus obras, su estado y sus pagos. Primera versión del asistente, respondiendo sobre obras y presupuestos.</span></div>
+      <div class="phase-section">
+        <div class="phase-section-lbl">Fuera del alcance</div>
+        <div class="phase-section-body">
+          Emisión de facturas fiscales homologadas ante el SENIAT · débito
+          bancario automático a contratistas · mantenimiento o corrección del
+          sistema actual en PHP · la marca propia de sanitarios importados ·
+          control de herramientas del taller y postventa. Todos se cotizan
+          aparte, con su propio presupuesto, cuando haya certeza de fecha y
+          alcance.
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="phase-section">
-    <div class="phase-section-lbl">El acta</div>
-    <div class="phase-section-body"><strong>15 de diciembre.</strong> Un presupuesto completo armado sin escribir un solo material a mano.</div>
-  </div>
-
-  <div class="phase-nav">
-    <a href="#f1">← Fase 1 · Contratistas y valuaciones</a>
-    <a class="nxt" href="#f3">Fase 3 · Administración y finanzas →</a>
-  </div>
-</section>
-
-<!-- ══════════════════════════ FASE 3 ══════════════════════════ -->
-<section class="page phase-page" id="f3">
-  <div class="top">
-    <span class="lockup">
-      <span class="rtm-mark"><img class="rtm-logo" src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png" alt="Remodela tu Mundo"></span>
-      <span class="x">×</span>
-      <span class="cresco-mark">crescō<em>.</em></span>
-    </span>
-    <a class="phase-back" href="#">← Volver a la propuesta</a>
-  </div>
-
-  <div class="phase-breadcrumb">Cronograma<span class="sep">·</span><span class="current">Fase 3 · Administración y finanzas</span></div>
-
-  <div class="phase-hero">
-    <div class="phase-title-row">
-      <span class="phase-code-mark">f3</span>
-      <h1 class="phase-title">Administración y finanzas</h1>
-      <span class="phase-status">dic – 31 ene</span>
-    </div>
-    <p class="phase-subtitle">Cuentas, cajas, conciliación y nómina. Y la pieza que cambia cómo se dirige la empresa: el costo real contra el presupuestado, en vivo, para saber si una obra está dejando utilidad en la semana seis, no al cerrarla.</p>
-  </div>
-
-  <div class="phase-mini-timeline">
-    <span class="phase-mini-label">3 ago</span>
-    <div class="phase-mini-bar"><div class="phase-mini-fill" style="left:57.14%;width:28.57%;"></div></div>
-    <span class="phase-mini-label cur">31 ene</span>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">Las funcionalidades</div>
-    <div class="phase-section-body">
-      <div class="mod-list">
-        <div class="mod-item"><span class="c">3.01</span><span class="n">Cuentas por cobrar y abonos</span><span class="d">Los abonos del cliente registrados una sola vez, con el recibo generado y enviado desde el sistema.</span></div>
-        <div class="mod-item"><span class="c">3.02</span><span class="n">Cuentas por pagar</span><span class="d">Proveedores y contratistas en una sola vista, con lo que se debe, lo abonado y la fecha comprometida.</span></div>
-        <div class="mod-item"><span class="c">3.03</span><span class="n">Caja de obra y caja de banco</span><span class="d">Efectivo y banco, con arqueo. Quién custodia, quién rinde y contra qué obra se descarga cada gasto.</span></div>
-        <div class="mod-item"><span class="c">3.04</span><span class="n">Reporte de Zelle</span><span class="d">Los pagos por Zelle agrupados solos, sin que nadie los transcriba.</span></div>
-        <div class="mod-item"><span class="c">3.05</span><span class="n">Conciliación asistida</span><span class="d">Se carga el estado de cuenta y el sistema propone los cruces; la administradora confirma. De horas a minutos.</span></div>
-        <div class="mod-item"><span class="c">3.06</span><span class="n">Costo real contra presupuestado</span><span class="d">Por obra y por partida, en vivo. La utilidad deja de ser una sorpresa del cierre.</span></div>
-        <div class="mod-item"><span class="c">3.07</span><span class="n">Umbrales de aprobación y suplentes</span><span class="d">Una compra pequeña avanza sola; una grande espera. Y cuando Diego se desconecta, hay un suplente definido. Es la diferencia entre digitalizar las veinte llamadas y eliminarlas.</span></div>
-        <div class="mod-item"><span class="c">3.08</span><span class="n">Pago a contratistas</span><span class="d">Orden aprobada, archivo listo para cargar en la banca en línea, comprobante capturado y partida cerrada sola. Efectivo y transferencia como caminos válidos, con su soporte contable.</span></div>
-        <div class="mod-item"><span class="c">3.09</span><span class="n">Nómina</span><span class="d">Las seis personas fijas, quincena y último, con su recibo.</span></div>
-        <div class="mod-item"><span class="c">3.10</span><span class="n">Migración de históricos</span><span class="d">Obras cerradas, cuentas y clientes traídos del sistema actual y cuadrados contra saldos, no copiados a la ligera.</span></div>
+      <div class="phase-section">
+        <div class="phase-section-lbl">Aceptación</div>
+        <div class="phase-section-body">
+          La aceptación de esta propuesta se formaliza con la firma del contrato
+          de obra y el pago del anticipo de movilización. Con la firma quedan
+          reservados el equipo de tres ingenieros y el arranque del diseño el
+          lunes 3 de agosto.
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 14mm;
+              margin-top: 18mm;
+              max-width: 150mm;
+            "
+          >
+            <div
+              style="
+                border-top: 0.5pt solid var(--ink);
+                padding-top: 6px;
+                font-size: 12.5px;
+                font-weight: 500;
+              "
+            >
+              Diego Alesi<br /><span
+                style="color: var(--ink-soft); font-weight: 400"
+                >Remodela tu Mundo</span
+              >
+            </div>
+            <div
+              style="
+                border-top: 0.5pt solid var(--ink);
+                padding-top: 6px;
+                font-size: 12.5px;
+                font-weight: 500;
+              "
+            >
+              Carlos Carrasquero<br /><span
+                style="color: var(--ink-soft); font-weight: 400"
+                >crescō · Director de Proyecto</span
+              >
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="phase-section">
-    <div class="phase-section-lbl">Lo que no hace</div>
-    <div class="phase-section-body">El sistema <strong>no emite facturas fiscales</strong>. Desde la Providencia SNAT/2024/000121 el SENIAT regula al proveedor del software, no al contribuyente: todo sistema que emita facturas debe estar homologado, versión por versión. La plataforma prepara los documentos y se integra con un sistema ya homologado que Remodela contrata aparte. Tampoco hay <strong>débito bancario automático</strong>: el pago móvil empresarial venezolano sirve para cobrar, no para dispersar.</div>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">El acta</div>
-    <div class="phase-section-body"><strong>31 de enero.</strong> Un cierre de mes completo cuadrado dentro de la plataforma, contra los soportes bancarios y contables.</div>
-  </div>
-
-  <div class="phase-nav">
-    <a href="#f2">← Fase 2 · Obras y presupuestos</a>
-    <a class="nxt" href="#f4">Fase 4 · Dirección y control →</a>
-  </div>
-</section>
-
-<!-- ══════════════════════════ FASE 4 ══════════════════════════ -->
-<section class="page phase-page" id="f4">
-  <div class="top">
-    <span class="lockup">
-      <span class="rtm-mark"><img class="rtm-logo" src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png" alt="Remodela tu Mundo"></span>
-      <span class="x">×</span>
-      <span class="cresco-mark">crescō<em>.</em></span>
-    </span>
-    <a class="phase-back" href="#">← Volver a la propuesta</a>
-  </div>
-
-  <div class="phase-breadcrumb">Cronograma<span class="sep">·</span><span class="current">Fase 4 · Dirección y control</span></div>
-
-  <div class="phase-hero">
-    <div class="phase-title-row">
-      <span class="phase-code-mark">f4</span>
-      <h1 class="phase-title">Dirección y control</h1>
-      <span class="phase-status">ene – 28 feb</span>
-    </div>
-    <p class="phase-subtitle">La fase que le devuelve a Diego la posibilidad de desconectarse. Todas las obras en una pantalla, el asistente respondiendo con los datos de la casa, los clientes recibiendo su avance por WhatsApp sin que nadie lo arme a mano, y el traspaso documentado.</p>
-  </div>
-
-  <div class="phase-mini-timeline">
-    <span class="phase-mini-label">3 ago</span>
-    <div class="phase-mini-bar"><div class="phase-mini-fill" style="left:71.43%;width:28.57%;"></div></div>
-    <span class="phase-mini-label cur">28 feb</span>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">Las funcionalidades</div>
-    <div class="phase-section-body">
-      <div class="mod-list">
-        <div class="mod-item"><span class="c">4.01</span><span class="n">Tablero de aeropuerto</span><span class="d">Todas las obras de una pasada: fase, avance, salud financiera y qué necesita atención hoy. El nombre lo puso Diego en la reunión.</span></div>
-        <div class="mod-item"><span class="c">4.02</span><span class="n">Avance y alertas</span><span class="d">Cronograma visual por obra y avisos cuando una partida se atrasa, un presupuesto se desvía o una cuenta se vence.</span></div>
-        <div class="mod-item"><span class="c">4.03</span><span class="n">Asistente completo</span><span class="d">Conectado a toda la base de datos: obras, compras, cuentas, contratistas y caja. Se le pregunta en lenguaje normal y responde con los números de la casa.</span></div>
-        <div class="mod-item"><span class="c">4.04</span><span class="n">Comunicaciones al cliente</span><span class="d">Correo y WhatsApp desde la plataforma, con reportes de avance y fotos reales de obra, revisadas antes de salir.</span></div>
-        <div class="mod-item"><span class="c">4.05</span><span class="n">Portal de proveedores</span><span class="d">Cargan su factura y su soporte directo a cuentas por pagar, sin que nadie los transcriba.</span></div>
-        <div class="mod-item"><span class="c">4.06</span><span class="n">Seguridad y auditoría</span><span class="d">Revisión de accesos y de la información financiera, respaldos verificados, monitoreo y pruebas con datos reales.</span></div>
-        <div class="mod-item"><span class="c">4.07</span><span class="n">Documentación y traspaso</span><span class="d">Manual del equipo, documentación técnica y video de traspaso en el Drive de Remodela, para que cualquier desarrollador pueda continuar sin crescō.</span></div>
+      <div class="phase-section" style="border-bottom: 0">
+        <div class="phase-section-lbl">Vigencia</div>
+        <div class="phase-section-body">
+          Alcance y precio firmes hasta el
+          <strong>viernes 14 de agosto de 2026</strong>. No es una fecha de
+          presión: es hasta donde hay agenda libre para reservar tres ingenieros
+          sin empujar a otro cliente. Cerrando antes del
+          <strong>31 de julio</strong>, el diseño arranca el lunes 3 de agosto.
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="phase-section">
-    <div class="phase-section-lbl">El acta</div>
-    <div class="phase-section-body"><strong>28 de febrero.</strong> La entrega completa de la plataforma, con la documentación y el traspaso firmados por Remodela.</div>
-  </div>
-
-  <div class="phase-nav">
-    <a href="#f3">← Fase 3 · Administración y finanzas</a>
-    <a class="nxt" href="#equipo">El equipo →</a>
-  </div>
-</section>
-
-<!-- ══════════════════════════ EQUIPO ══════════════════════════ -->
-<section class="page phase-page" id="equipo">
-  <div class="top">
-    <span class="lockup">
-      <span class="rtm-mark"><img class="rtm-logo" src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png" alt="Remodela tu Mundo"></span>
-      <span class="x">×</span>
-      <span class="cresco-mark">crescō<em>.</em></span>
-    </span>
-    <a class="phase-back" href="#">← Volver a la propuesta</a>
-  </div>
-
-  <div class="phase-breadcrumb">Propuesta<span class="sep">·</span><span class="current">El equipo</span></div>
-
-  <div class="phase-hero">
-    <div class="phase-title-row">
-      <h1 class="phase-title">El equipo</h1>
-      <span class="phase-status">ocho cargos</span>
-    </div>
-    <p class="phase-subtitle">Un solo ingeniero fijo se ve más barato en la factura. Lo que no se ve es el resto: esta plataforma toca siete oficios distintos, y muy pocas personas dominan bien más de dos. Un ingeniero solo levanta una parte respetable del sistema e improvisa el resto — y eso se descubre cuando el sistema ya está dentro de la operación.</p>
-  </div>
-
-  <div class="phase-section" style="border-bottom:0">
-    <div class="phase-section-lbl">El punto de falla</div>
-    <div class="phase-section-body">Y hay algo más, que no es una crítica a nadie: <strong>una sola persona es un solo punto de falla.</strong> No hace falta que nada salga mal a propósito para quedarse sin sistema: basta un imprevisto. Remodela ya lo vivió, y no fue culpa de quien hizo el programa — fue del modelo de una sola persona. Aquí no se contrata a una persona: se contrata a un equipo con las siete disciplinas adentro, y lo único que se decide es cuántos ingenieros quedan dedicados a tiempo completo. Es el mismo equipo detrás de la plataforma que Diego vio en la reunión, la que hoy opera para David y Samuel.</div>
-  </div>
-
-  <div class="team-grid">
-    <div class="team-item">
-      <span class="w">Todo el proyecto</span>
-      <span class="r">Director de Proyecto y Arquitecto de Software</span>
-      <span class="b">Carlos Carrasquero. Diseña el modelo de datos, decide la arquitectura, dirige el proyecto y es el interlocutor único de Diego.</span>
-    </div>
-    <div class="team-item">
-      <span class="w">Dedicado</span>
-      <span class="r">Ingeniero de Backend</span>
-      <span class="b">Base de datos, seguridad, permisos e integraciones con el banco, el correo y WhatsApp. La parte que no se ve y sostiene todo lo demás.</span>
-    </div>
-    <div class="team-item">
-      <span class="w">Dedicado</span>
-      <span class="r">Ingeniero de Frontend</span>
-      <span class="b">Las pantallas de oficina: obras, presupuestos, materiales, compras, cajas, cuentas y reportes. Donde viven la administradora, las arquitectas y los ingenieros.</span>
-    </div>
-    <div class="team-item">
-      <span class="w">Dedicado</span>
-      <span class="r">Ingeniero de Aplicaciones Móviles</span>
-      <span class="b">El portal del líder de equipo y del contratista en Android: partidas, cámara con fecha y ubicación, carga con señal débil y aviso del día de pago.</span>
-    </div>
-    <div class="team-item">
-      <span class="w">Agosto y por fase</span>
-      <span class="r">Diseñador de Producto</span>
-      <span class="b">Dibuja las pantallas con la gente de Remodela antes de que se programe nada. Es la diferencia entre un sistema que se adopta y uno que se abandona.</span>
-    </div>
-    <div class="team-item">
-      <span class="w">Por fase</span>
-      <span class="r">Ingeniero de Inteligencia Artificial</span>
-      <span class="b">El asistente conectado a la base de datos y la lectura de la evidencia de obra: que las fotos correspondan a la partida y se comparen contra la semana anterior.</span>
-    </div>
-    <div class="team-item">
-      <span class="w">Continuo</span>
-      <span class="r">Analista de Calidad</span>
-      <span class="b">Prueba cada entrega en el ambiente de pruebas antes de que la vea el equipo. Nadie debería descubrir un error en medio de un jueves de pago.</span>
-    </div>
-    <div class="team-item">
-      <span class="w">Desde agosto</span>
-      <span class="r">Ingeniero Residente</span>
-      <span class="b">La reunión semanal con Diego y la administradora, el canal directo, la capacitación de la gente nueva de cada obra y la gestión del plan. Es la compañía que Diego pidió, con día y hora.</span>
-    </div>
-  </div>
-
-  <div class="phase-nav">
-    <a href="#f4">← Fase 4 · Dirección y control</a>
-    <a class="nxt" href="#condiciones">Las condiciones →</a>
-  </div>
-</section>
-
-<!-- ══════════════════════════ CONDICIONES ══════════════════════════ -->
-<section class="page phase-page" id="condiciones">
-  <div class="top">
-    <span class="lockup">
-      <span class="rtm-mark"><img class="rtm-logo" src="https://vdjfsgniosjsnautoalu.supabase.co/storage/v1/object/public/cresco/logos/clientes/remodela-tu-mundo.png" alt="Remodela tu Mundo"></span>
-      <span class="x">×</span>
-      <span class="cresco-mark">crescō<em>.</em></span>
-    </span>
-    <a class="phase-back" href="#">← Volver a la propuesta</a>
-  </div>
-
-  <div class="phase-breadcrumb">Propuesta<span class="sep">·</span><span class="current">Las condiciones</span></div>
-
-  <div class="phase-hero">
-    <div class="phase-title-row">
-      <h1 class="phase-title">Las condiciones</h1>
-      <span class="phase-status">contrato de obra</span>
-    </div>
-    <p class="phase-subtitle">Se contrata como Remodela contrata una obra: anticipo de movilización, valuaciones mensuales contra partidas ejecutadas y aceptadas, y retención. Lo que no esté en el cómputo se cotiza como partida nueva, se firma antes de ejecutar y se valúa igual.</p>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">Las tres opciones</div>
-    <div class="phase-section-body">
-      El alcance es el mismo completo en las tres, y el precio es por el sistema completo: las fases ordenan la entrega, no dividen el precio. Lo que se decide es en cuántos meses se tiene.
-      <table class="opts">
-        <thead>
-          <tr>
-            <th></th>
-            <th>A · Dos ingenieros</th>
-            <th class="pick">B · Tres ingenieros</th>
-            <th>C · Cuatro ingenieros</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><th>Diseño</th><td>Agosto 2026</td><td class="pick">Agosto 2026</td><td>Agosto 2026</td></tr>
-          <tr><th>Desarrollo</th><td>9 meses</td><td class="pick">6 meses</td><td>5 meses</td></tr>
-          <tr><th>Primera entrega</th><td>Noviembre 2026</td><td class="pick">31 de octubre 2026</td><td>Octubre 2026</td></tr>
-          <tr><th>Entrega completa</th><td>Mayo 2027</td><td class="pick">28 de febrero 2027</td><td>Enero 2027</td></tr>
-          <tr><th>Contrato de obra</th><td>USD 21.700</td><td class="pick">USD 24.000</td><td>USD 26.900</td></tr>
-          <tr><th>Anticipo de movilización</th><td>USD 4.340</td><td class="pick">USD 4.800</td><td>USD 5.380</td></tr>
-          <tr><th>Valuaciones</th><td>10 de USD 1.736</td><td class="pick">7 de USD 2.743</td><td>6 de USD 3.587</td></tr>
-          <tr><th>Retención del 10%</th><td>USD 1.736</td><td class="pick">USD 1.920</td><td>USD 2.152</td></tr>
-          <tr><th>Ingeniero residente</th><td>USD 650 al mes</td><td class="pick">USD 850 al mes</td><td>USD 1.100 al mes</td></tr>
-          <tr class="hi"><th>Desembolso mensual</th><td>USD 2.212</td><td class="pick">USD 3.319</td><td>USD 4.328</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">Forma de pago</div>
-    <div class="phase-section-body">
-      <ul>
-        <li><strong>Anticipo de movilización del 20%</strong> a la firma, amortizable contra cada valuación.</li>
-        <li><strong>Valuaciones mensuales</strong> contra partidas ejecutadas y aceptadas. Cada fase trae sus criterios de aceptación escritos <em>antes</em> de empezarla, en el idioma de la operación y no en el técnico.</li>
-        <li><strong>Retención del 10%</strong> descontada de cada valuación y liberada treinta días después del acta final. Es el fondo de garantía de Remodela y no hay que pedirlo.</li>
-        <li><strong>El desembolso mensual dura lo que dura el desarrollo.</strong> En la opción B son siete meses; a partir de marzo de 2027 solo queda el ingeniero residente.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">Propiedad y continuidad</div>
-    <div class="phase-section-body">
-      <ul>
-        <li><strong>Todo a nombre de Remodela tu Mundo</strong> desde el día uno: repositorio del código, nube, base de datos y dominio, con el correo de Diego como dueño. crescō entra como colaborador.</li>
-        <li><strong>Respaldo exportable cada semana</strong> en el Drive de Remodela, en formato abierto. La administradora lo guarda y no depende de crescō para tenerlo.</li>
-        <li><strong>Continuidad escrita:</strong> documentación viva y video de traspaso técnico al cierre de cada fase. Si crescō no puede continuar, en cinco días hábiles Remodela tiene todo lo necesario para que cualquier desarrollador siga adelante.</li>
-        <li><strong>Salida limpia al final de cada fase</strong>, sin penalidad. Lo entregado queda funcionando y en la nube de Remodela.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">El acompañamiento</div>
-    <div class="phase-section-body">El <strong>ingeniero residente arranca en agosto</strong>, no cuando termina el proyecto. Incluye la reunión fija semanal, canal directo con respuesta en cuatro horas hábiles y en dos los jueves, capacitación de la gente nueva que entra en cada obra, gestión del plan, y hasta USD 250 al mes de nube, correo, WhatsApp y consumo del asistente. Lo que exceda esos USD 250 se factura al costo, con la factura del proveedor a la vista. Es el mismo número después de febrero: no es un rango que luego se negocia.</div>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">Fuera del alcance</div>
-    <div class="phase-section-body">Emisión de facturas fiscales homologadas ante el SENIAT · débito bancario automático a contratistas · mantenimiento o corrección del sistema actual en PHP · la marca propia de sanitarios importados · control de herramientas del taller y postventa. Todos se cotizan aparte, con su propio presupuesto, cuando haya certeza de fecha y alcance.</div>
-  </div>
-
-  <div class="phase-section">
-    <div class="phase-section-lbl">Aceptación</div>
-    <div class="phase-section-body">
-      La aceptación de esta propuesta se formaliza con la firma del contrato de obra y el pago del anticipo de movilización. Con la firma quedan reservados el equipo de tres ingenieros y el arranque del diseño el lunes 3 de agosto.
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14mm;margin-top:18mm;max-width:150mm">
-        <div style="border-top:0.5pt solid var(--ink);padding-top:6px;font-size:12.5px;font-weight:500">Diego Alesi<br><span style="color:var(--ink-soft);font-weight:400">Remodela tu Mundo</span></div>
-        <div style="border-top:0.5pt solid var(--ink);padding-top:6px;font-size:12.5px;font-weight:500">Carlos Carrasquero<br><span style="color:var(--ink-soft);font-weight:400">crescō · Director de Proyecto</span></div>
+      <div class="phase-nav">
+        <a href="#equipo">← El equipo</a>
+        <a class="nxt" href="#">Volver a la propuesta →</a>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <div class="phase-section" style="border-bottom:0">
-    <div class="phase-section-lbl">Vigencia</div>
-    <div class="phase-section-body">Alcance y precio firmes hasta el <strong>viernes 14 de agosto de 2026</strong>. No es una fecha de presión: es hasta donde hay agenda libre para reservar tres ingenieros sin empujar a otro cliente. Cerrando antes del <strong>31 de julio</strong>, el diseño arranca el lunes 3 de agosto.</div>
-  </div>
+    <script>
+      (function () {
+        const ROUTES = ['f0', 'f1', 'f2', 'f3', 'f4', 'equipo', 'condiciones'];
 
-  <div class="phase-nav">
-    <a href="#equipo">← El equipo</a>
-    <a class="nxt" href="#">Volver a la propuesta →</a>
-  </div>
-</section>
+        function currentRoute() {
+          const hash = window.location.hash.slice(1);
+          return ROUTES.includes(hash) ? hash : null;
+        }
 
-<script>
-  (function () {
-    const ROUTES = ['f0', 'f1', 'f2', 'f3', 'f4', 'equipo', 'condiciones'];
+        function showRoute() {
+          document.body.classList.add('routing');
 
-    function currentRoute() {
-      const hash = window.location.hash.slice(1);
-      return ROUTES.includes(hash) ? hash : null;
-    }
+          setTimeout(() => {
+            const route = currentRoute();
+            document.body.classList.toggle('view-phase', route !== null);
 
-    function showRoute() {
-      document.body.classList.add('routing');
+            document.querySelectorAll('.phase-page').forEach((page) => {
+              page.style.display = page.id === route ? 'flex' : 'none';
+            });
 
-      setTimeout(() => {
-        const route = currentRoute();
-        document.body.classList.toggle('view-phase', route !== null);
+            window.scrollTo({ top: 0, behavior: 'instant' });
 
-        document.querySelectorAll('.phase-page').forEach(page => {
-          page.style.display = page.id === route ? 'flex' : 'none';
+            requestAnimationFrame(() => {
+              document.body.classList.remove('routing');
+            });
+          }, 180);
+        }
+
+        window.addEventListener('hashchange', showRoute);
+        window.addEventListener('DOMContentLoaded', showRoute);
+
+        window.addEventListener('keydown', (e) => {
+          if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')
+            return;
+          const route = currentRoute();
+          if (route === null) return;
+
+          const idx = ROUTES.indexOf(route);
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            window.location.hash = idx > 0 ? '#' + ROUTES[idx - 1] : '#';
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            window.location.hash =
+              idx < ROUTES.length - 1 ? '#' + ROUTES[idx + 1] : '#';
+          } else if (e.key === 'Escape') {
+            e.preventDefault();
+            window.location.hash = '#';
+          }
         });
-
-        window.scrollTo({ top: 0, behavior: 'instant' });
-
-        requestAnimationFrame(() => {
-          document.body.classList.remove('routing');
-        });
-      }, 180);
-    }
-
-    window.addEventListener('hashchange', showRoute);
-    window.addEventListener('DOMContentLoaded', showRoute);
-
-    window.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-      const route = currentRoute();
-      if (route === null) return;
-
-      const idx = ROUTES.indexOf(route);
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        window.location.hash = idx > 0 ? '#' + ROUTES[idx - 1] : '#';
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        window.location.hash = idx < ROUTES.length - 1 ? '#' + ROUTES[idx + 1] : '#';
-      } else if (e.key === 'Escape') {
-        e.preventDefault();
-        window.location.hash = '#';
-      }
-    });
-  })();
-</script>
-
-</body>
+      })();
+    </script>
+  </body>
 </html>
