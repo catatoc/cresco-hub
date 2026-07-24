@@ -121,7 +121,8 @@
   border-top: .5pt solid rgba(212,204,188,.5); font-size: 10px; font-weight: 500; color: var(--cp-ink-soft); }
 .cp-legend span { display: inline-flex; align-items: center; gap: 5px; }
 .cp-legend i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex: none; }
-.cp-lring { transform-box: fill-box; transform-origin: center; animation: cp-latepulse 2.2s ease-in-out 3; }
+/* mismo compás que el guiño del chip de la propuesta: 1.5s × 3 desde 1.4s */
+.cp-lring { transform-box: fill-box; transform-origin: center; opacity: 0; animation: cp-latepulse 1.5s ease-in-out 1.4s 3; }
 .cp-empty { padding: 34px 26px; text-align: center; color: var(--cp-muted); font-size: 13.5px; font-weight: 300; }
 
 /* ── grid inferior: tareas + reuniones ── */
