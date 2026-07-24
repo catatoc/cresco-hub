@@ -194,7 +194,7 @@
 
       .stats {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 10px;
         border-top: 0.5pt solid var(--line);
         border-bottom: 0.5pt solid var(--line);
@@ -254,6 +254,14 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10mm;
+      }
+      .cols-3 {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8mm;
+      }
+      .cols-3 .col {
+        border-top: 0.5pt solid var(--line);
+        padding-top: 4mm;
       }
       .col {
         display: flex;
@@ -1128,6 +1136,14 @@
           page-break-after: auto;
           zoom: 0.78;
         }
+        /* la página A4 mide ~794px y cae en el media query móvil: en papel
+           los hitos y los pains vuelven a sus tres columnas */
+        .stats {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .cols-3 {
+          grid-template-columns: repeat(3, 1fr);
+        }
         body.view-phase .onepager {
           display: flex !important;
         }
@@ -1210,7 +1226,7 @@
         <div class="sec-head">
           Pains actuales (después de lo hablado el 21 de julio)
         </div>
-        <div class="cols">
+        <div class="cols cols-3">
           <div class="col">
             <ul class="bullets">
               <li>
@@ -1220,6 +1236,10 @@
                 semanas completas de una persona, haciendo trabajo que no agrega
                 valor.
               </li>
+            </ul>
+          </div>
+          <div class="col">
+            <ul class="bullets">
               <li>
                 <strong>144 horas al año</strong> Se estiman apróximadamente
                 tres horas cada semana discutiendo qué se terminó y qué no. Esto
@@ -1251,10 +1271,7 @@
 
       <div class="major-section">
         <div class="major-eyebrow">¿Cómo entregamos?</div>
-        <h2 class="major-title">
-          Cronograma · cinco fases. Aquí presentamos algunas de las
-          funcionalidades que pensamos podemos incluir en cada fase:
-        </h2>
+        <h2 class="major-title">Cronograma · cinco fases · lo que pensamos</h2>
 
         <div class="timeline">
           <a class="tl-row clickable" href="#f0">
