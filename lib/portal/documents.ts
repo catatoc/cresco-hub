@@ -277,13 +277,16 @@ export async function loadPortalDocuments(
       if (stack) return buildInfraFromStack(stack, locale);
       const dataSourceId = serverEnv.NOTION_DB_FINANCE;
       if (!dataSourceId) return null;
+      // el Type se filtra en código: si la opción no existe en el select de
+      // Finance, Notion rechaza el query completo con validation_error
       const rows = await queryAllRaw(dataSourceId, {
-        and: [
-          { property: 'Customer', relation: { contains: ctx.customerId } },
-          { property: 'Type', select: { equals: 'Infrastructure' } },
-        ],
+        property: 'Customer',
+        relation: { contains: ctx.customerId },
       });
-      return buildInfra(rows, locale);
+      const infraRows = rows.filter(
+        (r: any) => r?.properties?.Type?.select?.name === 'Infrastructure',
+      );
+      return buildInfra(infraRows, locale);
     })().catch((e) => {
       console.error('[portal] infra lookup failed', e);
       return null;

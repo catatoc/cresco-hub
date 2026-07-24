@@ -106,6 +106,7 @@ describe('loadPortalDocuments', () => {
               id: 'inf-1',
               properties: {
                 Description: { type: 'title', title: [{ plain_text: 'Render · API' }] },
+                Type: { select: { name: 'Infrastructure' } },
                 Amount: { number: 19 },
                 Frequency: { select: { name: 'Monthly' } },
                 Status: { status: { name: 'Paid' } },
@@ -115,6 +116,7 @@ describe('loadPortalDocuments', () => {
               id: 'inf-2',
               properties: {
                 Description: { type: 'title', title: [{ plain_text: 'Cancelado' }] },
+                Type: { select: { name: 'Infrastructure' } },
                 Amount: { number: 99 },
                 Status: { status: { name: 'Canceled' } },
               },
