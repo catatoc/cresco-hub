@@ -18,6 +18,9 @@ export function WelcomeExperience({ firstName, gender = null }: { firstName: str
   const [active, setActive] = useState<number | null>(0);
   const [leaving, setLeaving] = useState<number | null>(null);
   const busy = useRef(false);
+  // swipe: el primer instinto en móvil es deslizar; el toque sigue funcionando
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const swiped = useRef(false);
   const router = useRouter();
   const [entering, startEnter] = useTransition();
 
@@ -76,7 +79,29 @@ export function WelcomeExperience({ firstName, gender = null }: { firstName: str
   const ringFilled = active === DONE;
 
   return (
-    <div className={styles.root} onClick={() => onSlide && next()}>
+    <div
+      className={styles.root}
+      onClick={() => {
+        if (swiped.current) { swiped.current = false; return; }
+        if (onSlide) next();
+      }}
+      onTouchStart={(e) => {
+        const p = e.touches[0];
+        if (p) { touchStart.current = { x: p.clientX, y: p.clientY }; swiped.current = false; }
+      }}
+      onTouchEnd={(e) => {
+        const from = touchStart.current;
+        const p = e.changedTouches[0];
+        touchStart.current = null;
+        if (!from || !p || !onSlide) return;
+        const dx = p.clientX - from.x;
+        const dy = p.clientY - from.y;
+        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          swiped.current = true;
+          if (dx < 0) next(); else prev();
+        }
+      }}
+    >
       <div className={styles.atmos}>
         <div className={`${styles.glow} ${styles.g1}`} />
         <div className={`${styles.glow} ${styles.g2}`} />

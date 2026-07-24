@@ -6,7 +6,6 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { supabaseBrowser } from '@/lib/supabase/client';
-import { LanguageToggle } from '@/components/common/language-toggle';
 import styles from '@/app/(auth)/login/login.module.css';
 
 // La escena del onboarding, 1:1: amanecer, la luz que escala la cima,
@@ -72,7 +71,6 @@ export function LoginExperience() {
 
   return (
     <div className={styles.scene} ref={sceneRef}>
-      <LanguageToggle className="absolute top-[max(1rem,env(safe-area-inset-top))] right-4 z-20" />
       <div className={styles.horizon} />
       <div className={styles.sun} />
       <div className={styles.mist} />
