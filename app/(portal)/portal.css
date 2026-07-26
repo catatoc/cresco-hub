@@ -380,6 +380,31 @@
 .cp-err-card button:hover, .cp-err-card .cp-err-retry:hover { opacity: .92; }
 .cp-err-card button:active, .cp-err-card .cp-err-retry:active { transform: scale(.98); }
 
+/* ── sin portal activo (/no-access) · misma montaña + tarjeta glass que el error
+   boundary, pero con voz de agradecimiento y salida a WhatsApp. Vive aquí (y no
+   en un módulo del grupo (auth)) para no duplicar la receta de vidrio. ── */
+.cp-na-card { width: 460px; }
+.cp-na-card h1 { font-size: 23px; font-weight: 500; letter-spacing: -.03em; line-height: 1.25; margin: 22px 0 0; }
+.cp-na-card p { font-size: 14px; font-weight: 300; color: var(--cp-ink-soft); margin: 12px 0 0; line-height: 1.6; }
+.cp-na-acts { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 26px; }
+.cp-na-wa { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; letter-spacing: -.01em;
+  text-decoration: none; color: var(--cp-paper); background: var(--cp-ink); border-radius: 100px; padding: 13px 28px;
+  transition: transform .35s var(--cp-ease), box-shadow .35s var(--cp-ease); }
+.cp-na-wa:hover { transform: translateY(-2px); box-shadow: 0 20px 46px -22px rgba(26,22,18,.45); }
+.cp-na-wa:active { transform: translateY(0) scale(.99); }
+.cp-na-wa i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--cp-moss); color: var(--cp-paper); transition: transform .3s var(--cp-ease); }
+.cp-na-wa i svg { width: 13px; height: 13px; display: block; }
+.cp-na-wa:hover i { transform: scale(1.06); }
+.cp-na-back { font-size: 13px; font-weight: 500; letter-spacing: -.01em; text-decoration: none; color: var(--cp-ink-soft);
+  border-radius: 100px; padding: 13px 22px; transition: color .2s var(--cp-ease), background .2s var(--cp-ease); }
+.cp-na-back:hover { color: var(--cp-ink); background: rgba(212,204,188,.4); }
+@media (max-width: 480px) {
+  .cp-na-card { padding: 30px 24px 26px; }
+  .cp-na-acts { flex-direction: column; align-items: stretch; }
+  .cp-na-wa { justify-content: center; }
+}
+
 /* ── la cápsula · documentos del cliente (pagos · propuesta · accesos · infra)
    Un solo objeto de vidrio que escala con el contenido: con un documento es
    un botón tranquilo, con cuatro es un dock. El "lente" sigue al hover. ── */
