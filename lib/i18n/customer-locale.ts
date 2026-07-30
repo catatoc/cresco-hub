@@ -1,6 +1,6 @@
 import 'server-only';
 import { cookies } from 'next/headers';
-import { lookupContextData, SELECTED_CUSTOMER_COOKIE } from '@/lib/auth/context';
+import { isInternalEmail, lookupContextData, SELECTED_CUSTOMER_COOKIE } from '@/lib/auth/context';
 import { localeForCustomer, type Locale } from '@/lib/i18n/locale';
 
 /** Mismas opciones que la cookie de cliente seleccionado — viven juntas y duran lo mismo. */
@@ -18,9 +18,13 @@ export const CUSTOMER_LOCALE_COOKIE_OPTIONS = {
  * Replica la elección de cliente activo de `resolveContext`: la selección
  * previa si sigue siendo válida, si no el primer cliente del miembro. Un fallo
  * de Notion devuelve null — el idioma nunca debe bloquear un login.
+ *
+ * El equipo crescō queda fuera: ve el hub interno, no el portal, y varios de
+ * ellos tienen a Amedi entre sus clientes — sin esto el hub les saldría en
+ * inglés sin que nadie lo haya pedido.
  */
 export async function resolveActiveCustomerLocale(email: string | null): Promise<Locale | null> {
-  if (!email) return null;
+  if (!email || isInternalEmail(email)) return null;
   try {
     const looked = await lookupContextData(email);
     if (!looked) return null;

@@ -6,7 +6,11 @@ import type { CustomerIcon } from '@/schemas/customer';
 export const SELECTED_CUSTOMER_COOKIE = 'selected-customer-id';
 
 // dominio interno del estudio — todo lo demás es un cliente y ve el portal
-const INTERNAL_DOMAIN = '@cresco.so';
+export const INTERNAL_DOMAIN = '@cresco.so';
+
+/** true = equipo crescō (ve el hub interno) · false = cliente (ve el portal) */
+export const isInternalEmail = (email: string): boolean =>
+  email.toLowerCase().endsWith(INTERNAL_DOMAIN);
 
 export type CustomerSummary = {
   id: string;
@@ -81,7 +85,7 @@ export async function resolveContext(
     customers: customers.map((c) => ({ id: c.id, name: c.name, icon: c.icon })),
     projectIds: member.projectIds,
     isAdmin,
-    isInternal: email.toLowerCase().endsWith(INTERNAL_DOMAIN),
+    isInternal: isInternalEmail(email),
     portalSignIn: member.portalSignIn,
     portalOnboarding: member.portalOnboarding,
   };
