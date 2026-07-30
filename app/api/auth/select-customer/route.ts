@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { findMemberByEmail } from '@/lib/notion/team';
 import { SELECTED_CUSTOMER_COOKIE } from '@/lib/auth/context';
+import { CUSTOMER_LOCALE_COOKIE_OPTIONS } from '@/lib/i18n/customer-locale';
+import { CUSTOMER_LOCALE_COOKIE, localeForCustomer } from '@/lib/i18n/locale';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,6 +38,15 @@ export async function POST(request: Request) {
     path: '/',
     maxAge: 60 * 60 * 24 * 365,
   });
+
+  // Cambiar de cliente cambia el idioma de arranque. Se limpia cuando el nuevo
+  // cliente usa el default del portal, para no arrastrar el del anterior.
+  const locale = localeForCustomer(parsed.data.customerId);
+  if (locale) {
+    cookieStore.set(CUSTOMER_LOCALE_COOKIE, locale, CUSTOMER_LOCALE_COOKIE_OPTIONS);
+  } else {
+    cookieStore.delete(CUSTOMER_LOCALE_COOKIE);
+  }
 
   return NextResponse.json({ ok: true });
 }
