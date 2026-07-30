@@ -32,6 +32,18 @@ export function localeForCustomer(customerId: string | null | undefined): Locale
 const asLocale = (value: string | undefined): Locale | null =>
   value && (LOCALES as readonly string[]).includes(value) ? (value as Locale) : null;
 
+/**
+ * Parámetro de querystring que fija el idioma antes de autenticar (`?lang=en`).
+ * Existe porque el login es público: sin sesión no hay miembro ni cliente
+ * activo, así que el enlace es lo único que puede traer el idioma.
+ */
+export const LOCALE_PARAM = 'lang';
+
+/** El locale pedido por querystring, o null si falta o no es válido. */
+export function localeFromParam(value: string | null | undefined): Locale | null {
+  return asLocale(value ?? undefined);
+}
+
 type HeaderReader = { get(name: string): string | null };
 
 /**

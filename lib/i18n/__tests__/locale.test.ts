@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { detectLocale, localeForCustomer, CUSTOMER_LOCALES } from '@/lib/i18n/locale';
+import { detectLocale, localeForCustomer, localeFromParam, CUSTOMER_LOCALES } from '@/lib/i18n/locale';
 import { isInternalEmail } from '@/lib/auth/context';
 
 const noHeaders = { get: () => null };
@@ -28,6 +28,21 @@ describe('detectLocale · precedencia', () => {
   it('no detecta por Accept-Language', () => {
     const headers = { get: () => 'en-US,en;q=0.9' };
     expect(detectLocale(undefined, undefined, headers)).toBe('es');
+  });
+});
+
+describe('localeFromParam · ?lang= antes de autenticar', () => {
+  it('acepta los locales soportados', () => {
+    expect(localeFromParam('en')).toBe('en');
+    expect(localeFromParam('es')).toBe('es');
+  });
+
+  it('ignora ausente, vacío y no soportado', () => {
+    expect(localeFromParam(null)).toBeNull();
+    expect(localeFromParam(undefined)).toBeNull();
+    expect(localeFromParam('')).toBeNull();
+    expect(localeFromParam('fr')).toBeNull();
+    expect(localeFromParam('EN')).toBeNull();
   });
 });
 
