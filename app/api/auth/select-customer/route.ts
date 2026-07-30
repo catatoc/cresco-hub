@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { findMemberByEmail } from '@/lib/notion/team';
-import { SELECTED_CUSTOMER_COOKIE } from '@/lib/auth/context';
+import { isInternalEmail, SELECTED_CUSTOMER_COOKIE } from '@/lib/auth/context';
 import { CUSTOMER_LOCALE_COOKIE_OPTIONS } from '@/lib/i18n/customer-locale';
 import { CUSTOMER_LOCALE_COOKIE, localeForCustomer } from '@/lib/i18n/locale';
 
@@ -41,7 +41,8 @@ export async function POST(request: Request) {
 
   // Cambiar de cliente cambia el idioma de arranque. Se limpia cuando el nuevo
   // cliente usa el default del portal, para no arrastrar el del anterior.
-  const locale = localeForCustomer(parsed.data.customerId);
+  // El equipo crescō queda fuera: su hub no sigue el idioma del cliente.
+  const locale = isInternalEmail(user.email) ? null : localeForCustomer(parsed.data.customerId);
   if (locale) {
     cookieStore.set(CUSTOMER_LOCALE_COOKIE, locale, CUSTOMER_LOCALE_COOKIE_OPTIONS);
   } else {

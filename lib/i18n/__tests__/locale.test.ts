@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { detectLocale, localeForCustomer, CUSTOMER_LOCALES } from '@/lib/i18n/locale';
+import { isInternalEmail } from '@/lib/auth/context';
 
 const noHeaders = { get: () => null };
 const AMEDI = '31a8af9a-4f71-80e8-b61b-d7888a9007e2';
@@ -39,6 +40,12 @@ describe('localeForCustomer', () => {
     expect(localeForCustomer('31a8af9a-4f71-8090-a71c-c30f323c018b')).toBeNull();
     expect(localeForCustomer(null)).toBeNull();
     expect(localeForCustomer(undefined)).toBeNull();
+  });
+
+  it('el equipo crescō queda fuera del override — su hub no sigue al cliente', () => {
+    expect(isInternalEmail('alguien@cresco.so')).toBe(true);
+    expect(isInternalEmail('ALGUIEN@CRESCO.SO')).toBe(true);
+    expect(isInternalEmail('contacto@amedisalud.com')).toBe(false);
   });
 
   it('los ids del override son uuids con guiones, como los devuelve Notion', () => {
